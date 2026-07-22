@@ -14,8 +14,11 @@ interface Props {
 
 const { title, description } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
-const socialImageUrl = new URL(`${import.meta.env.BASE_URL}og-image.png`, Astro.site);
-const faviconUrl = `${import.meta.env.BASE_URL}favicon.svg`;
+const basePath = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const socialImageUrl = new URL(`${basePath}og-image.png`, Astro.site);
+const faviconUrl = `${basePath}favicon.svg`;
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",

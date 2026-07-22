@@ -1,0 +1,20 @@
+---
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+}
+
+const { number, title, description } = Astro.props;
+---
+
+<article class="service-row" data-reveal>
+  <div class="service-row__number" aria-hidden="true">{number}</div>
+  <div class="service-row__signal" aria-hidden="true">
+    <span></span>
+  </div>
+  <div class="service-row__content">
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+</article>

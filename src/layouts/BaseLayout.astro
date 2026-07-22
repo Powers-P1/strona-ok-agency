@@ -1,0 +1,61 @@
+---
+import "@fontsource-variable/instrument-sans";
+import "@fontsource/instrument-serif/400.css";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import "../styles/header-hero.css";
+import "../styles/content-sections.css";
+import "../styles/responsive.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const socialImageUrl = new URL(`${import.meta.env.BASE_URL}og-image.png`, Astro.site);
+const faviconUrl = `${import.meta.env.BASE_URL}favicon.svg`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "OK Agency",
+  url: canonicalUrl.toString(),
+  description,
+  knowsAbout: ["Marketing online", "Tworzenie stron internetowych"],
+};
+---
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={faviconUrl} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:site_name" content="OK Agency" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="OK Agency — marketing online i strony internetowe" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Przejdź do treści</a>
+    <slot />
+    <script src="../scripts/site.ts"></script>
+  </body>
+</html>

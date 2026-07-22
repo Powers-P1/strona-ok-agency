@@ -1,0 +1,16 @@
+---
+import ArrowIcon from "./ArrowIcon.astro";
+
+interface Props {
+  href: string;
+  variant?: "primary" | "text" | "signal";
+  label: string;
+}
+
+const { href, variant = "primary", label } = Astro.props;
+---
+
+<a class:list={["action-link", `action-link--${variant}`]} href={href}>
+  <span>{label}</span>
+  <ArrowIcon size={21} />
+</a>

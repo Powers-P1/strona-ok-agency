@@ -1,0 +1,42 @@
+---
+import ActionLink from "./ActionLink.astro";
+
+const homeUrl = import.meta.env.BASE_URL;
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-header__inner container">
+    <a class="wordmark" href={homeUrl} aria-label="OK Agency — strona główna">
+      <span class="wordmark__ok">OK</span>
+      <span>Agency</span>
+    </a>
+
+    <button
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+      aria-label="Otwórz menu"
+      class="menu-toggle"
+      data-menu-toggle
+      type="button"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav
+      aria-label="Główna nawigacja"
+      class="primary-navigation"
+      data-navigation
+      id="primary-navigation"
+    >
+      <a href="#uslugi">Usługi</a>
+      <a href="#jak-dzialamy">Jak działamy</a>
+      <a href="#dla-kogo">Dla kogo</a>
+    </nav>
+
+    <div class="site-header__cta">
+      <ActionLink href="#uslugi" label="Poznaj usługi" />
+    </div>
+  </div>
+</header>

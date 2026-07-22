@@ -1,0 +1,7 @@
+dist
+node_modules
+playwright-report
+test-results
+public/og-image.png
+docs/concepts/*.png
+docs/screenshots/*.png

@@ -329,6 +329,14 @@
       -webkit-user-drag: none;
     }
 
+    .scene-picture {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .stone-contact,
     .stone-shell,
     .stone-neural-canvas {
@@ -1191,6 +1199,74 @@
         );
       }
     }
+
+    /*
+      Preserve the approved sculpture scale on large and high-DPI desktops,
+      while letting the editorial typography and controls grow with the canvas.
+      The base desktop layout remains unchanged below this breakpoint.
+    */
+    @media (min-width: 1800px) and (min-height: 900px) {
+      :root {
+        --gutter: clamp(5rem, 3.75vw, 6rem);
+      }
+
+      .topbar {
+        height: clamp(7rem, 9vh, 8.5rem);
+      }
+
+      .wordmark {
+        width: clamp(10.8rem, 8.4vw, 12.2rem);
+      }
+
+      .nav {
+        gap: clamp(3rem, 2.7vw, 4rem);
+      }
+
+      .nav a {
+        font-size: clamp(.78rem, .55vw, .88rem);
+        letter-spacing: .18em;
+      }
+
+      .copy {
+        top: clamp(10rem, 15vh, 13rem);
+        width: min(51rem, 42vw);
+      }
+
+      .scene-label,
+      .detail-kicker {
+        font-size: .78rem;
+      }
+
+      .scene-label {
+        gap: 1rem;
+        margin-bottom: clamp(2rem, 2.5vh, 2.65rem);
+      }
+
+      .scene-label::before {
+        width: 3.45rem;
+      }
+
+      h1 {
+        font-size: clamp(12rem, 9vw, 14.5rem);
+      }
+
+      .descriptor {
+        margin-top: clamp(2.35rem, 3.2vh, 3.15rem);
+        font-size: clamp(.9rem, .72vw, 1.05rem);
+      }
+
+      .cta {
+        margin-top: clamp(2rem, 3vh, 2.8rem);
+        min-width: clamp(19.25rem, 16vw, 25rem);
+        padding: 1.38rem 4.4rem 1.38rem 1.65rem;
+        font-size: clamp(.9rem, .65vw, 1.02rem);
+      }
+
+      .cta::after {
+        right: 1.45rem;
+        font-size: 1.25rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1216,17 +1292,27 @@
 
       <div class="art-stage" aria-hidden="true">
         <div class="image-rig" id="image-rig">
-          <img
-            class="sculpture"
-            id="sculpture"
-            src="assets/editorial-atelier-scene-v1.png"
-            data-fallback-src="assets/wire-cherry-sculpture-epic-v3.png"
-            onerror="if(this.dataset.fallbackSrc){this.onerror=null;this.src=this.dataset.fallbackSrc;}"
-            alt=""
-            width="1672"
-            height="941"
-            fetchpriority="high"
-          >
+          <picture class="scene-picture">
+            <source
+              type="image/webp"
+              srcset="
+                assets/editorial-atelier-scene-v1.webp 1672w,
+                assets/editorial-atelier-scene-v1@2x.webp 3344w
+              "
+              sizes="100vw"
+            >
+            <img
+              class="sculpture"
+              id="sculpture"
+              src="assets/editorial-atelier-scene-v1.png"
+              data-fallback-src="assets/wire-cherry-sculpture-epic-v3.png"
+              onerror="if(this.dataset.fallbackSrc){this.onerror=null;this.src=this.dataset.fallbackSrc;}"
+              alt=""
+              width="1672"
+              height="941"
+              fetchpriority="high"
+            >
+          </picture>
           <div class="stone-contact" aria-hidden="true"></div>
           <canvas class="stone-neural-canvas" id="stone-neural-canvas" aria-hidden="true"></canvas>
           <div class="stone-shell" id="stone-shell" aria-hidden="true"></div>

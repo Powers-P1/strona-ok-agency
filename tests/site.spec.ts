@@ -57,16 +57,13 @@ test("all on-page links resolve to real targets", async ({ page }) => {
   }
 });
 
-test("metadata assets use the deployed repository base path", async ({ page }) => {
+test("metadata assets use the custom production domain", async ({ page }) => {
   await page.goto("./");
 
-  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
-    "href",
-    "/strona-ok-agency/favicon.svg",
-  );
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/favicon.svg");
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     "content",
-    "https://powers-p1.github.io/strona-ok-agency/og-image.png",
+    "https://okagency.pl/og-image.png",
   );
 });
 

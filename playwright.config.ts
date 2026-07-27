@@ -8,7 +8,7 @@ export default defineConfig({
   workers: 1,
   reporter: process.env.CI ? "github" : "list",
   use: {
-    baseURL: "http://127.0.0.1:4321/strona-ok-agency/",
+    baseURL: "http://127.0.0.1:4321/",
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run preview -- --host 127.0.0.1 --port 4321",
-    url: "http://127.0.0.1:4321/strona-ok-agency/",
+    url: "http://127.0.0.1:4321/",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

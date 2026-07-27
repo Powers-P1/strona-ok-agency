@@ -19,7 +19,7 @@ npm ci
 npm run dev
 ```
 
-Strona działa lokalnie pod ścieżką `http://localhost:4321/strona-ok-agency/`.
+Strona działa lokalnie pod adresem `http://localhost:4321/`.
 
 ## Kontrola jakości
 
@@ -36,10 +36,10 @@ Pełny zestaw kontroli uruchamia `npm run check`.
 ## Publikacja
 
 - Repozytorium: [Powers-P1/strona-ok-agency](https://github.com/Powers-P1/strona-ok-agency)
-- Strona: [powers-p1.github.io/strona-ok-agency](https://powers-p1.github.io/strona-ok-agency/)
+- Strona: [okagency.pl](https://okagency.pl/)
 - Gałąź główna: `main`
 
-Workflow wdrożeniowy buduje katalog `dist/` i publikuje go jako artefakt GitHub Pages.
+Workflow wdrożeniowy buduje katalog `dist/` i publikuje go jako artefakt GitHub Pages pod domeną `okagency.pl`.
 
 ## Podgląd
 

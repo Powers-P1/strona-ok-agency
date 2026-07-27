@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://powers-p1.github.io/strona-ok-agency/sitemap-index.xml
+Sitemap: https://okagency.pl/sitemap-index.xml

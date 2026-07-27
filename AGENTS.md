@@ -16,7 +16,8 @@
 - Services derived directly from the offer: Marketing online; Strony internetowe
 - Language: `pl-PL`
 - Contact email: not supplied; treat as `NONE`
-- Phone, location, social media and custom domain: not supplied; treat as `NONE`
+- Phone, location and social media: not supplied; treat as `NONE`
+- Primary custom domain: `https://okagency.pl`
 - Primary CTA chosen for the no-contact state: `Poznaj zakres współpracy`, linking to `#uslugi`
 
 Do not invent clients, awards, testimonials, certifications, case studies, years of experience, performance statistics, addresses, social accounts, partnerships, phone numbers, email addresses or unverifiable claims. Do not add a fake contact form.
@@ -27,7 +28,7 @@ Do not invent clients, awards, testimonials, certifications, case studies, years
 - Modern CSS with project-owned tokens; no Tailwind or component library.
 - Minimal client-side TypeScript only for the responsive navigation and small progressive enhancements.
 - Local npm font packages: Instrument Sans and Instrument Serif.
-- Static GitHub Pages deployment at `/strona-ok-agency/`.
+- Static GitHub Pages deployment at the domain root `/`.
 
 ## Selected design direction
 

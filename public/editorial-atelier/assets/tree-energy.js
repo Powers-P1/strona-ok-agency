@@ -425,6 +425,1823 @@
     });
 
     endpointRoutes = [...nodeDegree.entries()]
-     ×½¶ÖÚ$z{-®éÜj×6öçFW‡Bç7G&ö¶R‚“°¢Ð¢Ð¢Ò“°¢Ò“°¢6öçFW‡Bç&W7F÷&R‚“°¢Ð ¢gVæ7F–öâG&u&VGV6VDfÆ6‚‚’°¢–b‚&VGV6VEVæF–ær’&WGW&ã°¢6öç7BVæGö–çG2Ò²&VæDÄf""Â&VæEF÷6VçFW""Â&VæEF÷&–v‡B"Â&VæE%WW""Â&VæE$Æ÷r%Ó°¢VæGö–çG2æf÷$V6‚‚†VæGö–çB’Óâ°¢6öç7Bö–çBÒÖææöFW5¶VæGö–çEÓ°¢–b‚'&’æ—4'&’‡ö–çB’ÇÂö–çBæÆVæwF‚Â"’&WGW&ã°¢6öç7B‚Òö–çE³Ò¢775v–GFƒ°¢6öç7B’Òö–çE³Ò¢774†V–v‡C°¢6öç7BÖWFÒ&ÆööÔÖWF¶VæGö–çEÒÇÂ²&÷FF–öã¢Ó°¢6öçFW‡Bç6fR‚“°¢6öçFW‡BçG&ç6ÆFR‡‚Â’“°¢6öçFW‡Bç&÷FFR†ÖWFç&÷FF–öâ“°¢6öç7B&VGV6VE66ÆRÒÖF‚æÖ‚‚ãcBÂ775v–GF‚òÖæ–ÖvRçv–GF‚“°¢6öçFW‡Bæf–ÆÅ7G–ÆRÒ'&v&ƒ#SRÂ“’Â#BÂãS"’#°¢f÷"†ÆWB–æFW‚Ò²–æFW‚ÂS²–æFW‚³Ò’°¢6öçFW‡Bç6fR‚“°¢6öçFW‡Bç&÷FFR‚„ÖF‚å’¢"¢–æFW‚’òR“°¢6öçFW‡BçG&ç6ÆFRƒÂÓBã"¢&VGV6VE66ÆR“°¢6öçFW‡Bæ&Vv–åF‚‚“°¢6öçFW‡BæVÆÆ—6RƒÂÂã’¢&VGV6VE66ÆRÂBã"¢&VGV6VE66ÆRÂÂÂÖF‚å’¢"“°¢6öçFW‡Bæf–ÆÂ‚“°¢6öçFW‡Bç&W7F÷&R‚“°¢Ð¢6öçFW‡Bæf–ÆÅ7G–ÆRÒ'&v&ƒ#SRÂ#CBÂ#BÂã’’#°¢6öçFW‡Bæ&Vv–åF‚‚“°¢6öçFW‡Bæ&2ƒÂÂã‚¢&VGV6VE66ÆRÂÂÖF‚å’¢"“°¢6öçFW‡Bæf–ÆÂ‚“°¢6öçFW‡Bç&W7F÷&R‚“°¢Ò“°¢Ð ¢gVæ7F–öâG&tg&ÖR†æ÷r’°¢G&u7FöæTæWW&Â†æ÷r“°¢6öçFW‡Bæ6ÆV%&V7BƒÂÂ775v–GF‚Â774†V–v‡B“°¢G&t–çFW&æÅ6÷W&6R†æ÷r“°¢G&t6÷&TfVVG2†æ÷r“°¢G&u7–æ6W2†æ÷r“° ¢–b‚&VGV6VDÖ÷F–öâæÖF6†W2’°¢VÇ6W2æf÷$V6‚‚‡VÇ6R’ÓâG&uVÇ6R‡VÇ6RÂæ÷r’“°¢&Æ÷76ö×2æf÷$V6‚‚†&Æ÷76öÒ’ÓâG&t&Æ÷76öÒ†&Æ÷76öÒÂæ÷r’“°¢G&uö–çFW%&Vf–æVÖVçB‚“°¢ÒVÇ6R°¢G&u&VGV6VDfÆ6‚‚“°¢Ð ¢–b†FV'VtÖ’G&tFV'VtÖ‚“°¢Ð ¢gVæ7F–öâ&VæFW"†æ÷r’°¢–b‚vUf—6–&ÆRÇÂ&VGV6VDÖ÷F–öâæÖF6†W2’&WGW&ã°¢&V6÷&EW&f÷&Öæ6R†æ÷r“°¢–b‚VF—DÖbbFWF–Ä÷Vâbbæ÷rãÒæW‡E7FöæTB’66†VGVÆU7FöæT–FÆR†æ÷r“°¢–b‚VF—DÖbb7F—fF–öå'Vææ–ærbbFWF–Ä÷Vâbbæ÷rãÒæW‡D–FÆTB’66†VGVÆT–FÆR†æ÷r“°¢–b€¢VF—DÖ ¢bb7F—fF–öå'Vææ–æp¢bbFWF–Ä÷Và¢bbæ÷rãÒæW‡E&VÆ”@¢bbVÇ6W2æÆVæwF‚ÂP¢bbæW‡D–FÆTBÒæ÷râ6–væÅF–ÖRƒcS¢’°¢66†VGVÆU&VÆ’†æ÷r“°¢Ð¢WFFTVffV7G2†æ÷r“°¢WFFU7FöæTVffV7G2†æ÷r“°¢G&tg&ÖR†æ÷r“° ¢–b†7F—fF–öå'Vææ–ærbb7F—fF–öä÷VäBbbæ÷rãÒ7F—fF–öä÷VäB’°¢6ö×ÆWFT7F—fF–öâ‚“°¢&WGW&ã°¢Ð¢g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡&VæFW"“°¢Ð ¢gVæ7F–öâ&W6—¦T6çf2‚’°¢6öç7B&V7BÒ&–rævWD&÷VæF–æt6Æ–VçE&V7B‚“°¢6öç7B66ÆU‚ÒÖF‚æ‡—÷B€¢çVÖ&W"ç'6TfÆöB†vWD6ö×WFVE7G–ÆR‡&–r’çG&ç6f÷&Òç7Æ—B‚"Â"•³Óòç&WÆ6R‚&ÖG&—‚‚"Â""’’ÇÂÀ¢çVÖ&W"ç'6TfÆöB†vWD6ö×WFVE7G–ÆR‡&–r’çG&ç6f÷&Òç7Æ—B‚"Â"•³Ò’ÇÂ ¢“°¢775v–GF‚Ò&–ræ6Æ–VçEv–GF‚ÇÂ&V7Bçv–GF‚òÖF‚æÖ‚‚ãÂ66ÆU‚“°¢774†V–v‡BÒ&–ræ6Æ–VçD†V–v‡BÇÂ&V7Bæ†V–v‡BòÖF‚æÖ‚‚ãÂ66ÆU‚“°¢G"ÒÖF‚æÖ–â‡v–æF÷ræFWf–6U—†VÅ&F–òÇÂÂ6ö'6Uö–çFW"æÖF6†W2òã"¢ãR“°¢6çf2çv–GF‚ÒÖF‚æÖ‚ƒÂÖF‚ç&÷VæB†775v–GF‚¢G"’“°¢6çf2æ†V–v‡BÒÖF‚æÖ‚ƒÂÖF‚ç&÷VæB†774†V–v‡B¢G"’“°¢6çf2ç7G–ÆRçv–GF‚ÒG¶775v–GF‡×†°¢6çf2ç7G–ÆRæ†V–v‡BÒG¶774†V–v‡G×†°¢6öçFW‡Bç6WEG&ç6f÷&Ò†G"ÂÂÂG"ÂÂ“°¢&W6—¦U7FöæT6çf2‚“°¢G&tg&ÖR‡W&f÷&Öæ6Rææ÷r‚’“°¢Ð ¢gVæ7F–öâ&W6—¦U7FöæT6çf2‚’°¢–b‚7FöæT6çf2ÇÂ7FöæT6öçFW‡BÇÂ7FöæTÖ’&WGW&ã°¢7FöæT775v–GF‚ÒÖF‚æÖ‚ƒÂ775v–GF‚¢7FöæTÖç&Vv–öâçv–GF‚“°¢7FöæT774†V–v‡BÒÖF‚æÖ‚ƒÂ774†V–v‡B¢7FöæTÖç&Vv–öâæ†V–v‡B“°¢7FöæT6çf2çv–GF‚ÒÖF‚æÖ‚ƒÂÖF‚ç&÷VæB‡7FöæT775v–GF‚¢G"’“°¢7FöæT6çf2æ†V–v‡BÒÖF‚æÖ‚ƒÂÖF‚ç&÷VæB‡7FöæT774†V–v‡B¢G"’“°¢7FöæT6çf2ç7G–ÆRçv–GF‚ÒG·7FöæT775v–GF‡×†°¢7FöæT6çf2ç7G–ÆRæ†V–v‡BÒG·7FöæT774†V–v‡G×†°¢7FöæT6öçFW‡Bç6WEG&ç6f÷&Ò†G"ÂÂÂG"ÂÂ“°¢7FöæU67&F6‚çv–GF‚ÒÖF‚æÖ‚ƒ"ÂÖF‚ç&÷VæB‡7FöæT775v–GF‚’“°¢7FöæU67&F6‚æ†V–v‡BÒÖF‚æÖ‚ƒ"ÂÖF‚ç&÷VæB‡7FöæT774†V–v‡B’“°¢&V'V–ÆE7FöæTFÆ6W2‚“°¢Ð ¢gVæ7F–öâ6WD–æW'B†VÆVÖVçBÂfÇVR’°¢–b‚&–æW'B"–âVÆVÖVçB’VÆVÖVçBæ–æW'BÒfÇVS°¢–b‡fÇVR’VÆVÖVçBç6WDGG&–'WFR‚&&–Ö†–FFVâ"Â'G'VR"“°¢VÇ6RVÆVÖVçBç&VÖ÷fTGG&–'WFR‚&&–Ö†–FFVâ"“°¢Ð ¢gVæ7F–öâ†öÆE67&öÆÂ‡F&vWB’°¢v–æF÷rç67&öÆÅFò‡²F÷¢F&vWBÂÆVgC¢Â&V†f–÷#¢&WFò"Ò“°¢&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâ°¢v–æF÷rç67&öÆÅFòƒÂF&vWB“°¢&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâv–æF÷rç67&öÆÅFòƒÂF&vWB’“°¢Ò“°¢Ð ¢gVæ7F–öâ&W6WD7F‚’°¢W‡Æ÷&Ræ6Æ74Æ—7Bç&VÖ÷fR‚&—2Ö6†&v–ær"“°¢W‡Æ÷&Rç&VÖ÷fTGG&–'WFR‚&&–Ö'W7’"“°¢W‡Æ÷&Rç6WDGG&–'WFR‚&&–ÖF—6&ÆVB"Â&fÇ6R"“°¢W‡Æ÷&RçFW‡D6öçFVçBÒ÷&–v–æÄ7FÆ&VÃ°¢7F—fF–öäÆ–æ·2æf÷$V6‚‚†Æ–æ²’ÓâÆ–æ²ç&VÖ÷fTGG&–'WFR‚&&–ÖF—6&ÆVB"’“°¢Ð ¢gVæ7F–öâ6WD7F—fF–öäW‡æFVB‡fÇVR’°¢W‡Æ÷&Rç6WDGG&–'WFR‚&&–ÖW‡æFVB"Â7G&–ær‡fÇVR’“°¢7F—fF–öäÆ–æ·2æf÷$V6‚‚†Æ–æ²’ÓâÆ–æ²ç6WDGG&–'WFR‚&&–ÖW‡æFVB"Â7G&–ær‡fÇVR’’“°¢Ð ¢gVæ7F–öâ÷VäFWF–Â‡67&öÆÅF&vWBÒv–æF÷rç67&öÆÅ’’°¢FWF–Ä÷VâÒG'VS°¢7F—fF–öå'Vææ–ærÒfÇ6S°¢7F—fF–öä÷VäBÒ°¢&W6WD7F‚“°¢†W&òæ6Æ74Æ—7BæFB‚&—2Öfö7W6VB"“°¢6WD7F—fF–öäW‡æFVB‡G'VR“°¢FWF–Âç6WDGG&–'WFR‚&&–Ö†–FFVâ"Â&fÇ6R"“°¢6WD–æW'B†–çG&òÂG'VR“°¢6WD–æW'B†FWF–ÂÂfÇ6R“°¢†öÆE67&öÆÂ‡67&öÆÅF&vWB“°¢&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâ°¢&6²æfö7W2‡²&WfVçE67&öÆÃ¢G'VRÒ“°¢&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâ°¢–b†Fö7VÖVçBæ7F—fTVÆVÖVçBÓÒ&6²’&6²æfö7W2‡²&WfVçE67&öÆÃ¢G'VRÒ“°¢Ò“°¢Ò“°¢Ð ¢gVæ7F–öâ6Æ÷6TFWF–Â‚’°¢6öç7BF&vWBÒv–æF÷rç67&öÆÅ“°¢FWF–Ä÷VâÒfÇ6S°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6÷&TfVVG2ÒµÓ°¢7–æ6TfÆ6†W2ÒµÓ°¢7FöæUVÇ6W2ÒµÓ°¢†W&òæ6Æ74Æ—7Bç&VÖ÷fR‚&—2Öfö7W6VB"“°¢6WD7F—fF–öäW‡æFVB†fÇ6R“°¢FWF–Âç6WDGG&–'WFR‚&&–Ö†–FFVâ"Â'G'VR"“°¢6WD–æW'B†FWF–ÂÂG'VR“°¢6WD–æW'B†–çG&òÂfÇ6R“°¢æW‡D–FÆTBÒ&VGV6VDÖ÷F–öâæÖF6†W0¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒCS“°¢æW‡E&VÆ”BÒ&VGV6VDÖ÷F–öâæÖF6†W0¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒC#“°¢æW‡E7FöæTBÒ&VGV6VDÖ÷F–öâæÖF6†W0¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²C#°¢†öÆE67&öÆÂ‡F&vWB“°¢&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâ°¢7F—fF–öåG&–vvW"æfö7W2‡²&WfVçE67&öÆÃ¢G'VRÒ“°¢&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâ°¢–b†Fö7VÖVçBæ7F—fTVÆVÖVçBÓÒ7F—fF–öåG&–vvW"’7F—fF–öåG&–vvW"æfö7W2‡²&WfVçE67&öÆÃ¢G'VRÒ“°¢Ò“°¢Ò“°¢Ð ¢gVæ7F–öâ6æ6VÄ7F—fF–öâ‡&W7F÷&Tfö7W2ÒG'VR’°¢7F—fF–öå'Vææ–ærÒfÇ6S°¢7F—fF–öä÷VäBÒ°¢&VGV6VEVæF–ærÒfÇ6S°¢v–æF÷ræ6ÆV%F–ÖV÷WB‡&VGV6VEF–ÖW"“°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6÷&TfVVG2ÒµÓ°¢7–æ6TfÆ6†W2ÒµÓ°¢7FöæUVÇ6W2ÒµÓ°¢&W6WD7F‚“°¢6WD7F—fF–öäW‡æFVB†fÇ6R“°¢æW‡D–FÆTBÒ&VGV6VDÖ÷F–öâæÖF6†W0¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒ#“°¢æW‡E&VÆ”BÒ&VGV6VDÖ÷F–öâæÖF6†W0¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒCC“°¢æW‡E7FöæTBÒ&VGV6VDÖ÷F–öâæÖF6†W0¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²Cc°¢G&tg&ÖR‡W&f÷&Öæ6Rææ÷r‚’“°¢†öÆE67&öÆÂ†7F—fF–öå67&öÆÂ“°¢–b‡&W7F÷&Tfö7W2’&WVW7Dæ–ÖF–öäg&ÖR‚‚’Óâ7F—fF–öåG&–vvW"æfö7W2‡²&WfVçE67&öÆÃ¢G'VRÒ’“°¢Ð ¢gVæ7F–öâ6ö×ÆWFT7F—fF–öâ‚’°¢–b‚7F—fF–öå'Vææ–ær’&WGW&ã°¢&VGV6VEVæF–ærÒfÇ6S°¢v–æF÷ræ6ÆV%F–ÖV÷WB‡&VGV6VEF–ÖW"“°¢÷VäFWF–Â†7F—fF–öå67&öÆÂ“°¢Ð ¢gVæ7F–öâ7F—fFR‡G&–vvW"ÒW‡Æ÷&R’°¢–b†7F—fF–öå'Vææ–ærÇÂFWF–Ä÷VâÇÂW‡Æ÷&RævWDGG&–'WFR‚&&–ÖF—6&ÆVB"’ÓÓÒ'G'VR"’&WGW&ã°¢7F—fF–öåG&–vvW"ÒG&–vvW"bbG—VöbG&–vvW"æfö7W2ÓÓÒ&gVæ7F–öâ"òG&–vvW"¢W‡Æ÷&S°¢7F—fF–öå'Vææ–ærÒG'VS°¢7F—fF–öå7F'FVBÒW&f÷&Öæ6Rææ÷r‚“°¢–b†FV'VuW&f÷&Öæ6R’°¢W&f÷&Öæ6U&Wf–÷W2Ò°¢W&f÷&Öæ6U6×ÆW2ÒµÓ°¢FVÆWFRFö7VÖVçBæFö7VÖVçDVÆVÖVçBæFF6WBçG&VTg3°¢FVÆWFRFö7VÖVçBæFö7VÖVçDVÆVÖVçBæFF6WBçG&VTg&ÖU“S°¢Ð¢7F—fF–öå67&öÆÂÒv–æF÷rç67&öÆÅ“°¢7F—fF–öä÷VäBÒ°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6÷&TfVVG2ÒµÓ°¢7–æ6TfÆ6†W2ÒµÓ°¢7FöæUVÇ6W2ÒµÓ°¢W‡Æ÷&Ræ6Æ74Æ—7BæFB‚&—2Ö6†&v–ær"“°¢W‡Æ÷&Rç6WDGG&–'WFR‚&&–Ö'W7’"Â'G'VR"“°¢W‡Æ÷&Rç6WDGG&–'WFR‚&&–ÖF—6&ÆVB"Â'G'VR"“°¢7F—fF–öäÆ–æ·2æf÷$V6‚‚†Æ–æ²’ÓâÆ–æ²ç6WDGG&–'WFR‚&&–ÖF—6&ÆVB"Â'G'VR"’“°¢W‡Æ÷&RçFW‡D6öçFVçBÒ&VGV6VDÖ÷F–öâæÖF6†W2ò$÷Gv–W&×ž(
-b"¢$VæW&v–X'–æ–^(
-b#° ¢–b‡&VGV6VDÖ÷F–öâæÖF6†W2’°¢&VGV6VEVæF–ærÒG'VS°¢G&tg&ÖR†7F—fF–öå7F'FVB“°¢&VGV6VEF–ÖW"Òv–æF÷rç6WEF–ÖV÷WB‚‚’Óâ°¢–b†Fö7VÖVçBæ†–FFVâ’&WGW&ã°¢6ö×ÆWFT7F—fF–öâ‚“°¢ÒÂS#“°¢&WGW&ã°¢Ð ¢7F—fF–öä÷VäBÒ66†VGVÆT7F—fF–öâ†7F—fF–öå7F'FVB“°¢6æ6VÄæ–ÖF–öäg&ÖR†g&ÖR“°¢g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡&VæFW"“°¢Ð ¢gVæ7F–öâ7–æ4Ö÷F–öå&VfW&Væ6R‚’°¢6æ6VÄæ–ÖF–öäg&ÖR†g&ÖR“°¢–b‡&VGV6VDÖ÷F–öâæÖF6†W2’°¢æW‡D–FÆTBÒçVÖ&W"åõ4•D•dUô”äd”ä•E“°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6÷&TfVVG2ÒµÓ°¢7–æ6TfÆ6†W2ÒµÓ°¢7FöæUVÇ6W2ÒµÓ°¢æW‡E7FöæTBÒçVÖ&W"åõ4•D•dUô”äd”ä•E“°¢ö–çFW$†–v†Æ–v‡BÒçVÆÃ°¢&–rç7G–ÆRç6WE&÷W'G’‚"Ò×‚"Â#‚"“°¢&–rç7G–ÆRç6WE&÷W'G’‚"Ò×’"Â#‚"“°¢7FöæUö–çFW%‚Ò°¢7FöæUö–çFW%’Ò°¢–b†7F—fF–öå'Vææ–ær’6ö×ÆWFT7F—fF–öâ‚“°¢VÇ6RG&tg&ÖR‡W&f÷&Öæ6Rææ÷r‚’“°¢ÒVÇ6R–b‡vUf—6–&ÆR’°¢æW‡D–FÆTBÒFWF–Ä÷Và¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒ“°¢æW‡E&VÆ”BÒFWF–Ä÷Và¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒ3““°¢æW‡E7FöæTBÒFWF–Ä÷Và¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²3c°¢g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡&VæFW"“°¢Ð¢Ð ¢W‡Æ÷&RæFDWfVçDÆ—7FVæW"‚&6Æ–6²"Â‚’Óâ7F—fFR†W‡Æ÷&R’“°¢7F—fF–öäÆ–æ·2æf÷$V6‚‚†Æ–æ²’Óâ°¢Æ–æ²æFDWfVçDÆ—7FVæW"‚&6Æ–6²"Â†WfVçB’Óâ°¢WfVçBç&WfVçDFVfVÇB‚“°¢7F—fFR†Æ–æ²“°¢Ò“°¢Ò“°¢&6²æFDWfVçDÆ—7FVæW"‚&6Æ–6²"Â6Æ÷6TFWF–Â“° ¢Fö7VÖVçBæFDWfVçDÆ—7FVæW"‚&¶W–F÷vâ"Â†WfVçB’Óâ°¢–b†WfVçBæ¶W’ÓÒ$W66R"’&WGW&ã°¢–b†7F—fF–öå'Vææ–ær’6æ6VÄ7F—fF–öâ‡G'VR“°¢VÇ6R–b†FWF–Ä÷Vâ’6Æ÷6TFWF–Â‚“°¢Ò“° ¢–b‚6ö'6Uö–çFW"æÖF6†W2bbVF—DÖ’°¢v–æF÷ræFDWfVçDÆ—7FVæW"‚'ö–çFW&Ö÷fR"Â†WfVçB’Óâ°¢–b‡&VGV6VDÖ÷F–öâæÖF6†W2ÇÂFWF–Ä÷Vâ’&WGW&ã°¢6öç7B‚Ò†WfVçBæ6Æ–VçE‚òv–æF÷ræ–ææW%v–GF‚ÒãR’¢ÓC°¢6öç7B’Ò†WfVçBæ6Æ–VçE’òv–æF÷ræ–ææW$†V–v‡BÒãR’¢Ó3°¢7FöæUö–çFW%‚Ò†WfVçBæ6Æ–VçE‚òv–æF÷ræ–ææW%v–GF‚ÒãR’¢#°¢7FöæUö–çFW%’Ò†WfVçBæ6Æ–VçE’òv–æF÷ræ–ææW$†V–v‡BÒãR’¢#°¢&–rç7G–ÆRç6WE&÷W'G’‚"Ò×‚"ÂG·‡×†“°¢&–rç7G–ÆRç6WE&÷W'G’‚"Ò×’"ÂG·—×†“°¢ö–çFW$†–v†Æ–v‡BÒf–æEö–çFW$†–v†Æ–v‡B†WfVçBæ6Æ–VçE‚ÂWfVçBæ6Æ–VçE’“°¢ÒÂ²76—fS¢G'VRÒ“° ¢Fö7VÖVçBæFö7VÖVçDVÆVÖVçBæFDWfVçDÆ—7FVæW"‚'ö–çFW&ÆVfR"Â‚’Óâ°¢&–rç7G–ÆRç6WE&÷W'G’‚"Ò×‚"Â#‚"“°¢&–rç7G–ÆRç6WE&÷W'G’‚"Ò×’"Â#‚"“°¢7FöæUö–çFW%‚Ò°¢7FöæUö–çFW%’Ò°¢ö–çFW$†–v†Æ–v‡BÒçVÆÃ°¢Ò“°¢Ð ¢Fö7VÖVçBæFDWfVçDÆ—7FVæW"‚'f—6–&–Æ—G–6†ævR"Â‚’Óâ°¢6öç7Bæ÷rÒW&f÷&Öæ6Rææ÷r‚“°¢–b†Fö7VÖVçBæ†–FFVâ’°¢vUf—6–&ÆRÒfÇ6S°¢†–FFVäBÒæ÷s°¢6æ6VÄæ–ÖF–öäg&ÖR†g&ÖR“°¢&WGW&ã°¢Ð ¢vUf—6–&ÆRÒG'VS°¢6öç7BW6VDf÷"ÒÖF‚æÖ‚ƒÂæ÷rÒ†–FFVäB“°¢VÇ6W2æf÷$V6‚‚‡VÇ6R’Óâ°¢VÇ6Rç7F'B³ÒW6VDf÷#°¢VÇ6RæVæB³ÒW6VDf÷#°¢Ò“°¢&Æ÷76ö×2æf÷$V6‚‚†&Æ÷76öÒ’Óâ°¢&Æ÷76öÒç7F'B³ÒW6VDf÷#°¢Ò“°¢–b„çVÖ&W"æ—4f–æ—FR†æW‡D–FÆTB’’æW‡D–FÆTB³ÒW6VDf÷#°¢–b„çVÖ&W"æ—4f–æ—FR†æW‡E&VÆ”B’’æW‡E&VÆ”B³ÒW6VDf÷#°¢–b„çVÖ&W"æ—4f–æ—FR†æW‡E7FöæTB’’æW‡E7FöæTB³ÒW6VDf÷#°¢–b†7F—fF–öä÷VäB’7F—fF–öä÷VäB³ÒW6VDf÷#°¢7F—fF–öå7F'FVB³Ò7F—fF–öå'Vææ–æròW6VDf÷"¢°¢6÷&TfVVG2æf÷$V6‚‚†fVVB’Óâ°¢fVVBç7F'B³ÒW6VDf÷#°¢fVVBæVæB³ÒW6VDf÷#°¢Ò“°¢7–æ6TfÆ6†W2æf÷$V6‚‚†fÆ6‚’Óâ°¢fÆ6‚ç7F'B³ÒW6VDf÷#°¢Ò“°¢7FöæUVÇ6W2æf÷$V6‚‚‡VÇ6R’Óâ°¢VÇ6Rç7F'B³ÒW6VDf÷#°¢VÇ6RæVæB³ÒW6VDf÷#°¢Ò“° ¢–b‡&VGV6VEVæF–ær’6ö×ÆWFT7F—fF–öâ‚“°¢VÇ6R–b‚&VGV6VDÖ÷F–öâæÖF6†W2’g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡&VæFW"“°¢VÇ6RG&tg&ÖR†æ÷r“°¢Ò“° ¢&VGV6VDÖ÷F–öâæFDWfVçDÆ—7FVæW"‚&6†ævR"Â7–æ4Ö÷F–öå&VfW&Væ6R“°¢6ö'6Uö–çFW"æFDWfVçDÆ—7FVæW"‚&6†ævR"Â&W6—¦T6çf2“°¢æWr&W6—¦Tö'6W'fW"‡&W6—¦T6çf2’æö'6W'fR‡&–r“° ¢–b†VF—DÖ’°¢v–æF÷råE$TUôTäU$u•ôDUbÒ°¢&V'V–ÆB‚’°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6÷&TfVVG2ÒµÓ°¢7–æ6TfÆ6†W2ÒµÓ°¢7FöæUVÇ6W2ÒµÓ°¢&V'V–ÆDVFvT66†W2‚“°¢æW‡D–FÆTBÒçVÖ&W"åõ4•D•dUô”äd”ä•E“°¢æW‡E7FöæTBÒçVÖ&W"åõ4•D•dUô”äd”ä•E“°¢G&tg&ÖR‡W&f÷&Öæ6Rææ÷r‚’“°¢ÒÀ¢&Wf–Wr†VFvT–G2Â÷F–öç2Ò·Ò’°¢6öç7BfÆ–D–G2ÒVFvT–G2æf–ÇFW"‚†–B’ÓâVFvT'”–Bæ†2†–B’“°¢–b‚fÆ–D–G2æÆVæwF‚ÇÂ&VGV6VDÖ÷F–öâæÖF6†W2’°¢G&tg&ÖR‡W&f÷&Öæ6Rææ÷r‚’“°¢&WGW&âfÇ6S°¢Ð¢6öç7Bæ÷rÒW&f÷&Öæ6Rææ÷r‚“°¢6öç7BF‚Ò'V–ÆEF‚‡fÆ–D–G2“°¢6öç7B&6TGW&F–öâÒF‚æGW&F–öå6V6öæG2¢°¢6öç7BF&vWDGW&F–öâÒçVÖ&W"æ—4f–æ—FR†÷F–öç2çF&vWDGW&F–öä×2¢òÖF‚æÖ‚ƒC#ÂÖF‚æÖ–âƒcSÂ÷F–öç2çF&vWDGW&F–öä×2’¢¢çVÆÃ°¢6öç7BFW6—&VDGW&F–öâÒF&vWDGW&F–öà¢òÖF‚æÖ–â‡F&vWDGW&F–öâÂÖF‚æÖ‚ƒcSÂ&6TGW&F–öâ¢ãs"’¢¢&6TGW&F–öâ¢ãs#°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6öç7BVÇ6RÒFEVÇ6R‡fÆ–D–G2Âæ÷r²6–væÅF–ÖRƒs’Â°¢–çFVç6—G“¢÷F–öç2æ–çFVç6—G’ÇÂã‚À¢GW&F–öå66ÆS¢FW6—&VDGW&F–öâòÖF‚æÖ‚ƒÂ&6TGW&F–öâ’À¢6†&vS¢÷F–öç2æ6†&vRÓÒfÇ6RÀ¢FW&Ö–æÃ¢÷F–öç2çFW&Ö–æÂÇÂçVÆÂÀ¢&ÆööÕ66ÆS¢÷F–öç2æ&ÆööÕ66ÆRÇÂã ¢Ò“°¢æW‡D–FÆTBÒçVÖ&W"åõ4•D•dUô”äd”ä•E“°¢6æ6VÄæ–ÖF–öäg&ÖR†g&ÖR“°¢g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡&VæFW"“°¢&WGW&â°¢7F'FVC¢G'VRÀ¢GW&F–öã¢VÇ6RæGW&F–öâÀ¢'&—fÄC¢VÇ6RæVæBÀ¢VFvT–G3¢fÆ–D–G0¢Ó°¢ÒÀ¢7F÷‚’°¢VÇ6W2ÒµÓ°¢&Æ÷76ö×2ÒµÓ°¢6÷&TfVVG2ÒµÓ°¢7–æ6TfÆ6†W2ÒµÓ°¢7FöæUVÇ6W2ÒµÓ°¢G&tg&ÖR‡W&f÷&Öæ6Rææ÷r‚’“°¢ÒÀ¢&W6—¦S¢&W6—¦T6çf0¢Ó°¢Ð ¢6WD–æW'B†FWF–ÂÂG'VR“°¢&W6—¦T6çf2‚“°¢–b‚&VGV6VDÖ÷F–öâæÖF6†W2’°¢æW‡D–FÆTBÒVF—DÖ ¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒ3S“°¢æW‡E&VÆ”BÒVF—DÖ ¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²6–væÅF–ÖRƒC#“°¢æW‡E7FöæTBÒVF—DÖ ¢òçVÖ&W"åõ4•D•dUô”äd”ä•E¢¢W&f÷&Öæ6Rææ÷r‚’²3c°¢g&ÖRÒ&WVW7Dæ–ÖF–öäg&ÖR‡&VæFW"“°¢Ð§Ò’‚“°
+      .filter(([id, degree]) => degree === 1 && !["source", ...sourceNodeIds()].includes(id))
+      .map(([endpoint]) => ({ endpoint, edges: pathFrom("flare", endpoint) }))
+      .filter((route) => route.edges.length)
+      .sort((a, b) => map.nodes[a.endpoint][0] - map.nodes[b.endpoint][0]);
+
+    synapseNodeIds = Object.keys(map.nodes).filter((id) => (
+      id !== "source"
+      && !sourceNodeIds().includes(id)
+      && (nodeDegree.get(id) || 0) !== 2
+    ));
+
+    relayRoutes = [];
+    const starts = Object.keys(map.nodes).filter((id) => (
+      id !== "source"
+      && !sourceNodeIds().includes(id)
+      && (outgoing.get(id)?.length || 0) > 0
+      && (nodeDegree.get(id) || 0) >= 3
+    ));
+    starts.forEach((start) => {
+      (outgoing.get(start) || []).forEach((firstEdge) => {
+        if (firstEdge.kind === "root") return;
+        const edges = [];
+        let edge = firstEdge;
+        let end = start;
+        for (let step = 0; edge && step < 6; step += 1) {
+          edges.push(edge.id);
+          end = edge.to;
+          const next = outgoing.get(end) || [];
+          if ((nodeDegree.get(end) || 0) !== 2 || next.length !== 1) break;
+          edge = next[0];
+        }
+        if (
+          edges.length
+          && end !== start
+          && edges.some((id) => edgeById.get(id)?.kind !== "trunk")
+          && buildPath(edges).durationSeconds <= 1.35
+        ) {
+          relayRoutes.push({ start, end, edges });
+        }
+      });
+    });
+  }
+
+  rebuildGraphRoutes();
+
+  function sampleEdge(edgeId, progress) {
+    const cache = sampledEdges.get(edgeId);
+    const target = Math.max(0, Math.min(1, progress)) * cache.length;
+    let index = 1;
+    while (index < cache.cumulative.length && cache.cumulative[index] < target) index += 1;
+    index = Math.min(index, cache.samples.length - 1);
+    const previousLength = cache.cumulative[index - 1];
+    const segmentLength = Math.max(.0001, cache.cumulative[index] - previousLength);
+    const local = (target - previousLength) / segmentLength;
+    const a = cache.samples[index - 1];
+    const b = cache.samples[index];
+    return {
+      x: a[0] + (b[0] - a[0]) * local,
+      y: a[1] + (b[1] - a[1]) * local,
+      tangentX: b[0] - a[0],
+      tangentY: b[1] - a[1],
+      edge: cache.edge
+    };
+  }
+
+  function buildPath(edgeIds) {
+    const segments = edgeIds.map((id) => sampledEdges.get(id));
+    const cumulative = [0];
+    let length = 0;
+    let durationSeconds = 0;
+
+    segments.forEach((segment) => {
+      length += segment.length;
+      cumulative.push(length);
+      durationSeconds += segment.length / speedByKind[segment.edge.kind];
+    });
+
+    return {
+      edgeIds,
+      segments,
+      cumulative,
+      length,
+      durationSeconds: Math.max(.24, durationSeconds)
+    };
+  }
+
+  function samplePath(path, progress) {
+    const target = Math.max(0, Math.min(.999999, progress)) * path.length;
+    let index = 0;
+    while (index < path.segments.length - 1 && path.cumulative[index + 1] < target) index += 1;
+    const start = path.cumulative[index];
+    const segment = path.segments[index];
+    return sampleEdge(segment.edge.id, (target - start) / Math.max(.0001, segment.length));
+  }
+
+  function addPulse(edgeIds, start, options = {}) {
+    const validIds = edgeIds.filter((id) => edgeById.has(id));
+    if (!validIds.length) return null;
+    const path = buildPath(validIds);
+    const duration = Math.max(
+      180,
+      path.durationSeconds * 1000 * (options.durationScale || 1) * signalTimeScale
+    );
+    const pulse = {
+      path,
+      start,
+      duration,
+      end: start + duration,
+      intensity: options.intensity || 1,
+      terminal: options.terminal || null,
+      bloomScale: options.bloomScale || 1,
+      bloomTriggered: false,
+      charge: Boolean(options.charge),
+      relay: Boolean(options.relay)
+    };
+    pulses.push(pulse);
+    return pulse;
+  }
+
+  function pulseArrivalAfter(pulse, completedEdges) {
+    if (!pulse) return performance.now();
+    const boundary = pulse.path.cumulative[Math.min(completedEdges, pulse.path.segments.length)];
+    return pulse.start + pulse.duration * (boundary / Math.max(.0001, pulse.path.length));
+  }
+
+  function addCoreFeed(targetNode, start, options = {}) {
+    const target = map.nodes[targetNode];
+    if (!target) return null;
+    const duration = options.duration || (targetNode === "source" ? 520 : 760);
+    const feed = {
+      targetNode,
+      start,
+      duration,
+      end: start + duration,
+      intensity: options.intensity || 1,
+      charge: Boolean(options.charge),
+      mappedHandoff: Boolean(options.mappedHandoff)
+    };
+    coreFeeds.push(feed);
+    if (!reducedMotion.matches) {
+      scheduleStoneSource(
+        targetNode,
+        start + duration * (.055 + Math.random() * .035),
+        {
+          intensity: feed.intensity,
+          charge: feed.charge
+        }
+      );
+    }
+    synapseFlashes.push({
+      node: targetNode,
+      start: feed.end - 80,
+      duration: options.charge ? 940 : 620,
+      intensity: options.charge ? .9 : .58
+    });
+    return feed;
+  }
+
+  function coreFeedPoint(feed, progress) {
+    const start = map.source.center;
+    const end = map.nodes[feed.targetNode] || start;
+    const direction = Math.sign(end[0] - start[0]) || 1;
+    const c1 = [
+      start[0] + (end[0] - start[0]) * .28,
+      start[1] - .012 - Math.abs(end[0] - start[0]) * .08
+    ];
+    const c2 = [
+      start[0] + (end[0] - start[0]) * .72,
+      end[1] + .01 + direction * .002
+    ];
+    return cubic(start, c1, c2, end, progress);
+  }
+
+  function mapPoint(point) {
+    return [point[0] * cssWidth, point[1] * cssHeight];
+  }
+
+  function beginSourceClip() {
+    context.beginPath();
+    map.source.clip.forEach((point, index) => {
+      const [x, y] = mapPoint(point);
+      if (index === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    });
+    context.closePath();
+  }
+
+  function coreFeedLevel(feed, now) {
+    if (now < feed.start || now > feed.end) return 0;
+    const progress = Math.max(0, Math.min(1, (now - feed.start) / feed.duration));
+    const envelope = progress < .22
+      ? 1 - Math.pow(1 - progress / .22, 3)
+      : Math.pow(Math.max(0, 1 - (progress - .22) / .78), .58);
+    return Math.min(1.3, envelope * feed.intensity * (feed.charge ? 1.08 : .9));
+  }
+
+  function activeCoreSources(now) {
+    return coreFeeds
+      .map((feed, index) => ({
+        feed,
+        index,
+        level: coreFeedLevel(feed, now),
+        point: map.nodes[feed.targetNode] || map.source.center
+      }))
+      .filter((source) => source.level > .004);
+  }
+
+  function coreChargeAt(now) {
+    return activeCoreSources(now).reduce(
+      (strongest, source) => Math.max(strongest, source.level),
+      0
+    );
+  }
+
+  function sourceStrength(now, coreCharge = coreChargeAt(now)) {
+    if (reducedMotion.matches) return reducedPending ? 1.12 : .88;
+    const slow = Math.sin((now / 7300) * Math.PI * 2 + .35);
+    const slower = Math.sin((now / 10700) * Math.PI * 2 + 1.7);
+    let value = .76 + slow * .05 + slower * .03 + coreCharge * .58;
+
+    if (activationRunning) {
+      const elapsed = now - activationStarted;
+      if (elapsed < 680) value += .22 * Math.sin((elapsed / 680) * Math.PI * .5);
+      else value += Math.max(0, .22 * (1 - (elapsed - 680) / 2600));
+    }
+    return Math.max(.66, Math.min(1.58, value));
+  }
+
+  function drawEmissiveFilaments(source, now, prominence = 1) {
+    if (!emissiveReady) return;
+
+    const [cx, cy] = mapPoint(source.point);
+    const level = Math.min(1.25, source.level);
+    const scale = cssWidth / map.image.width;
+    const breath = reducedMotion.matches ? .5 : (Math.sin(now / 940 + source.index * 1.7) + 1) * .5;
+    const radiusX = Math.max(76, 190 * scale);
+    const radiusY = Math.max(41, 96 * (cssHeight / map.image.height));
+    const sourceRadiusX = radiusX / cssWidth * map.image.width;
+    const sourceRadiusY = radiusY / cssHeight * map.image.height;
+    const sourceX = source.point[0] * map.image.width;
+    const sourceY = source.point[1] * map.image.height;
+    const scratchWidth = Math.max(2, Math.ceil(radiusX * 2));
+    const scratchHeight = Math.max(2, Math.ceil(radiusY * 2));
+
+    if (emissiveScratch.width !== scratchWidth || emissiveScratch.height !== scratchHeight) {
+      emissiveScratch.width = scratchWidth;
+      emissiveScratch.height = scratchHeight;
+    } else {
+      emissiveContext.clearRect(0, 0, scratchWidth, scratchHeight);
+    }
+
+    emissiveContext.globalCompositeOperation = "source-over";
+    emissiveContext.globalAlpha = Math.min(.94, (.38 + level * .38) * (.76 + prominence * .24));
+    emissiveContext.drawImage(
+      emissiveMap,
+      sourceX - sourceRadiusX,
+      sourceY - sourceRadiusY,
+      sourceRadiusX * 2,
+      sourceRadiusY * 2,
+      0,
+      0,
+      scratchWidth,
+      scratchHeight
+    );
+
+    emissiveContext.globalCompositeOperation = "destination-in";
+    emissiveContext.globalAlpha = 1;
+    emissiveContext.save();
+    emissiveContext.translate(scratchWidth / 2, scratchHeight / 2);
+    emissiveContext.scale(1, radiusY / radiusX);
+    const reveal = emissiveContext.createRadialGradient(0, 0, radiusX * .06, 0, 0, radiusX);
+    const revealAlpha = Math.min(.86, (.2 + level * .5 + breath * .025) * (.8 + prominence * .2));
+    reveal.addColorStop(0, `rgba(255, 255, 255, ${revealAlpha})`);
+    reveal.addColorStop(.19, `rgba(255, 255, 255, ${revealAlpha * .96})`);
+    reveal.addColorStop(.48, `rgba(255, 255, 255, ${revealAlpha * .7})`);
+    reveal.addColorStop(.76, `rgba(255, 255, 255, ${revealAlpha * .24})`);
+    reveal.addColorStop(1, "rgba(255, 255, 255, 0)");
+    emissiveContext.fillStyle = reveal;
+    emissiveContext.beginPath();
+    emissiveContext.arc(0, 0, radiusX, 0, Math.PI * 2);
+    emissiveContext.fill();
+    emissiveContext.restore();
+
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    context.globalAlpha = Math.min(.86, (.34 + level * .36) * prominence);
+    context.drawImage(
+      emissiveScratch,
+      cx - radiusX,
+      cy - radiusY,
+      radiusX * 2,
+      radiusY * 2
+    );
+    context.restore();
+  }
+
+  function drawSourceNucleus(source, now, prominence = 1, dominant = false) {
+    const [cx, cy] = mapPoint(source.point);
+    const level = Math.min(1.25, source.level);
+    const scale = Math.max(.66, cssWidth / map.image.width);
+    const pulse = reducedMotion.matches ? .5 : (Math.sin(now / 430 + source.index * 2.1) + 1) * .5;
+    const radius = Math.max(6.8, 16.5 * scale)
+      * (1 + level * .1 + pulse * .025)
+      * (dominant ? 1 : .68);
+    const strength = sourceStrength(now, level);
+    const intensity = Math.min(.88, prominence * (.68 + level * .16));
+
+    context.save();
+    context.globalCompositeOperation = "lighter";
+
+    const scatterRadius = radius * 6.3;
+    const scatter = context.createRadialGradient(
+      cx - radius * .35,
+      cy + radius * .12,
+      radius * .35,
+      cx,
+      cy,
+      scatterRadius
+    );
+    scatter.addColorStop(0, `rgba(255, 183, 139, ${Math.min(.18, (.08 + level * .085) * intensity)})`);
+    scatter.addColorStop(.3, `rgba(255, 112, 126, ${Math.min(.12, (.045 + level * .055) * intensity)})`);
+    scatter.addColorStop(.68, `rgba(218, 49, 82, ${Math.min(.05, (.018 + level * .022) * intensity)})`);
+    scatter.addColorStop(1, "rgba(196, 37, 75, 0)");
+    context.fillStyle = scatter;
+    context.beginPath();
+    context.ellipse(cx, cy, scatterRadius, scatterRadius * .67, -.12, 0, Math.PI * 2);
+    context.fill();
+
+    const aura = context.createRadialGradient(cx, cy, radius * .08, cx, cy, radius * 4.8);
+    aura.addColorStop(0, `rgba(255, 226, 188, ${Math.min(.72, (.29 + level * .26) * intensity)})`);
+    aura.addColorStop(.15, `rgba(255, 166, 124, ${Math.min(.58, (.22 + level * .22) * intensity)})`);
+    aura.addColorStop(.38, `rgba(255, ${dominant ? 103 : 87}, ${dominant ? 103 : 126}, ${Math.min(.34, (.08 + level * .16) * intensity)})`);
+    aura.addColorStop(.72, `rgba(217, 49, 83, ${Math.min(.1, (.025 + level * .045) * intensity)})`);
+    aura.addColorStop(1, "rgba(196, 37, 75, 0)");
+    context.fillStyle = aura;
+    context.beginPath();
+    context.arc(cx, cy, radius * 4.65, 0, Math.PI * 2);
+    context.fill();
+
+    const core = context.createRadialGradient(
+      cx - radius * .16,
+      cy - radius * .18,
+      0,
+      cx,
+      cy,
+      radius
+    );
+    core.addColorStop(0, `rgba(255, 239, 207, ${Math.min(.8, (.36 + level * .28) * intensity)})`);
+    core.addColorStop(.26, `rgba(255, 204, 157, ${Math.min(.78, (.34 + level * .28) * intensity)})`);
+    core.addColorStop(.58, `rgba(255, ${dominant ? 127 : 105}, ${dominant ? 112 : 139}, ${Math.min(.56, (.2 + level * .22) * intensity)})`);
+    core.addColorStop(1, "rgba(239, 63, 96, 0)");
+    context.fillStyle = core;
+    context.beginPath();
+    context.ellipse(cx, cy, radius, radius * .82, -.18, 0, Math.PI * 2);
+    context.fill();
+
+    context.fillStyle = `rgba(255, 234, 199, ${Math.min(.72, (.12 + strength * .2 + level * .18) * intensity)})`;
+    context.beginPath();
+    context.arc(
+      cx - radius * .14,
+      cy - radius * .15,
+      Math.max(.9, radius * .14),
+      0,
+      Math.PI * 2
+    );
+    context.fill();
+    context.restore();
+
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    /*
+      The accepted plate is keyed from upper-left/front. Let emitted light
+      bounce down and a little to the right instead of mirroring it directly
+      under the nucleus; this keeps the live caustic consistent with the baked
+      floor shadow.
+    */
+    const reflectionX = Math.min(cssWidth * .985, cx + radius * 1.15);
+    const reflectionY = Math.min(cssHeight * .925, cy + cssHeight * .066);
+    const reflectionRadius = Math.max(22, 58 * scale);
+    const reflection = context.createRadialGradient(
+      reflectionX,
+      reflectionY,
+      0,
+      reflectionX,
+      reflectionY,
+      reflectionRadius
+    );
+    reflection.addColorStop(0, `rgba(255, 171, 128, ${Math.min(.15, level * .1 * prominence)})`);
+    reflection.addColorStop(.38, `rgba(255, 85, 117, ${Math.min(.06, level * .04 * prominence)})`);
+    reflection.addColorStop(1, "rgba(255, 91, 126, 0)");
+    context.fillStyle = reflection;
+    context.beginPath();
+    context.ellipse(
+      reflectionX,
+      reflectionY,
+      reflectionRadius,
+      Math.max(2.5, 5.2 * scale),
+      .055,
+      0,
+      Math.PI * 2
+    );
+    context.fill();
+    context.restore();
+  }
+
+  function drawInternalSource(now) {
+    const activeSources = activeCoreSources(now);
+    if (!activeSources.length) return;
+
+    const dominant = activeSources.reduce(
+      (strongest, source) => (
+        source.level * source.feed.intensity > strongest.level * strongest.feed.intensity
+          ? source
+          : strongest
+      )
+    );
+
+    activeSources.forEach((source) => {
+      const prominence = source === dominant
+        ? .98
+        : .16 + Math.min(.08, source.level * .07);
+      drawEmissiveFilaments(source, now, prominence);
+    });
+    drawSourceNucleus(dominant, now, .96, true);
+  }
+
+  function drawCoreFeeds(now) {
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    context.lineCap = "round";
+    coreFeeds.forEach((feed) => {
+      if (now < feed.start || now > feed.end) return;
+      const progress = Math.max(0, Math.min(1, (now - feed.start) / feed.duration));
+      const sourceTarget = map.nodes[feed.targetNode];
+      const isCorePulse = sourceTarget
+        && Math.hypot(
+          sourceTarget[0] - map.source.center[0],
+          sourceTarget[1] - map.source.center[1]
+        ) < .006;
+      if (isCorePulse || feed.mappedHandoff) {
+        // The internal source renders this charge as living energy spreading
+        // through the material. A separate geometric ring reads like a lamp.
+        return;
+      }
+
+      let previous = null;
+      const trailLength = feed.charge ? .46 : .34;
+      for (let step = 16; step >= 0; step -= 1) {
+        const local = progress - trailLength * (step / 16);
+        if (local < 0) continue;
+        const point = coreFeedPoint(feed, local);
+        const [x, y] = mapPoint(point);
+        if (previous) {
+          const alpha = (1 - step / 17) * feed.intensity;
+          context.beginPath();
+          context.moveTo(previous[0], previous[1]);
+          context.lineTo(x, y);
+          context.strokeStyle = `rgba(255, 154, 158, ${alpha * (feed.charge ? .46 : .29)})`;
+          context.lineWidth = Math.max(.7, cssWidth / map.image.width * (feed.charge ? 2.1 : 1.35));
+          context.stroke();
+        }
+        previous = [x, y];
+      }
+      const head = mapPoint(coreFeedPoint(feed, progress));
+      const radius = Math.max(3, cssWidth * .0048) * (feed.charge ? 1.15 : 1);
+      const glow = context.createRadialGradient(head[0], head[1], 0, head[0], head[1], radius);
+      glow.addColorStop(0, `rgba(255, 253, 234, ${.94 * feed.intensity})`);
+      glow.addColorStop(.25, `rgba(255, 206, 174, ${.7 * feed.intensity})`);
+      glow.addColorStop(.62, `rgba(255, 92, 141, ${.25 * feed.intensity})`);
+      glow.addColorStop(1, "rgba(255, 92, 141, 0)");
+      context.fillStyle = glow;
+      context.beginPath();
+      context.arc(head[0], head[1], radius, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.restore();
+  }
+
+  function drawSynapses(now) {
+    const scale = Math.max(.72, cssWidth / map.image.width);
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    synapseNodeIds.forEach((id, index) => {
+      const point = map.nodes[id];
+      if (!point) return;
+      const [x, y] = mapPoint(point);
+      const shimmer = reducedMotion.matches ? .72 : .65 + Math.sin(now / 2300 + index * .87) * .2;
+      context.fillStyle = `rgba(255, 218, 198, ${.11 * shimmer})`;
+      context.beginPath();
+      context.arc(x, y, Math.max(.62, .9 * scale), 0, Math.PI * 2);
+      context.fill();
+    });
+    synapseFlashes.forEach((flash) => {
+      if (now < flash.start || now > flash.start + flash.duration) return;
+      const point = map.nodes[flash.node];
+      if (!point) return;
+      const phase = (now - flash.start) / flash.duration;
+      const envelope = phase < .22 ? phase / .22 : Math.pow(1 - (phase - .22) / .78, 1.6);
+      const [x, y] = mapPoint(point);
+      const radius = Math.max(4.5, 7.5 * scale) * (1 + phase * .22);
+      const glow = context.createRadialGradient(x, y, 0, x, y, radius);
+      glow.addColorStop(0, `rgba(255, 249, 225, ${.88 * envelope * flash.intensity})`);
+      glow.addColorStop(.25, `rgba(255, 188, 172, ${.55 * envelope * flash.intensity})`);
+      glow.addColorStop(.65, `rgba(255, 92, 141, ${.18 * envelope * flash.intensity})`);
+      glow.addColorStop(1, "rgba(255, 92, 141, 0)");
+      context.fillStyle = glow;
+      context.beginPath();
+      context.arc(x, y, radius, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.restore();
+  }
+
+  function addStonePulse(routeIndex, start, options = {}) {
+    const route = stoneRoutes[routeIndex];
+    if (!route || !route.length) return null;
+    const limit = coarsePointer.matches ? 3 : 5;
+    const live = stonePulses.filter((pulse) => pulse.end > start - 100);
+    if (live.length >= limit) return null;
+    const speed = options.sourceDriven ? 470 : 390;
+    const duration = Math.max(
+      options.sourceDriven ? 440 : 360,
+      Math.min(options.sourceDriven ? 980 : 820, route.length / speed * 1000)
+    );
+    const pulse = {
+      route,
+      start,
+      duration,
+      end: start + duration,
+      intensity: options.intensity || .7,
+      tone: options.tone || (Math.random() < .24 ? "pink" : "amber"),
+      sourceDriven: Boolean(options.sourceDriven),
+      charge: Boolean(options.charge),
+      sourceNode: options.sourceNode || null,
+      direction: options.direction === -1 || options.direction === 1
+        ? options.direction
+        : Math.random() < .5 ? -1 : 1
+    };
+    stonePulses.push(pulse);
+    if (debugPerformance) {
+      const key = pulse.direction === -1 ? "reverse" : "forward";
+      stoneDirectionCounts[key] += 1;
+      document.documentElement.dataset.stoneForward = String(stoneDirectionCounts.forward);
+      document.documentElement.dataset.stoneReverse = String(stoneDirectionCounts.reverse);
+    }
+    return pulse;
+  }
+
+  function shuffledStoneRouteIndices(indices) {
+    const values = [...indices];
+    for (let index = values.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(Math.random() * (index + 1));
+      [values[index], values[swap]] = [values[swap], values[index]];
+    }
+    return values;
+  }
+
+  function scheduleStoneSource(sourceNode, start, options = {}) {
+    if (!stoneMap || reducedMotion.matches) return;
+    const indices = stoneMap.sourceRoutes[sourceNode]
+      || stoneMap.sourceRoutes.source
+      || [];
+    const branchCount = options.charge
+      ? Math.min(4, indices.length)
+      : Math.min(indices.length, 2 + (Math.random() < .46 ? 1 : 0));
+    shuffledStoneRouteIndices(indices).slice(0, branchCount).forEach((routeIndex, index) => {
+      addStonePulse(routeIndex, start + index * (72 + Math.random() * 72), {
+        intensity: (options.intensity || 1) * (index ? .66 : .9),
+        tone: index === 1 && Math.random() < .5 ? "pink" : "amber",
+        sourceDriven: true,
+        sourceNode,
+        charge: options.charge
+      });
+    });
+  }
+
+  function scheduleStoneIdle(now) {
+    if (!stoneRoutes.length || reducedMotion.matches) return;
+    const burstCount = Math.random() < .18 ? 2 + Math.floor(Math.random() * 3) : 1;
+    let cursor = now;
+    for (let index = 0; index < burstCount; index += 1) {
+      let routeIndex = Math.floor(Math.random() * stoneRoutes.length);
+      if (stoneRoutes.length > 1 && routeIndex === lastStoneRoute) {
+        routeIndex = (routeIndex + 1 + Math.floor(Math.random() * (stoneRoutes.length - 1))) % stoneRoutes.length;
+      }
+      lastStoneRoute = routeIndex;
+      addStonePulse(routeIndex, cursor, {
+        intensity: .44 + Math.random() * .23,
+        tone: Math.random() < .22 ? "pink" : "amber"
+      });
+      if (Math.random() < .25) {
+        addStonePulse(
+          (routeIndex + 1 + Math.floor(Math.random() * Math.max(1, stoneRoutes.length - 1))) % stoneRoutes.length,
+          cursor + 90 + Math.random() * 75,
+          {
+            intensity: .28 + Math.random() * .14,
+            tone: "pink"
+          }
+        );
+      }
+      cursor += 70 + Math.random() * 110;
+    }
+    const random = Math.random();
+    const gap = random < .09
+      ? 220 + Math.random() * 250
+      : random > .91
+        ? 1180 + Math.random() * 620
+        : 620 + Math.random() * 260;
+    nextStoneAt = now + Math.max(220, Math.min(1800, gap));
+  }
+
+  function stonePulseProgress(pulse, now) {
+    return (now - pulse.start) / pulse.duration;
+  }
+
+  function stonePulseEnvelope(pulse, now) {
+    const progress = stonePulseProgress(pulse, now);
+    if (progress < 0 || progress > 1) return 0;
+    const attack = Math.min(1, progress / .12);
+    const release = Math.min(1, (1 - progress) / .2);
+    return Math.max(0, Math.min(attack, release));
+  }
+
+  function stoneDepthOffset(depth) {
+    if (reducedMotion.matches) return [0, 0];
+    const factor = detailOpen ? .28 : 1;
+    const amount = depth === "back" ? -2.2 : depth === "mid" ? 1.1 : .52;
+    return [
+      stonePointerX * amount * factor,
+      stonePointerY * amount * .72 * factor
+    ];
+  }
+
+  function drawStoneDepth(depth, now) {
+    if (!stoneContext || !stoneScratchContext || !stoneAtlases[depth]) return;
+    const scale = Math.max(.55, cssWidth / stoneMap.image.width);
+    const lineWidth = (depth === "back" ? 19 : depth === "mid" ? 12 : 7) * scale;
+    const depthAlpha = depth === "back" ? .34 : depth === "mid" ? .66 : .82;
+    let drew = false;
+    let pinkActivity = 0;
+
+    stoneScratchContext.globalCompositeOperation = "source-over";
+    stoneScratchContext.clearRect(0, 0, stoneScratch.width, stoneScratch.height);
+    stoneScratchContext.lineCap = "round";
+    stoneScratchContext.lineJoin = "round";
+
+    stonePulses.forEach((pulse) => {
+      const progress = stonePulseProgress(pulse, now);
+      if (progress < 0 || progress > 1) return;
+      const trailLength = pulse.sourceDriven ? .32 : .2;
+      const start = Math.max(0, progress - trailLength);
+      const steps = pulse.sourceDriven ? 18 : 13;
+      let previous = null;
+      for (let index = 0; index <= steps; index += 1) {
+        const sampleProgress = start + (progress - start) * index / steps;
+        const point = sampleStonePulsePath(pulse, sampleProgress);
+        if (point.edge.depth !== depth) {
+          previous = null;
+          continue;
+        }
+        const x = point.x * stoneCssWidth;
+        const y = point.y * stoneCssHeight;
+        if (previous) {
+          const fade = .18 + .82 * index / steps;
+          stoneScratchContext.beginPath();
+          stoneScratchContext.moveTo(previous[0], previous[1]);
+          stoneScratchContext.lineTo(x, y);
+          stoneScratchContext.lineWidth = lineWidth * (.72 + fade * .28);
+          stoneScratchContext.strokeStyle = `rgba(255,255,255,${Math.min(.95, fade * pulse.intensity * depthAlpha)})`;
+          stoneScratchContext.stroke();
+          drew = true;
+        }
+        previous = [x, y];
+      }
+      if (pulse.tone === "pink") pinkActivity = Math.max(pinkActivity, pulse.intensity);
+    });
+
+    if (!drew) return;
+    stoneScratchContext.globalCompositeOperation = "source-in";
+    stoneScratchContext.globalAlpha = 1;
+    stoneScratchContext.drawImage(
+      stoneAtlases[depth],
+      0,
+      0,
+      stoneScratch.width,
+      stoneScratch.height
+    );
+    if (pinkActivity) {
+      stoneScratchContext.globalCompositeOperation = "source-atop";
+      stoneScratchContext.fillStyle = `rgba(255,68,126,${Math.min(.24, pinkActivity * .18)})`;
+      stoneScratchContext.fillRect(0, 0, stoneScratch.width, stoneScratch.height);
+    }
+
+    const [offsetX, offsetY] = stoneDepthOffset(depth);
+    stoneContext.save();
+    stoneContext.globalCompositeOperation = "lighter";
+    stoneContext.globalAlpha = depth === "back" ? .56 : depth === "mid" ? .76 : .92;
+    stoneContext.drawImage(
+      stoneScratch,
+      offsetX,
+      offsetY,
+      stoneCssWidth,
+      stoneCssHeight
+    );
+    stoneContext.restore();
+
+    stonePulses.forEach((pulse) => {
+      const progress = stonePulseProgress(pulse, now);
+      if (progress < 0 || progress > 1) return;
+      const point = sampleStonePulsePath(pulse, progress);
+      if (point.edge.depth !== depth) return;
+      const sprite = stoneSprites[`${depth}:${pulse.tone}`];
+      if (!sprite) return;
+      const size = (depth === "back" ? 22 : depth === "mid" ? 17 : 12)
+        * scale
+        * (pulse.sourceDriven ? 1.15 : 1);
+      stoneContext.save();
+      stoneContext.globalCompositeOperation = "lighter";
+      stoneContext.globalAlpha = stonePulseEnvelope(pulse, now) * pulse.intensity;
+      stoneContext.drawImage(
+        sprite,
+        point.x * stoneCssWidth + offsetX - size,
+        point.y * stoneCssHeight + offsetY - size,
+        size * 2,
+        size * 2
+      );
+      stoneContext.restore();
+    });
+  }
+
+  function drawStoneSourceResponse(now) {
+    if (!stoneContext) return;
+    const scale = Math.max(.55, cssWidth / stoneMap.image.width);
+    stonePulses.forEach((pulse) => {
+      if (!pulse.sourceDriven) return;
+      const progress = stonePulseProgress(pulse, now);
+      if (progress < 0 || progress > .64) return;
+
+      /*
+        The source peaks quickly, then fades while the signal is already in
+        flight. This reads as neural activation rather than a lamp waiting to
+        switch off before the pulse can move.
+      */
+      const attack = Math.min(1, progress / .09);
+      const decay = Math.pow(Math.max(0, 1 - progress / .64), 1.42);
+      const envelope = attack * decay;
+      const origin = sampleStonePulsePath(pulse, 0);
+      const x = origin.x * stoneCssWidth;
+      const y = origin.y * stoneCssHeight;
+      const radius = (pulse.charge ? 32 : 25) * scale;
+
+      /*
+        A shallow, anisotropic volume follows the glass perspective. It is
+        deliberately broader along the embedded fibers and much thinner
+        vertically, avoiding the synthetic circular-patch effect.
+      */
+      stoneContext.save();
+      stoneContext.globalCompositeOperation = "lighter";
+      stoneContext.translate(x - radius * .08, y + radius * .08);
+      stoneContext.rotate(-.11);
+      stoneContext.scale(1.22, .7);
+      const volume = stoneContext.createRadialGradient(0, 0, radius * .04, 0, 0, radius * 2.8);
+      volume.addColorStop(0, `rgba(255,231,197,${.34 * envelope * pulse.intensity})`);
+      volume.addColorStop(.16, `rgba(255,166,118,${.24 * envelope * pulse.intensity})`);
+      volume.addColorStop(.46, `rgba(255,78,121,${.075 * envelope * pulse.intensity})`);
+      volume.addColorStop(1, "rgba(255,74,116,0)");
+      stoneContext.fillStyle = volume;
+      stoneContext.beginPath();
+      stoneContext.arc(0, 0, radius * 2.8, 0, Math.PI * 2);
+      stoneContext.fill();
+      stoneContext.restore();
+
+      stoneContext.save();
+      stoneContext.globalCompositeOperation = "lighter";
+      stoneContext.fillStyle = `rgba(255,236,205,${.52 * envelope * pulse.intensity})`;
+      stoneContext.beginPath();
+      stoneContext.arc(x, y, Math.max(1.25, radius * .105), 0, Math.PI * 2);
+      stoneContext.fill();
+      stoneContext.restore();
+
+      /*
+        Short local floor caustic. Its down-right bias follows the global key
+        and its low opacity keeps the static contact shadow dominant.
+      */
+      const causticX = Math.min(stoneCssWidth * .97, x + radius * .58);
+      const causticY = Math.min(stoneCssHeight * .965, y + radius * 2.05);
+      const causticRadius = radius * 2.35;
+      stoneContext.save();
+      stoneContext.globalCompositeOperation = "lighter";
+      stoneContext.translate(causticX, causticY);
+      stoneContext.rotate(.055);
+      stoneContext.scale(1, .18);
+      const caustic = stoneContext.createRadialGradient(0, 0, 0, 0, 0, causticRadius);
+      caustic.addColorStop(0, `rgba(255,178,126,${.14 * envelope * pulse.intensity})`);
+      caustic.addColorStop(.38, `rgba(255,92,126,${.055 * envelope * pulse.intensity})`);
+      caustic.addColorStop(1, "rgba(255,81,118,0)");
+      stoneContext.fillStyle = caustic;
+      stoneContext.beginPath();
+      stoneContext.arc(0, 0, causticRadius, 0, Math.PI * 2);
+      stoneContext.fill();
+      stoneContext.restore();
+    });
+  }
+
+  function drawStoneNeural(now) {
+    if (!stoneContext || !stoneMap || !stoneCssWidth || !stoneCssHeight) return;
+    stoneContext.clearRect(0, 0, stoneCssWidth, stoneCssHeight);
+    if (reducedMotion.matches) {
+      if (emissiveReady && stoneAtlases.mid.width) {
+        stoneContext.save();
+        stoneContext.globalAlpha = .075;
+        stoneContext.globalCompositeOperation = "lighter";
+        stoneContext.drawImage(stoneAtlases.mid, 0, 0, stoneCssWidth, stoneCssHeight);
+        stoneContext.restore();
+      }
+      return;
+    }
+    drawStoneDepth("back", now);
+    drawStoneDepth("mid", now);
+    drawStoneDepth("front", now);
+    drawStoneSourceResponse(now);
+  }
+
+  function updateStoneEffects(now) {
+    stonePulses = stonePulses.filter((pulse) => now < pulse.end + 40);
+  }
+
+  function drawPulse(pulse, now) {
+    if (now < pulse.start || now > pulse.end) return;
+    const progress = (now - pulse.start) / pulse.duration;
+    const head = samplePath(pulse.path, progress);
+    const sectionScale = cssWidth / map.image.width;
+    const activationPulse = pulse.charge;
+    const relayPulse = pulse.relay;
+    const trailCount = activationPulse
+      ? coarsePointer.matches ? 13 : 18
+      : relayPulse
+        ? coarsePointer.matches ? 6 : 9
+        : coarsePointer.matches ? 9 : 13;
+    const trailLength = activationPulse
+      ? head.edge.kind === "root" || head.edge.kind === "trunk" ? .19 : .15
+      : relayPulse
+        ? .065
+        : head.edge.kind === "root" || head.edge.kind === "trunk" ? .135 : .092;
+
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.filter = "none";
+
+    let previous = null;
+    for (let index = trailCount; index >= 0; index -= 1) {
+      const trailProgress = progress - (trailLength * index) / trailCount;
+      if (trailProgress < 0) continue;
+      const point = samplePath(pulse.path, trailProgress);
+      const x = point.x * cssWidth;
+      const y = point.y * cssHeight;
+      if (previous) {
+        const fade = 1 - index / (trailCount + 1);
+        context.beginPath();
+        context.moveTo(previous[0], previous[1]);
+        context.lineTo(x, y);
+        context.lineWidth = Math.max(
+          activationPulse ? .86 : relayPulse ? .48 : .65,
+          widthByKind[point.edge.kind] * sectionScale * (.48 + fade * .52) * (activationPulse ? 1.2 : relayPulse ? .72 : 1)
+        );
+        context.strokeStyle = `rgba(255, ${relayPulse ? 214 : 191}, ${relayPulse ? 198 : 170}, ${(activationPulse ? .31 : relayPulse ? .15 : .19) * fade * pulse.intensity * depthAlpha[point.edge.depth] * point.edge.intensity})`;
+        context.stroke();
+      }
+      previous = [x, y];
+    }
+
+    const hx = head.x * cssWidth;
+    const hy = head.y * cssHeight;
+    const headRadius = Math.max(
+      activationPulse ? coarsePointer.matches ? 3.75 : 3.55 : relayPulse ? 2.15 : 3.05,
+      widthByKind[head.edge.kind]
+        * sectionScale
+        * (activationPulse ? 3.72 : relayPulse ? 2.25 : 3.35)
+        * pulse.intensity
+    );
+    const glow = context.createRadialGradient(hx, hy, 0, hx, hy, headRadius);
+    const alpha = pulse.intensity * depthAlpha[head.edge.depth] * head.edge.intensity;
+    glow.addColorStop(0, `rgba(255, 249, 225, ${.96 * alpha})`);
+    glow.addColorStop(.16, `rgba(255, 211, 182, ${.78 * alpha})`);
+    glow.addColorStop(.46, `rgba(255, 92, 141, ${(relayPulse ? .2 : .3) * alpha})`);
+    glow.addColorStop(1, "rgba(255, 92, 141, 0)");
+    context.fillStyle = glow;
+    context.beginPath();
+    context.arc(hx, hy, headRadius, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+  }
+
+  function addBlossom(endpoint, start, intensity = 1, activation = false) {
+    blossoms.push({
+      endpoint,
+      start,
+      duration: activation ? 1260 : 960,
+      intensity,
+      activation,
+      meta: bloomMeta[endpoint] || { rotation: 0, scale: 1 }
+    });
+  }
+
+  function drawBlossom(blossom, now) {
+    if (now < blossom.start || now > blossom.start + blossom.duration) return;
+    const phase = (now - blossom.start) / blossom.duration;
+    const attack = phase < .16
+      ? phase / .16
+      : Math.pow(1 - (phase - .16) / .84, 1.65);
+    const strength = Math.max(0, attack) * blossom.intensity;
+    const point = map.nodes[blossom.endpoint];
+    const x = point[0] * cssWidth;
+    const y = point[1] * cssHeight;
+    const scale = Math.max(
+      blossom.activation ? .62 : .42,
+      cssWidth / map.image.width
+    ) * blossom.meta.scale * (blossom.activation ? 1.14 : 1);
+
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    context.translate(x, y);
+    context.rotate(blossom.meta.rotation);
+
+    const petals = [
+      [0, -5.4, 2.5, 5.5, 0],
+      [5.1, -1.5, 2.35, 5.1, 1.16],
+      [3.2, 4.4, 2.3, 4.8, 2.4],
+      [-3.5, 4.1, 2.4, 5, -2.45],
+      [-5.1, -1.3, 2.25, 4.9, -1.13]
+    ];
+
+    petals.forEach(([px, py, prx, pry, rotation], index) => {
+      context.save();
+      context.translate(px * scale, py * scale);
+      context.rotate(rotation);
+      const petalAlpha = blossom.activation ? .4 + index * .025 : .25 + index * .025;
+      context.fillStyle = `rgba(255, ${index % 2 ? 174 : 194}, ${index % 2 ? 201 : 214}, ${petalAlpha * strength})`;
+      context.beginPath();
+      context.ellipse(0, 0, prx * scale, pry * scale, 0, 0, Math.PI * 2);
+      context.fill();
+      context.restore();
+    });
+
+    context.fillStyle = `rgba(255, 244, 214, ${(blossom.activation ? .98 : .86) * strength})`;
+    context.beginPath();
+    context.arc(0, 0, (blossom.activation ? 2 : 1.7) * scale, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+  }
+
+  function updateEffects(now) {
+    pulses.forEach((pulse) => {
+      if (!pulse.bloomTriggered && pulse.terminal && now >= pulse.end) {
+        pulse.bloomTriggered = true;
+        addBlossom(pulse.terminal, pulse.end, pulse.intensity * pulse.bloomScale, pulse.charge);
+      }
+    });
+    pulses = pulses.filter((pulse) => now < pulse.end + 90);
+    blossoms = blossoms.filter((blossom) => now < blossom.start + blossom.duration + 30);
+    coreFeeds = coreFeeds.filter((feed) => now < feed.end + 90);
+    synapseFlashes = synapseFlashes.filter((flash) => now < flash.start + flash.duration + 30);
+  }
+
+  function scheduleIdle(now) {
+    const root = randomRoot();
+    const route = endpointRoutes.length
+      ? endpointRoutes[(idleIndex * 7 + groupOrder[idleIndex % groupOrder.length]) % endpointRoutes.length]
+      : null;
+    if (!root.length || !route) {
+      nextIdleAt = now + signalTime(4000);
+      return;
+    }
+    const rootStart = edgeById.get(root[0])?.from || "source";
+    const feed = addCoreFeed(rootStart, now + signalTime(80), {
+      intensity: .82,
+      mappedHandoff: true
+    });
+    const rootPulse = addPulse(
+      root,
+      feed ? feed.start + feed.duration * .38 : now + 290,
+      {
+        intensity: .82,
+        durationScale: 1.02
+      }
+    );
+    addPulse(route.edges, (rootPulse?.end || now + signalTime(940)) - signalTime(28), {
+      intensity: .78,
+      durationScale: 1.02,
+      terminal: route.endpoint
+    });
+    const baseInterval = idleIntervals[idleIndex % idleIntervals.length];
+    const jitter = .56 + Math.random() * .88;
+    nextIdleAt = now + signalTime(baseInterval * jitter * 1000);
+    nextRelayAt = Math.min(nextRelayAt, now + signalTime(2200 + Math.random() * 1900));
+    idleIndex += 1;
+  }
+
+  function selectActivationRoutes(count = 5) {
+    if (endpointRoutes.length <= count) return [...endpointRoutes];
+    const selected = [];
+    for (let index = 0; index < count; index += 1) {
+      const position = Math.round((index / (count - 1)) * (endpointRoutes.length - 1));
+      const route = endpointRoutes[position];
+      if (route && !selected.includes(route)) selected.push(route);
+    }
+    return selected;
+  }
+
+  function commonPrefixLength(routes) {
+    if (!routes.length) return 0;
+    const limit = Math.min(...routes.map((route) => route.edges.length));
+    let length = 0;
+    while (
+      length < limit
+      && routes.every((route) => route.edges[length] === routes[0].edges[length])
+    ) {
+      length += 1;
+    }
+    return length;
+  }
+
+  function scheduleRelay(now) {
+    if (!relayRoutes.length) {
+      nextRelayAt = now + signalTime(9000);
+      return;
+    }
+    let index = Math.floor(Math.random() * relayRoutes.length);
+    if (relayRoutes.length > 1 && index === lastRelayIndex) index = (index + 1) % relayRoutes.length;
+    lastRelayIndex = index;
+    const route = relayRoutes[index];
+    synapseFlashes.push({
+      node: route.start,
+      start: now - 80,
+      duration: 580,
+      intensity: .48
+    });
+    const pulse = addPulse(route.edges, now + signalTime(60), {
+      intensity: .46,
+      durationScale: 1.22,
+      relay: true
+    });
+    if (pulse) {
+      synapseFlashes.push({
+        node: route.end,
+        start: pulse.end - 30,
+        duration: 720,
+        intensity: .58
+      });
+    }
+    nextRelayAt = now + signalTime(4300 + Math.random() * 3400);
+  }
+
+  function scheduleActivation(now) {
+    const roots = shuffledRoots();
+    let rootsArriveAt = now + signalTime(820);
+    roots.forEach((root, index) => {
+      const rootStart = edgeById.get(root[0])?.from || "source";
+      const feed = addCoreFeed(rootStart, now + signalTime(150 + index * 86), {
+        intensity: 1.05 + index * .03,
+        duration: 610 + index * 24,
+        charge: true,
+        mappedHandoff: true
+      });
+      const rootPulse = addPulse(root, feed ? feed.start + feed.duration * .42 : now + 320, {
+        intensity: .98 + index * .055,
+        durationScale: .52,
+        charge: true
+      });
+      rootsArriveAt = Math.max(rootsArriveAt, rootPulse?.end || rootsArriveAt);
+    });
+
+    const selected = selectActivationRoutes(10);
+    const sharedCount = commonPrefixLength(selected);
+    const sharedIds = selected[0]?.edges.slice(0, sharedCount) || [];
+    const shared = addPulse(sharedIds, rootsArriveAt - signalTime(38), {
+      intensity: 1.3,
+      durationScale: .58,
+      charge: true
+    });
+    const branchStart = shared?.end || rootsArriveAt;
+    let activationEnd = branchStart;
+    selected.forEach((route, index) => {
+      const tail = route.edges.slice(sharedCount);
+      const pulse = addPulse(tail, branchStart - signalTime(22) + signalTime(index * 72), {
+        intensity: 1.08 - index * .025,
+        durationScale: .6,
+        terminal: route.endpoint,
+        bloomScale: 1.22,
+        charge: true
+      });
+      if (pulse) activationEnd = Math.max(activationEnd, pulse.end + signalTime(680));
+      else {
+        addBlossom(route.endpoint, branchStart + signalTime(index * 72), 1.05, true);
+        activationEnd = Math.max(
+          activationEnd,
+          branchStart + signalTime(index * 72 + 680)
+        );
+      }
+    });
+    return activationEnd;
+  }
+
+  function drawPointerRefinement() {
+    if (!pointerHighlight || coarsePointer.matches || reducedMotion.matches || detailOpen) return;
+    const center = sampleEdge(pointerHighlight.edgeId, pointerHighlight.progress);
+    const before = sampleEdge(pointerHighlight.edgeId, Math.max(0, pointerHighlight.progress - .035));
+    const after = sampleEdge(pointerHighlight.edgeId, Math.min(1, pointerHighlight.progress + .035));
+    const alpha = pointerHighlight.alpha;
+
+    context.save();
+    context.globalCompositeOperation = "lighter";
+    context.beginPath();
+    context.moveTo(before.x * cssWidth, before.y * cssHeight);
+    context.quadraticCurveTo(
+      center.x * cssWidth,
+      center.y * cssHeight,
+      after.x * cssWidth,
+      after.y * cssHeight
+    );
+    context.lineCap = "round";
+    context.lineWidth = Math.max(.65, cssWidth / map.image.width);
+    context.strokeStyle = `rgba(202, 229, 238, ${alpha})`;
+    context.stroke();
+    context.restore();
+  }
+
+  function findPointerHighlight(clientX, clientY) {
+    if (coarsePointer.matches || reducedMotion.matches || detailOpen) return null;
+    const rect = rig.getBoundingClientRect();
+    const px = (clientX - rect.left) / rect.width;
+    const py = (clientY - rect.top) / rect.height;
+    let nearest = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+
+    sampledEdges.forEach((cache, edgeId) => {
+      if (cache.edge.kind === "root") return;
+      for (let index = 0; index < cache.samples.length; index += 3) {
+        const point = cache.samples[index];
+        const distance = Math.hypot(
+          (point[0] - px) * (map.image.width / map.image.height),
+          point[1] - py
+        );
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearest = {
+            edgeId,
+            progress: index / (cache.samples.length - 1)
+          };
+        }
+      }
+    });
+
+    if (!nearest || nearestDistance > .15) return null;
+    nearest.alpha = Math.min(.15, (1 - nearestDistance / .15) * .15);
+    return nearest;
+  }
+
+  function drawArrow(point, angle, color) {
+    const size = Math.max(3, cssWidth / 420);
+    context.save();
+    context.translate(point.x * cssWidth, point.y * cssHeight);
+    context.rotate(angle);
+    context.fillStyle = color;
+    context.beginPath();
+    context.moveTo(size, 0);
+    context.lineTo(-size * .65, size * .52);
+    context.lineTo(-size * .65, -size * .52);
+    context.closePath();
+    context.fill();
+    context.restore();
+  }
+
+  function curveRadius(edge, atEnd) {
+    const p0 = map.nodes[edge.from];
+    const p1 = edge.c1;
+    const p2 = edge.c2;
+    const p3 = map.nodes[edge.to];
+    const point = (value) => [value[0] * map.image.width, value[1] * map.image.height];
+    const [a, b, c, d] = [p0, p1, p2, p3].map(point);
+    const first = atEnd
+      ? [3 * (d[0] - c[0]), 3 * (d[1] - c[1])]
+      : [3 * (b[0] - a[0]), 3 * (b[1] - a[1])];
+    const second = atEnd
+      ? [6 * (d[0] - 2 * c[0] + b[0]), 6 * (d[1] - 2 * c[1] + b[1])]
+      : [6 * (a[0] - 2 * b[0] + c[0]), 6 * (a[1] - 2 * b[1] + c[1])];
+    const cross = Math.abs(first[0] * second[1] - first[1] * second[0]);
+    if (cross < .0001) return Number.POSITIVE_INFINITY;
+    return Math.pow(Math.hypot(first[0], first[1]), 3) / cross;
+  }
+
+  function debugRouteEdgeIds() {
+    if (!debugRoute) return null;
+    const group = map.groups.find((candidate) => candidate.id === debugRoute);
+    if (!group) return null;
+    const terminal = group.terminals[0];
+    return new Set([...map.roots[2], ...group.prefix, ...terminal.edges]);
+  }
+
+  function drawDebugMap() {
+    context.save();
+    context.globalCompositeOperation = "source-over";
+    context.lineCap = "round";
+    context.font = `${Math.max(7, cssWidth / 175)}px ui-monospace, monospace`;
+    context.textBaseline = "middle";
+
+    beginSourceClip();
+    context.setLineDash([5, 4]);
+    context.lineWidth = 1;
+    context.strokeStyle = "#ffe08f";
+    context.stroke();
+    context.setLineDash([]);
+
+    const routeEdges = debugRouteEdgeIds();
+    map.edges.forEach((edge) => {
+      const cache = sampledEdges.get(edge.id);
+      const color = map.debug.colors[edge.kind];
+      const inRoute = !routeEdges || routeEdges.has(edge.id);
+      context.beginPath();
+      cache.samples.forEach((point, index) => {
+        const x = point[0] * cssWidth;
+        const y = point[1] * cssHeight;
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      });
+      context.lineWidth = edge.kind === "root" || edge.kind === "trunk" ? 1.4 : .9;
+      context.strokeStyle = color;
+      context.globalAlpha = inRoute ? edge.depth === "back" ? .58 : .82 : .07;
+      context.stroke();
+
+      if (inRoute) {
+        const mid = sampleEdge(edge.id, .56);
+        const direction = sampleEdge(edge.id, .59);
+        drawArrow(mid, Math.atan2(
+          (direction.y - mid.y) * cssHeight,
+          (direction.x - mid.x) * cssWidth
+        ), color);
+
+        const sampleCount = Math.max(1, Math.floor(cache.length / 12));
+        context.globalAlpha = .66;
+        context.fillStyle = color;
+        for (let index = 1; index < sampleCount; index += 1) {
+          const sample = sampleEdge(edge.id, index / sampleCount);
+          context.beginPath();
+          context.arc(sample.x * cssWidth, sample.y * cssHeight, 1.15, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+
+      if (cssWidth > 720 && inRoute) {
+        const mid = sampleEdge(edge.id, .56);
+        context.globalAlpha = .76;
+        context.fillStyle = color;
+        context.fillText(edge.id, mid.x * cssWidth + 4, mid.y * cssHeight - 5);
+      }
+    });
+
+    Object.entries(map.nodes).forEach(([id, point]) => {
+      const [x, y] = mapPoint(point);
+      const endpoint = id.startsWith("end");
+      const sourceNode = sourceNodeIds().includes(id);
+      context.globalAlpha = 1;
+      context.fillStyle = endpoint ? "#ff8eb0" : sourceNode ? "#ffe08f" : "#d8f3fa";
+      context.beginPath();
+      context.arc(x, y, endpoint ? 3.2 : 2.3, 0, Math.PI * 2);
+      context.fill();
+      if (cssWidth > 720 && (endpoint || sourceNode || ["source", "flare", "t3", "t4", "t5", "crown", "ll", "lh", "lt0", "tr0", "rh", "rlh"].includes(id))) {
+        context.fillText(id, x + 5, y + 5);
+      }
+    });
+
+    const junctionIds = new Set([
+      "t3", "llShoulder", "crown", "crownLeftShoulder", "crownCenterShoulder",
+      "crownRightShoulder", "ll", "lsplit", "lh", "lt0", "rj", "rh",
+      "rlh", "rm", "rl", "rlBend"
+    ]);
+    const angleBetween = (incoming, outgoing) => {
+      const a = [
+        (incoming[0]) * cssWidth,
+        (incoming[1]) * cssHeight
+      ];
+      const b = [
+        (outgoing[0]) * cssWidth,
+        (outgoing[1]) * cssHeight
+      ];
+      const denominator = Math.max(.0001, Math.hypot(a[0], a[1]) * Math.hypot(b[0], b[1]));
+      const cosine = Math.max(-1, Math.min(1, (a[0] * b[0] + a[1] * b[1]) / denominator));
+      return Math.acos(cosine) * 180 / Math.PI;
+    };
+
+    junctionIds.forEach((nodeId) => {
+      const node = map.nodes[nodeId];
+      const incoming = map.edges.filter((edge) => edge.to === nodeId);
+      const outgoing = map.edges.filter((edge) => edge.from === nodeId);
+      if (!node || !incoming.length || !outgoing.length) return;
+      const [nx, ny] = mapPoint(node);
+
+      incoming.forEach((edge) => {
+        const [hx, hy] = mapPoint(edge.c2);
+        context.globalAlpha = .72;
+        context.strokeStyle = "#55ddeb";
+        context.lineWidth = .8;
+        context.beginPath();
+        context.moveTo(nx, ny);
+        context.lineTo(hx, hy);
+        context.stroke();
+        context.fillStyle = "#55ddeb";
+        context.beginPath();
+        context.arc(hx, hy, 1.8, 0, Math.PI * 2);
+        context.fill();
+
+        const dx = nx - hx;
+        const dy = ny - hy;
+        const length = Math.max(.001, Math.hypot(dx, dy));
+        context.globalAlpha = .9;
+        context.strokeStyle = "#55ddeb";
+        context.lineWidth = 1.25;
+        context.beginPath();
+        context.moveTo(nx - dx / length * 18, ny - dy / length * 18);
+        context.lineTo(nx, ny);
+        context.stroke();
+      });
+
+      outgoing.forEach((edge, index) => {
+        const [hx, hy] = mapPoint(edge.c1);
+        context.globalAlpha = .72;
+        context.strokeStyle = "#ffd36e";
+        context.lineWidth = .8;
+        context.beginPath();
+        context.moveTo(nx, ny);
+        context.lineTo(hx, hy);
+        context.stroke();
+        context.fillStyle = "#ffd36e";
+        context.beginPath();
+        context.arc(hx, hy, 1.8, 0, Math.PI * 2);
+        context.fill();
+
+        const dx = hx - nx;
+        const dy = hy - ny;
+        const length = Math.max(.001, Math.hypot(dx, dy));
+        context.globalAlpha = .9;
+        context.strokeStyle = "#ffd36e";
+        context.lineWidth = 1.25;
+        context.beginPath();
+        context.moveTo(nx, ny);
+        context.lineTo(nx + dx / length * 18, ny + dy / length * 18);
+        context.stroke();
+
+        if (cssWidth > 720) {
+          const reference = incoming[0];
+          const tangentAngle = angleBetween(
+            [node[0] - reference.c2[0], node[1] - reference.c2[1]],
+            [edge.c1[0] - node[0], edge.c1[1] - node[1]]
+          );
+          const radiusIn = curveRadius(reference, true);
+          const radiusOut = curveRadius(edge, false);
+          const minimumRadius = Math.min(radiusIn, radiusOut);
+          const radiusRatio = Math.max(radiusIn, radiusOut) / Math.max(.001, minimumRadius);
+          const severe = tangentAngle >= 20 || minimumRadius < 24;
+          const warning = tangentAngle >= 12 || radiusRatio > 3;
+          context.globalAlpha = .88;
+          context.fillStyle = severe ? "#ff6b74" : warning ? "#ffb36e" : "#b9f5df";
+          const radiusLabel = `${Number.isFinite(radiusIn) ? Math.round(radiusIn) : "âˆž"}/${Number.isFinite(radiusOut) ? Math.round(radiusOut) : "âˆž"}`;
+          context.fillText(`${Math.round(tangentAngle)}Â° R${radiusLabel}`, hx + 4, hy + 8 + index * 8);
+          if (severe) {
+            context.strokeStyle = "#ff6b74";
+            context.lineWidth = 1.5;
+            context.beginPath();
+            context.arc(nx, ny, 5.5 + index * 2.4, 0, Math.PI * 2);
+            context.stroke();
+          }
+        }
+      });
+    });
+    context.restore();
+  }
+
+  function drawReducedFlash() {
+    if (!reducedPending) return;
+    const endpoints = ["endLFar", "endTopCenter", "endTopRight", "endRUpper", "endRLow"];
+    endpoints.forEach((endpoint) => {
+      const point = map.nodes[endpoint];
+      if (!Array.isArray(point) || point.length < 2) return;
+      const x = point[0] * cssWidth;
+      const y = point[1] * cssHeight;
+      const meta = bloomMeta[endpoint] || { rotation: 0 };
+      context.save();
+      context.translate(x, y);
+      context.rotate(meta.rotation);
+      const reducedScale = Math.max(.64, cssWidth / map.image.width);
+      context.fillStyle = "rgba(255, 199, 214, .52)";
+      for (let index = 0; index < 5; index += 1) {
+        context.save();
+        context.rotate((Math.PI * 2 * index) / 5);
+        context.translate(0, -4.2 * reducedScale);
+        context.beginPath();
+        context.ellipse(0, 0, 1.9 * reducedScale, 4.2 * reducedScale, 0, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+      }
+      context.fillStyle = "rgba(255, 244, 214, .9)";
+      context.beginPath();
+      context.arc(0, 0, 1.8 * reducedScale, 0, Math.PI * 2);
+      context.fill();
+      context.restore();
+    });
+  }
+
+  function drawFrame(now) {
+    drawStoneNeural(now);
+    context.clearRect(0, 0, cssWidth, cssHeight);
+    drawInternalSource(now);
+    drawCoreFeeds(now);
+    drawSynapses(now);
+
+    if (!reducedMotion.matches) {
+      pulses.forEach((pulse) => drawPulse(pulse, now));
+      blossoms.forEach((blossom) => drawBlossom(blossom, now));
+      drawPointerRefinement();
+    } else {
+      drawReducedFlash();
+    }
+
+    if (debugMap) drawDebugMap();
+  }
+
+  function render(now) {
+    if (!pageVisible || reducedMotion.matches) return;
+    recordPerformance(now);
+    if (!editMap && !detailOpen && now >= nextStoneAt) scheduleStoneIdle(now);
+    if (!editMap && !activationRunning && !detailOpen && now >= nextIdleAt) scheduleIdle(now);
+    if (
+      !editMap
+      && !activationRunning
+      && !detailOpen
+      && now >= nextRelayAt
+      && pulses.length < 5
+      && nextIdleAt - now > signalTime(650)
+    ) {
+      scheduleRelay(now);
+    }
+    updateEffects(now);
+    updateStoneEffects(now);
+    drawFrame(now);
+
+    if (activationRunning && activationOpenAt && now >= activationOpenAt) {
+      completeActivation();
+      return;
+    }
+    frame = requestAnimationFrame(render);
+  }
+
+  function resizeCanvas() {
+    const rect = rig.getBoundingClientRect();
+    const scaleX = Math.hypot(
+      Number.parseFloat(getComputedStyle(rig).transform.split(",")[0]?.replace("matrix(", "")) || 1,
+      Number.parseFloat(getComputedStyle(rig).transform.split(",")[1]) || 0
+    );
+    cssWidth = rig.clientWidth || rect.width / Math.max(.001, scaleX);
+    cssHeight = rig.clientHeight || rect.height / Math.max(.001, scaleX);
+    dpr = Math.min(window.devicePixelRatio || 1, coarsePointer.matches ? 1.2 : 1.5);
+    canvas.width = Math.max(1, Math.round(cssWidth * dpr));
+    canvas.height = Math.max(1, Math.round(cssHeight * dpr));
+    canvas.style.width = `${cssWidth}px`;
+    canvas.style.height = `${cssHeight}px`;
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    resizeStoneCanvas();
+    drawFrame(performance.now());
+  }
+
+  function resizeStoneCanvas() {
+    if (!stoneCanvas || !stoneContext || !stoneMap) return;
+    stoneCssWidth = Math.max(1, cssWidth * stoneMap.region.width);
+    stoneCssHeight = Math.max(1, cssHeight * stoneMap.region.height);
+    stoneCanvas.width = Math.max(1, Math.round(stoneCssWidth * dpr));
+    stoneCanvas.height = Math.max(1, Math.round(stoneCssHeight * dpr));
+    stoneCanvas.style.width = `${stoneCssWidth}px`;
+    stoneCanvas.style.height = `${stoneCssHeight}px`;
+    stoneContext.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stoneScratch.width = Math.max(2, Math.round(stoneCssWidth));
+    stoneScratch.height = Math.max(2, Math.round(stoneCssHeight));
+    rebuildStoneAtlases();
+  }
+
+  function setInert(element, value) {
+    if ("inert" in element) element.inert = value;
+    if (value) element.setAttribute("aria-hidden", "true");
+    else element.removeAttribute("aria-hidden");
+  }
+
+  function holdScroll(target) {
+    window.scrollTo({ top: target, left: 0, behavior: "auto" });
+    requestAnimationFrame(() => {
+      window.scrollTo(0, target);
+      requestAnimationFrame(() => window.scrollTo(0, target));
+    });
+  }
+
+  function resetCta() {
+    explore.classList.remove("is-charging");
+    explore.removeAttribute("aria-busy");
+    explore.setAttribute("aria-disabled", "false");
+    explore.textContent = originalCtaLabel;
+    activationLinks.forEach((link) => link.removeAttribute("aria-disabled"));
+  }
+
+  function setActivationExpanded(value) {
+    explore.setAttribute("aria-expanded", String(value));
+    activationLinks.forEach((link) => link.setAttribute("aria-expanded", String(value)));
+  }
+
+  function openDetail(scrollTarget = window.scrollY) {
+    detailOpen = true;
+    activationRunning = false;
+    activationOpenAt = 0;
+    resetCta();
+    hero.classList.add("is-focused");
+    setActivationExpanded(true);
+    detail.setAttribute("aria-hidden", "false");
+    setInert(intro, true);
+    setInert(detail, false);
+    holdScroll(scrollTarget);
+    requestAnimationFrame(() => {
+      back.focus({ preventScroll: true });
+      requestAnimationFrame(() => {
+        if (document.activeElement !== back) back.focus({ preventScroll: true });
+      });
+    });
+  }
+
+  function closeDetail() {
+    const target = window.scrollY;
+    detailOpen = false;
+    pulses = [];
+    blossoms = [];
+    coreFeeds = [];
+    synapseFlashes = [];
+    stonePulses = [];
+    hero.classList.remove("is-focused");
+    setActivationExpanded(false);
+    detail.setAttribute("aria-hidden", "true");
+    setInert(detail, true);
+    setInert(intro, false);
+    nextIdleAt = reducedMotion.matches
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + signalTime(1450);
+    nextRelayAt = reducedMotion.matches
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + signalTime(4200);
+    nextStoneAt = reducedMotion.matches
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + 420;
+    holdScroll(target);
+    requestAnimationFrame(() => {
+      activationTrigger.focus({ preventScroll: true });
+      requestAnimationFrame(() => {
+        if (document.activeElement !== activationTrigger) activationTrigger.focus({ preventScroll: true });
+      });
+    });
+  }
+
+  function cancelActivation(restoreFocus = true) {
+    activationRunning = false;
+    activationOpenAt = 0;
+    reducedPending = false;
+    window.clearTimeout(reducedTimer);
+    pulses = [];
+    blossoms = [];
+    coreFeeds = [];
+    synapseFlashes = [];
+    stonePulses = [];
+    resetCta();
+    setActivationExpanded(false);
+    nextIdleAt = reducedMotion.matches
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + signalTime(1200);
+    nextRelayAt = reducedMotion.matches
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + signalTime(4400);
+    nextStoneAt = reducedMotion.matches
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + 460;
+    drawFrame(performance.now());
+    holdScroll(activationScroll);
+    if (restoreFocus) requestAnimationFrame(() => activationTrigger.focus({ preventScroll: true }));
+  }
+
+  function completeActivation() {
+    if (!activationRunning) return;
+    reducedPending = false;
+    window.clearTimeout(reducedTimer);
+    openDetail(activationScroll);
+  }
+
+  function activate(trigger = explore) {
+    if (activationRunning || detailOpen || explore.getAttribute("aria-disabled") === "true") return;
+    activationTrigger = trigger && typeof trigger.focus === "function" ? trigger : explore;
+    activationRunning = true;
+    activationStarted = performance.now();
+    if (debugPerformance) {
+      performancePrevious = 0;
+      performanceSamples = [];
+      delete document.documentElement.dataset.treeFps;
+      delete document.documentElement.dataset.treeFrameP95;
+    }
+    activationScroll = window.scrollY;
+    activationOpenAt = 0;
+    pulses = [];
+    blossoms = [];
+    coreFeeds = [];
+    synapseFlashes = [];
+    stonePulses = [];
+    explore.classList.add("is-charging");
+    explore.setAttribute("aria-busy", "true");
+    explore.setAttribute("aria-disabled", "true");
+    activationLinks.forEach((link) => link.setAttribute("aria-disabled", "true"));
+    explore.textContent = reducedMotion.matches ? "Otwieramyâ€¦" : "Energia pÅ‚ynieâ€¦";
+
+    if (reducedMotion.matches) {
+      reducedPending = true;
+      drawFrame(activationStarted);
+      reducedTimer = window.setTimeout(() => {
+        if (document.hidden) return;
+        completeActivation();
+      }, 520);
+      return;
+    }
+
+    activationOpenAt = scheduleActivation(activationStarted);
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(render);
+  }
+
+  function syncMotionPreference() {
+    cancelAnimationFrame(frame);
+    if (reducedMotion.matches) {
+      nextIdleAt = Number.POSITIVE_INFINITY;
+      pulses = [];
+      blossoms = [];
+      coreFeeds = [];
+      synapseFlashes = [];
+      stonePulses = [];
+      nextStoneAt = Number.POSITIVE_INFINITY;
+      pointerHighlight = null;
+      rig.style.setProperty("--px", "0px");
+      rig.style.setProperty("--py", "0px");
+      stonePointerX = 0;
+      stonePointerY = 0;
+      if (activationRunning) completeActivation();
+      else drawFrame(performance.now());
+    } else if (pageVisible) {
+      nextIdleAt = detailOpen
+        ? Number.POSITIVE_INFINITY
+        : performance.now() + signalTime(1100);
+      nextRelayAt = detailOpen
+        ? Number.POSITIVE_INFINITY
+        : performance.now() + signalTime(3900);
+      nextStoneAt = detailOpen
+        ? Number.POSITIVE_INFINITY
+        : performance.now() + 360;
+      frame = requestAnimationFrame(render);
+    }
+  }
+
+  explore.addEventListener("click", () => activate(explore));
+  activationLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      activate(link);
+    });
+  });
+  back.addEventListener("click", closeDetail);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (activationRunning) cancelActivation(true);
+    else if (detailOpen) closeDetail();
+  });
+
+  if (!coarsePointer.matches && !editMap) {
+    window.addEventListener("pointermove", (event) => {
+      if (reducedMotion.matches || detailOpen) return;
+      const x = (event.clientX / window.innerWidth - .5) * -4;
+      const y = (event.clientY / window.innerHeight - .5) * -3;
+      stonePointerX = (event.clientX / window.innerWidth - .5) * 2;
+      stonePointerY = (event.clientY / window.innerHeight - .5) * 2;
+      rig.style.setProperty("--px", `${x}px`);
+      rig.style.setProperty("--py", `${y}px`);
+      pointerHighlight = findPointerHighlight(event.clientX, event.clientY);
+    }, { passive: true });
+
+    document.documentElement.addEventListener("pointerleave", () => {
+      rig.style.setProperty("--px", "0px");
+      rig.style.setProperty("--py", "0px");
+      stonePointerX = 0;
+      stonePointerY = 0;
+      pointerHighlight = null;
+    });
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    const now = performance.now();
+    if (document.hidden) {
+      pageVisible = false;
+      hiddenAt = now;
+      cancelAnimationFrame(frame);
+      return;
+    }
+
+    pageVisible = true;
+    const pausedFor = Math.max(0, now - hiddenAt);
+    pulses.forEach((pulse) => {
+      pulse.start += pausedFor;
+      pulse.end += pausedFor;
+    });
+    blossoms.forEach((blossom) => {
+      blossom.start += pausedFor;
+    });
+    if (Number.isFinite(nextIdleAt)) nextIdleAt += pausedFor;
+    if (Number.isFinite(nextRelayAt)) nextRelayAt += pausedFor;
+    if (Number.isFinite(nextStoneAt)) nextStoneAt += pausedFor;
+    if (activationOpenAt) activationOpenAt += pausedFor;
+    activationStarted += activationRunning ? pausedFor : 0;
+    coreFeeds.forEach((feed) => {
+      feed.start += pausedFor;
+      feed.end += pausedFor;
+    });
+    synapseFlashes.forEach((flash) => {
+      flash.start += pausedFor;
+    });
+    stonePulses.forEach((pulse) => {
+      pulse.start += pausedFor;
+      pulse.end += pausedFor;
+    });
+
+    if (reducedPending) completeActivation();
+    else if (!reducedMotion.matches) frame = requestAnimationFrame(render);
+    else drawFrame(now);
+  });
+
+  reducedMotion.addEventListener("change", syncMotionPreference);
+  coarsePointer.addEventListener("change", resizeCanvas);
+  new ResizeObserver(resizeCanvas).observe(rig);
+
+  if (editMap) {
+    window.TREE_ENERGY_DEV = {
+      rebuild() {
+        pulses = [];
+        blossoms = [];
+        coreFeeds = [];
+        synapseFlashes = [];
+        stonePulses = [];
+        rebuildEdgeCaches();
+        nextIdleAt = Number.POSITIVE_INFINITY;
+        nextStoneAt = Number.POSITIVE_INFINITY;
+        drawFrame(performance.now());
+      },
+      preview(edgeIds, options = {}) {
+        const validIds = edgeIds.filter((id) => edgeById.has(id));
+        if (!validIds.length || reducedMotion.matches) {
+          drawFrame(performance.now());
+          return false;
+        }
+        const now = performance.now();
+        const path = buildPath(validIds);
+        const baseDuration = path.durationSeconds * 1000;
+        const targetDuration = Number.isFinite(options.targetDurationMs)
+          ? Math.max(420, Math.min(1650, options.targetDurationMs))
+          : null;
+        const desiredDuration = targetDuration
+          ? Math.min(targetDuration, Math.max(650, baseDuration * .72))
+          : baseDuration * .72;
+        pulses = [];
+        blossoms = [];
+        const pulse = addPulse(validIds, now + signalTime(70), {
+          intensity: options.intensity || 1.18,
+          durationScale: desiredDuration / Math.max(1, baseDuration),
+          charge: options.charge !== false,
+          terminal: options.terminal || null,
+          bloomScale: options.bloomScale || 1.2
+        });
+        nextIdleAt = Number.POSITIVE_INFINITY;
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(render);
+        return {
+          started: true,
+          duration: pulse.duration,
+          arrivalAt: pulse.end,
+          edgeIds: validIds
+        };
+      },
+      stop() {
+        pulses = [];
+        blossoms = [];
+        coreFeeds = [];
+        synapseFlashes = [];
+        stonePulses = [];
+        drawFrame(performance.now());
+      },
+      resize: resizeCanvas
+    };
+  }
+
+  setInert(detail, true);
+  resizeCanvas();
+  if (!reducedMotion.matches) {
+    nextIdleAt = editMap
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + signalTime(1350);
+    nextRelayAt = editMap
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + signalTime(4200);
+    nextStoneAt = editMap
+      ? Number.POSITIVE_INFINITY
+      : performance.now() + 360;
+    frame = requestAnimationFrame(render);
+  }
+})();

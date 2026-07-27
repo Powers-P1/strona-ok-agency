@@ -434,13 +434,1136 @@
       connectFrom = "";
       connectPointer = null;
       connectButton.classList.remove("is-active");
-      connectButton.textContent =óŸx¶‰žËkºwµçu•½ÕÐ  ¤€ôøì(€€€€€€€¥˜€ …•¹‘Á½¥¹ÑÕ‘¥Ð¹ÉÕ¹¹¥¹œ¤É•ÑÕÉ¸ì(€€€€€€€•¹ÑÉä¹ÍÑ…ÑÕÌ€ô€‰Á…ÍÍ•ˆì(€€€€€€€•¹ÑÉä¹¹½Ñ”€ô€‘í•¹ÑÉä¹Í½ÕÉ•ôƒ
-Ü‘½Íé•“	€ì(€€€€€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹ÕÉÉ•¹ÑMÑ…ÑÕÌ€ô€‰Á…ÍÍ•ˆì(€€€€€€€É•¹‘•É¹‘Á½¥¹ÑÕ‘¥Ð ¤ì(€€€€€€€ÅÕ•Õ•É…Ü ¤ì(€€€€€ô°5…Ñ ¹µ¥¸ ÄÜÀÀ°€¡ÁÕ±Í”¹‘ÕÉ…Ñ¥½¸ñð€ÄÌÔÀ¤€¬€ÄÐÀ¤¤ì(€€€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹…ÉÉ¥Ù…±Q¥µ•ÉÌ¹ÁÕÍ ¡…ÉÉ¥Ù…±Q¥µ•È¤ì(€€€ô(€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹Ñ¥µ•È€ôÝ¥¹‘½Ü¹Í•ÑQ¥µ•½ÕÐ¡ÉÕ¹9•áÑ¹‘Á½¥¹Ð°€ÈÀÀÀ¤ì(€ô((€™Õ¹Ñ¥½¸ÍÑ…ÉÑ¹‘Á½¥¹ÑÕ‘¥Ð ¤ì(€€€Í•ÑA…¹5½‘”¡™…±Í”¤ì(€€€Í•ÑMÁ±¥Ñ5½‘”¡™…±Í”¤ì(€€€Í•Ñ½¹¹•Ñ5½‘”¡™…±Í”¤ì(€€€‘•Ø¹ÍÑ½À ¤ì(€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹•¹ÑÉ¥•Ì€ô•¹‘Á½¥¹Ñ9½‘•Ì ¤ì(€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹¥¹‘•à€ô€Àì(€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹ÕÉÉ•¹Ð€ô€ˆˆì(€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹ÕÉÉ•¹ÑMÑ…ÑÕÌ€ô€ˆˆì(€€€•¹‘Á½¥¹ÑÕ‘¥Ð¹ÉÕ¹¹¥¹œ€ôÑÉÕ”ì(€€€…Õ‘¥Ñ	ÕÑÑ½¸¹±…ÍÍ1¥ÍÐ¹…‘ ‰¥Ìµ…Ñ¥Ù”ˆ¤ì(€€€…Õ‘¥Ñ	ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰i…ÑÉéåµ…¨…Õ‘åÐˆì(€€€É•¹‘•É¹‘Á½¥¹ÑÕ‘¥Ð ¤ì(€€€¥˜€ …•¹‘Á½¥¹ÑÕ‘¥Ð¹•¹ÑÉ¥•Ì¹±•¹Ñ ¤ì(€€€€€ÍÑ½Á¹‘Á½¥¹ÑÕ‘¥Ð ‰	É…¬¹½“ÍÜÁ¿é½¹å ‘½¯	…‘¹¥”è©•‘»­Ééåß¸ˆ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ôi¹…±•é¥½¹¼€‘í•¹‘Á½¥¹ÑÕ‘¥Ð¹•¹ÑÉ¥•Ì¹±•¹Ñ¡ô­¿ÍÝ•¬¤€‘íÍ½ÕÉ•9½‘•%‘Ì ¤¹±•¹Ñ¡ôƒéËÍ‘—¸MÑ…ÉÐ…Õ‘åÑÔ¼€ÈÍ•­Õ¹‘ä¹€ì(€€€ÉÕ¹9•áÑ¹‘Á½¥¹Ð ¤ì(€ô((€™Õ¹Ñ¥½¸ÁÉ•Ù¥•ÝM•±•Ñ¥½¸ ¤ì(€€€±•ÐÉ½ÕÑ”€ômtì(€€€¥˜€¡Í•±•Ñ¥½¸ü¹ÑåÁ”€ôôô€‰•‘”ˆñðÍ•±•Ñ¥½¸ü¹ÑåÁ”€ôôô€‰¡…¹‘±”ˆ¤ì(€€€€€½¹ÍÐ•‘”€ô•‘•	å%¡Í•±•Ñ¥½¸¹¥¤ì(€€€€€¥˜€¡•‘”¤É½ÕÑ”€ôl¸¸¹Á…Ñ¡Q½9½‘”¡•‘”¹™É½´¤°•‘”¹¥‘tì(€€€ô•±Í”¥˜€¡Í•±•Ñ¥½¸ü¹ÑåÁ”€ôôô€‰¹½‘”ˆ¤ì(€€€€€É½ÕÑ”€ôÁ…Ñ¡Q½9½‘”¡Í•±•Ñ¥½¸¹¥¤ì(€€€ô(€€€¥˜€ …É½ÕÑ”¹±•¹Ñ ¤ì(€€€€€½¹ÍÐÉ½ÕÀ€ôµ…À¹É½ÕÁÍlÁtì(€€€€€É½ÕÑ”€ôl¸¸¹µ…À¹É½½ÑÍlÉt°€¸¸¹É½ÕÀ¹ÁÉ•™¥à°€¸¸¹É½ÕÀ¹Ñ•Éµ¥¹…±ÍlÁt¹•‘•Ítì(€€€ô(€€€½¹ÍÐÍÑ…ÉÑ•€ô‘•Ø¹ÁÉ•Ù¥•Ü¡É½ÕÑ”¤ì(€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ôÍÑ…ÉÑ•€üQ•ÍÐè€‘íÉ½ÕÑ”¹©½¥¸ ˆƒŠH€ˆ¥õ€€è€‰Q•ÍÐÁÕ±Í”¹¥•‘½ÍÓeÁ¹äÜÉ•‘Õ•µµ½Ñ¥½¸¸ˆì(€ô((€™Õ¹Ñ¥½¸•áÁ½ÉÑ)Í½¸¡Í¡½Ü€ôÑÉÕ”¤ì(€€€½¹ÍÐ©Í½¸€ô)M=8¹ÍÑÉ¥¹¥™ä¡µ…À°¹Õ±°°€È¤ì(€€€½ÕÑÁÕÐ¹Ù…±Õ”€ô©Í½¸ì(€€€¥˜€¡Í¡½Ü¤½ÕÑÁÕÐ¹±…ÍÍ1¥ÍÐ¹Ñ½±” ‰¥ÌµÙ¥Í¥‰±”ˆ¤ì(€€€É•ÑÕÉ¸©Í½¸ì(€ô((€…Íå¹Œ™Õ¹Ñ¥½¸½Áå)Í½¸ ¤ì(€€€½¹ÍÐ©Í½¸€ô•áÁ½ÉÑ)Í½¸¡™…±Í”¤ì(€€€ÑÉäì(€€€€€…Ý…¥Ð¹…Ù¥…Ñ½È¹±¥Á‰½…É¹ÝÉ¥Ñ•Q•áÐ¡©Í½¸¤ì(€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰M­½Á¥½Ý…¹¼Á—	¹ä)M=8µ…Áä¸ˆì(€€€ô…Ñ ì(€€€€€½ÕÑÁÕÐ¹±…ÍÍ1¥ÍÐ¹…‘ ‰¥ÌµÙ¥Í¥‰±”ˆ¤ì(€€€€€½ÕÑÁÕÐ¹™½ÕÌ ¤ì(€€€€€½ÕÑÁÕÐ¹Í•±•Ð ¤ì(€€€€€‘½Õµ•¹Ð¹•á•½µµ…¹ ‰½Áäˆ¤ì(€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰M­½Á¥½Ý…¹¼)M=8ÁÉé•èÁ½±”•­ÍÁ½ÉÑÔ¸ˆì(€€€ô(€ô((€™Õ¹Ñ¥½¸‘½Ý¹±½…‘)Í½¸ ¤ì(€€€½¹ÍÐ‰±½ˆ€ô¹•Ü	±½ˆ¡m•áÁ½ÉÑ)Í½¸¡™…±Í”¥t°ìÑåÁ”è€‰…ÁÁ±¥…Ñ¥½¸½©Í½¸ˆô¤ì(€€€½¹ÍÐ…¹¡½È€ô‘½Õµ•¹Ð¹É•…Ñ•±•µ•¹Ð ‰„ˆ¤ì(€€€…¹¡½È¹¡É•˜€ôUI0¹É•…Ñ•=‰©•ÑUI0¡‰±½ˆ¤ì(€€€…¹¡½È¹‘½Ý¹±½…€ô€‰ÑÉ•”µ±¥¡Ðµµ…ÀµÝ½É­¥¹œ¹©Í½¸ˆì(€€€…¹¡½È¹±¥¬ ¤ì(€€€Ý¥¹‘½Ü¹Í•ÑQ¥µ•½ÕÐ  ¤€ôøUI0¹É•Ù½­•=‰©•ÑUI0¡…¹¡½È¹¡É•˜¤°€À¤ì(€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰A½‰É…¹¼ÑÉ•”µ±¥¡Ðµµ…ÀµÝ½É­¥¹œ¹©Í½¸¸ˆì(€ô((€™Õ¹Ñ¥½¸ÕÁ‘…Ñ•A…¹•° ¤ì(€€€¥˜€ …Í•±•Ñ¥½¸¤Í•±•Ñ¥½¹1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰	É…¬é…é¹…é•¹¥„ˆì(€€€•±Í”¥˜€¡Í•±•Ñ¥½¸¹ÑåÁ”€ôôô€‰¹½‘”ˆ¤ì(€€€€€½¹ÍÐÁ½¥¹Ð€ôµ…À¹¹½‘•ÍmÍ•±•Ñ¥½¸¹¥‘tì(€€€€€Í•±•Ñ¥½¹1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô9=€‘íÍ•±•Ñ¥½¸¹¥‘ôƒ
-Ül‘íÁ½¥¹Ðü¹µ…À ¡Ù…±Õ”¤€ôøÙ…±Õ”¹Ñ½¥á• Ð¤¤¹©½¥¸ ˆ°€ˆ¥õu€ì(€€€ô•±Í”ì(€€€€€½¹ÍÐ•‘”€ô•‘•	å%¡Í•±•Ñ¥½¸¹¥¤ì(€€€€€Í•±•Ñ¥½¹1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‘íÍ•±•Ñ¥½¸¹ÑåÁ”¹Ñ½UÁÁ•É…Í” ¥ô€‘íÍ•±•Ñ¥½¸¹¥‘ô‘íÍ•±•Ñ¥½¸¹¡…¹‘±”€ü€ƒ
-Ü€‘íÍ•±•Ñ¥½¸¹¡…¹‘±•õ€€è€ˆ‰ôƒ
-Ü€‘í•‘”ü¹­¥¹ñð€ˆ‰õ€ì(€€€ô(€€€±•Ð‘•±•Ñ¥½¹AÉ½Ñ•Ñ•€ô™…±Í”ì(€€€¥˜€¡Í•±•Ñ¥½¸ü¹ÑåÁ”€ôôô€‰¹½‘”ˆ¤ì(€€€€€½¹ÍÐ¥¹¥‘•¹Ð€ôµ…À¹•‘•Ì¹™¥±Ñ•È ¡•‘”¤€ôø•‘”¹™É½´€ôôôÍ•±•Ñ¥½¸¹¥ñð•‘”¹Ñ¼€ôôôÍ•±•Ñ¥½¸¹¥¤ì(€€€€€‘•±•Ñ¥½¹AÉ½Ñ•Ñ•€ôÁÉ½Ñ•Ñ•‘9½‘•Ì¹¡…Ì¡Í•±•Ñ¥½¸¹¥¤ì(€€€ô•±Í”¥˜€¡Í•±•Ñ¥½¸ü¹ÑåÁ”€ôôô€‰•‘”ˆñðÍ•±•Ñ¥½¸ü¹ÑåÁ”€ôôô€‰¡…¹‘±”ˆ¤ì(€€€€€‘•±•Ñ¥½¹AÉ½Ñ•Ñ•€ô™…±Í”ì(€€€ô(€€€‘•±•Ñ•	ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€…Í•±•Ñ¥½¸(€€€€€€ü€‰•±•Ñ”èÝå‰¥•Éèˆ(€€€€€€è‘•±•Ñ¥½¹AÉ½Ñ•Ñ•(€€€€€€€€ü€‰•±•Ñ”è¡É½¹¥½¹”ˆ(€€€€€€€€è€‰•±•Ñ”é…é¹…é½¹”ˆì(€€€‘•±•Ñ•	ÕÑÑ½¸¹Ñ¥Ñ±”€ô€…Í•±•Ñ¥½¸(€€€€€€ü€‰9…©Á¥•ÉÜ­±¥­¹¥¨ßeé—±Õˆ­Ééåß¸ˆ(€€€€€€è‘•±•Ñ¥½¹AÉ½Ñ•Ñ•(€€€€€€€€ü€‰¡É½¹¥½¹ä©•ÍÐÝçé¹¥”¹½‘”Í½ÕÉ”¸ˆ(€€€€€€€€è€‰UÍ×…­ÑÕ…±¹¥”é…é¹…é½¹ä•±•µ•¹Ð¸ˆì(€€€½¹ÍÐ…±±¥…¹½ÍÑ¥Ì€ô‘¥…¹½ÍÑ¥Ì ¤ì(€€€½¹ÍÐÉ½½Ñ¥…¹½ÍÑ¥Ì€ô…±±¥…¹½ÍÑ¥Ì¹™¥±Ñ•È ¡¥Ñ•´¤€ôø¥Ñ•´¹¥¹½µ¥¹œ¹­¥¹€ôôô€‰É½½Ðˆñð¥Ñ•´¹½ÕÑ½¥¹œ¹­¥¹€ôôô€‰É½½Ðˆ¤ì(€€€½¹ÍÐ¥ÍÍÕ•Ì€ô…±±¥…¹½ÍÑ¥Ì(€€€€€€¹™¥±Ñ•È ¡¥Ñ•´¤€ôø¥Ñ•´¹¥¹½µ¥¹œ¹­¥¹€„ôô€‰É½½Ðˆ€˜˜¥Ñ•´¹½ÕÑ½¥¹œ¹­¥¹€„ôô€‰É½½Ðˆ¤(€€€€€€¹™¥±Ñ•È ¡¥Ñ•´¤€ôø¥Ñ•´¹…¹±”€øô€ÄÈñð¥Ñ•´¹µ¥¹¥µÕµI…‘¥ÕÌ€ð€ÈÐñð¥Ñ•´¹É…‘¥ÕÍI…Ñ¥¼€ø€Ì¤(€€€€€€¹Í±¥” À°€Ø¤ì(€€€½¹ÍÐÉ½½ÑA•…¬€ôÉ½½Ñ¥…¹½ÍÑ¥Ì¹É•‘Õ” ¡Á•…¬°¥Ñ•´¤€ôø5…Ñ ¹µ…à¡Á•…¬°¥Ñ•´¹…¹±”¤°€À¤ì(€€€‘¥…¹½ÍÑ¥Í1…‰•°¹¥¹¹•É!Q50€ô¥ÍÍÕ•Ì¹±•¹Ñ (€€€€€€ü€ñÍÑÉ½¹œùQÉÕ¹¬€¼É½Ý¸€¼‰É…¹¡•Ìèð½ÍÑÉ½¹œøñ‰Èø‘í¥ÍÍÕ•Ì¹µ…À ¡¥Ñ•´¤€ôøì(€€€€€€€€€½¹ÍÐÝ…É¹¥¹œ€ô¥Ñ•´¹…¹±”€øô€ÈÀñð¥Ñ•´¹µ¥¹¥µÕµI…‘¥ÕÌ€ð€ÈÐì(€€€€€€€€€½¹ÍÐÉ¥¸€ô9Õµ‰•È¹¥Í¥¹¥Ñ”¡¥Ñ•´¹É…‘¥ÕÍ%¸¤€ü¥Ñ•´¹É…‘¥ÕÍ%¸¹Ñ½¥á• À¤€è€‹Š"xˆì(€€€€€€€€€½¹ÍÐÉ½ÕÐ€ô9Õµ‰•È¹¥Í¥¹¥Ñ”¡¥Ñ•´¹É…‘¥ÕÍ=ÕÐ¤€ü¥Ñ•´¹É…‘¥ÕÍ=ÕÐ¹Ñ½¥á• À¤€è€‹Š"xˆì(€€€€€€€€€½¹ÍÐÉ…Ñ¥¼€ô9Õµ‰•È¹¥Í¥¹¥Ñ”¡¥Ñ•´¹É…‘¥ÕÍI…Ñ¥¼¤€ü¥Ñ•´¹É…‘¥ÕÍI…Ñ¥¼¹Ñ½¥á• Ä¤€è€‹Š"xˆì(€€€€€€€€€É•ÑÕÉ¸€ñÍÁ…¸±…ÍÌôˆ‘íÝ…É¹¥¹œ€ü€‰Ý…É¹¥¹œˆ€è€ˆ‰ôˆø‘í¥Ñ•´¹¹½‘•ôè€‘í¥Ñ•´¹…¹±”¹Ñ½¥á• Ä¥÷
-Àƒ
-ÜH€‘íÉ¥¹ô¼‘íÉ½ÕÑôƒ
-Üƒ\‘íÉ…Ñ¥½ôð½ÍÁ…¸ù€ì(€€€€€€€ô¤¹©½¥¸ ˆñ‰Èøˆ¥ôñ‰ÈøñÍÁ…¸ùI½½Ðµ•É”èµ…à€‘íÉ½½ÑA•…¬¹Ñ½¥á• Ä¥÷
-Àð½ÍÁ…¸ù€(€€€€€€èMÑåé¹”‡eé¤è‰•è¥ÍÑ½Ñ¹å ½ÍÑÉé—ñ—¸ñ‰ÈøñÍÁ…¸ùI½½Ðµ•É”èµ…à€‘íÉ½½ÑA•…¬¹Ñ½¥á• Ä¥÷
-Àð½ÍÁ…¸ù€ì(€ô((€½Ù•É±…ä¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰Á½¥¹Ñ•É‘½Ý¸ˆ°€¡•Ù•¹Ð¤€ôøì(€€€½¹ÍÐÁ½¥¹Ð€ôÁ½¥¹Ñ•ÉA½¥¹Ð¡•Ù•¹Ð¤ì(€€€¥˜€¡½¹¹•Ñ5½‘”€˜˜€…ÍÁ…•!•±€˜˜•Ù•¹Ð¹‰ÕÑÑ½¸€ôôô€À¤ì(€€€€€½¹ÍÐ¹½‘•!¥Ð€ô¡¥Ñ9½‘”¡Á½¥¹Ð°€ÄÐ¤ì(€€€€€¥˜€ …½¹¹•ÑÉ½´¤ì(€€€€€€€¥˜€ …¹½‘•!¥Ð¤ì(€€€€€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰9…©Á¥•ÉÜ­±¥­¹¥¨¥ÍÑ¹¥•«ä¹½‘”Á½ëÑ­½Ýä¸ˆì(€€€€€€€ô•±Í”ì(€€€€€€€€€½¹¹•ÑÉ½´€ô¹½‘•!¥Ð¹¥ì(€€€€€€€€€Í•±•Ñ¥½¸€ôìÑåÁ”è€‰¹½‘”ˆ°¥è½¹¹•ÑÉ½´ôì(€€€€€€€€€½¹¹•Ñ	ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰-±¥­¹¥¨•³Š˜ˆì(€€€€€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ôMÑ…ÉÐè€‘í½¹¹•ÑÉ½µô¸-±¥­¹¥¨¹½‘”‘½•±½Ýä…±‰¼ÁÕÍÑ”µ¥•©Í”¹€ì(€€€€€€€ô(€€€€€ô•±Í”ì(€€€€€€€É•…Ñ•½¹¹•Ñ¥½¸¡½¹¹•ÑÉ½´°¹½‘•!¥Ðü¹¥ñð€ˆˆ°Á½¥¹Ð¤ì(€€€€€ô(€€€€€ÕÁ‘…Ñ•A…¹•° ¤ì(€€€€€ÅÕ•Õ•É…Ü ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡ÍÁ±¥Ñ5½‘”€˜˜€…ÍÁ…•!•±€˜˜•Ù•¹Ð¹‰ÕÑÑ½¸€ôôô€À¤ì(€€€€€½¹ÍÐ•‘•!¥Ð€ô¡¥Ñ‘”¡Á½¥¹Ð°€Äà¤ì(€€€€€¥˜€¡•‘•!¥Ð¤ì(€€€€€€€Í•±•Ñ¥½¸€ôìÑåÁ”è€‰•‘”ˆ°¥è•‘•!¥Ð¹¥ôì(€€€€€€€ÍÁ±¥ÑM•±•Ñ•¡Á½¥¹Ð°•‘•!¥Ð¹¥¤ì(€€€€€ô•±Í”ì(€€€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰9¥”ÑÉ…™¥½¹¼Ü­Ééåß¸AÉéå‰±§ðÝ¥‘½¬¤­±¥­¹¥¨‘½¯	…‘¹¥•¨¸ˆì(€€€€€ô(€€€€€ÕÁ‘…Ñ•A…¹•° ¤ì(€€€€€ÅÕ•Õ•É…Ü ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€½¹ÍÐÝ…¹ÑÍA…¸€ôÁ…¹5½‘”ñðÍÁ…•!•±ñð•Ù•¹Ð¹‰ÕÑÑ½¸€ôôô€Äì(€€€¥˜€¡Ý…¹ÑÍA…¸¤ì(€€€€€‘É…œ€ôì(€€€€€€€µ½‘”è€‰Á…¸ˆ°(€€€€€€€Á½¥¹Ñ•É%è•Ù•¹Ð¹Á½¥¹Ñ•É%°(€€€€€€€±…ÍÑ±¥•¹Ñ`è•Ù•¹Ð¹±¥•¹Ñ`°(€€€€€€€±…ÍÑ±¥•¹Ñdè•Ù•¹Ð¹±¥•¹Ñd°(€€€€€€€µ½Ù•è™…±Í”(€€€€€ôì(€€€€€½Ù•É±…ä¹Í•ÑA½¥¹Ñ•É…ÁÑÕÉ”¡•Ù•¹Ð¹Á½¥¹Ñ•É%¤ì(€€€€€½Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹…‘ ‰¥ÌµÁ…¹¹¥¹œˆ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€½¹ÍÐ¡¥Ð€ô¡¥ÑQ•ÍÐ¡Á½¥¹Ð¤ì(€€€Í•±•Ñ¥½¸€ô¡¥Ð€üìÑåÁ”è¡¥Ð¹ÑåÁ”°¥è¡¥Ð¹¥°¡…¹‘±”è¡¥Ð¹¡…¹‘±”ô€è¹Õ±°ì(€€€ÕÁ‘…Ñ•A…¹•° ¤ì(€€€ÅÕ•Õ•É…Ü ¤ì((€€€¥˜€¡¡¥Ðü¹ÑåÁ”€ôôô€‰¹½‘”ˆ€˜˜ÁÉ½Ñ•Ñ•‘9½‘•Ì¹¡…Ì¡¡¥Ð¹¥¤¤ì(€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰9½‘”Í½ÕÉ”©•ÍÐ¡É½¹¥½¹äì©•¼­ÉéåÝ”¤Õ¡ÝåÑäÁ½é½ÍÑ…«•‘åÑ½Ý…±¹”¸ˆì(€€€ô•±Í”¥˜€¡¡¥Ðü¹ÑåÁ”€ôôô€‰¹½‘”ˆñð¡¥Ðü¹ÑåÁ”€ôôô€‰¡…¹‘±”ˆ¤ì(€€€€€‘É…œ€ôì(€€€€€€€µ½‘”è€‰•‘¥Ðˆ°(€€€€€€€Á½¥¹Ñ•É%è•Ù•¹Ð¹Á½¥¹Ñ•É%°(€€€€€€€ÍÑ…ÉÑMÑ…Ñ”èÍ•É¥…±¥é•‘5…À ¤°(€€€€€€€±…ÍÑ`èÁ½¥¹Ð¹à°(€€€€€€€±…ÍÑdèÁ½¥¹Ð¹ä°(€€€€€€€µ½Ù•è™…±Í”(€€€€€ôì(€€€€€½Ù•É±…ä¹Í•ÑA½¥¹Ñ•É…ÁÑÕÉ”¡•Ù•¹Ð¹Á½¥¹Ñ•É%¤ì(€€€€€½Ù•É±…ä¹ÍÑå±”¹ÕÉÍ½È€ô€‰É…‰‰¥¹œˆì(€€€ô(€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€ô¤ì((€½Ù•É±…ä¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰Á½¥¹Ñ•Éµ½Ù”ˆ°€¡•Ù•¹Ð¤€ôøì(€€€¥˜€¡½¹¹•Ñ5½‘”¤ì(€€€€€½¹¹•ÑA½¥¹Ñ•È€ôÁ½¥¹Ñ•ÉA½¥¹Ð¡•Ù•¹Ð¤ì(€€€€€ÅÕ•Õ•É…Ü ¤ì(€€€ô(€€€¥˜€ …‘É…œñð‘É…œ¹Á½¥¹Ñ•É%€„ôô•Ù•¹Ð¹Á½¥¹Ñ•É%¤É•ÑÕÉ¸ì(€€€¥˜€¡‘É…œ¹µ½‘”€ôôô€‰Á…¸ˆ¤ì(€€€€€½¹ÍÐ‘à€ô•Ù•¹Ð¹±¥•¹Ñ`€´‘É…œ¹±…ÍÑ±¥•¹Ñ`ì(€€€€€½¹ÍÐ‘ä€ô•Ù•¹Ð¹±¥•¹Ñd€´‘É…œ¹±…ÍÑ±¥•¹Ñdì(€€€€€‘É…œ¹±…ÍÑ±¥•¹Ñ`€ô•Ù•¹Ð¹±¥•¹Ñ`ì(€€€€€‘É…œ¹±…ÍÑ±¥•¹Ñd€ô•Ù•¹Ð¹±¥•¹Ñdì(€€€€€¥˜€ …‘à€˜˜€…‘ä¤É•ÑÕÉ¸ì(€€€€€‘É…œ¹µ½Ù•€ôÑÉÕ”ì(€€€€€Ù¥•Ü¹à€¬ô‘àì(€€€€€Ù¥•Ü¹ä€¬ô‘äì(€€€€€…ÁÁ±åY¥•Ü ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€ …Í•±•Ñ¥½¸¤É•ÑÕÉ¸ì(€€€½¹ÍÐÁ½¥¹Ð€ôÁ½¥¹Ñ•ÉA½¥¹Ð¡•Ù•¹Ð¤ì(€€€½¹ÍÐÁÉ•¥Í¥½¸€ô•Ù•¹Ð¹Í¡¥™Ñ-•ä€ü€¸È€è€Äì(€€€½¹ÍÐ‘à€ô€¡Á½¥¹Ð¹à€´‘É…œ¹±…ÍÑ`¤€¨ÁÉ•¥Í¥½¸ì(€€€½¹ÍÐ‘ä€ô€¡Á½¥¹Ð¹ä€´‘É…œ¹±…ÍÑd¤€¨ÁÉ•¥Í¥½¸ì(€€€‘É…œ¹±…ÍÑ`€ôÁ½¥¹Ð¹àì(€€€‘É…œ¹±…ÍÑd€ôÁ½¥¹Ð¹äì(€€€¥˜€ …‘à€˜˜€…‘ä¤É•ÑÕÉ¸ì(€€€‘É…œ¹µ½Ù•€ôÑÉÕ”ì((€€€¥˜€¡Í•±•Ñ¥½¸¹ÑåÁ”€ôôô€‰¹½‘”ˆ¤ì(€€€€€½¹ÍÐ¹½‘”€ôµ…À¹¹½‘•ÍmÍ•±•Ñ¥½¸¹¥‘tì(€€€€€¥˜€ …¹½‘”¤É•ÑÕÉ¸ì(€€€€€¹½‘•lÁt€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸ Ä°¹½‘•lÁt€¬‘à¤¤ì(€€€€€¹½‘•lÅt€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸ Ä°¹½‘•lÅt€¬‘ä¤¤ì(€€€€€µ…À¹•‘•Ì¹™½É…  ¡•‘”¤€ôøì(€€€€€€€¥˜€¡•‘”¹™É½´€ôôôÍ•±•Ñ¥½¸¹¥¤ì(€€€€€€€€€•‘”¹ŒÅlÁt€¬ô‘àì(€€€€€€€€€•‘”¹ŒÅlÅt€¬ô‘äì(€€€€€€€ô(€€€€€€€¥˜€¡•‘”¹Ñ¼€ôôôÍ•±•Ñ¥½¸¹¥¤ì(€€€€€€€€€•‘”¹ŒÉlÁt€¬ô‘àì(€€€€€€€€€•‘”¹ŒÉlÅt€¬ô‘äì(€€€€€€€ô(€€€€€ô¤ì(€€€ô•±Í”¥˜€¡Í•±•Ñ¥½¸¹ÑåÁ”€ôôô€‰¡…¹‘±”ˆ¤ì(€€€€€½¹ÍÐ•‘”€ô•‘•	å%¡Í•±•Ñ¥½¸¹¥¤ì(€€€€€¥˜€ …•‘”¤É•ÑÕÉ¸ì(€€€€€•‘•mÍ•±•Ñ¥½¸¹¡…¹‘±•ulÁt€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸ Ä°•‘•mÍ•±•Ñ¥½¸¹¡…¹‘±•ulÁt€¬‘à¤¤ì(€€€€€•‘•mÍ•±•Ñ¥½¸¹¡…¹‘±•ulÅt€ô5…Ñ ¹µ…à À°5…Ñ ¹µ¥¸ Ä°•‘•mÍ•±•Ñ¥½¸¹¡…¹‘±•ulÅt€¬‘ä¤¤ì(€€€ô(€€€‘•Ø¹É•‰Õ¥± ¤ì(€€€…ÕÑ½Í…Ù” ¤ì(€€€ÕÁ‘…Ñ•A…¹•° ¤ì(€€€ÅÕ•Õ•É…Ü ¤ì(€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€ô¤ì((€™Õ¹Ñ¥½¸•¹‘É…œ¡•Ù•¹Ð¤ì(€€€¥˜€ …‘É…œñð‘É…œ¹Á½¥¹Ñ•É%€„ôô•Ù•¹Ð¹Á½¥¹Ñ•É%¤É•ÑÕÉ¸ì(€€€¥˜€¡½Ù•É±…ä¹¡…ÍA½¥¹Ñ•É…ÁÑÕÉ”¡•Ù•¹Ð¹Á½¥¹Ñ•É%¤¤½Ù•É±…ä¹É•±•…Í•A½¥¹Ñ•É…ÁÑÕÉ”¡•Ù•¹Ð¹Á½¥¹Ñ•É%¤ì(€€€½Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” ‰¥ÌµÁ…¹¹¥¹œˆ¤ì(€€€½Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹Ñ½±” ‰¥ÌµÁ…¸µÉ•…‘äˆ°Á…¹5½‘”ñðÍÁ…•!•±¤ì(€€€¥˜€¡‘É…œ¹µ½‘”€ôôô€‰•‘¥Ðˆ€˜˜‘É…œ¹µ½Ù•€˜˜‘É…œ¹ÍÑ…ÉÑMÑ…Ñ”€„ôôÍ•É¥…±¥é•‘5…À ¤¤ì(€€€€€½µµ¥Ð ‰i…Á¥Í…¹¼­½É•­Ód•½µ•ÑÉ¥¤¸ˆ¤ì(€€€ô(€€€‘É…œ€ô¹Õ±°ì(€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€ô((€½Ù•É±…ä¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰Á½¥¹Ñ•ÉÕÀˆ°•¹‘É…œ¤ì(€½Ù•É±…ä¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰Á½¥¹Ñ•É…¹•°ˆ°•¹‘É…œ¤ì(€½Ù•É±…ä¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰Ý¡••°ˆ°€¡•Ù•¹Ð¤€ôøì(€€€½¹ÍÐ™…Ñ½È€ô5…Ñ ¹•áÀ µ•Ù•¹Ð¹‘•±Ñ…d€¨€¸ÀÀÄÌÔ¤ì(€€€é½½µÐ¡•Ù•¹Ð¹±¥•¹Ñ`°•Ù•¹Ð¹±¥•¹Ñd°Ù¥•Ü¹Í…±”€¨™…Ñ½È¤ì(€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€ô°ìÁ…ÍÍ¥Ù”è™…±Í”ô¤ì(€½Ù•É±…ä¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰…Õá±¥¬ˆ°€¡•Ù•¹Ð¤€ôøì(€€€¥˜€¡•Ù•¹Ð¹‰ÕÑÑ½¸€ôôô€Ä¤•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€ô¤ì((€Á…¹•°¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€¡•Ù•¹Ð¤€ôøì(€€€½¹ÍÐ‰ÕÑÑ½¸€ô•Ù•¹Ð¹Ñ…É•Ð¹±½Í•ÍÐ ‰m‘…Ñ„µ…Ñ¥½¹tˆ¤ì(€€€¥˜€ …‰ÕÑÑ½¸¤É•ÑÕÉ¸ì(€€€½¹ÍÐ…Ñ¥½¸€ô‰ÕÑÑ½¸¹‘…Ñ…Í•Ð¹…Ñ¥½¸ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰Õ¹‘¼ˆ¤É•ÍÑ½É•!¥ÍÑ½Éä¡¡¥ÍÑ½Éå%¹‘•à€´€Ä¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰É•‘¼ˆ¤É•ÍÑ½É•!¥ÍÑ½Éä¡¡¥ÍÑ½Éå%¹‘•à€¬€Ä¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰É•Í•Ðˆ¤ì(€€€€€É•Á±…•5…À¡Í½ÕÉ•5…À¤ì(€€€€€Í•±•Ñ¥½¸€ô¹Õ±°ì(€€€€€½µµ¥Ð ‰AÉéåÝËÍ½¹¼µ…ÃdƒéËÍ“	½ß¸ˆ¤ì(€€€ô(€€€¥˜€¡…Ñ¥½¸€ôôô€‰ÍÁ±¥Ðˆ¤Í•ÑMÁ±¥Ñ5½‘” …ÍÁ±¥Ñ5½‘”¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰½¹¹•Ðˆ¤Í•Ñ½¹¹•Ñ5½‘” …½¹¹•Ñ5½‘”¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰‘•±•Ñ”ˆ¤ì(€€€€€¥˜€¡Á…¹5½‘”¤Í•ÑA…¹5½‘”¡™…±Í”¤ì(€€€€€¥˜€¡ÍÁ±¥Ñ5½‘”¤Í•ÑMÁ±¥Ñ5½‘”¡™…±Í”¤ì(€€€€€¥˜€¡½¹¹•Ñ5½‘”¤Í•Ñ½¹¹•Ñ5½‘”¡™…±Í”¤ì(€€€€€‘•±•Ñ•M•±•Ñ¥½¸ ¤ì(€€€ô(€€€¥˜€¡…Ñ¥½¸€ôôô€‰ÁÕ±Í”ˆ¤ì(€€€€€¥˜€¡•¹‘Á½¥¹ÑÕ‘¥Ð¹ÉÕ¹¹¥¹œ¤ÍÑ½Á¹‘Á½¥¹ÑÕ‘¥Ð ‰Õ‘åÐé…ÑÉéåµ…¹ä¹„Éé•èÁ½©•‘å¹é•¼Ñ•ÍÑÔ¸ˆ¤ì(€€€€€ÁÉ•Ù¥•ÝM•±•Ñ¥½¸ ¤ì(€€€ô(€€€¥˜€¡…Ñ¥½¸€ôôô€‰…Õ‘¥Ðˆ¤ì(€€€€€¥˜€¡•¹‘Á½¥¹ÑÕ‘¥Ð¹ÉÕ¹¹¥¹œ¤ÍÑ½Á¹‘Á½¥¹ÑÕ‘¥Ð ¤ì(€€€€€•±Í”ÍÑ…ÉÑ¹‘Á½¥¹ÑÕ‘¥Ð ¤ì(€€€ô(€€€¥˜€¡…Ñ¥½¸€ôôô€‰•áÁ½ÉÐˆ¤•áÁ½ÉÑ)Í½¸¡ÑÉÕ”¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰½Áäˆ¤½Áå)Í½¸ ¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰‘½Ý¹±½…ˆ¤‘½Ý¹±½…‘)Í½¸ ¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰é½½´µ½ÕÐˆ¤é½½µÉ½µ•¹Ñ•È Ä€¼€Ä¸ÈÔ¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰é½½´µ¥¸ˆ¤é½½µÉ½µ•¹Ñ•È Ä¸ÈÔ¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰Á…¸ˆ¤Í•ÑA…¹5½‘” …Á…¹5½‘”¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰™¥Ðˆ¤É•Í•ÑY¥•Ü ¤ì(€€€¥˜€¡…Ñ¥½¸€ôôô€‰½±±…ÁÍ”ˆ¤ì(€€€€€½¹ÍÐ½±±…ÁÍ•€ôÁ…¹•°¹±…ÍÍ1¥ÍÐ¹Ñ½±” ‰¥Ìµ½±±…ÁÍ•ˆ¤ì(€€€€€‰ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ð€ô½±±…ÁÍ•€ü€ˆ¬ˆ€è€‹Š"Hˆì(€€€€€‰ÕÑÑ½¸¹Í•ÑÑÑÉ¥‰ÕÑ” ‰…É¥„µ•áÁ…¹‘•ˆ°MÑÉ¥¹œ …½±±…ÁÍ•¤¤ì(€€€€€‰ÕÑÑ½¸¹Í•ÑÑÑÉ¥‰ÕÑ” ‰…É¥„µ±…‰•°ˆ°½±±…ÁÍ•€ü€‰I½éÝ§Á…¹•°ˆ€è€‰iÝ§Á…¹•°ˆ¤ì(€€€ô(€€€ÕÁ‘…Ñ•A…¹•° ¤ì(€€€ÅÕ•Õ•É…Ü ¤ì(€ô¤ì((€Ý¥¹‘½Ü¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰­•å‘½Ý¸ˆ°€¡•Ù•¹Ð¤€ôøì(€€€½¹ÍÐµ½‘¥™¥•È€ô•Ù•¹Ð¹ÑÉ±-•äñð•Ù•¹Ð¹µ•Ñ…-•äì(€€€¥˜€¡µ½‘¥™¥•È€˜˜•Ù•¹Ð¹­•ä¹Ñ½1½Ý•É…Í” ¤€ôôô€‰èˆ¤ì(€€€€€É•ÍÑ½É•!¥ÍÑ½Éä¡•Ù•¹Ð¹Í¡¥™Ñ-•ä€ü¡¥ÍÑ½Éå%¹‘•à€¬€Ä€è¡¥ÍÑ½Éå%¹‘•à€´€Ä¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡µ½‘¥™¥•È€˜˜•Ù•¹Ð¹­•ä¹Ñ½1½Ý•É…Í” ¤€ôôô€‰äˆ¤ì(€€€€€É•ÍÑ½É•!¥ÍÑ½Éä¡¡¥ÍÑ½Éå%¹‘•à€¬€Ä¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹Ñ…É•Ð€ôôô½ÕÑÁÕÐ¤É•ÑÕÉ¸ì(€€€¥˜€¡•Ù•¹Ð¹½‘”€ôôô€‰MÁ…”ˆ¤ì(€€€€€ÍÁ…•!•±€ôÑÉÕ”ì(€€€€€½Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹…‘ ‰¥ÌµÁ…¸µÉ•…‘äˆ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä€ôôô€ˆÀˆ¤ì(€€€€€É•Í•ÑY¥•Ü ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä¹Ñ½1½Ý•É…Í” ¤€ôôô€‰ ˆ¤ì(€€€€€Í•ÑA…¹5½‘” …Á…¹5½‘”¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä¹Ñ½1½Ý•É…Í” ¤€ôôô€‰Œˆ¤ì(€€€€€Í•Ñ½¹¹•Ñ5½‘” …½¹¹•Ñ5½‘”¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä€ôôô€ˆ¬ˆñð•Ù•¹Ð¹­•ä€ôôô€ˆôˆ¤ì(€€€€€é½½µÉ½µ•¹Ñ•È Ä¸ÈÔ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä€ôôô€ˆ´ˆ¤ì(€€€€€é½½µÉ½µ•¹Ñ•È Ä€¼€Ä¸ÈÔ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä€ôôô€‰•±•Ñ”ˆñð•Ù•¹Ð¹­•ä€ôôô€‰	…­ÍÁ…”ˆ¤ì(€€€€€¥˜€¡½¹¹•Ñ5½‘”¤ì(€€€€€€€Í•Ñ½¹¹•Ñ5½‘”¡™…±Í”¤ì(€€€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€€€€€É•ÑÕÉ¸ì(€€€€€ô(€€€€€‘•±•Ñ•M•±•Ñ¥½¸ ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä¹Ñ½1½Ý•É…Í” ¤€ôôô€‰Ìˆ¤ì(€€€€€Í•ÑMÁ±¥Ñ5½‘” …ÍÁ±¥Ñ5½‘”¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä¹Ñ½1½Ý•É…Í” ¤€ôôô€‰Àˆ¤ì(€€€€€ÁÉ•Ù¥•ÝM•±•Ñ¥½¸ ¤ì(€€€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€€€ô(€€€¥˜€¡•Ù•¹Ð¹­•ä€ôôô€‰Í…Á”ˆ¤ì(€€€€€¥˜€¡•¹‘Á½¥¹ÑÕ‘¥Ð¹ÉÕ¹¹¥¹œ¤ÍÑ½Á¹‘Á½¥¹ÑÕ‘¥Ð ‰Õ‘åÐé…ÑÉéåµ…¹ä¸ˆ¤ì(€€€€€Í•ÑMÁ±¥Ñ5½‘”¡™…±Í”¤ì(€€€€€Í•Ñ½¹¹•Ñ5½‘”¡™…±Í”¤ì(€€€€€Í•ÑA…¹5½‘”¡™…±Í”¤ì(€€€€€‘•Ø¹ÍÑ½À ¤ì(€€€€€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ô€‰¹Õ±½Ý…¹¼¹…Éëe‘é¥”½Ñ•ÍÐ¸ˆì(€€€€€ÅÕ•Õ•É…Ü ¤ì(€€€ô(€ô¤ì((€Ý¥¹‘½Ü¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰­•åÕÀˆ°€¡•Ù•¹Ð¤€ôøì(€€€¥˜€¡•Ù•¹Ð¹½‘”€„ôô€‰MÁ…”ˆ¤É•ÑÕÉ¸ì(€€€ÍÁ…•!•±€ô™…±Í”ì(€€€¥˜€¡‘É…œü¹µ½‘”€„ôô€‰Á…¸ˆ€˜˜€…Á…¹5½‘”¤½Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” ‰¥ÌµÁ…¸µÉ•…‘äˆ¤ì(€€€•Ù•¹Ð¹ÁÉ•Ù•¹Ñ•™…Õ±Ð ¤ì(€ô¤ì(€Ý¥¹‘½Ü¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰‰±ÕÈˆ°€ ¤€ôøì(€€€ÍÁ…•!•±€ô™…±Í”ì(€€€¥˜€¡‘É…œü¹µ½‘”€„ôô€‰Á…¸ˆ€˜˜€…Á…¹5½‘”¤½Ù•É±…ä¹±…ÍÍ1¥ÍÐ¹É•µ½Ù” ‰¥ÌµÁ…¸µÉ•…‘äˆ¤ì(€ô¤ì((€±•ÐÉ•ÍÑ½É•€ô™…±Í”ì(€ÑÉäì(€€€½¹ÍÐÝ½É­¥¹œ€ô)M=8¹Á…ÉÍ”¡±½…±MÑ½É…”¹•Ñ%Ñ•´¡ÍÑ½É…•-•ä¤ñð€‰¹Õ±°ˆ¤ì(€€€¥˜€¡Ù…±¥‘5…À¡Ý½É­¥¹œ¤¤ì(€€€€€É•Á±…•5…À¡Ý½É­¥¹œ¤ì(€€€€€É•ÍÑ½É•€ôÑÉÕ”ì(€€€ô(€ô…Ñ ì(€€€±½…±MÑ½É…”¹É•µ½Ù•%Ñ•´¡ÍÑ½É…•-•ä¤ì(€ô((€¡¥ÍÑ½Éä€ômÍ•É¥…±¥é•‘5…À ¥tì(€¡¥ÍÑ½Éå%¹‘•à€ô€Àì(€¹•ÜI•Í¥é•=‰Í•ÉÙ•È¡É•Í¥é”¤¹½‰Í•ÉÙ”¡É¥œ¤ì(€…ÁÁ±åY¥•Ü ¤ì(€É•Í¥é” ¤ì(€ÕÁ‘…Ñ•A…¹•° ¤ì(€ÍÑ…ÑÕÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ð€ôÉ•ÍÑ½É•€ü€‰]éåÑ…¹¼±½­…±»­½Á§dÉ½‰½ë¸ˆ€è€‰‘åÑÕ©•Íèµ…ÃdƒéËÍ“	½ßìéµ¥…¹äé…Á¥ÍÕ«Í§d±½­…±¹¥”¸ˆì)ô¤ ¤ì(
+      connectButton.textContent = "Nowa krzywa (C)";
+      overlay.classList.remove("is-connecting");
+    }
+    splitButton.classList.toggle("is-active", splitMode);
+    splitButton.textContent = splitMode ? "Kliknij krzywÄ…â€¦" : "Dodaj node (S)";
+    statusLabel.textContent = splitMode
+      ? "Dodaj node: kliknij istniejÄ…cÄ… krzywÄ… dokÅ‚adnie w miejscu nowego punktu."
+      : "Tryb dodawania noda wyÅ‚Ä…czony.";
+    queueDraw();
+  }
+
+  function setConnectMode(nextValue) {
+    connectMode = nextValue;
+    connectPointer = null;
+    if (connectMode) {
+      panMode = false;
+      panButton.classList.remove("is-active");
+      overlay.classList.toggle("is-pan-ready", spaceHeld);
+      splitMode = false;
+      splitButton.classList.remove("is-active");
+      splitButton.textContent = "Dodaj node (S)";
+      connectFrom = selection?.type === "node" ? selection.id : "";
+    } else {
+      connectFrom = "";
+    }
+    connectButton.classList.toggle("is-active", connectMode);
+    connectButton.textContent = connectMode
+      ? connectFrom ? "Kliknij celâ€¦" : "Kliknij startâ€¦"
+      : "Nowa krzywa (C)";
+    overlay.classList.toggle("is-connecting", connectMode);
+    statusLabel.textContent = connectMode
+      ? connectFrom
+        ? `Nowa krzywa od ${connectFrom}: kliknij node docelowy albo puste miejsce.`
+        : "Nowa krzywa: kliknij node poczÄ…tkowy."
+      : "Tryb tworzenia krzywej wyÅ‚Ä…czony.";
+    queueDraw();
+  }
+
+  function cubic(edge, t) {
+    const p0 = map.nodes[edge.from];
+    const p1 = edge.c1;
+    const p2 = edge.c2;
+    const p3 = map.nodes[edge.to];
+    const mt = 1 - t;
+    return [
+      mt ** 3 * p0[0] + 3 * mt ** 2 * t * p1[0] + 3 * mt * t ** 2 * p2[0] + t ** 3 * p3[0],
+      mt ** 3 * p0[1] + 3 * mt ** 2 * t * p1[1] + 3 * mt * t ** 2 * p2[1] + t ** 3 * p3[1]
+    ];
+  }
+
+  function edgeById(id) {
+    return map.edges.find((edge) => edge.id === id);
+  }
+
+  function closestOnEdge(edge, point) {
+    let best = { distance: Number.POSITIVE_INFINITY, t: 0, point: map.nodes[edge.from] };
+    for (let index = 0; index <= 120; index += 1) {
+      const t = index / 120;
+      const sample = cubic(edge, t);
+      const distance = Math.hypot((sample[0] - point.x) * width, (sample[1] - point.y) * height);
+      if (distance < best.distance) best = { distance, t, point: sample };
+    }
+    return best;
+  }
+
+  function hitTest(point) {
+    const bestNode = hitNode(point);
+    if (bestNode) return bestNode;
+
+    const candidateEdges = selection?.type === "edge"
+      ? [edgeById(selection.id)].filter(Boolean)
+      : selection?.type === "node"
+        ? map.edges.filter((edge) => edge.from === selection.id || edge.to === selection.id)
+        : [];
+    for (const edge of candidateEdges) {
+      for (const handle of ["c1", "c2"]) {
+        const control = edge[handle];
+        const distance = Math.hypot((control[0] - point.x) * width, (control[1] - point.y) * height);
+        if (distance <= 11) return { type: "handle", id: edge.id, handle, distance };
+      }
+    }
+
+    return hitEdge(point);
+  }
+
+  function hitNode(point, maximumDistance = 10) {
+    let bestNode = null;
+    Object.entries(map.nodes).forEach(([id, node]) => {
+      const distance = Math.hypot((node[0] - point.x) * width, (node[1] - point.y) * height);
+      if (distance <= maximumDistance && (!bestNode || distance < bestNode.distance)) {
+        bestNode = { type: "node", id, distance };
+      }
+    });
+    return bestNode;
+  }
+
+  function hitEdge(point, maximumDistance = 12) {
+    let bestEdge = null;
+    map.edges.forEach((edge) => {
+      const candidate = closestOnEdge(edge, point);
+      if (candidate.distance <= maximumDistance && (!bestEdge || candidate.distance < bestEdge.distance)) {
+        bestEdge = { type: "edge", id: edge.id, distance: candidate.distance, t: candidate.t };
+      }
+    });
+    return bestEdge;
+  }
+
+  function selectedEdges() {
+    if (selection?.type === "edge" || selection?.type === "handle") {
+      const edge = edgeById(selection.id);
+      return edge ? [edge] : [];
+    }
+    if (selection?.type === "node") {
+      return map.edges.filter((edge) => edge.from === selection.id || edge.to === selection.id);
+    }
+    return [];
+  }
+
+  function vectorAngle(a, b) {
+    const av = [a[0] * map.image.width, a[1] * map.image.height];
+    const bv = [b[0] * map.image.width, b[1] * map.image.height];
+    const denominator = Math.max(.00001, Math.hypot(...av) * Math.hypot(...bv));
+    const cosine = Math.max(-1, Math.min(1, (av[0] * bv[0] + av[1] * bv[1]) / denominator));
+    return Math.acos(cosine) * 180 / Math.PI;
+  }
+
+  function curveRadius(edge, atEnd) {
+    const pixel = (point) => [point[0] * map.image.width, point[1] * map.image.height];
+    const [p0, p1, p2, p3] = [
+      map.nodes[edge.from], edge.c1, edge.c2, map.nodes[edge.to]
+    ].map(pixel);
+    const first = atEnd
+      ? [3 * (p3[0] - p2[0]), 3 * (p3[1] - p2[1])]
+      : [3 * (p1[0] - p0[0]), 3 * (p1[1] - p0[1])];
+    const second = atEnd
+      ? [6 * (p3[0] - 2 * p2[0] + p1[0]), 6 * (p3[1] - 2 * p2[1] + p1[1])]
+      : [6 * (p0[0] - 2 * p1[0] + p2[0]), 6 * (p0[1] - 2 * p1[1] + p2[1])];
+    const cross = Math.abs(first[0] * second[1] - first[1] * second[0]);
+    if (cross < .0001) return Number.POSITIVE_INFINITY;
+    return Math.pow(Math.hypot(...first), 3) / cross;
+  }
+
+  function diagnostics() {
+    const pairs = new Map();
+    const paths = [];
+    map.roots.forEach((root) => paths.push([...root, "flare_t1"]));
+    map.groups.forEach((group) => group.terminals.forEach((terminal) => paths.push([...group.prefix, ...terminal.edges])));
+    paths.forEach((path) => {
+      for (let index = 0; index < path.length - 1; index += 1) {
+        const incoming = edgeById(path[index]);
+        const outgoing = edgeById(path[index + 1]);
+        if (!incoming || !outgoing || incoming.to !== outgoing.from) continue;
+        const node = map.nodes[incoming.to];
+        const incomingVector = [node[0] - incoming.c2[0], node[1] - incoming.c2[1]];
+        const outgoingVector = [outgoing.c1[0] - node[0], outgoing.c1[1] - node[1]];
+        const angle = vectorAngle(incomingVector, outgoingVector);
+        const incomingLength = Math.hypot(incomingVector[0] * map.image.width, incomingVector[1] * map.image.height);
+        const outgoingLength = Math.hypot(outgoingVector[0] * map.image.width, outgoingVector[1] * map.image.height);
+        const handleRatio = Math.max(incomingLength, outgoingLength) / Math.max(1, Math.min(incomingLength, outgoingLength));
+        const radiusIn = curveRadius(incoming, true);
+        const radiusOut = curveRadius(outgoing, false);
+        const minimumRadius = Math.min(radiusIn, radiusOut);
+        const radiusRatio = Math.max(radiusIn, radiusOut) / Math.max(.001, minimumRadius);
+        const key = `${incoming.id}>${outgoing.id}`;
+        pairs.set(key, {
+          incoming, outgoing, node: incoming.to, angle, handleRatio,
+          radiusIn, radiusOut, minimumRadius, radiusRatio
+        });
+      }
+    });
+    return [...pairs.values()].sort((a, b) => {
+      const severity = (item) => Math.max(
+        item.angle,
+        item.minimumRadius < 24 ? 38 - item.minimumRadius : 0,
+        Number.isFinite(item.radiusRatio) ? (item.radiusRatio - 1) * 9 : 0,
+        (item.handleRatio - 1) * 5
+      );
+      return severity(b) - severity(a);
+    });
+  }
+
+  function queueDraw() {
+    cancelAnimationFrame(drawRequest);
+    drawRequest = requestAnimationFrame(draw);
+  }
+
+  function drawEdge(edge, color, lineWidth = 1, alpha = .7) {
+    context.beginPath();
+    for (let index = 0; index <= 56; index += 1) {
+      const point = pointToCanvas(cubic(edge, index / 56));
+      if (index === 0) context.moveTo(point[0], point[1]);
+      else context.lineTo(point[0], point[1]);
+    }
+    context.globalAlpha = alpha;
+    context.strokeStyle = color;
+    context.lineWidth = lineWidth;
+    context.stroke();
+  }
+
+  function drawHandle(edge, handle) {
+    const node = handle === "c1" ? map.nodes[edge.from] : map.nodes[edge.to];
+    const control = edge[handle];
+    const [nx, ny] = pointToCanvas(node);
+    const [hx, hy] = pointToCanvas(control);
+    const color = handle === "c1" ? "#ffd36e" : "#55ddeb";
+    context.globalAlpha = .94;
+    context.strokeStyle = color;
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(nx, ny);
+    context.lineTo(hx, hy);
+    context.stroke();
+    context.fillStyle = color;
+    context.beginPath();
+    context.arc(hx, hy, 5, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = "#071522";
+    context.font = "8px ui-monospace, monospace";
+    context.fillText(handle.toUpperCase(), hx + 6, hy - 5);
+  }
+
+  function draw() {
+    context.clearRect(0, 0, width, height);
+    const warnings = diagnostics();
+    const warnedNodes = new Set(warnings.filter((item) => (
+      item.angle >= 12 || item.minimumRadius < 24 || item.radiusRatio > 3
+    )).map((item) => item.node));
+
+    map.edges.forEach((edge) => drawEdge(edge, "#8fd2dd", .7, .18));
+    selectedEdges().forEach((edge) => {
+      drawEdge(edge, "#ff5c8d", 2, .94);
+      drawHandle(edge, "c1");
+      drawHandle(edge, "c2");
+      const middle = pointToCanvas(cubic(edge, .5));
+      context.globalAlpha = 1;
+      context.fillStyle = "#fff0df";
+      context.font = "10px ui-monospace, monospace";
+      context.fillText(edge.id, middle[0] + 7, middle[1] - 7);
+    });
+
+    Object.entries(map.nodes).forEach(([id, point]) => {
+      const [x, y] = pointToCanvas(point);
+      const isSelected = selection?.type === "node" && selection.id === id;
+      context.globalAlpha = 1;
+      context.fillStyle = isSelected ? "#fff0df" : warnedNodes.has(id) ? "#ffb36e" : "#7ec8dd";
+      context.beginPath();
+      context.arc(x, y, isSelected ? 6 : 3.4, 0, Math.PI * 2);
+      context.fill();
+      if (isSelected || warnedNodes.has(id)) {
+        context.font = "9px ui-monospace, monospace";
+        context.fillText(id, x + 7, y + 10);
+      }
+    });
+
+    if (endpointAudit.current && map.nodes[endpointAudit.current]) {
+      const [x, y] = pointToCanvas(map.nodes[endpointAudit.current]);
+      const color = endpointAudit.currentStatus === "passed"
+        ? "#83f0bc"
+        : endpointAudit.currentStatus === "failed"
+          ? "#ff7f8f"
+          : "#ffd36e";
+      context.globalAlpha = 1;
+      context.strokeStyle = color;
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.arc(x, y, 11, 0, Math.PI * 2);
+      context.stroke();
+      context.globalAlpha = .2;
+      context.fillStyle = color;
+      context.beginPath();
+      context.arc(x, y, 16, 0, Math.PI * 2);
+      context.fill();
+    }
+
+    if (connectMode) {
+      context.globalAlpha = 1;
+      context.fillStyle = "#b9f5df";
+      context.font = "11px ui-monospace, monospace";
+      context.fillText(
+        connectFrom
+          ? `NOWA KRZYWA: ${connectFrom} â†’ kliknij node lub puste miejsce`
+          : "NOWA KRZYWA: kliknij node poczÄ…tkowy",
+        18,
+        30
+      );
+      const from = map.nodes[connectFrom];
+      if (from) {
+        const [fromX, fromY] = pointToCanvas(from);
+        context.strokeStyle = "#b9f5df";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(fromX, fromY, 8, 0, Math.PI * 2);
+        context.stroke();
+        if (connectPointer) {
+          const [toX, toY] = pointToCanvas([connectPointer.x, connectPointer.y]);
+          context.setLineDash([7, 6]);
+          context.beginPath();
+          context.moveTo(fromX, fromY);
+          context.lineTo(toX, toY);
+          context.stroke();
+          context.setLineDash([]);
+        }
+      }
+    }
+
+    if (splitMode) {
+      context.globalAlpha = 1;
+      context.fillStyle = "#ffd36e";
+      context.font = "11px ui-monospace, monospace";
+      context.fillText("SPLIT: kliknij dowolnÄ… krzywÄ… dokÅ‚adnie w miejscu podziaÅ‚u", 18, 30);
+    }
+  }
+
+  function resize() {
+    width = rig.clientWidth;
+    height = rig.clientHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    overlay.width = Math.max(1, Math.round(width * dpr));
+    overlay.height = Math.max(1, Math.round(height * dpr));
+    overlay.style.width = `${width}px`;
+    overlay.style.height = `${height}px`;
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    queueDraw();
+  }
+
+  function uniqueId(base, source) {
+    let id = base.replace(/[^a-zA-Z0-9_-]/g, "_");
+    let suffix = 2;
+    while (source.has(id)) {
+      id = `${base}_${suffix}`;
+      suffix += 1;
+    }
+    return id;
+  }
+
+  function lerp(a, b, t) {
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+  }
+
+  function pathEndNode(edgeIds) {
+    let endNode = "";
+    edgeIds.forEach((edgeId) => {
+      const edge = edgeById(edgeId);
+      if (edge) endNode = edge.to;
+    });
+    return endNode;
+  }
+
+  function attachConnectionToTerminal(edge) {
+    let attached = false;
+    map.groups.forEach((group) => {
+      group.terminals.forEach((terminal) => {
+        if (attached || terminal.endpoint !== edge.to) return;
+        const route = [...group.prefix, ...terminal.edges];
+        if (pathEndNode(route) !== edge.from) return;
+        terminal.edges.push(edge.id);
+        attached = true;
+      });
+    });
+    return attached;
+  }
+
+  function createConnection(fromId, targetId, point) {
+    const from = map.nodes[fromId];
+    if (!from) {
+      statusLabel.textContent = "Nie znaleziono noda poczÄ…tkowego.";
+      return false;
+    }
+
+    let createdNode = false;
+    if (!targetId) {
+      const nodeIds = new Set(Object.keys(map.nodes));
+      targetId = uniqueId(`${fromId}_node`, nodeIds);
+      map.nodes[targetId] = [
+        Math.max(0, Math.min(1, point.x)),
+        Math.max(0, Math.min(1, point.y))
+      ];
+      createdNode = true;
+    }
+    if (targetId === fromId) {
+      statusLabel.textContent = "Node poczÄ…tkowy i docelowy muszÄ… byÄ‡ rÃ³Å¼ne.";
+      return false;
+    }
+    if (map.edges.some((edge) => edge.from === fromId && edge.to === targetId)) {
+      statusLabel.textContent = "Taka krzywa juÅ¼ istnieje.";
+      return false;
+    }
+
+    const to = map.nodes[targetId];
+    if (!to) return false;
+    const edgeIds = new Set(map.edges.map((edge) => edge.id));
+    const edgeId = uniqueId(`${fromId}_${targetId}`, edgeIds);
+    const incident = map.edges.filter((edge) => edge.from === fromId || edge.to === fromId);
+    const kind = protectedNodes.has(fromId) || incident.some((edge) => edge.kind === "branch")
+      ? "branch"
+      : "twig";
+    const edge = {
+      id: edgeId,
+      from: fromId,
+      to: targetId,
+      c1: lerp(from, to, .32),
+      c2: lerp(from, to, .68),
+      kind,
+      depth: "front",
+      intensity: .82
+    };
+    map.edges.push(edge);
+    const attached = attachConnectionToTerminal(edge);
+    selection = { type: "edge", id: edgeId };
+    setConnectMode(false);
+    dev.rebuild();
+    commit(
+      `${createdNode ? `Utworzono ${targetId} i ` : ""}poÅ‚Ä…czono ${fromId} â†’ ${targetId}`
+      + `${attached ? " oraz przywrÃ³cono trasÄ™ terminala" : ""}.`
+    );
+    queueDraw();
+    return true;
+  }
+
+  function insertAfterReference(existingId, newId) {
+    const insert = (path) => {
+      for (let index = path.length - 1; index >= 0; index -= 1) {
+        if (path[index] === existingId) path.splice(index + 1, 0, newId);
+      }
+    };
+    map.roots.forEach(insert);
+    map.groups.forEach((group) => {
+      insert(group.prefix);
+      group.terminals.forEach((terminal) => insert(terminal.edges));
+    });
+  }
+
+  function removeReferences(edgeId) {
+    const remove = (path) => {
+      for (let index = path.length - 1; index >= 0; index -= 1) {
+        if (path[index] === edgeId) path.splice(index, 1);
+      }
+    };
+    map.roots.forEach(remove);
+    map.groups.forEach((group) => {
+      remove(group.prefix);
+      group.terminals.forEach((terminal) => remove(terminal.edges));
+    });
+  }
+
+  function splitSelected(point, edgeId = selection?.type === "edge" ? selection.id : "") {
+    const edge = edgeById(edgeId);
+    if (!edge) {
+      statusLabel.textContent = "Nie trafiono w krzywÄ…. PrzybliÅ¼ widok i kliknij ponownie.";
+      return false;
+    }
+    if (!edge) return;
+    const nearest = closestOnEdge(edge, point);
+    const t = Math.max(.08, Math.min(.92, nearest.t));
+    const p0 = map.nodes[edge.from];
+    const p1 = edge.c1;
+    const p2 = edge.c2;
+    const p3 = map.nodes[edge.to];
+    const q0 = lerp(p0, p1, t);
+    const q1 = lerp(p1, p2, t);
+    const q2 = lerp(p2, p3, t);
+    const r0 = lerp(q0, q1, t);
+    const r1 = lerp(q1, q2, t);
+    const splitPoint = lerp(r0, r1, t);
+    const nodeIds = new Set(Object.keys(map.nodes));
+    const edgeIds = new Set(map.edges.map((item) => item.id));
+    const nodeId = uniqueId(`${edge.id}_node`, nodeIds);
+    const newEdgeId = uniqueId(`${edge.id}_part2`, edgeIds);
+    const oldTarget = edge.to;
+    const newEdge = {
+      ...clone(edge),
+      id: newEdgeId,
+      from: nodeId,
+      to: oldTarget,
+      c1: r1,
+      c2: q2
+    };
+    map.nodes[nodeId] = splitPoint;
+    edge.to = nodeId;
+    edge.c1 = q0;
+    edge.c2 = r0;
+    const edgeIndex = map.edges.indexOf(edge);
+    map.edges.splice(edgeIndex + 1, 0, newEdge);
+    insertAfterReference(edge.id, newEdgeId);
+    selection = { type: "node", id: nodeId };
+    splitMode = false;
+    splitButton.classList.remove("is-active");
+    splitButton.textContent = "Dodaj node (S)";
+    dev.rebuild();
+    commit(`Podzielono ${edge.id} w t=${t.toFixed(2)}.`);
+    queueDraw();
+    return true;
+  }
+
+  function deleteSelection() {
+    if (!selection) {
+      statusLabel.textContent = "Najpierw kliknij wÄ™zeÅ‚ lub krzywÄ…, potem uÅ¼yj Delete.";
+      return false;
+    }
+    if (selection.type === "edge" || selection.type === "handle") {
+      const edge = edgeById(selection.id);
+      if (!edge) return;
+      removeReferences(edge.id);
+      map.edges.splice(map.edges.indexOf(edge), 1);
+      selection = null;
+      dev.rebuild();
+      commit(`UsuniÄ™to krawÄ™dÅº ${edge.id}.`);
+      queueDraw();
+      return true;
+    }
+
+    if (selection.type === "node") {
+      const nodeId = selection.id;
+      const incoming = map.edges.filter((edge) => edge.to === nodeId);
+      const outgoing = map.edges.filter((edge) => edge.from === nodeId);
+      const incident = [...incoming, ...outgoing];
+      if (protectedNodes.has(nodeId)) {
+        statusLabel.textContent = "Node source jest chroniony.";
+        return false;
+      }
+      if (incoming.length > 1 || outgoing.length > 1) {
+        statusLabel.textContent = "WÄ™zeÅ‚ rozgaÅ‚Ä™zienia: usuÅ„ najpierw zbÄ™dne gaÅ‚Ä™zie.";
+        return false;
+      }
+      if (incoming.length === 1 && outgoing.length === 1) {
+        const before = incoming[0];
+        const after = outgoing[0];
+        before.to = after.to;
+        before.c2 = clone(after.c2);
+        removeReferences(after.id);
+        map.edges.splice(map.edges.indexOf(after), 1);
+      } else {
+        incident.forEach((edge) => {
+          removeReferences(edge.id);
+          map.edges.splice(map.edges.indexOf(edge), 1);
+        });
+      }
+      delete map.nodes[nodeId];
+      selection = null;
+      dev.rebuild();
+      commit(`UsuniÄ™to wÄ™zeÅ‚ ${nodeId}.`);
+      queueDraw();
+      return true;
+    }
+    return false;
+  }
+
+  function pathToNode(target) {
+    const sources = sourceNodeIds();
+    const start = sources[Math.floor(Math.random() * sources.length)];
+    const queue = [{ node: start, path: [] }];
+    const visited = new Set([start]);
+    while (queue.length) {
+      const current = queue.shift();
+      if (current.node === target) return current.path;
+      map.edges.filter((edge) => edge.from === current.node).forEach((edge) => {
+        if (visited.has(edge.to)) return;
+        visited.add(edge.to);
+        queue.push({ node: edge.to, path: [...current.path, edge.id] });
+      });
+    }
+    return [];
+  }
+
+  function sourceNodeIds() {
+    const ids = map.roots
+      .filter((route) => route.length > 0 && route.every((edgeId) => edgeById(edgeId)))
+      .map((route) => edgeById(route[0])?.from)
+      .filter((id) => id && map.nodes[id]);
+    return [...new Set(ids.length ? ids : ["source"])];
+  }
+
+  function endpointNodes() {
+    const degree = new Map(Object.keys(map.nodes).map((id) => [id, 0]));
+    map.edges.forEach((edge) => {
+      degree.set(edge.from, (degree.get(edge.from) || 0) + 1);
+      degree.set(edge.to, (degree.get(edge.to) || 0) + 1);
+    });
+    return [...degree.entries()]
+      .filter(([, count]) => count === 1)
+      .map(([id]) => ({
+        id,
+        point: map.nodes[id],
+        route: pathToNode(id),
+        source: "",
+        status: "pending",
+        note: ""
+      }))
+      .map((entry) => ({
+        ...entry,
+        source: edgeById(entry.route[0])?.from || ""
+      }))
+      .sort((a, b) => a.point[0] - b.point[0] || a.point[1] - b.point[1]);
+  }
+
+  function routeReaches(route, target) {
+    const first = edgeById(route[0]);
+    let node = first?.from || "";
+    if (!sourceNodeIds().includes(node)) return false;
+    for (const edgeId of route) {
+      const edge = edgeById(edgeId);
+      if (!edge || edge.from !== node) return false;
+      node = edge.to;
+    }
+    return route.length > 0 && node === target;
+  }
+
+  function renderEndpointAudit() {
+    if (!endpointAudit.entries.length) {
+      auditLabel.classList.add("is-visible");
+      auditLabel.dataset.total = "0";
+      auditLabel.dataset.passed = "0";
+      auditLabel.dataset.failed = "0";
+      auditLabel.innerHTML = '<div class="map-editor-audit-summary">Brak nodÃ³w z dokÅ‚adnie jednÄ… krzywÄ….</div>';
+      return;
+    }
+    const passed = endpointAudit.entries.filter((entry) => entry.status === "passed").length;
+    const failed = endpointAudit.entries.filter((entry) => entry.status === "failed").length;
+    const tested = passed + failed;
+    auditLabel.classList.add("is-visible");
+    auditLabel.dataset.total = String(endpointAudit.entries.length);
+    auditLabel.dataset.tested = String(tested);
+    auditLabel.dataset.passed = String(passed);
+    auditLabel.dataset.failed = String(failed);
+    auditLabel.dataset.running = String(endpointAudit.running);
+    const marks = { pending: "â—‹", running: "â–¶", passed: "âœ“", failed: "Ã—" };
+    auditLabel.innerHTML = `
+      <div class="map-editor-audit-summary">
+        KoÅ„cÃ³wki: ${endpointAudit.entries.length} Â· sprawdzone ${tested} Â· OK ${passed} Â· brak trasy ${failed}<br>
+        Å¹rÃ³dÅ‚a: ${sourceNodeIds().join(", ")}
+      </div>
+      <div class="map-editor-audit-list">
+        ${endpointAudit.entries.map((entry) => `
+          <div class="map-editor-audit-row" data-endpoint="${entry.id}" data-status="${entry.status}">
+            <span class="map-editor-audit-mark">${marks[entry.status]}</span>
+            <span class="map-editor-audit-id" title="${entry.id}">${entry.id}</span>
+            <span class="map-editor-audit-note">${entry.note || `${entry.source || "â€”"} Â· ${entry.route.length} odc.`}</span>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function stopEndpointAudit(message = "Audyt zatrzymany.") {
+    window.clearTimeout(endpointAudit.timer);
+    endpointAudit.arrivalTimers.forEach((timer) => window.clearTimeout(timer));
+    endpointAudit.arrivalTimers = [];
+    endpointAudit.running = false;
+    endpointAudit.currentStatus = "";
+    dev.stop();
+    auditButton.classList.remove("is-active");
+    auditButton.textContent = endpointAudit.entries.length ? "PowtÃ³rz audyt" : "Audyt koÅ„cÃ³wek";
+    statusLabel.textContent = message;
+    renderEndpointAudit();
+    queueDraw();
+  }
+
+  function finishEndpointAudit() {
+    window.clearTimeout(endpointAudit.timer);
+    endpointAudit.running = false;
+    endpointAudit.currentStatus = endpointAudit.entries.at(-1)?.status || "";
+    auditButton.classList.remove("is-active");
+    auditButton.textContent = "PowtÃ³rz audyt";
+    const passed = endpointAudit.entries.filter((entry) => entry.status === "passed").length;
+    const failed = endpointAudit.entries.filter((entry) => entry.status === "failed").length;
+    statusLabel.textContent = `Audyt zakoÅ„czony: ${passed}/${endpointAudit.entries.length} koÅ„cÃ³wek osiÄ…gniÄ™tych${failed ? `, ${failed} bez trasy.` : "."}`;
+    renderEndpointAudit();
+    queueDraw();
+  }
+
+  function runNextEndpoint() {
+    if (!endpointAudit.running) return;
+    if (endpointAudit.index >= endpointAudit.entries.length) {
+      finishEndpointAudit();
+      return;
+    }
+    const entry = endpointAudit.entries[endpointAudit.index];
+    endpointAudit.index += 1;
+    endpointAudit.current = entry.id;
+    const reachable = routeReaches(entry.route, entry.id);
+
+    if (!reachable) {
+      entry.status = "failed";
+      entry.note = "brak trasy";
+      endpointAudit.currentStatus = "failed";
+      statusLabel.textContent = `Audyt ${endpointAudit.index}/${endpointAudit.entries.length}: ${entry.id} â€” brak kierunkowej trasy od ÅºrÃ³deÅ‚.`;
+      renderEndpointAudit();
+      queueDraw();
+      endpointAudit.timer = window.setTimeout(runNextEndpoint, 2000);
+      return;
+    }
+
+    entry.status = "running";
+    entry.note = `${entry.source} â†’`;
+    endpointAudit.currentStatus = "running";
+    statusLabel.textContent = `Audyt ${endpointAudit.index}/${endpointAudit.entries.length}: sygnaÅ‚ ${entry.source} â†’ ${entry.id}.`;
+    renderEndpointAudit();
+    queueDraw();
+    const pulse = dev.preview(entry.route, {
+      targetDurationMs: 1350,
+      terminal: entry.id,
+      intensity: 1.36,
+      bloomScale: 1.45,
+      charge: true
+    });
+    if (!pulse || pulse.started === false) {
+      entry.status = "failed";
+      entry.note = "brak impulsu";
+      endpointAudit.currentStatus = "failed";
+      renderEndpointAudit();
+      queueDraw();
+    } else {
+      const arrivalTimer = window.setTimeout(() => {
+        if (!endpointAudit.running) return;
+        entry.status = "passed";
+        entry.note = `${entry.source} Â· doszedÅ‚`;
+        endpointAudit.currentStatus = "passed";
+        renderEndpointAudit();
+        queueDraw();
+      }, Math.min(1700, (pulse.duration || 1350) + 140));
+      endpointAudit.arrivalTimers.push(arrivalTimer);
+    }
+    endpointAudit.timer = window.setTimeout(runNextEndpoint, 2000);
+  }
+
+  function startEndpointAudit() {
+    setPanMode(false);
+    setSplitMode(false);
+    setConnectMode(false);
+    dev.stop();
+    endpointAudit.entries = endpointNodes();
+    endpointAudit.index = 0;
+    endpointAudit.current = "";
+    endpointAudit.currentStatus = "";
+    endpointAudit.running = true;
+    auditButton.classList.add("is-active");
+    auditButton.textContent = "Zatrzymaj audyt";
+    renderEndpointAudit();
+    if (!endpointAudit.entries.length) {
+      stopEndpointAudit("Brak nodÃ³w poÅ‚Ä…czonych dokÅ‚adnie z jednÄ… krzywÄ….");
+      return;
+    }
+    statusLabel.textContent = `Znaleziono ${endpointAudit.entries.length} koÅ„cÃ³wek i ${sourceNodeIds().length} ÅºrÃ³deÅ‚. Start audytu co 2 sekundy.`;
+    runNextEndpoint();
+  }
+
+  function previewSelection() {
+    let route = [];
+    if (selection?.type === "edge" || selection?.type === "handle") {
+      const edge = edgeById(selection.id);
+      if (edge) route = [...pathToNode(edge.from), edge.id];
+    } else if (selection?.type === "node") {
+      route = pathToNode(selection.id);
+    }
+    if (!route.length) {
+      const group = map.groups[0];
+      route = [...map.roots[2], ...group.prefix, ...group.terminals[0].edges];
+    }
+    const started = dev.preview(route);
+    statusLabel.textContent = started ? `Test: ${route.join(" â†’ ")}` : "Test pulse niedostÄ™pny w reduced-motion.";
+  }
+
+  function exportJson(show = true) {
+    const json = JSON.stringify(map, null, 2);
+    output.value = json;
+    if (show) output.classList.toggle("is-visible");
+    return json;
+  }
+
+  async function copyJson() {
+    const json = exportJson(false);
+    try {
+      await navigator.clipboard.writeText(json);
+      statusLabel.textContent = "Skopiowano peÅ‚ny JSON mapy.";
+    } catch {
+      output.classList.add("is-visible");
+      output.focus();
+      output.select();
+      document.execCommand("copy");
+      statusLabel.textContent = "Skopiowano JSON przez pole eksportu.";
+    }
+  }
+
+  function downloadJson() {
+    const blob = new Blob([exportJson(false)], { type: "application/json" });
+    const anchor = document.createElement("a");
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = "tree-light-map-working.json";
+    anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(anchor.href), 0);
+    statusLabel.textContent = "Pobrano tree-light-map-working.json.";
+  }
+
+  function updatePanel() {
+    if (!selection) selectionLabel.textContent = "Brak zaznaczenia";
+    else if (selection.type === "node") {
+      const point = map.nodes[selection.id];
+      selectionLabel.textContent = `NODE ${selection.id} Â· [${point?.map((value) => value.toFixed(4)).join(", ")}]`;
+    } else {
+      const edge = edgeById(selection.id);
+      selectionLabel.textContent = `${selection.type.toUpperCase()} ${selection.id}${selection.handle ? ` Â· ${selection.handle}` : ""} Â· ${edge?.kind || ""}`;
+    }
+    let deletionProtected = false;
+    if (selection?.type === "node") {
+      const incident = map.edges.filter((edge) => edge.from === selection.id || edge.to === selection.id);
+      deletionProtected = protectedNodes.has(selection.id);
+    } else if (selection?.type === "edge" || selection?.type === "handle") {
+      deletionProtected = false;
+    }
+    deleteButton.textContent = !selection
+      ? "Delete: wybierz"
+      : deletionProtected
+        ? "Delete: chronione"
+        : "Delete zaznaczone";
+    deleteButton.title = !selection
+      ? "Najpierw kliknij wÄ™zeÅ‚ lub krzywÄ…."
+      : deletionProtected
+        ? "Chroniony jest wyÅ‚Ä…cznie node source."
+        : "UsuÅ„ aktualnie zaznaczony element.";
+    const allDiagnostics = diagnostics();
+    const rootDiagnostics = allDiagnostics.filter((item) => item.incoming.kind === "root" || item.outgoing.kind === "root");
+    const issues = allDiagnostics
+      .filter((item) => item.incoming.kind !== "root" && item.outgoing.kind !== "root")
+      .filter((item) => item.angle >= 12 || item.minimumRadius < 24 || item.radiusRatio > 3)
+      .slice(0, 6);
+    const rootPeak = rootDiagnostics.reduce((peak, item) => Math.max(peak, item.angle), 0);
+    diagnosticsLabel.innerHTML = issues.length
+      ? `<strong>Trunk / crown / branches:</strong><br>${issues.map((item) => {
+          const warning = item.angle >= 20 || item.minimumRadius < 24;
+          const rin = Number.isFinite(item.radiusIn) ? item.radiusIn.toFixed(0) : "âˆž";
+          const rout = Number.isFinite(item.radiusOut) ? item.radiusOut.toFixed(0) : "âˆž";
+          const ratio = Number.isFinite(item.radiusRatio) ? item.radiusRatio.toFixed(1) : "âˆž";
+          return `<span class="${warning ? "warning" : ""}">${item.node}: ${item.angle.toFixed(1)}Â° Â· R ${rin}/${rout} Â· Ã—${ratio}</span>`;
+        }).join("<br>")}<br><span>Root merge: max ${rootPeak.toFixed(1)}Â°</span>`
+      : `Styczne gaÅ‚Ä™zi: bez istotnych ostrzeÅ¼eÅ„.<br><span>Root merge: max ${rootPeak.toFixed(1)}Â°</span>`;
+  }
+
+  overlay.addEventListener("pointerdown", (event) => {
+    const point = pointerPoint(event);
+    if (connectMode && !spaceHeld && event.button === 0) {
+      const nodeHit = hitNode(point, 14);
+      if (!connectFrom) {
+        if (!nodeHit) {
+          statusLabel.textContent = "Najpierw kliknij istniejÄ…cy node poczÄ…tkowy.";
+        } else {
+          connectFrom = nodeHit.id;
+          selection = { type: "node", id: connectFrom };
+          connectButton.textContent = "Kliknij celâ€¦";
+          statusLabel.textContent = `Start: ${connectFrom}. Kliknij node docelowy albo puste miejsce.`;
+        }
+      } else {
+        createConnection(connectFrom, nodeHit?.id || "", point);
+      }
+      updatePanel();
+      queueDraw();
+      event.preventDefault();
+      return;
+    }
+    if (splitMode && !spaceHeld && event.button === 0) {
+      const edgeHit = hitEdge(point, 18);
+      if (edgeHit) {
+        selection = { type: "edge", id: edgeHit.id };
+        splitSelected(point, edgeHit.id);
+      } else {
+        statusLabel.textContent = "Nie trafiono w krzywÄ…. PrzybliÅ¼ widok i kliknij dokÅ‚adniej.";
+      }
+      updatePanel();
+      queueDraw();
+      event.preventDefault();
+      return;
+    }
+    const wantsPan = panMode || spaceHeld || event.button === 1;
+    if (wantsPan) {
+      drag = {
+        mode: "pan",
+        pointerId: event.pointerId,
+        lastClientX: event.clientX,
+        lastClientY: event.clientY,
+        moved: false
+      };
+      overlay.setPointerCapture(event.pointerId);
+      overlay.classList.add("is-panning");
+      event.preventDefault();
+      return;
+    }
+    const hit = hitTest(point);
+    selection = hit ? { type: hit.type, id: hit.id, handle: hit.handle } : null;
+    updatePanel();
+    queueDraw();
+
+    if (hit?.type === "node" && protectedNodes.has(hit.id)) {
+      statusLabel.textContent = "Node source jest chroniony; jego krzywe i uchwyty pozostajÄ… edytowalne.";
+    } else if (hit?.type === "node" || hit?.type === "handle") {
+      drag = {
+        mode: "edit",
+        pointerId: event.pointerId,
+        startState: serializedMap(),
+        lastX: point.x,
+        lastY: point.y,
+        moved: false
+      };
+      overlay.setPointerCapture(event.pointerId);
+      overlay.style.cursor = "grabbing";
+    }
+    event.preventDefault();
+  });
+
+  overlay.addEventListener("pointermove", (event) => {
+    if (connectMode) {
+      connectPointer = pointerPoint(event);
+      queueDraw();
+    }
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (drag.mode === "pan") {
+      const dx = event.clientX - drag.lastClientX;
+      const dy = event.clientY - drag.lastClientY;
+      drag.lastClientX = event.clientX;
+      drag.lastClientY = event.clientY;
+      if (!dx && !dy) return;
+      drag.moved = true;
+      view.x += dx;
+      view.y += dy;
+      applyView();
+      event.preventDefault();
+      return;
+    }
+    if (!selection) return;
+    const point = pointerPoint(event);
+    const precision = event.shiftKey ? .2 : 1;
+    const dx = (point.x - drag.lastX) * precision;
+    const dy = (point.y - drag.lastY) * precision;
+    drag.lastX = point.x;
+    drag.lastY = point.y;
+    if (!dx && !dy) return;
+    drag.moved = true;
+
+    if (selection.type === "node") {
+      const node = map.nodes[selection.id];
+      if (!node) return;
+      node[0] = Math.max(0, Math.min(1, node[0] + dx));
+      node[1] = Math.max(0, Math.min(1, node[1] + dy));
+      map.edges.forEach((edge) => {
+        if (edge.from === selection.id) {
+          edge.c1[0] += dx;
+          edge.c1[1] += dy;
+        }
+        if (edge.to === selection.id) {
+          edge.c2[0] += dx;
+          edge.c2[1] += dy;
+        }
+      });
+    } else if (selection.type === "handle") {
+      const edge = edgeById(selection.id);
+      if (!edge) return;
+      edge[selection.handle][0] = Math.max(0, Math.min(1, edge[selection.handle][0] + dx));
+      edge[selection.handle][1] = Math.max(0, Math.min(1, edge[selection.handle][1] + dy));
+    }
+    dev.rebuild();
+    autosave();
+    updatePanel();
+    queueDraw();
+    event.preventDefault();
+  });
+
+  function endDrag(event) {
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (overlay.hasPointerCapture(event.pointerId)) overlay.releasePointerCapture(event.pointerId);
+    overlay.classList.remove("is-panning");
+    overlay.classList.toggle("is-pan-ready", panMode || spaceHeld);
+    if (drag.mode === "edit" && drag.moved && drag.startState !== serializedMap()) {
+      commit("Zapisano korektÄ™ geometrii.");
+    }
+    drag = null;
+    event.preventDefault();
+  }
+
+  overlay.addEventListener("pointerup", endDrag);
+  overlay.addEventListener("pointercancel", endDrag);
+  overlay.addEventListener("wheel", (event) => {
+    const factor = Math.exp(-event.deltaY * .00135);
+    zoomAt(event.clientX, event.clientY, view.scale * factor);
+    event.preventDefault();
+  }, { passive: false });
+  overlay.addEventListener("auxclick", (event) => {
+    if (event.button === 1) event.preventDefault();
+  });
+
+  panel.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+    const action = button.dataset.action;
+    if (action === "undo") restoreHistory(historyIndex - 1);
+    if (action === "redo") restoreHistory(historyIndex + 1);
+    if (action === "reset") {
+      replaceMap(sourceMap);
+      selection = null;
+      commit("PrzywrÃ³cono mapÄ™ ÅºrÃ³dÅ‚owÄ….");
+    }
+    if (action === "split") setSplitMode(!splitMode);
+    if (action === "connect") setConnectMode(!connectMode);
+    if (action === "delete") {
+      if (panMode) setPanMode(false);
+      if (splitMode) setSplitMode(false);
+      if (connectMode) setConnectMode(false);
+      deleteSelection();
+    }
+    if (action === "pulse") {
+      if (endpointAudit.running) stopEndpointAudit("Audyt zatrzymany na rzecz pojedynczego testu.");
+      previewSelection();
+    }
+    if (action === "audit") {
+      if (endpointAudit.running) stopEndpointAudit();
+      else startEndpointAudit();
+    }
+    if (action === "export") exportJson(true);
+    if (action === "copy") copyJson();
+    if (action === "download") downloadJson();
+    if (action === "zoom-out") zoomFromCenter(1 / 1.25);
+    if (action === "zoom-in") zoomFromCenter(1.25);
+    if (action === "pan") setPanMode(!panMode);
+    if (action === "fit") resetView();
+    if (action === "collapse") {
+      const collapsed = panel.classList.toggle("is-collapsed");
+      button.textContent = collapsed ? "+" : "âˆ’";
+      button.setAttribute("aria-expanded", String(!collapsed));
+      button.setAttribute("aria-label", collapsed ? "RozwiÅ„ panel" : "ZwiÅ„ panel");
+    }
+    updatePanel();
+    queueDraw();
+  });
+
+  window.addEventListener("keydown", (event) => {
+    const modifier = event.ctrlKey || event.metaKey;
+    if (modifier && event.key.toLowerCase() === "z") {
+      restoreHistory(event.shiftKey ? historyIndex + 1 : historyIndex - 1);
+      event.preventDefault();
+      return;
+    }
+    if (modifier && event.key.toLowerCase() === "y") {
+      restoreHistory(historyIndex + 1);
+      event.preventDefault();
+      return;
+    }
+    if (event.target === output) return;
+    if (event.code === "Space") {
+      spaceHeld = true;
+      overlay.classList.add("is-pan-ready");
+      event.preventDefault();
+      return;
+    }
+    if (event.key === "0") {
+      resetView();
+      event.preventDefault();
+      return;
+    }
+    if (event.key.toLowerCase() === "h") {
+      setPanMode(!panMode);
+      event.preventDefault();
+      return;
+    }
+    if (event.key.toLowerCase() === "c") {
+      setConnectMode(!connectMode);
+      event.preventDefault();
+      return;
+    }
+    if (event.key === "+" || event.key === "=") {
+      zoomFromCenter(1.25);
+      event.preventDefault();
+      return;
+    }
+    if (event.key === "-") {
+      zoomFromCenter(1 / 1.25);
+      event.preventDefault();
+      return;
+    }
+    if (event.key === "Delete" || event.key === "Backspace") {
+      if (connectMode) {
+        setConnectMode(false);
+        event.preventDefault();
+        return;
+      }
+      deleteSelection();
+      event.preventDefault();
+    }
+    if (event.key.toLowerCase() === "s") {
+      setSplitMode(!splitMode);
+      event.preventDefault();
+    }
+    if (event.key.toLowerCase() === "p") {
+      previewSelection();
+      event.preventDefault();
+    }
+    if (event.key === "Escape") {
+      if (endpointAudit.running) stopEndpointAudit("Audyt zatrzymany.");
+      setSplitMode(false);
+      setConnectMode(false);
+      setPanMode(false);
+      dev.stop();
+      statusLabel.textContent = "Anulowano narzÄ™dzie/test.";
+      queueDraw();
+    }
+  });
+
+  window.addEventListener("keyup", (event) => {
+    if (event.code !== "Space") return;
+    spaceHeld = false;
+    if (drag?.mode !== "pan" && !panMode) overlay.classList.remove("is-pan-ready");
+    event.preventDefault();
+  });
+  window.addEventListener("blur", () => {
+    spaceHeld = false;
+    if (drag?.mode !== "pan" && !panMode) overlay.classList.remove("is-pan-ready");
+  });
+
+  let restored = false;
+  try {
+    const working = JSON.parse(localStorage.getItem(storageKey) || "null");
+    if (validMap(working)) {
+      replaceMap(working);
+      restored = true;
+    }
+  } catch {
+    localStorage.removeItem(storageKey);
+  }
+
+  history = [serializedMap()];
+  historyIndex = 0;
+  new ResizeObserver(resize).observe(rig);
+  applyView();
+  resize();
+  updatePanel();
+  statusLabel.textContent = restored ? "Wczytano lokalnÄ… kopiÄ™ roboczÄ…." : "Edytujesz mapÄ™ ÅºrÃ³dÅ‚owÄ…; zmiany zapisujÄ… siÄ™ lokalnie.";
+})();

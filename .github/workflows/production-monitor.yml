@@ -61,6 +61,19 @@ jobs:
           check_status "https://okagency.pl/.well-known/security.txt" "200,403"
           check_status "https://okagency.pl/api/contact" "405,403"
 
+          robots_txt="$(web_curl --fail https://okagency.pl/robots.txt)"
+          if printf '%s\n' "$robots_txt" \
+            | grep --ignore-case --extended-regexp --quiet 'Cloudflare Managed|Content-Signal:'; then
+            echo "FAIL: robots.txt contains a Cloudflare-managed overlay"
+            exit 1
+          fi
+          printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: OAI-SearchBot' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: ClaudeBot' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: GPTBot' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'Sitemap: https://okagency.pl/sitemap.xml' \
+            && echo "OK: repository-managed robots.txt without Cloudflare overlay" \
+            || { echo "FAIL: robots.txt policy is incomplete"; exit 1; }
+
           test "$(web_curl --head https://www.okagency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: www redirect" \
             || { echo "FAIL: www redirect"; exit 1; }

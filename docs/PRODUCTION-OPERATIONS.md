@@ -264,14 +264,24 @@ SEO:
 - domena kanoniczna: `https://okagency.pl`;
 - canonicale znajdują się w HTML;
 - sitemap używa adresów bez `.html`;
-- `robots.txt` wskazuje sitemapę;
-- `robots.txt` rozdziela crawlery wyszukiwania i cytowania AI od botów
-  treningowych;
+- repozytoryjny [`robots.txt`](../robots.txt) jest jedynym źródłem polityki
+  crawlerów i wskazuje sitemapę;
+- funkcja Cloudflare **Managed robots.txt** w AI Crawl Control → Signals jest
+  wyłączona, dlatego Cloudflare nie dokleja własnych dyrektyw ani
+  `Content-Signal` przed plikiem z repo;
+- `OAI-SearchBot`, `ChatGPT-User`, `Googlebot`, `PerplexityBot` i `ClaudeBot`
+  mogą indeksować lub pobierać publiczne treści do odpowiedzi z cytowaniem;
+- `GPTBot` i `Google-Extended` mają `Disallow: /`, ponieważ trening modeli nie
+  jest wymagany do prezentowania strony w wynikach lub odpowiedziach AI;
 - `llms.txt` i `llms-full.txt` są kopiowane do artefaktu produkcyjnego jako
   dodatkowy, niewiążący opis serwisu dla systemów, które obsługują ten format;
 - `ok-agency.pages.dev` nie publikuje duplikatu treści;
 - `security.txt` znajduje się w
   [`.well-known/security.txt`](../.well-known/security.txt).
+
+Zmiana polityki crawlerów wymaga edycji `robots.txt`, przejścia CI i wdrożenia
+Cloudflare Pages. Nie należy ponownie włączać Cloudflare Managed `robots.txt`,
+ponieważ utworzyłoby to drugą, potencjalnie sprzeczną politykę.
 
 Przy zmianie kontaktu należy zaktualizować `security.txt`. Przed datą
 `Expires` trzeba odnowić jego termin.
@@ -334,6 +344,8 @@ Nie należy dodawać mu uprawnień DNS, Pages, Turnstile, billing ani profile.
 Workflow `Production monitor` działa o minucie 17 co 6 godzin. Sprawdza:
 
 - dostępność strony głównej, kontaktu, `security.txt` i API;
+- brak nakładki Cloudflare w `robots.txt` oraz obecność kluczowych reguł
+  crawlerów z repo;
 - przekierowania `www`, domeny alternatywnej i `pages.dev`;
 - HSTS obu domen;
 - DNSSEC obu domen;

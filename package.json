@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.mjs",
     "check:links": "node scripts/check-links.mjs",
+    "check:worker": "wrangler deploy --config wrangler.contact.jsonc --dry-run --outdir dist/worker-dry-run",
     "prebuild": "npm run check:links",
     "build": "node scripts/build.mjs"
   },

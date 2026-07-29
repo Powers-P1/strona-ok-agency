@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "okagency-contact-api",
+  "main": "./worker/contact.js",
+  "compatibility_date": "2026-07-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "okagency.pl/api/contact*",
+      "zone_name": "okagency.pl"
+    },
+    {
+      "pattern": "www.okagency.pl/api/contact*",
+      "zone_name": "okagency.pl"
+    }
+  ],
+  "vars": {
+    "CONTACT_FROM": "formularz@okagency.pl",
+    "CONTACT_TO": "hello@okagency.pl",
+    "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl"
+  },
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "hello@okagency.pl",
+      "allowed_sender_addresses": ["formularz@okagency.pl"]
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
+  }
+}

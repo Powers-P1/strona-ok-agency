@@ -1,0 +1,215 @@
+/*
+ * Shared primary-navigation contract.
+ *
+ * The header protection surfaces keep navigation contrast independent from
+ * animated artwork and responsive image crops. Interactive states follow
+ * WCAG 2.2 AA and use the stronger 44px target/focus treatment where the
+ * editorial layout allows it.
+ */
+
+:root {
+  --ok-nav-light-text: #071a2c;
+  --ok-nav-light-hover: #8f1642;
+  --ok-nav-dark-text: #f0dfcf;
+  --ok-nav-dark-hover: #fff8f0;
+  --ok-nav-light-focus: #8f1642;
+  --ok-nav-dark-focus: #ff7da4;
+  --ok-nav-accent: #d73568;
+}
+
+/* Theme tokens inherited by every primary navigation link. */
+.site-header-light,
+.topbar,
+.header-nav,
+.about-page[data-theme="light"] > .site-header,
+.privacy-page .legal-header nav {
+  --ok-nav-text: var(--ok-nav-light-text);
+  --ok-nav-hover: var(--ok-nav-light-hover);
+  --ok-nav-focus: var(--ok-nav-light-focus);
+}
+
+.site-header-dark,
+.site-nav,
+.about-page[data-theme="dark"] > .site-header,
+.error-page .legal-header nav {
+  --ok-nav-text: var(--ok-nav-dark-text);
+  --ok-nav-hover: var(--ok-nav-dark-hover);
+  --ok-nav-focus: var(--ok-nav-dark-focus);
+}
+
+/*
+ * A high-opacity theme-aware veil removes local image detail from behind
+ * glyphs. It fades below the controls, preserving the cinematic artwork.
+ */
+.site-header-light {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(234, 217, 203, .96) 0%,
+      rgba(234, 217, 203, .91) 58%,
+      rgba(234, 217, 203, .68) 78%,
+      rgba(234, 217, 203, 0) 100%
+    );
+}
+
+.site-header-dark {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 19, 33, .96) 0%,
+      rgba(4, 19, 33, .91) 58%,
+      rgba(4, 19, 33, .7) 78%,
+      rgba(4, 19, 33, 0) 100%
+    );
+}
+
+.topbar {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(234, 217, 203, .96) 0%,
+      rgba(234, 217, 203, .91) 62%,
+      rgba(234, 217, 203, 0) 100%
+    );
+}
+
+.about-page[data-theme="light"] > .site-header {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(234, 217, 203, .96) 0%,
+      rgba(234, 217, 203, .91) 62%,
+      rgba(234, 217, 203, 0) 100%
+    );
+}
+
+.about-page[data-theme="dark"] > .site-header {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 19, 33, .96) 0%,
+      rgba(4, 19, 33, .91) 62%,
+      rgba(4, 19, 33, 0) 100%
+    );
+}
+
+/*
+ * Contact uses a split paper/image composition. The surface follows that
+ * composition so both the navy wordmark and cream navigation stay legible.
+ */
+.contact-page > .site-header {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(246, 218, 194, .96) 0%,
+      rgba(246, 218, 194, .93) 39%,
+      rgba(4, 19, 33, .72) 68%,
+      rgba(4, 19, 33, .94) 100%
+    );
+}
+
+header nav a[data-nav-link],
+.about-page > .site-header nav a {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ok-nav-text, currentColor);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .09em;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: none;
+  transition:
+    color .22s ease,
+    text-decoration-color .22s ease;
+}
+
+header nav a[data-nav-link]:hover,
+header nav a[data-nav-link]:focus-visible,
+header nav a[data-nav-link].is-active,
+header nav a[data-nav-link][aria-current="page"],
+.about-page > .site-header nav a:hover,
+.about-page > .site-header nav a:focus-visible,
+.about-page > .site-header nav a.is-active,
+.about-page > .site-header nav a[aria-current="page"] {
+  color: var(--ok-nav-hover, currentColor);
+}
+
+header nav a[data-nav-link]::after,
+.about-page > .site-header nav a::after {
+  right: 2px;
+  bottom: 3px;
+  left: 2px;
+  height: 2px;
+  background: var(--ok-nav-accent);
+  transform-origin: left;
+}
+
+header nav a[data-nav-link]:hover::after,
+header nav a[data-nav-link]:focus-visible::after,
+header nav a[data-nav-link].is-active::after,
+header nav a[data-nav-link][aria-current="page"]::after,
+.about-page > .site-header nav a:hover::after,
+.about-page > .site-header nav a:focus-visible::after,
+.about-page > .site-header nav a.is-active::after,
+.about-page > .site-header nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+header nav a[data-nav-link]:focus-visible,
+.about-page > .site-header nav a:focus-visible {
+  outline: 3px solid var(--ok-nav-focus, var(--ok-nav-accent));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@media (max-width: 1024px) {
+  .contact-page > .site-header {
+    background: rgba(246, 218, 194, .97);
+  }
+
+  .site-nav {
+    --ok-nav-text: #142030;
+    --ok-nav-hover: #8f1642;
+    --ok-nav-focus: #8f1642;
+  }
+}
+
+@media (max-width: 640px) {
+  header nav a[data-nav-link],
+  .about-page > .site-header nav a {
+    font-size: 12px;
+    letter-spacing: .08em;
+  }
+}
+
+@media (forced-colors: active) {
+  .site-header-light,
+  .site-header-dark,
+  .topbar,
+  .about-page > .site-header,
+  .contact-page > .site-header {
+    background: Canvas;
+  }
+
+  header nav a[data-nav-link],
+  .about-page > .site-header nav a {
+    color: LinkText;
+    forced-color-adjust: auto;
+  }
+
+  header nav a[data-nav-link]::after,
+  .about-page > .site-header nav a::after {
+    background: currentColor;
+  }
+
+  header nav a[data-nav-link]:focus-visible,
+  .about-page > .site-header nav a:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}

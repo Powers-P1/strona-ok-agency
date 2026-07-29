@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ead9cb">
+  <meta name="description" content="Cztery pytania, rekomendowany kierunek i pierwszy krok — od razu na ekranie.">
+  <title>OK Agency — Diagnoza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-opening-v1.webp" type="image/webp">
+  <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-map-v1.webp" type="image/webp">
+  <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-outcome-v1.webp" type="image/webp">
+  <link rel="stylesheet" href="assets/services/diagnosis/styles.css">
+  <link rel="stylesheet" href="assets/route-motion.css">
+  <link rel="stylesheet" href="assets/site-footer.css">
+  <link rel="stylesheet" href="assets/site-navigation.css">
+  <link rel="stylesheet" href="assets/responsive-foundation.css">
+</head>
+<body class="web-service diagnosis-service">
+  <a class="skip-link" href="#diagnosis-opening">Przejdź do Diagnozy</a>
+
+  <main class="diagnosis-story" data-diagnosis-tool>
+    <div class="story-stage">
+      <p class="sr-only" data-diagnosis-announcer aria-live="polite" aria-atomic="true"></p>
+
+      <section
+        class="diagnosis-frame campaign-opening is-active"
+        id="diagnosis-opening"
+        data-act="opening"
+        aria-labelledby="opening-title"
+        aria-hidden="false"
+      >
+        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-opening-v1.webp" width="1672" height="941" alt="" fetchpriority="high">
+
+        <svg class="energy-shimmer" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
+          <defs><filter id="opening-glint" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation=".65"></feGaussianBlur></filter></defs>
+          <path class="glint glint-a" filter="url(#opening-glint)" pathLength="1" d="M 1536 768 C 1408 701 1349 642 1303 570 C 1258 501 1173 501 1092 490 C 1028 481 980 449 965 406"></path>
+          <path class="glint glint-b" filter="url(#opening-glint)" pathLength="1" d="M 1303 570 C 1274 492 1240 429 1217 365"></path>
+        </svg>
+
+        <header class="site-header site-header-light">
+          <a class="wordmark" href="index.html" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency"></a>
+          <nav aria-label="Główna nawigacja">
+            <a href="menu.html" data-nav-link="offer">Oferta</a>
+            <a href="proces.html?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+            <a href="kontakt.html?context=diagnosis" data-nav-link="contact">Kontakt</a>
+          </nav>
+        </header>
+
+        <svg class="annotation-lines" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
+          <g class="annotation-wire" data-line="opening-symptom"><path pathLength="1" d="M 995 419 L 925 355 H 824"></path></g>
+          <g class="annotation-wire" data-line="opening-context"><path pathLength="1" d="M 1090 502 L 1030 568 H 936"></path></g>
+          <g class="annotation-wire" data-line="opening-source"><path pathLength="1" d="M 1398 607 L 1338 675 H 1242"></path></g>
+        </svg>
+
+        <article class="annotation-callout callout-symptom" data-annotation="opening-symptom">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-opening-symptom" aria-label="Pokaż opis: Objaw"></button>
+          <div class="annotation-copy" id="copy-opening-symptom"><strong>Objaw</strong><span>To, co widać: słabe zapytania, nieregularna komunikacja albo kampania bez jasnych wniosków.</span></div>
+        </article>
+        <article class="annotation-callout callout-context" data-annotation="opening-context">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-opening-context" aria-label="Pokaż opis: Kontekst"></button>
+          <div class="annotation-copy" id="copy-opening-context"><strong>Kontekst</strong><span>Sprawdzamy cel, ofertę, odbiorców, dane i ograniczenia, zanim nazwiemy rozwiązanie.</span></div>
+        </article>
+        <article class="annotation-callout callout-source" data-annotation="opening-source">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-opening-source" aria-label="Pokaż opis: Przyczyna"></button>
+          <div class="annotation-copy" id="copy-opening-source"><strong>Przyczyna</strong><span>Szukamy zależności, która uruchamia pozostałe problemy, a nie najgłośniejszego symptomu.</span></div>
+        </article>
+
+        <div class="opening-copy">
+          <span class="section-kicker">Diagnoza</span>
+          <h1 id="opening-title" tabindex="-1">Najpierw przestańmy<br><em>zgadywać.</em></h1>
+          <p>Oddzielamy widoczny objaw od problemu, który naprawdę<br>blokuje kolejny ruch.</p>
+          <div class="opening-scope" aria-label="Możliwe kierunki">
+            <span>Strona</span><span>Social media</span><span>Kampanie</span><span>Nie wiem</span>
+          </div>
+          <button class="outline-cta" type="button" data-start-diagnosis>
+            <span>Zacznij diagnozę · 4 pytania</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"></path></svg>
+          </button>
+          <p class="opening-privacy">Bez zapisów · bez maila · tylko wynik trafia do kontaktu</p>
+        </div>
+      </section>
+
+      <section
+        class="diagnosis-frame campaign-journey"
+        id="diagnosis-map"
+        data-act="map"
+        aria-labelledby="map-title"
+        aria-hidden="true"
+        inert
+      >
+        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-map-v1.webp" width="1672" height="941" alt="">
+
+        <svg class="energy-shimmer" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
+          <defs><filter id="map-glint" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation=".6"></feGaussianBlur></filter></defs>
+          <path class="glint glint-a" filter="url(#map-glint)" pathLength="1" d="M 1256 643 C 1197 580 1182 513 1112 475 C 1035 433 968 471 897 421 C 841 381 846 315 881 277"></path>
+          <path class="glint glint-b" filter="url(#map-glint)" pathLength="1" d="M 1112 475 C 1189 425 1239 362 1276 315"></path>
+          <path class="glint glint-c" filter="url(#map-glint)" pathLength="1" d="M 897 421 C 823 405 779 432 760 486"></path>
+        </svg>
+
+        <header class="site-header site-header-dark">
+          <a class="wordmark" href="index.html" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency"></a>
+          <nav aria-label="Główna nawigacja">
+            <a href="menu.html" data-nav-link="offer">Oferta</a>
+            <a href="proces.html?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+            <a href="kontakt.html?context=diagnosis" data-nav-link="contact">Kontakt</a>
+          </nav>
+        </header>
+
+        <svg class="annotation-lines map-annotation-lines" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
+          <g class="annotation-wire" data-line="map-facts"><path pathLength="1" d="M 758 486 L 695 555 H 622"></path></g>
+          <g class="annotation-wire" data-line="map-context"><path pathLength="1" d="M 881 277 L 819 218 H 738"></path></g>
+          <g class="annotation-wire" data-line="map-dependencies"><path pathLength="1" d="M 1112 475 L 1047 415 H 961"></path></g>
+          <g class="annotation-wire" data-line="map-priority"><path pathLength="1" d="M 1256 643 L 1194 707 H 1098"></path></g>
+        </svg>
+        <article class="annotation-callout note-facts" data-annotation="map-facts">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-facts" aria-label="Pokaż opis: Fakty"></button>
+          <div class="annotation-copy journey-note" id="copy-map-facts"><strong>Fakty</strong><span>Materiały, działania i dostępne dane — bez dopowiadania braków.</span></div>
+        </article>
+        <article class="annotation-callout note-context" data-annotation="map-context">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-context" aria-label="Pokaż opis: Kontekst"></button>
+          <div class="annotation-copy journey-note" id="copy-map-context"><strong>Kontekst</strong><span>Cel, oferta, odbiorcy, kanały i realne ograniczenia zespołu.</span></div>
+        </article>
+        <article class="annotation-callout note-dependencies" data-annotation="map-dependencies">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-dependencies" aria-label="Pokaż opis: Zależności"></button>
+          <div class="annotation-copy journey-note" id="copy-map-dependencies"><strong>Zależności</strong><span>Oddzielamy źródło problemu od konsekwencji widocznych w innych miejscach.</span></div>
+        </article>
+        <article class="annotation-callout note-priority" data-annotation="map-priority">
+          <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-priority" aria-label="Pokaż opis: Priorytet"></button>
+          <div class="annotation-copy journey-note" id="copy-map-priority"><strong>Priorytet</strong><span>Wybieramy ruch, który usuwa najważniejszą blokadę i otwiera kolejne decyzje.</span></div>
+        </article>
+
+        <div class="map-interface">
+          <header class="map-intro">
+            <span class="section-kicker">Mapa zależności</span>
+            <h2 id="map-title">Łączymy fakty, <em>nie przeczucia.</em></h2>
+            <p>Każda odpowiedź dostaje kontekst. Przechodzimy od objawu do faktów, zależności i właściwego priorytetu.</p>
+          </header>
+
+          <div class="quiz-shell" data-quiz-shell>
+            <section class="quiz-question is-active" data-question-step="1" aria-labelledby="question-1-title" aria-hidden="false">
+              <div class="quiz-progress"><span>01 / 04 · Objaw</span><span class="progress-track" aria-hidden="true"><i class="is-done"></i><i></i><i></i><i></i></span></div>
+              <h3 id="question-1-title" tabindex="-1">Co dziś uwiera Cię najbardziej?</h3>
+              <p>Oddzielmy widoczny objaw od problemu, który naprawdę blokuje kolejny ruch.</p>
+              <ol class="answers">
+                <li><button type="button" data-question="q1" data-value="offer" aria-pressed="false"><b>01</b><span>Ludzie nie rozumieją oferty bez rozmowy</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q1" data-value="rhythm" aria-pressed="false"><b>02</b><span>Publikuję nieregularnie i znikam między postami</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q1" data-value="leads" aria-pressed="false"><b>03</b><span>Nie mam przewidywalnego źródła zapytań</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q1" data-value="mixed" aria-pressed="false"><b>04</b><span>Kilka rzeczy nie działa naraz — nie wiem, od czego zacząć</span><i aria-hidden="true">→</i></button></li>
+              </ol>
+            </section>
+
+            <section class="quiz-question" data-question-step="2" aria-labelledby="question-2-title" aria-hidden="true" inert>
+              <div class="quiz-progress"><span>02 / 04 · Kontekst</span><span class="progress-track" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i></i><i></i></span></div>
+              <h3 id="question-2-title" tabindex="-1">Gdzie dziś trafia ktoś, kto Cię szuka?</h3>
+              <p>Sprawdzamy miejsce, w którym odbiorca ma zrozumieć ofertę i wykonać kolejny krok.</p>
+              <ol class="answers">
+                <li><button type="button" data-question="q2" data-value="site-strong" aria-pressed="false"><b>01</b><span>Na stronę, która jasno prowadzi do kontaktu</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q2" data-value="site-weak" aria-pressed="false"><b>02</b><span>Na stronę, ale jest przestarzała albo nieczytelna</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q2" data-value="social-only" aria-pressed="false"><b>03</b><span>Na profil w social mediach</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q2" data-value="direct" aria-pressed="false"><b>04</b><span>Głównie do mnie, z polecenia lub wiadomości prywatnej</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q2" data-value="fragmented" aria-pressed="false"><b>05</b><span>W różne miejsca — bez jednego punktu docelowego</span><i aria-hidden="true">→</i></button></li>
+              </ol>
+              <button class="quiz-back" type="button" data-back>←&nbsp;&nbsp;Wstecz</button>
+            </section>
+
+            <section class="quiz-question" data-question-step="3" aria-labelledby="question-3-title" aria-hidden="true" inert>
+              <div class="quiz-progress"><span>03 / 04 · Fakty</span><span class="progress-track" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i></i></span></div>
+              <h3 id="question-3-title" tabindex="-1">Co masz już gotowe?</h3>
+              <p>Przeglądamy materiały, działania i dane, które naprawdę można wykorzystać — nie te dopiero planowane.</p>
+              <ol class="answers">
+                <li><button type="button" data-question="q3" data-value="basics" aria-pressed="false"><b>01</b><span>Jasną ofertę, ale tylko podstawowe materiały</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q3" data-value="site" aria-pressed="false"><b>02</b><span>Działającą stronę i ofertę</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q3" data-value="stack" aria-pressed="false"><b>03</b><span>Stronę, regularne treści i podstawowy pomiar</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q3" data-value="pieces" aria-pressed="false"><b>04</b><span>Same elementy — nie wiem, czy tworzą spójną całość</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q3" data-value="changing" aria-pressed="false"><b>05</b><span>Oferta lub grupa odbiorców nadal się zmienia</span><i aria-hidden="true">→</i></button></li>
+              </ol>
+              <button class="quiz-back" type="button" data-back>←&nbsp;&nbsp;Wstecz</button>
+            </section>
+
+            <section class="quiz-question" data-question-step="4" aria-labelledby="question-4-title" aria-hidden="true" inert>
+              <div class="quiz-progress"><span>04 / 04 · Priorytet</span><span class="progress-track" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i></span></div>
+              <h3 id="question-4-title" tabindex="-1">Jaki rezultat jest dziś najważniejszy?</h3>
+              <p>Nie pytamy o termin. Sam termin nie powinien decydować o wyborze usługi.</p>
+              <ol class="answers">
+                <li><button type="button" data-question="q4" data-value="website" aria-pressed="false"><b>01</b><span>Jasno pokazać ofertę i zbierać lepsze zapytania</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q4" data-value="social" aria-pressed="false"><b>02</b><span>Być regularnie widocznym i budować zaufanie</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q4" data-value="campaign" aria-pressed="false"><b>03</b><span>Pozyskiwać mierzalne zapytania lub sprzedaż</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q4" data-value="talk" aria-pressed="false"><b>04</b><span>Ustalić priorytet i czego teraz nie robić</span><i aria-hidden="true">→</i></button></li>
+                <li><button type="button" data-question="q4" data-value="none" aria-pressed="false"><b>05</b><span>Nie mam jeszcze konkretnego celu, który marketing ma wspierać</span><i aria-hidden="true">→</i></button></li>
+              </ol>
+              <button class="quiz-back" type="button" data-back>←&nbsp;&nbsp;Wstecz</button>
+            </section>
+          </div>
+          <p class="quiz-privacy">Bez zapisów · bez maila · tylko wynik trafia do kontaktu</p>
+        </div>
+      </section>
+
+      <section
+        class="diagnosis-frame campaign-proof"
+        id="diagnosis-outcome"
+        data-act="outcome"
+        aria-labelledby="result-title"
+        aria-hidden="true"
+        inert
+      >
+        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-outcome-v1.webp" width="1672" height="941" alt="">
+        <span class="proof-bloom" aria-hidden="true"></span>
+
+        <header class="site-header site-header-light">
+          <a class="wordmark" href="index.html" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency"></a>
+          <nav aria-label="Główna nawigacja">
+            <a href="menu.html" data-nav-link="offer">Oferta</a>
+            <a href="proces.html?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+            <a href="kontakt.html?context=diagnosis" data-nav-link="contact">Kontakt</a>
+          </nav>
+        </header>
+
+        <article class="result-content">
+          <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
+          <h1 id="result-title" tabindex="-1">Najpierw strona internetowa.</h1>
+          <p class="result-why" data-result-why></p>
+          <p class="steps-label">Pierwsze trzy kroki</p>
+          <ol class="result-steps"><li data-result-step="0"></li><li data-result-step="1"></li><li data-result-step="2"></li></ol>
+          <p class="result-disclaimer">To punkt startu, nie oferta ani wycena.</p>
+          <div class="result-actions">
+            <a class="result-cta result-primary" data-result-primary href="strony-internetowe.html"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
+            <a class="result-cta result-secondary" data-result-secondary href="kontakt.html?context=website&amp;source=diagnosis"><span>Przejdź do kontaktu</span><i aria-hidden="true">→</i></a>
+          </div>
+          <div class="result-controls">
+            <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>
+            <button type="button" data-restart>↺&nbsp;&nbsp;Zacznij od nowa</button>
+          </div>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <div data-site-footer></div>
+  <script src="assets/art-coordinate-system.js"></script>
+  <script src="assets/navigation.js"></script>
+  <script src="assets/services/diagnosis/script.js"></script>
+  <script src="assets/site-footer.js"></script>
+</body>
+</html>

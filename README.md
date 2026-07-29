@@ -23,7 +23,7 @@ npm run build
 ```
 
 Polecenie `build` przygotowuje w `dist/` wyłącznie pliki produkcyjne oraz
-konfigurację Cloudflare Pages z `_headers` i `_redirects`.
+nagłówki bezpieczeństwa Cloudflare Pages z `_headers`.
 
 ## Publikacja
 
@@ -35,3 +35,5 @@ Cloudflare Pages jest połączone z repozytorium GitHub:
 - katalog wynikowy: `dist`.
 
 Konfiguracja projektu dla Wranglera znajduje się w `wrangler.jsonc`.
+Przekierowanie `www.okagency.pl` do domeny głównej jest obsługiwane przez
+konfigurację domen niestandardowych w Cloudflare.

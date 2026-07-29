@@ -1,2 +1,0 @@
-# Canonical host. Cloudflare Pages preserves the wildcard suffix as :splat.
-https://www.okagency.pl/* https://okagency.pl/:splat 301

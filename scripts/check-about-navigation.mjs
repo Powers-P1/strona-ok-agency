@@ -1,0 +1,98 @@
+import { readFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import vm from "node:vm";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const source = await readFile(resolve(root, "assets/services/about/script.js"), "utf8");
+
+const makeClassList = initial => {
+  const values = new Set(initial);
+  return {
+    contains: value => values.has(value),
+    remove: value => values.delete(value),
+    toggle: (value, force) => force ? values.add(value) : values.delete(value),
+  };
+};
+
+const makeElement = ({ id = "", go, nav = false, theme = "light" } = {}) => {
+  const listeners = new Map();
+  const attributes = new Map();
+  const element = {
+    id,
+    dataset: { theme, ...(go === undefined ? {} : { go: String(go) }) },
+    classList: makeClassList([]),
+    listeners,
+    attributes,
+    nav,
+    scrolled: 0,
+    addEventListener(type, listener) { listeners.set(type, listener); },
+    setAttribute(name, value) { attributes.set(name, String(value)); },
+    removeAttribute(name) { attributes.delete(name); },
+    scrollIntoView() { this.scrolled += 1; },
+  };
+  return element;
+};
+
+const scenes = [
+  makeElement({ id: "about-responsibility", theme: "light" }),
+  makeElement({ id: "about-oliwia", theme: "light" }),
+  makeElement({ id: "about-model", theme: "dark" }),
+  makeElement({ id: "about-credibility", theme: "light" }),
+];
+const navButtons = [0, 1, 2, 3].map(go => makeElement({ go, nav: true }));
+const ctaButtons = [1, 2, 3].map(go => makeElement({ go }));
+const sceneButtons = [...ctaButtons, ...navButtons];
+const themeColor = { content: "" };
+let currentHash = "";
+
+const document = {
+  body: { dataset: {} },
+  activeElement: null,
+  querySelector: selector => selector === 'meta[name="theme-color"]' ? themeColor : null,
+  querySelectorAll: selector => {
+    if (selector === ".scene") return scenes;
+    if (selector === ".scene-nav [data-go]") return navButtons;
+    if (selector === "[data-go]") return sceneButtons;
+    return [];
+  },
+  addEventListener() {},
+};
+const window = {
+  location: { hash: "" },
+  matchMedia: () => ({ matches: false }),
+  addEventListener() {},
+};
+const history = {
+  replaceState(_state, _title, hash) {
+    currentHash = hash;
+    window.location.hash = hash;
+  },
+};
+
+vm.runInNewContext(source, {
+  document,
+  window,
+  history,
+  requestAnimationFrame: callback => callback(),
+});
+
+for (const button of sceneButtons) {
+  const target = Number(button.dataset.go);
+  const before = scenes[target].scrolled;
+  button.listeners.get("click")?.();
+  if (scenes[target].scrolled !== before + 1) {
+    throw new Error(`data-go="${target}" nie przewinął właściwej sceny`);
+  }
+  if (currentHash !== `#${scenes[target].id}`) {
+    throw new Error(`data-go="${target}" ustawił błędny hash ${currentHash}`);
+  }
+  for (const navButton of navButtons) {
+    const shouldBeCurrent = Number(navButton.dataset.go) === target;
+    if (navButton.attributes.has("aria-current") !== shouldBeCurrent) {
+      throw new Error(`data-go="${target}" ustawił błędne aria-current`);
+    }
+  }
+}
+
+console.log(`OK: ${sceneButtons.length} przycisków data-go prowadzi do właściwych scen, hashy i stanu nawigacji.`);

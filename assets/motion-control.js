@@ -26,7 +26,9 @@
       button.setAttribute("aria-pressed", String(paused));
       button.setAttribute(
         "aria-label",
-        paused ? "Wznów animacje na stronie" : "Wstrzymaj animacje na stronie",
+        paused
+          ? "Wznów ruch i animacje na stronie"
+          : "Wstrzymaj ruch i animacje na stronie",
       );
       const label = button.querySelector("[data-motion-label]");
       if (label) label.textContent = paused ? "Wznów ruch" : "Wstrzymaj ruch";

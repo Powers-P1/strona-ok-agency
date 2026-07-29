@@ -32,16 +32,26 @@
       "about": { "@id": "https://okagency.pl/#organization" }
     }
   </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://okagency.pl/" },
+        { "@type": "ListItem", "position": 2, "name": "Kontakt", "item": "https://okagency.pl/kontakt" }
+      ]
+    }
+  </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="prefetch" href="/menu">
   <script src="assets/js-enabled.js"></script>
-  <link rel="stylesheet" href="assets/page-contact.css?v=20260729-2">
+  <link rel="stylesheet" href="assets/page-contact.css?v=20260729-3">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
   <link rel="stylesheet" href="/assets/fonts.css">
-  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-3">
   <script src="/assets/motion-control.js"></script>
 </head>
 <body class="contact-page">
@@ -156,6 +166,7 @@
             data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil"
             data-action="contact"
             data-theme="light"
+            data-size="flexible"
           ></div>
         </div>
 
@@ -190,7 +201,7 @@
     </main>
 
     <div class="scene" aria-hidden="true">
-      <img src="assets/kontakt-scene.webp" alt="" fetchpriority="high" decoding="async">
+      <img src="assets/kontakt-scene.webp" alt="" width="1329" height="1175" fetchpriority="high" decoding="async">
     </div>
   </div>
   <div data-site-footer></div>

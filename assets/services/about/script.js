@@ -3,6 +3,7 @@
 
   const scenes = [...document.querySelectorAll(".scene")];
   const navButtons = [...document.querySelectorAll(".scene-nav [data-go]")];
+  const sceneButtons = [...document.querySelectorAll("[data-go]")];
   const themeColor = document.querySelector('meta[name="theme-color"]');
   const hashes = scenes.map((scene) => `#${scene.id}`);
   let activeIndex = Math.max(0, hashes.indexOf(window.location.hash));
@@ -21,8 +22,8 @@
       scene.removeAttribute("inert");
     });
 
-    navButtons.forEach((button, buttonIndex) => {
-      if (buttonIndex === activeIndex) {
+    navButtons.forEach((button) => {
+      if (Number(button.dataset.go) === activeIndex) {
         button.setAttribute("aria-current", "true");
       } else {
         button.removeAttribute("aria-current");
@@ -40,8 +41,10 @@
     scene.removeAttribute("inert");
   });
 
-  navButtons.forEach((button, index) => {
+  sceneButtons.forEach((button) => {
     button.addEventListener("click", () => {
+      const index = Number(button.dataset.go);
+      if (!Number.isInteger(index) || !scenes[index]) return;
       updateActiveScene(index);
       scenes[index].scrollIntoView({
         behavior: motionPaused() ? "auto" : "smooth",

@@ -1356,6 +1356,7 @@ body[data-theme="dark"] .scene-nav button {
 
   .wordmark {
     width: 88px;
+    flex: 0 0 88px;
   }
 
   .site-header nav {

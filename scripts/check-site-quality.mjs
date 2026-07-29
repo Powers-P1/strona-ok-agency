@@ -107,6 +107,7 @@ for (const file of publicFiles) {
 
   if (!/href=["']\/assets\/fonts\.css["']/i.test(source)) failures.push(`${file}: brak lokalnych fontów`);
   if (!/href=["']\/assets\/site-enhancements\.css(?:\?[^"']*)?["']/i.test(source)) failures.push(`${file}: brak warstwy dostępności`);
+  if (!/src=["']\/assets\/motion-control\.js\?v=[\d-]+["']/i.test(source)) failures.push(`${file}: motion-control.js bez wersjonowania cache`);
   if (!/rel=["']icon["']/i.test(source)) failures.push(`${file}: brak jawnej ikony strony`);
   if (/href=["'][^"']*\.html(?:[?#"'])/i.test(source)) failures.push(`${file}: wewnętrzny link zawiera .html`);
   if (/fonts\.(?:googleapis|gstatic)\.com/i.test(source)) failures.push(`${file}: zewnętrzne Google Fonts`);

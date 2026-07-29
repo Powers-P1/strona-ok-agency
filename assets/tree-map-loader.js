@@ -54,7 +54,7 @@
     try {
       window.TREE_LIGHT_MAP = await loadCanonicalMap();
       await loadScript("/assets/stone-neural-map.js");
-      await loadScript("/assets/tree-energy.js");
+      await loadScript("/assets/tree-energy.js?v=20260729-2");
 
       const params = new URLSearchParams(window.location.search);
       if (params.get("debugMap") === "1" && params.get("editMap") === "1") {

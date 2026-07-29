@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.mjs",
     "check:links": "node scripts/check-links.mjs",
+    "prebuild": "npm run check:links",
     "build": "node scripts/build.mjs"
   },
   "engines": {

@@ -1,0 +1,125 @@
+name: Production monitor
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check production, DNSSEC and certificate
+        id: health
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          exec > >(tee monitor-report.txt) 2>&1
+
+          check_status() {
+            local url="$1"
+            local expected="$2"
+            local actual
+            actual="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$url")"
+            test "$actual" = "$expected" || {
+              echo "FAIL: $url returned $actual, expected $expected"
+              return 1
+            }
+            echo "OK: $url -> $actual"
+          }
+
+          check_status "https://okagency.pl/" "200"
+          check_status "https://okagency.pl/kontakt" "200"
+          check_status "https://okagency.pl/.well-known/security.txt" "200"
+
+          test "$(curl --silent --show-error --head --max-time 20 https://www.okagency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+            && echo "OK: www redirect" \
+            || { echo "FAIL: www redirect"; exit 1; }
+
+          test "$(curl --silent --show-error --head --max-time 20 https://ok-agency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+            && echo "OK: alternate-domain redirect" \
+            || { echo "FAIL: alternate-domain redirect"; exit 1; }
+
+          test "$(curl --silent --show-error --head --max-time 20 https://ok-agency.pages.dev/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+            && echo "OK: pages.dev redirect" \
+            || { echo "FAIL: pages.dev redirect"; exit 1; }
+
+          curl --silent --show-error --head --max-time 20 https://okagency.pl/ \
+            | grep --ignore-case --quiet '^strict-transport-security:.*max-age=' \
+            && echo "OK: HSTS" \
+            || { echo "FAIL: HSTS missing"; exit 1; }
+
+          dnssec_status="$(curl --silent --show-error --max-time 20 \
+            --header 'accept: application/dns-json' \
+            'https://cloudflare-dns.com/dns-query?name=okagency.pl&type=DNSKEY' \
+            | jq -r '.AD')"
+          test "$dnssec_status" = "true" \
+            && echo "OK: DNSSEC validation" \
+            || { echo "FAIL: DNSSEC validation"; exit 1; }
+
+          cert_end="$(echo | openssl s_client -servername okagency.pl -connect okagency.pl:443 2>/dev/null \
+            | openssl x509 -noout -enddate | cut -d= -f2)"
+          cert_end_epoch="$(date --date="$cert_end" +%s)"
+          minimum_epoch="$(date --date='+21 days' +%s)"
+          test "$cert_end_epoch" -gt "$minimum_epoch" \
+            && echo "OK: certificate valid beyond 21 days ($cert_end)" \
+            || { echo "FAIL: certificate expires too soon ($cert_end)"; exit 1; }
+
+      - name: Open or update incident issue
+        if: steps.health.outcome == 'failure'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require("fs");
+            const title = "[monitor] Problem z produkcją okagency.pl";
+            const report = fs.readFileSync("monitor-report.txt", "utf8").slice(-12000);
+            const { owner, repo } = context.repo;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: "open", labels: "production-monitor", per_page: 100
+            });
+            const existing = issues.find(issue => issue.title === title);
+            const body = [
+              `Automatyczny monitoring wykrył problem: ${new Date().toISOString()}.`,
+              "",
+              "```text",
+              report,
+              "```",
+              "",
+              `[Uruchomienie workflow](${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId})`,
+            ].join("\n");
+            if (existing) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({
+                owner, repo, title, body, labels: ["production-monitor"]
+              });
+            }
+
+      - name: Close recovered incident issue
+        if: steps.health.outcome == 'success'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const title = "[monitor] Problem z produkcją okagency.pl";
+            const { owner, repo } = context.repo;
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: "open", labels: "production-monitor", per_page: 100
+            });
+            for (const issue of issues.filter(issue => issue.title === title)) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number,
+                body: `Monitoring ponownie przechodzi poprawnie: ${new Date().toISOString()}.`
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number, state: "closed"
+              });
+            }
+
+      - name: Fail workflow when health check failed
+        if: steps.health.outcome == 'failure'
+        run: exit 1

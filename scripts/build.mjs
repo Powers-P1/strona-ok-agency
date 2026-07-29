@@ -21,6 +21,7 @@ await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
 
 const staticFiles = [
   "_headers",
+  "_routes.json",
   "robots.txt",
   "sitemap.xml",
 ];
@@ -28,6 +29,8 @@ const staticFiles = [
 for (const file of staticFiles) {
   await cp(join(root, file), join(dist, file));
 }
+
+await cp(join(root, ".well-known"), join(dist, ".well-known"), { recursive: true });
 
 console.log(
   `OK: przygotowano ${htmlFiles.length} stron i konfigurację Cloudflare Pages w dist/.`,

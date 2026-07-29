@@ -2,5 +2,16 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "ok-agency",
   "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-07-29"
+  "compatibility_date": "2026-07-29",
+  "vars": {
+    "CONTACT_FROM": "formularz@okagency.pl",
+    "CONTACT_TO": "hello@okagency.pl",
+    "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl"
+  },
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "hello@okagency.pl"
+    }
+  ]
 }

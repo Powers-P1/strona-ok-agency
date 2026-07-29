@@ -440,7 +440,7 @@ Rekomendowana struktura:
    - Kontakt,
    - Polityka prywatności.
 4. **Kontakt**
-   - `kontakt@okagency.pl`,
+   - `hello@okagency.pl`,
    - `© 2026 OK Agency`.
 
 Stopka nie zawiera linku „Realizacje”, „Portfolio” ani „Case studies”. Może wyróżniać link „Zrób diagnozę — 4 pytania”.

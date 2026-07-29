@@ -1,6 +1,7 @@
-import { cp, mkdir, readdir, rm } from "node:fs/promises";
+import { cp, mkdir, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { renderHeaders } from "./csp.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
@@ -20,7 +21,6 @@ for (const file of htmlFiles) {
 await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
 
 const staticFiles = [
-  "_headers",
   "robots.txt",
   "sitemap.xml",
 ];
@@ -29,8 +29,11 @@ for (const file of staticFiles) {
   await cp(join(root, file), join(dist, file));
 }
 
+const { headers, styleHashCount } = await renderHeaders(root, htmlFiles);
+await writeFile(join(dist, "_headers"), headers, "utf8");
+
 await cp(join(root, ".well-known"), join(dist, ".well-known"), { recursive: true });
 
 console.log(
-  `OK: przygotowano ${htmlFiles.length} stron i konfigurację Cloudflare Pages w dist/.`,
+  `OK: przygotowano ${htmlFiles.length} stron, CSP (${styleHashCount} haszy stylów) i konfigurację Cloudflare Pages w dist/.`,
 );

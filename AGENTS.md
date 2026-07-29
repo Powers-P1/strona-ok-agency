@@ -27,6 +27,8 @@
 - Nie dodawaj trackerów, analityki ani nowych zewnętrznych integracji bez
   wyraźnej zgody.
 - Aktualizuj mapę nawigacji i sitemapę, gdy dodajesz albo usuwasz stronę.
+- Po zmianie hostingu, domen, DNS, poczty, Workera, sekretów, workflowów albo
+  zabezpieczeń aktualizuj `docs/PRODUCTION-OPERATIONS.md`.
 
 ## Wymagane sprawdzenia
 
@@ -42,3 +44,5 @@ npm run build
   wdraża zmiany z `main`.
 - Artefakt wdrożeniowy musi pochodzić z `dist/`.
 - Po wdrożeniu sprawdź `https://okagency.pl` i kluczowe podstrony.
+- Szczegóły infrastruktury i procedury awaryjne są opisane w
+  `docs/PRODUCTION-OPERATIONS.md`.

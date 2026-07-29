@@ -92,7 +92,20 @@ jobs:
             || { echo "FAIL: alternate-domain DNSSEC validation"; exit 1; }
 
           dns_query _dmarc.okagency.pl TXT \
-            | jq --exit-status 'any(.Answer[]?; .type == 16 and (.data | contains("p=quarantine")))' >/dev/null \
+            | jq --exit-status '
+                any(
+                  .Answer[]?;
+                  .type == 16
+                  and (
+                    .data
+                    | ascii_downcase
+                    | gsub("^\"|\"$"; "")
+                    | split(";")
+                    | map(gsub("^\\s+|\\s+$"; ""))
+                    | index("p=quarantine") != null
+                  )
+                )
+              ' >/dev/null \
             && echo "OK: primary DMARC enforcement" \
             || { echo "FAIL: primary DMARC enforcement"; exit 1; }
 
@@ -102,7 +115,20 @@ jobs:
             || { echo "FAIL: primary DKIM"; exit 1; }
 
           dns_query _dmarc.ok-agency.pl TXT \
-            | jq --exit-status 'any(.Answer[]?; .type == 16 and (.data | contains("p=quarantine")))' >/dev/null \
+            | jq --exit-status '
+                any(
+                  .Answer[]?;
+                  .type == 16
+                  and (
+                    .data
+                    | ascii_downcase
+                    | gsub("^\"|\"$"; "")
+                    | split(";")
+                    | map(gsub("^\\s+|\\s+$"; ""))
+                    | index("p=quarantine") != null
+                  )
+                )
+              ' >/dev/null \
             && echo "OK: alternate-domain DMARC enforcement" \
             || { echo "FAIL: alternate-domain DMARC enforcement"; exit 1; }
 

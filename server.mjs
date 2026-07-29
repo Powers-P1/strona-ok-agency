@@ -37,9 +37,17 @@ createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`);
     let path = normalize(decodeURIComponent(url.pathname)).replace(/^([/\\])+/, "");
     if (!path || path.endsWith("/") || path === ".") path = join(path, "index.html");
-    const file = join(root, path);
+    let file = join(root, path);
     if (!file.startsWith(root)) { res.writeHead(403); res.end(); return; }
-    const info = await stat(file).catch(() => null);
+    let info = await stat(file).catch(() => null);
+    if (!info && !extname(file)) {
+      const htmlFile = `${file}.html`;
+      const htmlInfo = await stat(htmlFile).catch(() => null);
+      if (htmlInfo?.isFile()) {
+        file = htmlFile;
+        info = htmlInfo;
+      }
+    }
     const target = info && info.isDirectory() ? join(file, "index.html") : file;
     const body = await readFile(target);
     res.writeHead(200, {
@@ -48,8 +56,12 @@ createServer(async (req, res) => {
     });
     res.end(body);
   } catch {
-    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("404");
+    const body = await readFile(join(root, "404.html")).catch(() => Buffer.from("404", "utf8"));
+    res.writeHead(404, {
+      "Content-Type": body.length > 3 ? types[".html"] : "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+    });
+    res.end(body);
   }
 }).listen(port, host, () => {
   console.log(`OK Agency dev server: http://${host}:${port}/`);

@@ -4,41 +4,63 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e9d8c8">
-  <title>Kontakt — OK Agency</title>
+  <title>Kontakt z agencją marketingową | OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/kontakt">
   <meta name="description" content="Dobre projekty zaczynają się od dobrej rozmowy. Napisz do OK Agency — odpowiadam zwykle w ciągu jednego dnia roboczego.">
-  <meta property="og:title" content="Kontakt — OK Agency">
+  <meta property="og:title" content="Kontakt z agencją marketingową | OK Agency">
   <meta property="og:description" content="Opowiedz krótko o swoim projekcie i celach. Odpowiadam zwykle w ciągu jednego dnia roboczego.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okagency.pl/kontakt">
+  <meta property="og:site_name" content="OK Agency">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kontakt z agencją marketingową | OK Agency">
+  <meta name="twitter:description" content="Opowiedz krótko o swoim projekcie i celach. Odpowiadam zwykle w ciągu jednego dnia roboczego.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "@id": "https://okagency.pl/kontakt#webpage",
+      "url": "https://okagency.pl/kontakt",
+      "name": "Kontakt z OK Agency",
+      "inLanguage": "pl-PL",
+      "about": { "@id": "https://okagency.pl/#organization" }
+    }
+  </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="prefetch" href="menu.html">
+  <link rel="prefetch" href="/menu">
   <script src="assets/js-enabled.js"></script>
   <link rel="stylesheet" href="assets/page-contact.css">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-footer.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="contact-page">
   <a class="skip" href="#main">Przejdź do treści</a>
 
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="OK Agency — strona główna">
+    <a class="brand" href="/" aria-label="OK Agency — strona główna">
       <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
     </a>
     <nav class="site-nav" aria-label="Główna nawigacja">
-      <a href="menu.html" data-nav-link="offer">Oferta</a>
-      <a href="proces.html" data-nav-link="process">Jak pracujemy</a>
-      <a href="kontakt.html" data-nav-link="contact">Kontakt</a>
+      <a href="/menu" data-nav-link="offer">Oferta</a>
+      <a href="/proces" data-nav-link="process">Jak pracujemy</a>
+      <a href="/kontakt" data-nav-link="contact">Kontakt</a>
     </nav>
   </header>
 
   <div class="layout">
     <main class="panel" id="main">
-      <a class="back-link" href="menu.html" style="--i:0" data-context-back><span class="arr" aria-hidden="true">&larr;</span> <span data-context-back-label>Wróć do oferty</span></a>
+      <a class="back-link" href="/menu" style="--i:0" data-context-back><span class="arr" aria-hidden="true">&larr;</span> <span data-context-back-label>Wróć do oferty</span></a>
 
       <p class="kicker" style="--i:1">Rozmawiajmy o tym, co ważne</p>
 
@@ -115,16 +137,16 @@
           <p class="error" id="e-message">Napisz kilka zdań o projekcie.</p>
         </div>
 
-        <div class="hp" aria-hidden="true">
+        <div class="hp" aria-hidden="true" inert>
           <label for="f-fax">Nie wypełniaj tego pola</label>
-          <input id="f-fax" name="fax" type="text" tabindex="-1" autocomplete="off">
+          <input id="f-fax" name="fax" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
         </div>
 
         <label class="consent" id="consent-wrap">
           <input type="checkbox" id="f-consent" required>
           <span class="box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2.5 8.5l3.5 3.5 7-8"/></svg></span>
-          <span class="consent-copy">Wyrażam zgodę na przetwarzanie moich danych w&nbsp;celu odpowiedzi na zapytanie. Szczegóły w&nbsp;<a href="polityka-prywatnosci.html">Polityce prywatności</a>.</span>
-          <span class="consent-error" id="e-consent">Zaznacz zgodę, aby wysłać wiadomość.</span>
+          <span class="consent-copy">Potwierdzam, że zapoznałem/am się z&nbsp;<a href="/polityka-prywatnosci">Polityką prywatności</a> i&nbsp;przyjmuję do wiadomości zasady przetwarzania danych w&nbsp;związku z&nbsp;moim zapytaniem.</span>
+          <span class="consent-error" id="e-consent">Potwierdź zapoznanie się z Polityką prywatności.</span>
         </label>
 
         <div class="field field--wide">

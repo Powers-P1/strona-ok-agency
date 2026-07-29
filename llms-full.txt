@@ -1,0 +1,52 @@
+# OK Agency — pełny opis tekstowy
+
+> Źródło pomocnicze dla systemów pobierających treść serwisu. Aktualne na 29 lipca 2026 r. Kanonicznym źródłem są podlinkowane strony HTML.
+
+## Kim jest OK Agency
+
+OK Agency to agencja marketingowa prowadzona przez Oliwię Karolewską. Pracuje zdalnie z małymi i średnimi firmami w całej Polsce. Model pracy zakłada jedną osobę prowadzącą, która zna kontekst i odpowiada za całość, oraz dobór specjalistów do rzeczywistego zakresu zadania.
+
+Agencja nie publikuje niepotwierdzonych obietnic wyników ani uniwersalnego cennika. Zakres, termin i wycena zależą od stanu materiałów, liczby decyzji, złożoności rozwiązania, potrzebnych kompetencji i sposobu pomiaru.
+
+## Strony internetowe
+
+Usługa jest przeznaczona dla firm, które potrzebują jednego miejsca jasno wyjaśniającego ofertę i prowadzącego użytkownika do decyzji lub kontaktu. Proces obejmuje kierunek, architekturę informacji, treść i prototyp, projekt graficzny, wdrożenie, CMS, podstawy SEO i analityki, testy oraz publikację.
+
+Wycena zależy między innymi od liczby typów podstron, gotowości treści i identyfikacji, integracji oraz zakresu wdrożenia. Do startu potrzebne są informacje o ofercie, odbiorcach, celu strony, materiałach marki i osobach decyzyjnych. Sama budowa strony nie jest właściwym pierwszym krokiem, jeśli firma nie ma jeszcze określonej oferty lub decyzji, którą serwis ma wspierać.
+
+Źródło: https://okagency.pl/strony-internetowe
+
+## Social media
+
+Usługa jest przeznaczona dla marek, które mają działającą ofertę i potrzebują powtarzalnego rytmu komunikacji. Obejmuje audyt kanałów, kierunek komunikacji, plan treści, copy i kreacje, publikację oraz raport z rekomendacjami. Współpraca działa w cyklach miesięcznych.
+
+Wycena i rytm zależą od liczby kanałów, formatów, zakresu produkcji, sposobu akceptacji i tego, czy potrzebna jest moderacja. Do startu potrzebne są cele, wiedza o odbiorcach, materiały marki, dostęp do kanałów i osoba zatwierdzająca. Obsługa social media nie zastąpi uporządkowania oferty ani strony, jeśli odbiorca nie ma dokąd przejść po kontakcie z treścią.
+
+Źródło: https://okagency.pl/social-media
+
+## Kampanie płatne
+
+Usługa obejmuje kampanie Meta Ads i Google Ads: diagnozę celu, koncepcję, kreacje, konfigurację pomiaru, uruchomienie i optymalizację. Budżet reklamowy pozostaje po stronie klienta. Głównym kryterium jest cel biznesowy, a dane reklamowe służą do znalezienia przyczyny wyniku.
+
+Wycena zależy od liczby kanałów, rynków, kreacji, etapów lejka i stanu pomiaru. Do startu potrzebne są oferta, miejsce docelowe, dostęp do kont reklamowych i analitycznych, zasoby kreacyjne oraz kryterium jakościowego wyniku. Kampania nie jest dobrym pierwszym krokiem bez gotowej oferty, strony docelowej i możliwości pomiaru.
+
+Źródło: https://okagency.pl/kampanie
+
+## Diagnoza i proces
+
+Diagnoza zadaje cztery pytania i wskazuje jeden z kierunków: strona internetowa, social media, kampania, rozmowa porządkująca albo brak potrzeby zakupu na tym etapie. Odpowiedzi są przetwarzane lokalnie w przeglądarce i nie są zapisywane przez OK Agency.
+
+Proces współpracy składa się z rozpoznania problemu, wyboru priorytetu i miernika, realizacji z kontrolą jakości oraz powrotu danych do kolejnych decyzji.
+
+Źródła:
+
+- https://okagency.pl/diagnoza
+- https://okagency.pl/proces
+
+## Dane kontaktowe i zasady
+
+Kontakt: hello@okagency.pl
+Obszar działania: zdalnie, cała Polska
+Strona główna: https://okagency.pl/
+Polityka prywatności: https://okagency.pl/polityka-prywatnosci
+Informacja o dostępności: https://okagency.pl/dostepnosc

@@ -40,18 +40,18 @@ Na każdej stronie występują te same trzy pozycje, w tej samej kolejności:
 
 | Etykieta | Cel | Rola |
 | --- | --- | --- |
-| Oferta | `menu.html` | wybór lub zmiana kierunku |
-| Jak pracujemy | `proces.html` | wspólny proces dla wszystkich usług |
-| Kontakt | `kontakt.html` | rozpoczęcie rozmowy |
+| Oferta | `/menu` | wybór lub zmiana kierunku |
+| Jak pracujemy | `/proces` | wspólny proces dla wszystkich usług |
+| Kontakt | `/kontakt` | rozpoczęcie rozmowy |
 
-Logo zawsze prowadzi do `index.html`. Kotwice wewnątrz strony nie należą do nawigacji globalnej - prowadzą do nich przyciski i podpowiedzi przewijania w treści.
+Logo zawsze prowadzi do `/`. Kotwice wewnątrz strony nie należą do nawigacji globalnej - prowadzą do nich przyciski i podpowiedzi przewijania w treści.
 
 Polityka prywatności korzysta z tego samego nagłówka, a strona 404 pokazuje te same cele razem z przyciskami ratunkowymi do strony głównej, oferty i diagnozy.
 
 ## Kontekst między stronami
 
-- Usługa -> Proces: `proces.html?from=<kierunek>`.
-- Usługa -> Kontakt: `kontakt.html?context=<kierunek>`.
+- Usługa -> Proces: `/proces?from=<kierunek>`.
+- Usługa -> Kontakt: `/kontakt?context=<kierunek>`.
 - Proces otwarty z usługi zachowuje kierunek także w linkach do kontaktu.
 - Kontakt automatycznie wybiera temat i pokazuje powrót do strony, z której przyszedł użytkownik.
 - Bez parametru kontekstu powrót prowadzi do pełnej oferty.

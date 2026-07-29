@@ -20,7 +20,7 @@ export async function renderHeaders(root, htmlFiles) {
 
     const inlineScripts = [
       ...html.matchAll(/<script(?=[\s>])(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/gi),
-    ];
+    ].filter(match => !/\btype=["']application\/(?:ld\+)?json["']/i.test(match[0]));
     if (inlineScripts.length > 0) {
       throw new Error(`${file}: wykonywalny skrypt inline jest zabroniony przez CSP.`);
     }

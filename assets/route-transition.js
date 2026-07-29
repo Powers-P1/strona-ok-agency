@@ -50,7 +50,7 @@
   const focusObserver = new MutationObserver(() => {
     if (!pendingMenu || !hero.classList.contains("is-focused")) return;
     pendingMenu = false;
-    leave("menu.html");
+    leave("/menu");
   });
   focusObserver.observe(hero, { attributes: true, attributeFilter: ["class"] });
 
@@ -60,6 +60,11 @@
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || trigger.target) return;
 
     if (trigger.matches("[data-menu-entry]")) {
+      if (document.documentElement.dataset.heroEffects === "disabled") {
+        event.preventDefault();
+        leave("/menu");
+        return;
+      }
       pendingMenu = true;
       return;
     }

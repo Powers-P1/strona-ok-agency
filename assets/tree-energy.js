@@ -51,6 +51,10 @@
   const debugPerformance = params.get("debugPerf") === "1";
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const coarsePointer = window.matchMedia("(pointer: coarse)");
+  const motionPaused = () => (
+    reducedMotion.matches
+    || document.documentElement.dataset.motion === "paused"
+  );
   const originalCtaLabel = explore.textContent.trim();
   const edgeById = new Map(map.edges.map((edge) => [edge.id, edge]));
   const sampledEdges = new Map();
@@ -79,6 +83,8 @@
   let cssHeight = 0;
   let dpr = 1;
   let frame = 0;
+  let lastRenderedAt = 0;
+  const frameInterval = 1000 / 30;
   let pageVisible = !document.hidden;
   let hiddenAt = 0;
   let nextIdleAt = Number.POSITIVE_INFINITY;
@@ -564,7 +570,7 @@
       mappedHandoff: Boolean(options.mappedHandoff)
     };
     coreFeeds.push(feed);
-    if (!reducedMotion.matches) {
+    if (!motionPaused()) {
       scheduleStoneSource(
         targetNode,
         start + duration * (.055 + Math.random() * .035),
@@ -640,7 +646,7 @@
   }
 
   function sourceStrength(now, coreCharge = coreChargeAt(now)) {
-    if (reducedMotion.matches) return reducedPending ? 1.12 : .88;
+    if (motionPaused()) return reducedPending ? 1.12 : .88;
     const slow = Math.sin((now / 7300) * Math.PI * 2 + .35);
     const slower = Math.sin((now / 10700) * Math.PI * 2 + 1.7);
     let value = .76 + slow * .05 + slower * .03 + coreCharge * .58;
@@ -659,7 +665,7 @@
     const [cx, cy] = mapPoint(source.point);
     const level = Math.min(1.25, source.level);
     const scale = cssWidth / map.image.width;
-    const breath = reducedMotion.matches ? .5 : (Math.sin(now / 940 + source.index * 1.7) + 1) * .5;
+    const breath = motionPaused() ? .5 : (Math.sin(now / 940 + source.index * 1.7) + 1) * .5;
     const radiusX = Math.max(76, 190 * scale);
     const radiusY = Math.max(41, 96 * (cssHeight / map.image.height));
     const sourceRadiusX = radiusX / cssWidth * map.image.width;
@@ -725,7 +731,7 @@
     const [cx, cy] = mapPoint(source.point);
     const level = Math.min(1.25, source.level);
     const scale = Math.max(.66, cssWidth / map.image.width);
-    const pulse = reducedMotion.matches ? .5 : (Math.sin(now / 430 + source.index * 2.1) + 1) * .5;
+    const pulse = motionPaused() ? .5 : (Math.sin(now / 430 + source.index * 2.1) + 1) * .5;
     const radius = Math.max(6.8, 16.5 * scale)
       * (1 + level * .1 + pulse * .025)
       * (dominant ? 1 : .68);
@@ -911,7 +917,7 @@
       const point = map.nodes[id];
       if (!point) return;
       const [x, y] = mapPoint(point);
-      const shimmer = reducedMotion.matches ? .72 : .65 + Math.sin(now / 2300 + index * .87) * .2;
+      const shimmer = motionPaused() ? .72 : .65 + Math.sin(now / 2300 + index * .87) * .2;
       context.fillStyle = `rgba(255, 218, 198, ${.11 * shimmer})`;
       context.beginPath();
       context.arc(x, y, Math.max(.62, .9 * scale), 0, Math.PI * 2);
@@ -983,7 +989,7 @@
   }
 
   function scheduleStoneSource(sourceNode, start, options = {}) {
-    if (!stoneMap || reducedMotion.matches) return;
+    if (!stoneMap || motionPaused()) return;
     const indices = stoneMap.sourceRoutes[sourceNode]
       || stoneMap.sourceRoutes.source
       || [];
@@ -1002,7 +1008,7 @@
   }
 
   function scheduleStoneIdle(now) {
-    if (!stoneRoutes.length || reducedMotion.matches) return;
+    if (!stoneRoutes.length || motionPaused()) return;
     const burstCount = Math.random() < .18 ? 2 + Math.floor(Math.random() * 3) : 1;
     let cursor = now;
     for (let index = 0; index < burstCount; index += 1) {
@@ -1049,7 +1055,7 @@
   }
 
   function stoneDepthOffset(depth) {
-    if (reducedMotion.matches) return [0, 0];
+    if (motionPaused()) return [0, 0];
     const factor = detailOpen ? .28 : 1;
     const amount = depth === "back" ? -2.2 : depth === "mid" ? 1.1 : .52;
     return [
@@ -1232,7 +1238,7 @@
   function drawStoneNeural(now) {
     if (!stoneContext || !stoneMap || !stoneCssWidth || !stoneCssHeight) return;
     stoneContext.clearRect(0, 0, stoneCssWidth, stoneCssHeight);
-    if (reducedMotion.matches) {
+    if (motionPaused()) {
       if (emissiveReady && stoneAtlases.mid.width) {
         stoneContext.save();
         stoneContext.globalAlpha = .075;
@@ -1531,7 +1537,7 @@
   }
 
   function drawPointerRefinement() {
-    if (!pointerHighlight || coarsePointer.matches || reducedMotion.matches || detailOpen) return;
+    if (!pointerHighlight || coarsePointer.matches || motionPaused() || detailOpen) return;
     const center = sampleEdge(pointerHighlight.edgeId, pointerHighlight.progress);
     const before = sampleEdge(pointerHighlight.edgeId, Math.max(0, pointerHighlight.progress - .035));
     const after = sampleEdge(pointerHighlight.edgeId, Math.min(1, pointerHighlight.progress + .035));
@@ -1555,7 +1561,7 @@
   }
 
   function findPointerHighlight(clientX, clientY) {
-    if (coarsePointer.matches || reducedMotion.matches || detailOpen) return null;
+    if (coarsePointer.matches || motionPaused() || detailOpen) return null;
     const rect = rig.getBoundingClientRect();
     const px = (clientX - rect.left) / rect.width;
     const py = (clientY - rect.top) / rect.height;
@@ -1842,7 +1848,7 @@
     drawCoreFeeds(now);
     drawSynapses(now);
 
-    if (!reducedMotion.matches) {
+    if (!motionPaused()) {
       pulses.forEach((pulse) => drawPulse(pulse, now));
       blossoms.forEach((blossom) => drawBlossom(blossom, now));
       drawPointerRefinement();
@@ -1854,7 +1860,12 @@
   }
 
   function render(now) {
-    if (!pageVisible || reducedMotion.matches) return;
+    if (!pageVisible || motionPaused()) return;
+    if (now - lastRenderedAt < frameInterval) {
+      frame = requestAnimationFrame(render);
+      return;
+    }
+    lastRenderedAt = now;
     recordPerformance(now);
     if (!editMap && !detailOpen && now >= nextStoneAt) scheduleStoneIdle(now);
     if (!editMap && !activationRunning && !detailOpen && now >= nextIdleAt) scheduleIdle(now);
@@ -1887,7 +1898,7 @@
     );
     cssWidth = rig.clientWidth || rect.width / Math.max(.001, scaleX);
     cssHeight = rig.clientHeight || rect.height / Math.max(.001, scaleX);
-    dpr = Math.min(window.devicePixelRatio || 1, coarsePointer.matches ? 1.2 : 1.5);
+    dpr = Math.min(window.devicePixelRatio || 1, coarsePointer.matches ? 1 : 1.25);
     canvas.width = Math.max(1, Math.round(cssWidth * dpr));
     canvas.height = Math.max(1, Math.round(cssHeight * dpr));
     canvas.style.width = `${cssWidth}px`;
@@ -1970,13 +1981,13 @@
     detail.setAttribute("aria-hidden", "true");
     setInert(detail, true);
     setInert(intro, false);
-    nextIdleAt = reducedMotion.matches
+    nextIdleAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + signalTime(1450);
-    nextRelayAt = reducedMotion.matches
+    nextRelayAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + signalTime(4200);
-    nextStoneAt = reducedMotion.matches
+    nextStoneAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + 420;
     holdScroll(target);
@@ -2000,13 +2011,13 @@
     stonePulses = [];
     resetCta();
     setActivationExpanded(false);
-    nextIdleAt = reducedMotion.matches
+    nextIdleAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + signalTime(1200);
-    nextRelayAt = reducedMotion.matches
+    nextRelayAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + signalTime(4400);
-    nextStoneAt = reducedMotion.matches
+    nextStoneAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + 460;
     drawFrame(performance.now());
@@ -2043,9 +2054,9 @@
     explore.setAttribute("aria-busy", "true");
     explore.setAttribute("aria-disabled", "true");
     activationLinks.forEach((link) => link.setAttribute("aria-disabled", "true"));
-    explore.textContent = reducedMotion.matches ? "Otwieramy…" : "Energia płynie…";
+    explore.textContent = motionPaused() ? "Otwieramy…" : "Energia płynie…";
 
-    if (reducedMotion.matches) {
+    if (motionPaused()) {
       reducedPending = true;
       drawFrame(activationStarted);
       reducedTimer = window.setTimeout(() => {
@@ -2062,7 +2073,7 @@
 
   function syncMotionPreference() {
     cancelAnimationFrame(frame);
-    if (reducedMotion.matches) {
+    if (motionPaused()) {
       nextIdleAt = Number.POSITIVE_INFINITY;
       pulses = [];
       blossoms = [];
@@ -2108,7 +2119,7 @@
 
   if (!coarsePointer.matches && !editMap) {
     window.addEventListener("pointermove", (event) => {
-      if (reducedMotion.matches || detailOpen) return;
+      if (motionPaused() || detailOpen) return;
       const x = (event.clientX / window.innerWidth - .5) * -4;
       const y = (event.clientY / window.innerHeight - .5) * -3;
       stonePointerX = (event.clientX / window.innerWidth - .5) * 2;
@@ -2163,11 +2174,12 @@
     });
 
     if (reducedPending) completeActivation();
-    else if (!reducedMotion.matches) frame = requestAnimationFrame(render);
+    else if (!motionPaused()) frame = requestAnimationFrame(render);
     else drawFrame(now);
   });
 
   reducedMotion.addEventListener("change", syncMotionPreference);
+  window.addEventListener("okagency:motionchange", syncMotionPreference);
   coarsePointer.addEventListener("change", resizeCanvas);
   new ResizeObserver(resizeCanvas).observe(rig);
 
@@ -2186,7 +2198,7 @@
       },
       preview(edgeIds, options = {}) {
         const validIds = edgeIds.filter((id) => edgeById.has(id));
-        if (!validIds.length || reducedMotion.matches) {
+        if (!validIds.length || motionPaused()) {
           drawFrame(performance.now());
           return false;
         }
@@ -2232,7 +2244,7 @@
 
   setInert(detail, true);
   resizeCanvas();
-  if (!reducedMotion.matches) {
+  if (!motionPaused()) {
     nextIdleAt = editMap
       ? Number.POSITIVE_INFINITY
       : performance.now() + signalTime(1350);

@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="error-page">
   <a class="legal-skip" href="#main">Przejdź do treści</a>
@@ -19,13 +22,13 @@
   <div class="error-veil" aria-hidden="true"></div>
 
   <header class="legal-header">
-    <a class="legal-header__brand" href="index.html" aria-label="OK Agency — strona główna">
+    <a class="legal-header__brand" href="/" aria-label="OK Agency — strona główna">
       <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
     </a>
     <nav aria-label="Główna nawigacja">
-      <a href="menu.html" data-nav-link="offer">Oferta</a>
-      <a href="proces.html" data-nav-link="process">Jak pracujemy</a>
-      <a href="kontakt.html" data-nav-link="contact">Kontakt</a>
+      <a href="/menu" data-nav-link="offer">Oferta</a>
+      <a href="/proces" data-nav-link="process">Jak pracujemy</a>
+      <a href="/kontakt" data-nav-link="contact">Kontakt</a>
     </nav>
   </header>
 
@@ -35,15 +38,15 @@
       <h1 class="error-title" id="error-title">Zgubił się adres,<br><span>nie kierunek.</span></h1>
       <p class="error-lead">Ta podstrona nie istnieje albo została przeniesiona. Wróć do początku, przejrzyj ofertę lub odpowiedz na cztery pytania w Diagnozie.</p>
       <nav class="error-actions" aria-label="Co możesz zrobić dalej">
-        <a class="primary" href="index.html">Wróć na stronę główną</a>
-        <a class="secondary" href="menu.html">Zobacz ofertę</a>
-        <a class="diagnosis" href="diagnoza.html">Zrób diagnozę — 4 pytania</a>
+        <a class="primary" href="/">Wróć na stronę główną</a>
+        <a class="secondary" href="/menu">Zobacz ofertę</a>
+        <a class="diagnosis" href="/diagnoza">Zrób diagnozę — 4 pytania</a>
       </nav>
     </section>
   </main>
 
   <p class="error-number" aria-hidden="true">404</p>
-  <p class="error-meta"><span>OK Agency</span><span>Zdalnie — cała Polska</span></p>
+  <footer class="error-meta"><span>OK Agency</span><span>Zdalnie — cała Polska</span></footer>
   <script src="assets/navigation.js"></script>
   <script src="assets/route-transition.js"></script>
 </body>

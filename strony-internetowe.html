@@ -4,12 +4,70 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#efe1d4">
-  <meta name="description" content="Strony internetowe OK Agency — strategia, UX, treść, design i wdrożenie w jednym procesie.">
-  <title>OK Agency — Strony internetowe</title>
+  <meta name="description" content="Strony internetowe dla firm: strategia, architektura, UX, treść, projekt, wdrożenie, CMS, SEO i testy w jednym procesie OK Agency.">
+  <title>Strony internetowe dla firm | OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/strony-internetowe">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Strony internetowe dla firm | OK Agency">
+  <meta property="og:description" content="Od kierunku i treści po projekt, wdrożenie, testy i publikację strony dla firmy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okagency.pl/strony-internetowe">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Strony internetowe dla firm | OK Agency">
+  <meta name="twitter:description" content="Od kierunku i treści po projekt, wdrożenie, testy i publikację strony dla firmy.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "@id": "https://okagency.pl/strony-internetowe#service",
+          "name": "Strony internetowe dla firm",
+          "serviceType": "Strategia, projektowanie i wdrażanie stron internetowych",
+          "url": "https://okagency.pl/strony-internetowe",
+          "description": "Strategia, architektura informacji, UX, treść, projekt responsywny, wdrożenie, CMS, podstawy SEO i analityki, testy oraz publikacja.",
+          "provider": { "@id": "https://okagency.pl/#organization" },
+          "areaServed": { "@type": "Country", "name": "Polska" },
+          "audience": { "@type": "BusinessAudience", "audienceType": "Małe i średnie firmy" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://okagency.pl/strony-internetowe#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Ile trwa przygotowanie strony internetowej?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Termin powstaje po poznaniu zakresu. Harmonogram obejmuje kierunek, architekturę, treść i prototyp, projekt, wdrożenie, testy oraz publikację; wpływają na niego materiały, liczba typów podstron, integracje i tempo decyzji."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Czy muszę mieć gotowe teksty?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie. Treść może powstać w ramach procesu, ale potrzebne są rzetelne informacje o ofercie, odbiorcach, przewagach i ograniczeniach."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Co dokładnie otrzymuję po publikacji?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Uzgodnioną architekturę i treść, projekt responsywny, wdrożenie, CMS w ustalonym zakresie, podstawy SEO i analityki, testy kluczowych ścieżek oraz gotowy do publikacji serwis."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
   <link rel="preload" as="image" href="assets/services/web/web-art-opening-v1.webp" type="image/webp">
   <link rel="stylesheet" href="assets/services/web/styles.css">
   <link rel="stylesheet" href="assets/route-motion.css">
@@ -17,6 +75,9 @@
   <link rel="stylesheet" href="assets/site-footer.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="web-service">
   <a class="skip-link" href="#web-opening">Przejdź do oferty stron internetowych</a>
@@ -44,13 +105,13 @@
         </svg>
 
         <header class="site-header site-header-light">
-          <a class="wordmark" href="index.html" aria-label="OK Agency — strona główna">
+          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
             <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
           </a>
           <nav aria-label="Główna nawigacja">
-            <a href="menu.html" data-nav-link="offer">Oferta</a>
-            <a href="proces.html?from=web" data-nav-link="process">Jak pracujemy</a>
-            <a href="kontakt.html?context=web" data-nav-link="contact">Kontakt</a>
+            <a href="/menu" data-nav-link="offer">Oferta</a>
+            <a href="/proces?from=web" data-nav-link="process">Jak pracujemy</a>
+            <a href="/kontakt?context=web" data-nav-link="contact">Kontakt</a>
           </nav>
         </header>
 
@@ -105,7 +166,7 @@
           <span class="section-kicker">Strony internetowe</span>
           <h1 id="opening-title">Najpierw <em>sens.</em><br>Potem ekran.</h1>
           <p>Zanim projektujemy widoki, porządkujemy ofertę, odbiorców<br>i cel biznesowy strony.</p>
-          <div class="opening-scope" aria-label="Zakres realizacji strony">
+          <div class="opening-scope" role="group" aria-label="Zakres realizacji strony">
             <span>Strategia</span>
             <span>UX i treść</span>
             <span>Design</span>
@@ -149,13 +210,13 @@
         </svg>
 
         <header class="site-header site-header-dark">
-          <a class="wordmark" href="index.html" aria-label="OK Agency — strona główna">
+          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
             <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency">
           </a>
           <nav aria-label="Główna nawigacja">
-            <a href="menu.html" data-nav-link="offer">Oferta</a>
-            <a href="proces.html?from=web" data-nav-link="process">Jak pracujemy</a>
-            <a href="kontakt.html?context=web" data-nav-link="contact">Kontakt</a>
+            <a href="/menu" data-nav-link="offer">Oferta</a>
+            <a href="/proces?from=web" data-nav-link="process">Jak pracujemy</a>
+            <a href="/kontakt?context=web" data-nav-link="contact">Kontakt</a>
           </nav>
         </header>
 
@@ -243,13 +304,13 @@
         <span class="proof-bloom" aria-hidden="true"></span>
 
         <header class="site-header site-header-light">
-          <a class="wordmark" href="index.html" aria-label="OK Agency — strona główna">
+          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
             <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
           </a>
           <nav aria-label="Główna nawigacja">
-            <a href="menu.html" data-nav-link="offer">Oferta</a>
-            <a href="proces.html?from=web" data-nav-link="process">Jak pracujemy</a>
-            <a href="kontakt.html?context=web" data-nav-link="contact">Kontakt</a>
+            <a href="/menu" data-nav-link="offer">Oferta</a>
+            <a href="/proces?from=web" data-nav-link="process">Jak pracujemy</a>
+            <a href="/kontakt?context=web" data-nav-link="contact">Kontakt</a>
           </nav>
         </header>
 
@@ -258,7 +319,7 @@
           <h2 id="proof-title">Gotowa do pracy<br>od <em>pierwszego dnia.</em></h2>
           <p class="proof-lead">Dobra strona nie kończy się na estetycznym projekcie. Ma być szybka, czytelna, łatwa do edycji i przygotowana do dalszego rozwoju.</p>
 
-          <div class="proof-list" aria-label="Standard wykonania strony internetowej">
+          <div class="proof-list" role="group" aria-label="Standard wykonania strony internetowej">
             <article class="proof-item is-open">
               <button class="proof-trigger" type="button" aria-expanded="true" aria-controls="proof-quality">
                 <span class="proof-index">01</span>
@@ -308,17 +369,60 @@
           <p class="proof-output"><strong>Co otrzymujesz:</strong> strategię i architekturę strony, UX i treść, projekt graficzny, wdrożenie, CMS, podstawowe SEO i analitykę, testy oraz publikację.</p>
 
           <div class="proof-actions">
-            <a class="proof-primary" href="kontakt.html?context=web#contact-form">
+            <a class="proof-primary" href="/kontakt?context=web#contact-form">
               <span>Porozmawiajmy o stronie</span>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7 17 17 7M9 7h8v8"></path>
               </svg>
             </a>
-            <a class="proof-secondary" href="proces.html?from=web">Zobacz, jak pracujemy</a>
+            <a class="proof-secondary" href="/proces?from=web">Zobacz, jak pracujemy</a>
           </div>
         </div>
       </section>
     </div>
+
+    <section class="decision-guide" aria-labelledby="web-decision-title">
+      <div class="decision-guide__intro">
+        <p class="decision-guide__eyebrow">Przed wyceną / konkrety</p>
+        <h2 id="web-decision-title">Czy strona jest dziś właściwym krokiem?</h2>
+        <p class="decision-guide__lead">Tak, jeśli oferta jest gotowa, ale odbiorca nie ma jednego miejsca, które jasno tłumaczy wartość i prowadzi do decyzji. Zakres strony wynika z zadania biznesowego — nie z gotowej liczby ekranów.</p>
+      </div>
+
+      <div class="decision-guide__grid">
+        <article class="decision-guide__item">
+          <h3>Dla kogo</h3>
+          <p>Dla małych i średnich firm, które potrzebują uporządkować ofertę, poprawić ścieżkę do kontaktu albo zastąpić serwis, który nie wspiera już sprzedaży.</p>
+        </article>
+        <article class="decision-guide__item">
+          <h3>Od czego zależy wycena</h3>
+          <p>Od liczby typów podstron, gotowości treści i identyfikacji, potrzebnych integracji, CMS-u oraz zakresu wdrożenia i testów.</p>
+        </article>
+        <article class="decision-guide__item">
+          <h3>Co przygotować</h3>
+          <p>Ofertę, wiedzę o odbiorcach, cel strony, materiały marki, dostępne dane oraz osoby, które zatwierdzają treść i projekt.</p>
+        </article>
+        <article class="decision-guide__item">
+          <h3>Kiedy nie zaczynać</h3>
+          <p>Gdy oferta i główna decyzja użytkownika nie są jeszcze określone. Wtedy najpierw potrzebna jest diagnoza i wybór kierunku.</p>
+        </article>
+      </div>
+
+      <div class="decision-guide__faq" aria-labelledby="web-faq-title">
+        <h2 id="web-faq-title">Najczęstsze pytania</h2>
+        <details>
+          <summary>Ile trwa przygotowanie strony internetowej?</summary>
+          <p>Nie podajemy jednej liczby tygodni bez poznania zakresu. Po rozmowie otrzymujesz etapowy harmonogram obejmujący kierunek, architekturę, treść i prototyp, projekt, wdrożenie, testy oraz publikację. Na termin najmocniej wpływają gotowość materiałów, liczba typów podstron, integracje i tempo decyzji.</p>
+        </details>
+        <details>
+          <summary>Czy muszę mieć gotowe teksty?</summary>
+          <p>Nie. Treść może powstać w ramach procesu. Potrzebne są jednak rzetelne informacje o ofercie, odbiorcach, przewagach i ograniczeniach — bez nich nie da się napisać strony, która prowadzi do właściwej decyzji.</p>
+        </details>
+        <details>
+          <summary>Co dokładnie otrzymuję po publikacji?</summary>
+          <p>Uzgodnioną architekturę i treść, projekt responsywny, wdrożenie, CMS w ustalonym zakresie, podstawy SEO i analityki, testy kluczowych ścieżek oraz gotowy do publikacji serwis.</p>
+        </details>
+      </div>
+    </section>
   </main>
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.js"></script>

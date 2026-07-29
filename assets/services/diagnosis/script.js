@@ -41,8 +41,8 @@
         "Ułóż strukturę treści wokół pytań klientów.",
         "Dopiero potem określ zakres projektu, pomiar i wycenę."
       ],
-      primary: ["Zobacz strony internetowe", "strony-internetowe.html"],
-      secondary: ["Przejdź do kontaktu", "kontakt.html?context=website&source=diagnosis"]
+      primary: ["Zobacz strony internetowe", "/strony-internetowe"],
+      secondary: ["Przejdź do kontaktu", "/kontakt?context=web&source=diagnosis"]
     },
     social: {
       title: "Najpierw social media.",
@@ -52,8 +52,8 @@
         "Zbuduj 3–4 powtarzalne formaty treści.",
         "Zaplanuj pierwsze cztery tygodnie i prosty sposób oceny rytmu."
       ],
-      primary: ["Zobacz social media", "social-media.html"],
-      secondary: ["Przejdź do kontaktu", "kontakt.html?context=social&source=diagnosis"]
+      primary: ["Zobacz social media", "/social-media"],
+      secondary: ["Przejdź do kontaktu", "/kontakt?context=social&source=diagnosis"]
     },
     campaign: {
       title: "Najpierw kampania.",
@@ -63,8 +63,8 @@
         "Ustal próg opłacalności oraz sposób pomiaru.",
         "Uruchom ograniczony test i oceniaj jakość, nie samą liczbę kliknięć."
       ],
-      primary: ["Zobacz kampanie", "kampanie.html"],
-      secondary: ["Przejdź do kontaktu", "kontakt.html?context=campaign&source=diagnosis"]
+      primary: ["Zobacz kampanie", "/kampanie"],
+      secondary: ["Przejdź do kontaktu", "/kontakt?context=campaign&source=diagnosis"]
     },
     conversation: {
       title: "Najpierw rozmowa.",
@@ -74,8 +74,8 @@
         "Oddziel główną przyczynę od widocznych objawów.",
         "Wybierz kolejność działań i nazwij to, czego nie robić teraz."
       ],
-      primary: ["Umów rozmowę", "kontakt.html?context=conversation&source=diagnosis"],
-      secondary: ["Zobacz proces", "proces.html?from=diagnosis"]
+      primary: ["Umów rozmowę", "/kontakt?context=conversation&source=diagnosis"],
+      secondary: ["Zobacz proces", "/proces?from=diagnosis"]
     },
     none: {
       title: "Na razie żadna usługa.",
@@ -85,8 +85,8 @@
         "Zbierz fakty o obecnej sytuacji zamiast tworzyć listę działań.",
         "Wróć do diagnozy, gdy będzie wiadomo, po czym poznasz poprawę."
       ],
-      primary: ["Wróć do oferty", "menu.html"],
-      secondary: ["Zadaj jedno pytanie", "kontakt.html?context=none&source=diagnosis"]
+      primary: ["Wróć do oferty", "/menu"],
+      secondary: ["Zadaj jedno pytanie", "/kontakt?context=none&source=diagnosis"]
     }
   };
 

@@ -4,20 +4,45 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ead9cb">
-  <meta name="description" content="Cztery pytania, rekomendowany kierunek i pierwszy krok — od razu na ekranie.">
-  <title>OK Agency — Diagnoza</title>
+  <meta name="description" content="Bezpłatna diagnoza marketingowa dla firmy: odpowiedz na cztery pytania i poznaj rekomendowany kierunek oraz pierwszy krok — bez wysyłania danych.">
+  <title>Diagnoza marketingowa dla firmy | OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/diagnoza">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Diagnoza marketingowa dla firmy | OK Agency">
+  <meta property="og:description" content="Cztery pytania, rekomendowany kierunek i pierwszy krok — od razu na ekranie.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okagency.pl/diagnoza">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Diagnoza marketingowa dla firmy | OK Agency">
+  <meta name="twitter:description" content="Cztery pytania, rekomendowany kierunek i pierwszy krok — od razu na ekranie.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Diagnoza marketingowa OK Agency",
+      "url": "https://okagency.pl/diagnoza",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Dowolny system z nowoczesną przeglądarką",
+      "inLanguage": "pl-PL",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "PLN" },
+      "provider": { "@id": "https://okagency.pl/#organization" }
+    }
+  </script>
   <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-opening-v1.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-map-v1.webp" type="image/webp">
-  <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-outcome-v1.webp" type="image/webp">
   <link rel="stylesheet" href="assets/services/diagnosis/styles.css">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-footer.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="web-service diagnosis-service">
   <a class="skip-link" href="#diagnosis-opening">Przejdź do Diagnozy</a>
@@ -42,11 +67,11 @@
         </svg>
 
         <header class="site-header site-header-light">
-          <a class="wordmark" href="index.html" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency"></a>
+          <a class="wordmark" href="/" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency"></a>
           <nav aria-label="Główna nawigacja">
-            <a href="menu.html" data-nav-link="offer">Oferta</a>
-            <a href="proces.html?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
-            <a href="kontakt.html?context=diagnosis" data-nav-link="contact">Kontakt</a>
+            <a href="/menu" data-nav-link="offer">Oferta</a>
+            <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+            <a href="/kontakt?context=diagnosis" data-nav-link="contact">Kontakt</a>
           </nav>
         </header>
 
@@ -73,7 +98,7 @@
           <span class="section-kicker">Diagnoza</span>
           <h1 id="opening-title" tabindex="-1">Najpierw przestańmy<br><em>zgadywać.</em></h1>
           <p>Oddzielamy widoczny objaw od problemu, który naprawdę<br>blokuje kolejny ruch.</p>
-          <div class="opening-scope" aria-label="Możliwe kierunki">
+          <div class="opening-scope" role="group" aria-label="Możliwe kierunki">
             <span>Strona</span><span>Social media</span><span>Kampanie</span><span>Nie wiem</span>
           </div>
           <button class="outline-cta" type="button" data-start-diagnosis>
@@ -92,7 +117,7 @@
         aria-hidden="true"
         inert
       >
-        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-map-v1.webp" width="1672" height="941" alt="">
+      <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-map-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
 
         <svg class="energy-shimmer" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
           <defs><filter id="map-glint" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation=".6"></feGaussianBlur></filter></defs>
@@ -102,11 +127,11 @@
         </svg>
 
         <header class="site-header site-header-dark">
-          <a class="wordmark" href="index.html" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency"></a>
+          <a class="wordmark" href="/" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency"></a>
           <nav aria-label="Główna nawigacja">
-            <a href="menu.html" data-nav-link="offer">Oferta</a>
-            <a href="proces.html?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
-            <a href="kontakt.html?context=diagnosis" data-nav-link="contact">Kontakt</a>
+            <a href="/menu" data-nav-link="offer">Oferta</a>
+            <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+            <a href="/kontakt?context=diagnosis" data-nav-link="contact">Kontakt</a>
           </nav>
         </header>
 
@@ -207,28 +232,28 @@
         aria-hidden="true"
         inert
       >
-        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-outcome-v1.webp" width="1672" height="941" alt="">
+      <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-outcome-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
         <span class="proof-bloom" aria-hidden="true"></span>
 
         <header class="site-header site-header-light">
-          <a class="wordmark" href="index.html" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency"></a>
+          <a class="wordmark" href="/" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency"></a>
           <nav aria-label="Główna nawigacja">
-            <a href="menu.html" data-nav-link="offer">Oferta</a>
-            <a href="proces.html?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
-            <a href="kontakt.html?context=diagnosis" data-nav-link="contact">Kontakt</a>
+            <a href="/menu" data-nav-link="offer">Oferta</a>
+            <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+            <a href="/kontakt?context=diagnosis" data-nav-link="contact">Kontakt</a>
           </nav>
         </header>
 
         <article class="result-content">
           <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
-          <h1 id="result-title" tabindex="-1">Najpierw strona internetowa.</h1>
+          <h2 id="result-title" tabindex="-1">Najpierw strona internetowa.</h2>
           <p class="result-why" data-result-why></p>
           <p class="steps-label">Pierwsze trzy kroki</p>
           <ol class="result-steps"><li data-result-step="0"></li><li data-result-step="1"></li><li data-result-step="2"></li></ol>
           <p class="result-disclaimer">To punkt startu, nie oferta ani wycena.</p>
           <div class="result-actions">
-            <a class="result-cta result-primary" data-result-primary href="strony-internetowe.html"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
-            <a class="result-cta result-secondary" data-result-secondary href="kontakt.html?context=website&amp;source=diagnosis"><span>Przejdź do kontaktu</span><i aria-hidden="true">→</i></a>
+            <a class="result-cta result-primary" data-result-primary href="/strony-internetowe"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
+            <a class="result-cta result-secondary" data-result-secondary href="/kontakt?context=website&amp;source=diagnosis"><span>Przejdź do kontaktu</span><i aria-hidden="true">→</i></a>
           </div>
           <div class="result-controls">
             <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>

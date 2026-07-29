@@ -175,7 +175,7 @@ a { color: inherit; }
   letter-spacing: -.01em;
 }
 .page-title .accent { display: block; color: var(--pink); }
-.page-title .mask { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+.page-title .mask { display: block; overflow: visible; padding-bottom: .1em; margin-bottom: -.1em; }
 .page-title .line { display: block; }
 
 .lead {
@@ -290,6 +290,10 @@ a { color: inherit; }
   height: 1px;
   overflow: hidden;
 }
+
+.js .page-title .mask { overflow: hidden; }
+.js .is-settled .page-title .mask,
+html[data-motion="paused"] .page-title .mask { overflow: visible; }
 
 /* zgoda */
 .consent {

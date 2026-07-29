@@ -1,25 +1,12 @@
-# dependencies
 node_modules/
-
-# build output and framework state
 dist/
-.astro/
 
-# test output
-playwright-report/
-test-results/
+# Local design and generation workspaces. Production assets live in assets/.
+05-editorial-atelier/
+mockups/
+_src/
 
-# environment and secrets
-.env
-.env.*
-!.env.example
-
-# editors and operating systems
-.idea/
-.vscode/
+# Local tooling noise.
 .DS_Store
 Thumbs.db
-
-# debug logs
 *.log
-npm-debug.log*

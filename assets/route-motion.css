@@ -1,0 +1,123 @@
+.hero .topbar,
+.hero .copy,
+.hero .image-rig {
+  transform-origin: 64% 62%;
+}
+
+.hero .topbar,
+.hero .copy {
+  transition:
+    opacity .34s cubic-bezier(.4, 0, 1, 1),
+    transform .52s cubic-bezier(.4, 0, .2, 1),
+    filter .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.hero .image-rig {
+  transition:
+    opacity .48s cubic-bezier(.4, 0, .2, 1),
+    transform .62s cubic-bezier(.32, .72, 0, 1),
+    filter .52s cubic-bezier(.4, 0, .2, 1);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 31;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 68% 68%, rgba(255, 236, 220, .14), transparent 34%),
+    rgba(8, 21, 35, .22);
+  backdrop-filter: blur(0);
+  transition:
+    opacity .42s cubic-bezier(.4, 0, .2, 1),
+    backdrop-filter .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+.hero.is-route-leaving .topbar,
+.hero.is-route-leaving .copy {
+  will-change: transform, opacity, filter;
+  opacity: 0;
+  transform: translate3d(0, -12px, 0) scale(.985);
+  filter: blur(5px);
+}
+
+.hero.is-route-leaving .image-rig {
+  will-change: transform, opacity, filter;
+  opacity: .72;
+  transform: translate3d(1.2%, .7%, 0) scale(1.045);
+  filter: blur(6px) saturate(.92);
+}
+
+.hero.is-route-leaving::after {
+  opacity: 1;
+  backdrop-filter: blur(3px);
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 12px;
+  left: 12px;
+  min-height: 44px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  color: #f0dfcf;
+  background: #081523;
+  border: 1px solid #ff5b88;
+  text-decoration: none;
+  transform: translateY(-140%);
+  transition: transform .2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@keyframes ok-view-old {
+  0%, 48% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(.985);
+    filter: blur(7px);
+  }
+}
+
+@keyframes ok-view-new {
+  from {
+    opacity: .18;
+    transform: scale(1.014);
+    filter: blur(6px);
+  }
+  48% {
+    opacity: .9;
+    filter: blur(1px);
+  }
+  72% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  .hero .topbar,
+  .hero .copy,
+  .hero .image-rig,
+  .hero::after {
+    transition: none;
+  }
+}

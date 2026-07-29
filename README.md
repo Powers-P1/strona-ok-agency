@@ -1,50 +1,32 @@
-# Strona OK Agency
+# OK Agency
 
-Jednostronicowa, responsywna wizytówka OK Agency — agencji marketingowej oferującej marketing online i tworzenie stron internetowych małym firmom i MŚP.
-
-## Stack
-
-- Astro 7 i TypeScript — statyczny, lekki wynik odpowiedni dla GitHub Pages
-- nowoczesny CSS — własny system tokenów bez ciężkiej biblioteki UI
-- Instrument Sans i Instrument Serif — fonty przechowywane lokalnie w paczkach npm
-- Playwright i axe-core — testy responsywności, interakcji i podstaw dostępności
-- GitHub Actions — CI i automatyczne wdrożenie Pages
+Oficjalny, wielostronicowy serwis OK Agency publikowany pod
+[okagency.pl](https://okagency.pl).
 
 ## Praca lokalna
 
-Wymagany Node.js 24+.
+Wymagany jest Node.js 22 lub nowszy.
 
 ```powershell
-npm ci
+npm install
 npm run dev
 ```
 
-Strona działa lokalnie pod adresem `http://localhost:4321/`.
+Serwer lokalny udostępnia stronę pod `http://127.0.0.1:7100/`.
 
-## Kontrola jakości
+## Weryfikacja
 
 ```powershell
-npm run format:check
-npm run lint
-npm run typecheck
-npm run test:e2e
+npm run check:links
 npm run build
 ```
 
-Pełny zestaw kontroli uruchamia `npm run check`.
+Polecenie `build` przygotowuje w `dist/` wyłącznie pliki publikowane przez
+GitHub Pages. Materiały robocze i mockupy nie trafiają do repozytorium ani na
+serwer produkcyjny.
 
 ## Publikacja
 
-- Repozytorium: [Powers-P1/strona-ok-agency](https://github.com/Powers-P1/strona-ok-agency)
-- Strona: [okagency.pl](https://okagency.pl/)
-- Gałąź główna: `main`
-
-Workflow wdrożeniowy buduje katalog `dist/` i publikuje go jako artefakt GitHub Pages pod domeną `okagency.pl`.
-
-## Podgląd
-
-![Widok desktopowy](docs/screenshots/desktop.png)
-
-![Widok mobilny](docs/screenshots/mobile.png)
-
-Decyzje projektowe i źródłowe makiety znajdują się w [docs/design-decisions.md](docs/design-decisions.md).
+Zmiany na gałęzi `main` są automatycznie sprawdzane i wdrażane przez GitHub
+Actions. Domena `okagency.pl` korzysta z DNS Cloudflare i wskazuje na GitHub
+Pages.

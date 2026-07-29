@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readdir, rm } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -18,11 +18,18 @@ for (const file of htmlFiles) {
 }
 
 await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
-await cp(join(root, "CNAME"), join(dist, "CNAME"));
-await cp(join(root, "robots.txt"), join(dist, "robots.txt"));
-await cp(join(root, "sitemap.xml"), join(dist, "sitemap.xml"));
-await writeFile(join(dist, ".nojekyll"), "", "utf8");
+
+const staticFiles = [
+  "_headers",
+  "_redirects",
+  "robots.txt",
+  "sitemap.xml",
+];
+
+for (const file of staticFiles) {
+  await cp(join(root, file), join(dist, file));
+}
 
 console.log(
-  `OK: przygotowano ${htmlFiles.length} stron i zasoby produkcyjne w dist/.`,
+  `OK: przygotowano ${htmlFiles.length} stron i konfigurację Cloudflare Pages w dist/.`,
 );

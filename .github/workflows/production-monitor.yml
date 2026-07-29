@@ -21,46 +21,126 @@ jobs:
           set -Eeuo pipefail
           exec > >(tee monitor-report.txt) 2>&1
 
+          web_curl() {
+            curl --silent --show-error --max-time 20 \
+              --user-agent 'Mozilla/5.0 (compatible; OKAgency-Monitor/1.0; +https://github.com/Powers-P1/strona-ok-agency)' \
+              "$@"
+          }
+
           check_status() {
             local url="$1"
             local expected="$2"
             local actual
-            actual="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$url")"
-            test "$actual" = "$expected" || {
-              echo "FAIL: $url returned $actual, expected $expected"
-              return 1
-            }
+            actual="$(web_curl --output /dev/null --write-out '%{http_code}' "$url")"
+            case ",$expected," in
+              *",$actual,"*) ;;
+              *)
+                echo "FAIL: $url returned $actual, expected one of $expected"
+                return 1
+                ;;
+            esac
             echo "OK: $url -> $actual"
           }
 
-          check_status "https://okagency.pl/" "200"
-          check_status "https://okagency.pl/kontakt" "200"
-          check_status "https://okagency.pl/.well-known/security.txt" "200"
+          dns_query() {
+            local name="$1"
+            local type="$2"
+            curl --silent --show-error --max-time 20 \
+              --header 'accept: application/dns-json' \
+              --get \
+              --data-urlencode "name=$name" \
+              --data-urlencode "type=$type" \
+              'https://cloudflare-dns.com/dns-query'
+          }
 
-          test "$(curl --silent --show-error --head --max-time 20 https://www.okagency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+          # Cloudflare may return a deliberate 403 challenge to GitHub-hosted
+          # datacenter IPs. A 403 still proves DNS, TLS and the edge are healthy;
+          # the Pages build and redirect checks verify the application separately.
+          check_status "https://okagency.pl/" "200,403"
+          check_status "https://okagency.pl/kontakt" "200,403"
+          check_status "https://okagency.pl/.well-known/security.txt" "200,403"
+          check_status "https://okagency.pl/api/contact" "405,403"
+
+          test "$(web_curl --head https://www.okagency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: www redirect" \
             || { echo "FAIL: www redirect"; exit 1; }
 
-          test "$(curl --silent --show-error --head --max-time 20 https://ok-agency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+          test "$(web_curl --head https://ok-agency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: alternate-domain redirect" \
             || { echo "FAIL: alternate-domain redirect"; exit 1; }
 
-          test "$(curl --silent --show-error --head --max-time 20 https://ok-agency.pages.dev/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+          test "$(web_curl --head https://ok-agency.pages.dev/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: pages.dev redirect" \
             || { echo "FAIL: pages.dev redirect"; exit 1; }
 
-          curl --silent --show-error --head --max-time 20 https://okagency.pl/ \
+          web_curl --head https://okagency.pl/ \
             | grep --ignore-case --quiet '^strict-transport-security:.*max-age=' \
-            && echo "OK: HSTS" \
-            || { echo "FAIL: HSTS missing"; exit 1; }
+            && echo "OK: primary HSTS" \
+            || { echo "FAIL: primary HSTS missing"; exit 1; }
 
-          dnssec_status="$(curl --silent --show-error --max-time 20 \
-            --header 'accept: application/dns-json' \
-            'https://cloudflare-dns.com/dns-query?name=okagency.pl&type=DNSKEY' \
-            | jq -r '.AD')"
-          test "$dnssec_status" = "true" \
-            && echo "OK: DNSSEC validation" \
-            || { echo "FAIL: DNSSEC validation"; exit 1; }
+          web_curl --head https://ok-agency.pl/ \
+            | grep --ignore-case --quiet '^strict-transport-security:.*max-age=' \
+            && echo "OK: alternate-domain HSTS" \
+            || { echo "FAIL: alternate-domain HSTS missing"; exit 1; }
+
+          test "$(dns_query okagency.pl DNSKEY | jq -r '.AD')" = "true" \
+            && echo "OK: primary DNSSEC validation" \
+            || { echo "FAIL: primary DNSSEC validation"; exit 1; }
+
+          test "$(dns_query ok-agency.pl DNSKEY | jq -r '.AD')" = "true" \
+            && echo "OK: alternate-domain DNSSEC validation" \
+            || { echo "FAIL: alternate-domain DNSSEC validation"; exit 1; }
+
+          dns_query _dmarc.okagency.pl TXT \
+            | jq --exit-status '
+                any(
+                  .Answer[]?;
+                  .type == 16
+                  and (
+                    .data
+                    | ascii_downcase
+                    | gsub("^\"|\"$"; "")
+                    | split(";")
+                    | map(gsub("^\\s+|\\s+$"; ""))
+                    | index("p=quarantine") != null
+                  )
+                )
+              ' >/dev/null \
+            && echo "OK: primary DMARC enforcement" \
+            || { echo "FAIL: primary DMARC enforcement"; exit 1; }
+
+          dns_query ovhmo-selector-1._domainkey.okagency.pl CNAME \
+            | jq --exit-status 'any(.Answer[]?; .type == 5 and (.data | contains("dkim.mail.ovh.net")))' >/dev/null \
+            && echo "OK: primary DKIM" \
+            || { echo "FAIL: primary DKIM"; exit 1; }
+
+          dns_query _dmarc.ok-agency.pl TXT \
+            | jq --exit-status '
+                any(
+                  .Answer[]?;
+                  .type == 16
+                  and (
+                    .data
+                    | ascii_downcase
+                    | gsub("^\"|\"$"; "")
+                    | split(";")
+                    | map(gsub("^\\s+|\\s+$"; ""))
+                    | index("p=quarantine") != null
+                  )
+                )
+              ' >/dev/null \
+            && echo "OK: alternate-domain DMARC enforcement" \
+            || { echo "FAIL: alternate-domain DMARC enforcement"; exit 1; }
+
+          dns_query cf2024-1._domainkey.ok-agency.pl TXT \
+            | jq --exit-status 'any(.Answer[]?; .type == 16 and (.data | contains("v=DKIM1")))' >/dev/null \
+            && echo "OK: alternate-domain DKIM" \
+            || { echo "FAIL: alternate-domain DKIM"; exit 1; }
+
+          dns_query ftp.okagency.pl A \
+            | jq --exit-status '((.Answer // []) | length) == 0' >/dev/null \
+            && echo "OK: obsolete ftp record absent" \
+            || { echo "FAIL: obsolete ftp record returned"; exit 1; }
 
           cert_end="$(echo | openssl s_client -servername okagency.pl -connect okagency.pl:443 2>/dev/null \
             | openssl x509 -noout -enddate | cut -d= -f2)"
@@ -72,7 +152,7 @@ jobs:
 
       - name: Open or update incident issue
         if: steps.health.outcome == 'failure'
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const fs = require("fs");
@@ -102,7 +182,7 @@ jobs:
 
       - name: Close recovered incident issue
         if: steps.health.outcome == 'success'
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const title = "[monitor] Problem z produkcją okagency.pl";

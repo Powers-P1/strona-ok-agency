@@ -233,6 +233,9 @@ zweryfikowany sender w Email Routing.
 TLS:
 
 - certyfikaty: Cloudflare Universal SSL;
+- certyfikat Universal i certyfikat zapasowy mają status aktywny/wystawiony
+  dla obu stref;
+- Certificate Transparency Monitoring jest włączony dla obu domen;
 - tryb HTTPS i przekierowania są realizowane na brzegu Cloudflare;
 - HSTS dla obu domen: `max-age=15552000` (6 miesięcy);
 - `includeSubDomains` i preload są celowo wyłączone, aby nie obejmować
@@ -336,7 +339,9 @@ Workflow `Production monitor` działa o minucie 17 co 6 godzin. Sprawdza:
 - DNSSEC obu domen;
 - DMARC i DKIM obu domen wysyłających;
 - brak starego `ftp.okagency.pl`;
-- ważność certyfikatu przez co najmniej 21 dni.
+- zaufany łańcuch TLS, zgodność nazwy hosta i ważność certyfikatu przez co
+  najmniej 21 dni dla `okagency.pl`, `www.okagency.pl`, `ok-agency.pl` oraz
+  `www.ok-agency.pl`.
 
 Awaria otwiera lub aktualizuje issue z etykietą `production-monitor`.
 Powrót do poprawnego działania dodaje komentarz i zamyka issue.

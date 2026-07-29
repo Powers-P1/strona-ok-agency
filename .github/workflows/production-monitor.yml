@@ -142,13 +142,57 @@ jobs:
             && echo "OK: obsolete ftp record absent" \
             || { echo "FAIL: obsolete ftp record returned"; exit 1; }
 
-          cert_end="$(echo | openssl s_client -servername okagency.pl -connect okagency.pl:443 2>/dev/null \
-            | openssl x509 -noout -enddate | cut -d= -f2)"
-          cert_end_epoch="$(date --date="$cert_end" +%s)"
-          minimum_epoch="$(date --date='+21 days' +%s)"
-          test "$cert_end_epoch" -gt "$minimum_epoch" \
-            && echo "OK: certificate valid beyond 21 days ($cert_end)" \
-            || { echo "FAIL: certificate expires too soon ($cert_end)"; exit 1; }
+          check_certificate() {
+            local hostname="$1"
+            local tls_output
+            local cert_end
+            local cert_end_epoch
+            local minimum_epoch
+
+            if ! tls_output="$(
+              timeout 20 openssl s_client \
+                -connect "$hostname:443" \
+                -servername "$hostname" \
+                -verify_hostname "$hostname" \
+                -verify_return_error \
+                </dev/null 2>&1
+            )"; then
+              echo "FAIL: TLS chain or hostname validation failed for $hostname"
+              echo "$tls_output"
+              return 1
+            fi
+
+            printf '%s\n' "$tls_output" \
+              | grep --quiet 'Verify return code: 0 (ok)' \
+              || {
+                echo "FAIL: OpenSSL did not confirm a trusted certificate for $hostname"
+                echo "$tls_output"
+                return 1
+              }
+
+            cert_end="$(
+              printf '%s\n' "$tls_output" \
+                | openssl x509 -noout -enddate \
+                | cut -d= -f2
+            )"
+            test -n "$cert_end" \
+              || { echo "FAIL: certificate expiry missing for $hostname"; return 1; }
+
+            cert_end_epoch="$(date --date="$cert_end" +%s)"
+            minimum_epoch="$(date --date='+21 days' +%s)"
+            test "$cert_end_epoch" -gt "$minimum_epoch" \
+              || {
+                echo "FAIL: certificate for $hostname expires too soon ($cert_end)"
+                return 1
+              }
+
+            echo "OK: trusted certificate and hostname for $hostname, valid beyond 21 days ($cert_end)"
+          }
+
+          check_certificate "okagency.pl"
+          check_certificate "www.okagency.pl"
+          check_certificate "ok-agency.pl"
+          check_certificate "www.ok-agency.pl"
 
       - name: Open or update incident issue
         if: steps.health.outcome == 'failure'

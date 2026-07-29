@@ -21,7 +21,6 @@ await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
 
 const staticFiles = [
   "_headers",
-  "_redirects",
   "robots.txt",
   "sitemap.xml",
 ];

@@ -15,7 +15,7 @@
 - Statyczny, wielostronicowy serwis HTML/CSS/JavaScript bez frameworka
   produkcyjnego.
 - `server.mjs` służy wyłącznie do lokalnego podglądu.
-- `scripts/build.mjs` tworzy katalog `dist/` dla GitHub Pages.
+- `scripts/build.mjs` tworzy katalog `dist/` dla Cloudflare Pages.
 - Główna domena: `https://okagency.pl`.
 - Repozytorium: `Powers-P1/strona-ok-agency`.
 
@@ -38,6 +38,7 @@ npm run build
 ## Publikacja
 
 - Gałąź produkcyjna: `main`.
-- CI i GitHub Pages są skonfigurowane w `.github/workflows/`.
+- Cloudflare Pages jest połączone z repozytorium GitHub i automatycznie
+  wdraża zmiany z `main`.
 - Artefakt wdrożeniowy musi pochodzić z `dist/`.
 - Po wdrożeniu sprawdź `https://okagency.pl` i kluczowe podstrony.

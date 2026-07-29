@@ -30,3 +30,6 @@ jobs:
 
       - name: Build production site
         run: npm run build
+
+      - name: Validate contact Worker
+        run: npm run check:worker

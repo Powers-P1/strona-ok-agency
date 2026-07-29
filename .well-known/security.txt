@@ -1,0 +1,4 @@
+Contact: mailto:hello@okagency.pl
+Canonical: https://okagency.pl/.well-known/security.txt
+Preferred-Languages: pl, en
+Expires: 2027-07-29T00:00:00Z

@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#e9d8c8">
   <meta name="description" content="OK Agency — strategie, strony internetowe i kampanie, które pracują na wynik.">
   <title>OK Agency — Ładnie to za mało</title>
+  <link rel="canonical" href="https://okagency.pl/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1194,7 +1195,6 @@
               id="sculpture"
               src="assets/editorial-atelier-scene-v1.png"
               data-fallback-src="assets/wire-cherry-sculpture-epic-v3.png"
-              onerror="if(this.dataset.fallbackSrc){this.onerror=null;this.src=this.dataset.fallbackSrc;}"
               alt=""
               width="1672"
               height="941"
@@ -1487,8 +1487,15 @@
     (() => {
       const hero = document.getElementById("hero");
       const back = document.getElementById("back");
+      const sculpture = document.getElementById("sculpture");
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (!hero || !back) return;
+
+      sculpture?.addEventListener("error", () => {
+        const fallbackSrc = sculpture.dataset.fallbackSrc;
+        if (!fallbackSrc || sculpture.src.endsWith(fallbackSrc)) return;
+        sculpture.src = fallbackSrc;
+      }, { once: true });
 
       let panelTimer = 0;
       const playPanels = (className, duration) => {

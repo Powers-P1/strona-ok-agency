@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e9d8c8">
   <title>Kontakt — OK Agency</title>
+  <link rel="canonical" href="https://okagency.pl/kontakt">
   <meta name="description" content="Dobre projekty zaczynają się od dobrej rozmowy. Napisz do OK Agency — odpowiadam zwykle w ciągu jednego dnia roboczego.">
   <meta property="og:title" content="Kontakt — OK Agency">
   <meta property="og:description" content="Opowiedz krótko o swoim projekcie i celach. Odpowiadam zwykle w ciągu jednego dnia roboczego.">
@@ -906,31 +907,40 @@
           <input type="checkbox" id="f-consent" required>
           <span class="box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2.5 8.5l3.5 3.5 7-8"/></svg></span>
           <span class="consent-copy">Wyrażam zgodę na przetwarzanie moich danych w&nbsp;celu odpowiedzi na zapytanie. Szczegóły w&nbsp;<a href="polityka-prywatnosci.html">Polityce prywatności</a>.</span>
-          <span class="consent-error" id="e-consent">Zaznacz zgodę, aby przygotować wiadomość.</span>
+          <span class="consent-error" id="e-consent">Zaznacz zgodę, aby wysłać wiadomość.</span>
         </label>
+
+        <div class="field field--wide">
+          <div
+            class="cf-turnstile"
+            id="contact-turnstile"
+            data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil"
+            data-action="contact"
+            data-theme="light"
+          ></div>
+        </div>
 
         <div class="form-foot">
           <button class="submit" type="submit">
-            <span>Przygotuj wiadomość e-mail</span>
+            <span>Wyślij wiadomość</span>
             <span class="arr" aria-hidden="true">&rarr;</span>
           </button>
-          <p class="mailto-helper">Po kliknięciu otworzymy Twój program pocztowy z uzupełnioną wiadomością. Wyślesz ją stamtąd — nie zostanie wysłana automatycznie.</p>
+          <p class="mailto-helper">Wiadomość wyślemy bezpiecznie przez formularz. Jeśli wolisz, możesz też napisać bezpośrednio na hello@okagency.pl.</p>
         </div>
       </form>
 
       <section class="flow-state" id="handoff-state" style="--i:5" aria-labelledby="handoff-title" aria-live="polite" hidden>
-        <h2 id="handoff-title" tabindex="-1">Wiadomość jest przygotowana</h2>
-        <p>Sprawdź program pocztowy i wyślij ją stamtąd. Wiadomość nie została wysłana przez tę stronę.</p>
+        <h2 id="handoff-title" tabindex="-1">Dziękujemy za wiadomość</h2>
+        <p>Formularz został wysłany. Odpowiemy zwykle w ciągu 1 dnia roboczego.</p>
         <a class="state-email" href="mailto:hello@okagency.pl">hello@okagency.pl</a>
         <div class="state-actions">
-          <button class="state-link" type="button" data-return-to-form>&larr;&nbsp; Wróć do formularza</button>
-          <button class="state-link" id="show-fallback" type="button">Program pocztowy się nie otworzył?</button>
+          <button class="state-link" type="button" data-return-to-form>&larr;&nbsp; Wyślij kolejną wiadomość</button>
         </div>
       </section>
 
       <section class="flow-state" id="fallback-state" style="--i:5" aria-labelledby="fallback-title" hidden>
-        <h2 id="fallback-title" tabindex="-1">Program pocztowy się nie otworzył?</h2>
-        <p>Napisz bezpośrednio na hello@okagency.pl. Dane z formularza nadal są tutaj.</p>
+        <h2 id="fallback-title" tabindex="-1">Nie udało się wysłać formularza</h2>
+        <p>Spróbuj ponownie za chwilę albo napisz bezpośrednio na hello@okagency.pl. Dane z formularza nadal są tutaj.</p>
         <a class="state-email" href="mailto:hello@okagency.pl">hello@okagency.pl</a>
         <div class="state-actions">
           <button class="copy-address" id="copy-address" type="button">Kopiuj adres</button>
@@ -985,6 +995,17 @@
       const fallbackTitle = document.getElementById("fallback-title");
       const contextNote = document.getElementById("context-note");
       const contextNoteCopy = document.getElementById("context-note-copy");
+      let turnstileWidgetId = null;
+
+      window.onContactTurnstileLoad = () => {
+        turnstileWidgetId = window.turnstile.render("#contact-turnstile");
+      };
+
+      const resetTurnstile = () => {
+        if (window.turnstile && turnstileWidgetId !== null) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
+      };
       const directBlock = document.getElementById("contact-direct");
       const fields = {
         name: document.getElementById("f-name"),
@@ -1103,10 +1124,6 @@
         button.addEventListener("click", returnToForm);
       });
 
-      document.getElementById("show-fallback").addEventListener("click", () => {
-        showState(fallbackState, fallbackTitle);
-      });
-
       const copyFeedback = document.getElementById("copy-feedback");
       document.getElementById("copy-address").addEventListener("click", async () => {
         try {
@@ -1125,7 +1142,7 @@
         copyFeedback.textContent = "Adres skopiowany.";
       });
 
-      form.addEventListener("submit", e => {
+      form.addEventListener("submit", async e => {
         e.preventDefault();
 
         if (document.getElementById("f-fax").value) return;
@@ -1145,21 +1162,48 @@
 
         updateValidationSummary(0);
 
-        const v = id => document.getElementById(id).value.trim();
-        const subject = `[${fields.topic.value}] ${v("f-name")}${v("f-company") ? " — " + v("f-company") : ""}`;
-        const body = [
-          `Temat: ${fields.topic.value}`,
-          `Imię i nazwisko: ${v("f-name")}`,
-          `E-mail: ${v("f-email")}`,
-          v("f-phone") ? `Telefon: ${v("f-phone")}` : null,
-          v("f-company") ? `Firma: ${v("f-company")}` : null,
-          "",
-          v("f-message"),
-        ].filter(x => x !== null).join("\n");
+        const turnstileToken = form.querySelector('[name="cf-turnstile-response"]')?.value || "";
+        if (!turnstileToken) {
+          validationSummary.textContent = "Potwierdź, że formularz wysyła człowiek.";
+          validationSummary.hidden = false;
+          document.getElementById("contact-turnstile").scrollIntoView({ block: "center" });
+          return;
+        }
 
-        const href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        showState(handoffState, handoffTitle);
-        window.location.href = href;
+        const v = id => document.getElementById(id).value.trim();
+        const submitButton = form.querySelector(".submit");
+        submitButton.disabled = true;
+        submitButton.setAttribute("aria-busy", "true");
+
+        try {
+          const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              name: v("f-name"),
+              email: v("f-email"),
+              phone: v("f-phone"),
+              company: v("f-company"),
+              topic: fields.topic.value,
+              message: v("f-message"),
+              fax: v("f-fax"),
+              turnstileToken,
+            }),
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || result.ok !== true) throw new Error("contact_send_failed");
+
+          form.reset();
+          resetTurnstile();
+          showState(handoffState, handoffTitle);
+        } catch {
+          resetTurnstile();
+          showState(fallbackState, fallbackTitle);
+        } finally {
+          submitButton.disabled = false;
+          submitButton.removeAttribute("aria-busy");
+        }
       });
 
       // miękkie wyjście przy nawigacji
@@ -1179,5 +1223,6 @@
       }
     })();
   </script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onContactTurnstileLoad&amp;render=explicit" defer></script>
 </body>
 </html>

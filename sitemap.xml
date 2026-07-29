@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://okagency.pl/</loc></url>
+  <url><loc>https://okagency.pl/menu</loc></url>
   <url><loc>https://okagency.pl/o-nas</loc></url>
   <url><loc>https://okagency.pl/proces</loc></url>
   <url><loc>https://okagency.pl/strony-internetowe</loc></url>
@@ -9,4 +10,5 @@
   <url><loc>https://okagency.pl/diagnoza</loc></url>
   <url><loc>https://okagency.pl/kontakt</loc></url>
   <url><loc>https://okagency.pl/polityka-prywatnosci</loc></url>
+  <url><loc>https://okagency.pl/dostepnosc</loc></url>
 </urlset>

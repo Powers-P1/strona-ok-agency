@@ -4,11 +4,70 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#efe1d4">
-  <title>OK Agency — Kampanie</title>
+  <meta name="description" content="Prowadzenie kampanii Meta Ads i Google Ads dla firm: strategia, kreacje, konfiguracja pomiaru, uruchomienie i optymalizacja budżetu.">
+  <title>Kampanie Meta Ads i Google Ads | OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/kampanie">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Kampanie Meta Ads i Google Ads | OK Agency">
+  <meta property="og:description" content="Cel, koncepcja, kreacje, pomiar, uruchomienie i optymalizacja kampanii płatnych.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okagency.pl/kampanie">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kampanie Meta Ads i Google Ads | OK Agency">
+  <meta name="twitter:description" content="Cel, koncepcja, kreacje, pomiar, uruchomienie i optymalizacja kampanii płatnych.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "@id": "https://okagency.pl/kampanie#service",
+          "name": "Kampanie Meta Ads i Google Ads",
+          "serviceType": "Strategia i prowadzenie płatnych kampanii reklamowych",
+          "url": "https://okagency.pl/kampanie",
+          "description": "Diagnoza celu, koncepcja, kreacje, konfiguracja pomiaru, uruchomienie oraz optymalizacja kampanii Meta Ads i Google Ads.",
+          "provider": { "@id": "https://okagency.pl/#organization" },
+          "areaServed": { "@type": "Country", "name": "Polska" },
+          "audience": { "@type": "BusinessAudience", "audienceType": "Małe i średnie firmy" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://okagency.pl/kampanie#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Czy budżet reklamowy jest częścią wynagrodzenia?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie. Budżet mediowy pozostaje na koncie reklamowym klienta i jest rozliczany bezpośrednio z platformą. Zakres obsługi kampanii jest wyceniany osobno."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Jak wygląda początek współpracy?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Najpierw potwierdzane są cel, miejsce docelowe i sposób pomiaru. Następnie powstają koncepcja i kreacje, konfiguracja zdarzeń, uruchomienie oraz rytm optymalizacji."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Czy kampania od razu gwarantuje sprzedaż?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nie. Kampania pozwala kontrolować dystrybucję, testować komunikaty i mierzyć lejek, ale wynik zależy również od oferty, strony, procesu sprzedaży, budżetu i warunków rynkowych."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
   <link rel="preload" as="image" href="assets/services/campaign/campaign-art-opening-clean-v1.webp" type="image/webp">
   <link rel="stylesheet" href="assets/services/campaign/styles.css">
   <link rel="stylesheet" href="assets/route-motion.css">
@@ -16,6 +75,9 @@
   <link rel="stylesheet" href="assets/site-footer.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="campaign-page">
   <a class="skip-link" href="#campaign-opening">Przejdź do Kampanii</a>
@@ -43,13 +105,13 @@
       </svg>
 
       <header class="site-header site-header-light">
-        <a class="wordmark" href="index.html" aria-label="OK Agency — strona główna">
+        <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
           <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
         </a>
         <nav aria-label="Główna nawigacja">
-          <a href="menu.html" data-nav-link="offer">Oferta</a>
-          <a href="proces.html?from=campaign" data-nav-link="process">Jak pracujemy</a>
-          <a href="kontakt.html?context=campaign" data-nav-link="contact">Kontakt</a>
+          <a href="/menu" data-nav-link="offer">Oferta</a>
+          <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
+          <a href="/kontakt?context=campaign" data-nav-link="contact">Kontakt</a>
         </nav>
       </header>
 
@@ -103,7 +165,7 @@
       <div class="opening-copy">
         <h1 id="opening-title">Pomysł,<br>który <em>trafia</em> do<br>właściwych ludzi.</h1>
         <p>Prowadzimy kampanie w Meta Ads i Google Ads — od strategii<br>i kreacji po emisję, analitykę i bieżącą optymalizację.</p>
-        <div class="opening-scope" aria-label="Cele prowadzonych kampanii">
+        <div class="opening-scope" role="group" aria-label="Cele prowadzonych kampanii">
           <span>Sprzedaż</span>
           <span>Lead generation</span>
           <span>Remarketing</span>
@@ -145,13 +207,13 @@
       </svg>
 
       <header class="site-header site-header-dark">
-        <a class="wordmark" href="index.html" aria-label="OK Agency — strona główna">
+        <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
           <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency">
         </a>
         <nav aria-label="Główna nawigacja">
-          <a href="menu.html" data-nav-link="offer">Oferta</a>
-          <a href="proces.html?from=campaign" data-nav-link="process">Jak pracujemy</a>
-          <a href="kontakt.html?context=campaign" data-nav-link="contact">Kontakt</a>
+          <a href="/menu" data-nav-link="offer">Oferta</a>
+          <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
+          <a href="/kontakt?context=campaign" data-nav-link="contact">Kontakt</a>
         </nav>
       </header>
 
@@ -238,13 +300,13 @@
       <span class="proof-bloom" aria-hidden="true"></span>
 
       <header class="site-header site-header-light">
-        <a class="wordmark" href="index.html" aria-label="OK Agency — strona główna">
+        <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
           <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
         </a>
         <nav aria-label="Główna nawigacja">
-          <a href="menu.html" data-nav-link="offer">Oferta</a>
-          <a href="proces.html?from=campaign" data-nav-link="process">Jak pracujemy</a>
-          <a href="kontakt.html?context=campaign" data-nav-link="contact">Kontakt</a>
+          <a href="/menu" data-nav-link="offer">Oferta</a>
+          <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
+          <a href="/kontakt?context=campaign" data-nav-link="contact">Kontakt</a>
         </nav>
       </header>
 
@@ -252,7 +314,7 @@
         <h2 id="proof-title">Mierzymy decyzje,<br>nie tylko <em>kliknięcia.</em></h2>
         <p class="proof-lead">Dla każdej kampanii ustalamy jeden główny cel biznesowy. Pozostałe dane wykorzystujemy do znalezienia przyczyny wyniku.</p>
 
-        <div class="proof-list" aria-label="Poziomy pomiaru kampanii">
+        <div class="proof-list" role="group" aria-label="Poziomy pomiaru kampanii">
           <article class="proof-item is-open">
             <button class="proof-trigger" type="button" aria-expanded="true" aria-controls="proof-business">
               <span class="proof-index">01</span>
@@ -300,17 +362,60 @@
         <p class="proof-output"><strong>Co otrzymujesz:</strong> plan pomiaru, konfigurację zdarzeń, bieżącą optymalizację i raport z decyzjami — nie eksport statystyk.</p>
 
         <div class="proof-actions">
-          <a class="proof-primary" href="kontakt.html?context=campaign">
+          <a class="proof-primary" href="/kontakt?context=campaign">
             <span>Porozmawiajmy o kampanii</span>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M7 17 17 7M9 7h8v8"></path>
             </svg>
           </a>
-          <a class="proof-secondary" href="proces.html?from=campaign">Zobacz, jak pracujemy</a>
+          <a class="proof-secondary" href="/proces?from=campaign">Zobacz, jak pracujemy</a>
         </div>
       </div>
     </section>
     </div>
+
+    <section class="decision-guide" aria-labelledby="campaign-decision-title">
+      <div class="decision-guide__intro">
+        <p class="decision-guide__eyebrow">Przed uruchomieniem / konkrety</p>
+        <h2 id="campaign-decision-title">Czy płatna kampania jest gotowa do startu?</h2>
+        <p class="decision-guide__lead">Tak, jeśli oferta, miejsce docelowe i podstawy pomiaru są gotowe. Reklama wzmacnia działający układ — nie naprawi niejasnej oferty ani strony, która nie prowadzi do konwersji.</p>
+      </div>
+
+      <div class="decision-guide__grid">
+        <article class="decision-guide__item">
+          <h3>Dla kogo</h3>
+          <p>Dla firm, które chcą kontrolowanego sposobu pozyskiwania ruchu lub zapytań i potrafią wskazać jeden główny wynik biznesowy.</p>
+        </article>
+        <article class="decision-guide__item">
+          <h3>Od czego zależy wycena</h3>
+          <p>Od liczby kanałów i rynków, liczby etapów lejka, zakresu kreacji, stanu analityki, częstotliwości optymalizacji i raportowania.</p>
+        </article>
+        <article class="decision-guide__item">
+          <h3>Co przygotować</h3>
+          <p>Ofertę, landing page, dostęp do kont reklamowych i analitycznych, zasoby kreacyjne, budżet mediowy oraz kryterium jakościowego wyniku.</p>
+        </article>
+        <article class="decision-guide__item">
+          <h3>Kiedy nie zaczynać</h3>
+          <p>Bez gotowej oferty, miejsca docelowego i pomiaru. W takiej sytuacji kampania tylko szybciej ujawni istniejące braki.</p>
+        </article>
+      </div>
+
+      <div class="decision-guide__faq" aria-labelledby="campaign-faq-title">
+        <h2 id="campaign-faq-title">Najczęstsze pytania</h2>
+        <details>
+          <summary>Czy budżet reklamowy jest częścią wynagrodzenia?</summary>
+          <p>Nie. Budżet mediowy pozostaje na koncie reklamowym klienta i jest rozliczany bezpośrednio z platformą. Zakres obsługi kampanii wyceniamy osobno.</p>
+        </details>
+        <details>
+          <summary>Jak wygląda początek współpracy?</summary>
+          <p>Najpierw potwierdzamy cel, miejsce docelowe i sposób pomiaru. Następnie powstają koncepcja i kreacje, konfiguracja zdarzeń, uruchomienie oraz rytm optymalizacji. Terminy zależą od gotowości dostępów, materiałów i ścieżki akceptacji.</p>
+        </details>
+        <details>
+          <summary>Czy kampania od razu gwarantuje sprzedaż?</summary>
+          <p>Nie. Kampania pozwala kontrolować dystrybucję, testować komunikaty i mierzyć kolejne etapy lejka. Wynik zależy również od oferty, strony, procesu sprzedaży, budżetu i warunków rynkowych.</p>
+        </details>
+      </div>
+    </section>
   </main>
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.js"></script>

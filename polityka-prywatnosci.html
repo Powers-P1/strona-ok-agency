@@ -6,25 +6,54 @@
   <meta name="theme-color" content="#ead9cb">
   <title>Polityka prywatności — OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/polityka-prywatnosci">
-  <meta name="description" content="Informacje o danych przekazywanych podczas kontaktu z OK Agency.">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/legal-pages.css">
-  <link rel="stylesheet" href="assets/route-motion.css">
-  <link rel="stylesheet" href="assets/site-footer.css">
-  <link rel="stylesheet" href="assets/site-navigation.css">
-  <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <meta name="description" content="Polityka prywatności serwisu OK Agency: formularz kontaktowy, Cloudflare, OVHcloud, analityka, retencja i prawa użytkownika.">
+  <meta property="og:title" content="Polityka prywatności | OK Agency">
+  <meta property="og:description" content="Formularz kontaktowy, dostawcy techniczni, retencja danych i prawa użytkownika — jasno opisane.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okagency.pl/polityka-prywatnosci">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Polityka prywatności | OK Agency">
+  <meta name="twitter:description" content="Jak OK Agency przetwarza dane w formularzu kontaktowym i używanych usługach.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Polityka prywatności OK Agency",
+      "url": "https://okagency.pl/polityka-prywatnosci",
+      "inLanguage": "pl-PL",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "OK Agency",
+        "url": "https://okagency.pl/"
+      }
+    }
+  </script>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script src="/assets/motion-control.js"></script>
+  <link rel="stylesheet" href="/assets/legal-pages.css">
+  <link rel="stylesheet" href="/assets/route-motion.css">
+  <link rel="stylesheet" href="/assets/site-footer.css">
+  <link rel="stylesheet" href="/assets/site-navigation.css">
+  <link rel="stylesheet" href="/assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
 </head>
 <body class="privacy-page">
   <a class="legal-skip" href="#main">Przejdź do treści</a>
 
   <header class="legal-header">
-    <a class="legal-header__brand" href="index.html" aria-label="OK Agency — strona główna">
-      <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
+    <a class="legal-header__brand" href="/" aria-label="OK Agency — strona główna">
+      <img src="/assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
     </a>
     <nav aria-label="Główna nawigacja">
-      <a href="menu.html" data-nav-link="offer">Oferta</a>
-      <a href="proces.html" data-nav-link="process">Jak pracujemy</a>
-      <a href="kontakt.html" data-nav-link="contact">Kontakt</a>
+      <a href="/menu" data-nav-link="offer">Oferta</a>
+      <a href="/proces" data-nav-link="process">Jak pracujemy</a>
+      <a href="/kontakt" data-nav-link="contact">Kontakt</a>
     </nav>
   </header>
 
@@ -33,81 +62,139 @@
       <div>
         <p class="legal-eyebrow">Prywatność / jasne zasady</p>
         <h1 class="privacy-title" id="privacy-title">Twoje dane.<br>Bez domysłów.</h1>
-        <p class="privacy-lead">Zbieramy tylko informacje potrzebne do odpowiedzi na Twoje zapytanie. Poniżej opisujemy, co dzieje się z danymi przekazanymi podczas kontaktu.</p>
+        <p class="privacy-lead">Opisujemy dokładnie, jakie dane są potrzebne do działania strony i odpowiedzi na zapytanie, przez jakie usługi przechodzą oraz jak długo są przechowywane.</p>
       </div>
 
-      <aside class="privacy-status" aria-labelledby="privacy-status-title">
-        <p class="privacy-status__label">Status dokumentu <span>przed publikacją</span></p>
-        <h2 id="privacy-status-title">Dane do uzupełnienia przed publikacją</h2>
-        <p>Repozytorium nie zawiera potwierdzonych danych administratora ani adresu firmy. Te informacje — wraz z podstawą prawną, zasadami przechowywania i udostępniania danych — muszą zostać uzupełnione przez właścicielkę strony.</p>
-      </aside>
+      <section class="privacy-status" aria-labelledby="privacy-status-title">
+        <p class="privacy-status__label">Status dokumentu <span>wersja 1.0</span></p>
+        <h2 id="privacy-status-title">Aktualna konfiguracja produkcyjna</h2>
+        <p>Stan na 29 lipca 2026 r. Dokument obejmuje Cloudflare Pages, Workers, Email Routing, Turnstile i Web Analytics, skrzynkę OVHcloud Zimbra, lokalnie hostowane fonty, formularz kontaktowy oraz lokalną „Diagnozę”.</p>
+      </section>
     </section>
 
     <div class="privacy-document">
       <nav class="privacy-toc" aria-labelledby="privacy-toc-title">
         <h2 id="privacy-toc-title">W tym dokumencie</h2>
         <ol>
-          <li><a href="#administrator"><span>01 Administrator</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#formularz"><span>02 Dane z formularza</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#cel"><span>03 Cel kontaktu</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#odbiorcy"><span>04 Odbiorcy i narzędzia</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#retencja"><span>05 Czas przechowywania</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#prawa"><span>06 Twoje prawa</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#kontakt"><span>07 Kontakt</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#zakres"><span>01 Zakres dokumentu</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#administrator"><span>02 Administrator danych</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#dane"><span>03 Jakie dane mogą być przetwarzane</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#cele"><span>04 Cele i podstawy prawne</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#formularz"><span>05 Formularz kontaktowy i poczta</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#narzedzia"><span>06 Dostawcy i narzędzia techniczne</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#cookies"><span>07 Cookies, pamięć przeglądarki i „Diagnoza”</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#odbiorcy"><span>08 Odbiorcy danych i transfery poza EOG</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#retencja"><span>09 Jak długo dane są przechowywane</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#prawa"><span>10 Prawa osoby, której dane dotyczą</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#automatyzacja"><span>11 Automatyczne mechanizmy i profilowanie</span><span aria-hidden="true">↘</span></a></li>
+          <li><a href="#bezpieczenstwo"><span>12 Bezpieczeństwo i zmiany dokumentu</span><span aria-hidden="true">↘</span></a></li>
         </ol>
       </nav>
 
       <article class="privacy-content">
-        <section class="policy-section" id="administrator" aria-labelledby="administrator-title">
-          <h2 id="administrator-title"><span>01 /</span>Administrator danych</h2>
-          <p class="fill-row"><span>Administrator</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p class="fill-row"><span>Aktualna nazwa / status firmy</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p class="fill-row"><span>Pełny adres / dane rejestrowe</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p class="fill-row"><span>Kontakt w sprawach prywatności</span><a href="mailto:hello@okagency.pl">hello@okagency.pl</a></p>
-          <p>Nie zakładamy, że osoba opisana w innych częściach serwisu jest administratorem danych — ta informacja wymaga potwierdzenia.</p>
-        </section>
-
-        <section class="policy-section" id="formularz" aria-labelledby="formularz-title">
-          <h2 id="formularz-title"><span>02 /</span>Dane przekazywane podczas kontaktu</h2>
-          <p>Formularz kontaktowy prosi o imię i nazwisko, adres e-mail, temat oraz treść wiadomości. Telefon i nazwa firmy są opcjonalne. Dane są przesyłane do bezpiecznej funkcji Cloudflare Pages i wysyłane wyłącznie na adres hello@okagency.pl. Ochronę formularza przed nadużyciami zapewnia Cloudflare Turnstile.</p>
-        </section>
-
-        <section class="policy-section" id="cel" aria-labelledby="cel-title">
-          <h2 id="cel-title"><span>03 /</span>Po co używamy tych danych</h2>
-          <p>Do odpowiedzi na zapytanie, prowadzenia korespondencji i przygotowania rozmowy o projekcie.</p>
-          <p class="fill-row"><span>Podstawa prawna</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-        </section>
-
-        <section class="policy-section" id="odbiorcy" aria-labelledby="odbiorcy-title">
-          <h2 id="odbiorcy-title"><span>04 /</span>Odbiorcy i narzędzia</h2>
-          <p class="fill-row"><span>Odbiorcy danych i narzędzia</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p class="fill-row"><span>Hosting</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p class="fill-row"><span>Cookies i analityka</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p class="fill-row"><span>Transfery danych</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-          <p>Serwis ładuje fonty z domen Google Fonts. Docelowa informacja o odbiorcach i transferach wymaga potwierdzenia konfiguracji produkcyjnej.</p>
-        </section>
-
-        <section class="policy-section" id="retencja" aria-labelledby="retencja-title">
-          <h2 id="retencja-title"><span>05 /</span>Czas przechowywania</h2>
-          <p class="fill-row"><span>Okres retencji</span><strong>[DO UZUPEŁNIENIA]</strong></p>
-        </section>
-
-        <section class="policy-section" id="prawa" aria-labelledby="prawa-title">
-          <h2 id="prawa-title"><span>06 /</span>Twoje prawa</h2>
-          <p>Zakres praw i sposób ich realizacji zostaną uzupełnione po potwierdzeniu administratora i podstaw prawnych. <strong>[DO UZUPEŁNIENIA]</strong></p>
-        </section>
-
-        <section class="policy-section" id="kontakt" aria-labelledby="kontakt-title">
-          <h2 id="kontakt-title"><span>07 /</span>Kontakt</h2>
-          <p>W sprawach dotyczących prywatności napisz na <a href="mailto:hello@okagency.pl">hello@okagency.pl</a>.</p>
-        </section>
+<section class="policy-section" id="zakres" aria-labelledby="zakres-title">
+  <h2 id="zakres-title"><span>01 /</span>Zakres dokumentu</h2>
+  <p>Niniejsza Polityka prywatności wyjaśnia, w jaki sposób przetwarzane są dane osobowe podczas korzystania z serwisu okagency.pl, w tym po wejściu przez domenę ok-agency.pl, która przekierowuje do domeny głównej. Dokument obejmuje zwykłe przeglądanie strony, formularz kontaktowy, kontakt e-mail, narzędzie „Diagnoza” oraz usługi techniczne wykorzystywane do działania i zabezpieczenia serwisu.</p>
+  <p>Polityka opisuje aktualną konfigurację produkcyjną strony. Serwis nie prowadzi kont użytkowników, newslettera, sklepu internetowego ani śledzenia reklamowego.</p>
+</section>
+<section class="policy-section" id="administrator" aria-labelledby="administrator-title">
+  <h2 id="administrator-title"><span>02 /</span>Administrator danych</h2>
+  <p class="fill-row"><span>Administrator</span><strong>Oliwia Karolewska</strong></p>
+  <p class="fill-row"><span>Firma</span><strong>OK Agency - Oliwia Karolewska (JDG; rozpoczęcie działalności: 3 sierpnia 2026 r.)</strong></p>
+  <p class="fill-row"><span>Adres</span><strong>ul. Mieczysława Wolfkego 16 lok. 64, 01-494 Warszawa</strong></p>
+  <p class="fill-row"><span>NIP</span><strong>5223377514</strong></p>
+  <p class="fill-row"><span>REGON</span><strong>545140510</strong></p>
+  <p class="fill-row"><span>Kontakt w sprawach danych</span><a href="mailto:hello@okagency.pl">hello@okagency.pl</a></p>
+  <p>Administratorem danych jest Oliwia Karolewska. Od 3 sierpnia 2026 r. prowadzi jednoosobową działalność gospodarczą pod firmą OK Agency - Oliwia Karolewska. W dalszej części dokumentu administrator jest określany jako „OK Agency” lub „Administrator”.</p>
+  <p>W sprawach dotyczących prywatności, realizacji praw lub bezpieczeństwa danych można kontaktować się e-mailem albo listownie na wskazany wyżej adres.</p>
+</section>
+<section class="policy-section" id="dane" aria-labelledby="dane-title">
+  <h2 id="dane-title"><span>03 /</span>Jakie dane mogą być przetwarzane</h2>
+  <p><strong>Podczas przeglądania strony.</strong> dane techniczne związane z połączeniem i bezpieczeństwem, takie jak adres IP, data i czas żądania, żądany adres URL, informacje o przeglądarce i systemie, nagłówki HTTP, strona odsyłająca, dane o routingu, błędach i zdarzeniach bezpieczeństwa oraz dane o wydajności ładowania strony.</p>
+  <p><strong>W formularzu kontaktowym.</strong> imię i nazwisko, adres e-mail, wybrany temat i treść wiadomości. Numer telefonu i nazwa firmy są opcjonalne. Przetwarzany jest też jednorazowy token Cloudflare Turnstile oraz dane techniczne potrzebne do sprawdzenia, czy formularz wysyła człowiek, a nie automat.</p>
+  <p><strong>W wiadomości e-mail.</strong> adres nadawcy, treść korespondencji, podpis, dane zawarte w załącznikach oraz techniczne metadane wiadomości.</p>
+  <p><strong>W narzędziu „Diagnoza”.</strong> odpowiedzi na cztery pytania są przetwarzane wyłącznie lokalnie w pamięci przeglądarki w celu wyświetlenia wyniku. Odpowiedzi nie są wysyłane do serwera ani zapisywane przez OK Agency.</p>
+  <p>Dane pochodzą bezpośrednio od osoby, której dotyczą, albo są generowane automatycznie przez jej urządzenie, przeglądarkę i infrastrukturę sieciową podczas korzystania z serwisu.</p>
+</section>
+<section class="policy-section" id="cele" aria-labelledby="cele-title">
+  <h2 id="cele-title"><span>04 /</span>Cele i podstawy prawne</h2>
+  <p><strong>Obsługa zapytania, rozmowy o projekcie, przygotowanie wyceny lub oferty i podjęcie działań przed zawarciem umowy.</strong> art. 6 ust. 1 lit. b RODO - przetwarzanie jest niezbędne do podjęcia działań na żądanie osoby przed zawarciem umowy.</p>
+  <p><strong>Odpowiedź na pytanie, które nie zmierza bezpośrednio do zawarcia umowy, prowadzenie korespondencji i organizacja kontaktu.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na komunikacji z osobami zainteresowanymi działalnością OK Agency.</p>
+  <p><strong>Zapewnienie działania strony, bezpieczeństwa połączeń i formularza, przeciwdziałanie spamowi, botom i nadużyciom oraz diagnozowanie błędów.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ochronie serwisu, danych i ciągłości działania.</p>
+  <p><strong>Pomiar zagregowanego ruchu i wydajności strony za pomocą Cloudflare Web Analytics.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ocenie działania i poprawie jakości serwisu, bez wykorzystywania cookies reklamowych.</p>
+  <p><strong>Wypełnianie obowiązków wynikających z prawa, w szczególności podatkowych i rachunkowych, jeśli zapytanie doprowadzi do współpracy.</strong> art. 6 ust. 1 lit. c RODO.</p>
+  <p><strong>Ustalenie, dochodzenie lub obrona roszczeń.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ochronie swoich praw.</p>
+  <p>Dane przekazane w zapytaniu nie są automatycznie dopisywane do newslettera ani używane do wysyłania marketingu bezpośredniego. Takie wykorzystanie wymagałoby odrębnej podstawy prawnej i osobnej informacji.</p>
+</section>
+<section class="policy-section" id="formularz" aria-labelledby="formularz-title">
+  <h2 id="formularz-title"><span>05 /</span>Formularz kontaktowy i poczta</h2>
+  <p>Formularz wysyła dane szyfrowanym połączeniem do funkcji Cloudflare Worker. Funkcja sprawdza pochodzenie żądania, rozmiar i poprawność pól oraz jednorazowy token Cloudflare Turnstile. Po pozytywnej weryfikacji wiadomość jest przekazywana przez Cloudflare Email Routing do skrzynki hello@okagency.pl obsługiwanej w usłudze OVHcloud Zimbra.</p>
+  <p>OK Agency nie zapisuje treści formularza w osobnej bazie danych. Treść wiadomości znajduje się w korespondencji e-mail. Logi funkcji formularza rejestrują techniczne nazwy zdarzeń i wynik operacji, ale nie treść wiadomości przesłanej przez użytkownika.</p>
+  <p>Pola obowiązkowe są potrzebne, aby ustalić nadawcę, odpowiedzieć i zrozumieć sprawę. Telefon i nazwa firmy są dobrowolne. Z formularza nie należy przesyłać danych szczególnych kategorii, dokumentów tożsamości ani innych informacji, które nie są potrzebne do opisania zapytania.</p>
+  <p>Bezpośredni kontakt na adres hello@okagency.pl podlega tym samym zasadom co korespondencja przesłana z formularza.</p>
+</section>
+<section class="policy-section" id="narzedzia" aria-labelledby="narzedzia-title">
+  <h2 id="narzedzia-title"><span>06 /</span>Dostawcy i narzędzia techniczne</h2>
+  <p><strong>Cloudflare.</strong> zapewnia DNS, ochronę i dostarczanie strony, Cloudflare Pages, Cloudflare Workers, Email Routing, Cloudflare Turnstile oraz Cloudflare Web Analytics. Treść formularza i dane techniczne przechodzą przez infrastrukturę Cloudflare w zakresie koniecznym do wykonania tych usług.</p>
+  <p><strong>Cloudflare Turnstile.</strong> chroni formularz przed botami. Przetwarza między innymi adres IP, informacje o przeglądarce i połączeniu, sygnały środowiska przeglądarki, identyfikator witryny i pochodzenie żądania. Cloudflare działa jako podmiot przetwarzający, gdy zabezpiecza stronę na polecenie OK Agency, oraz jako odrębny administrator w zakresie, w którym wykorzystuje sygnały do ulepszania własnych mechanizmów wykrywania botów.</p>
+  <p><strong>Cloudflare Web Analytics.</strong> dostarcza zagregowane statystyki odwiedzin i dane o wydajności. Beacon nie korzysta z cookies, localStorage ani sessionStorage. Cloudflare wskazuje, że adres IP odebrany w zwykłym procesie obsługi żądania jest odrzucany w najbliższym centrum danych i nie jest przechowywany w głównych bazach ani logach tej usługi.</p>
+  <p><strong>OVHcloud.</strong> obsługuje skrzynkę pocztową, na której przechowywana jest korespondencja z formularza i wiadomości wysłane bezpośrednio do OK Agency.</p>
+  <p><strong>Fonty.</strong> kroje Archivo, Barlow Condensed i Manrope są przechowywane lokalnie w serwisie i nie wymagają połączenia przeglądarki z zewnętrznym dostawcą fontów.</p>
+  <p><strong>Informacje dostawców:</strong></p>
+  <p><a href="https://www.cloudflare.com/policies/privacy/" target="_blank" rel="noopener noreferrer">Polityka prywatności Cloudflare</a></p>
+  <p><a href="https://www.cloudflare.com/turnstile-privacy-policy/" target="_blank" rel="noopener noreferrer">Informacja prywatności Cloudflare Turnstile</a></p>
+  <p><a href="https://www.ovhcloud.com/pl/personal-data-protection/" target="_blank" rel="noopener noreferrer">Ochrona danych w OVHcloud</a></p>
+</section>
+<section class="policy-section" id="cookies" aria-labelledby="cookies-title">
+  <h2 id="cookies-title"><span>07 /</span>Cookies, pamięć przeglądarki i „Diagnoza”</h2>
+  <p>W aktualnej konfiguracji OK Agency nie używa własnych cookies analitycznych, reklamowych ani marketingowych i nie zapisuje identyfikatorów użytkownika w localStorage lub sessionStorage.</p>
+  <p>Serwis może zapisać w sessionStorage wyłącznie techniczną preferencję „animacje wstrzymane” albo „animacje włączone”. Ustawienie nie identyfikuje użytkownika, nie jest wysyłane do OK Agency i znika po zamknięciu sesji przeglądarki.</p>
+  <p>Cloudflare Web Analytics działa bez cookies i bez odczytu pamięci przeglądarki. W widżecie Turnstile wyłączono funkcję pre-clearance, dlatego widżet nie wydaje pliku cf_clearance. Turnstile nadal przetwarza niezbędne sygnały techniczne służące ochronie formularza.</p>
+  <p>Odpowiedzi udzielone w narzędziu „Diagnoza” pozostają wyłącznie w bieżącej pamięci strony. Po odświeżeniu lub zamknięciu strony znikają. Po przejściu do formularza kontaktowego może zostać przekazana jedynie ogólna kategoria wyniku, aby wstępnie wybrać temat kontaktu; konkretne odpowiedzi nie są wysyłane.</p>
+</section>
+<section class="policy-section" id="odbiorcy" aria-labelledby="odbiorcy-title">
+  <h2 id="odbiorcy-title"><span>08 /</span>Odbiorcy danych i transfery poza EOG</h2>
+  <p>Dostęp do danych mogą otrzymać dostawcy usług działający na rzecz Administratora w zakresie niezbędnym do świadczenia usług: Cloudflare i jego podwykonawcy oraz OVHcloud.</p>
+  <p>Dane mogą być także ujawnione organom publicznym lub innym podmiotom, jeśli obowiązek taki wynika z przepisów prawa albo jest to konieczne do ustalenia, dochodzenia lub obrony roszczeń.</p>
+  <p>Cloudflare jest grupą działającą globalnie, dlatego dane techniczne mogą być przetwarzane poza Europejskim Obszarem Gospodarczym, w szczególności w Stanach Zjednoczonych. Dostawca deklaruje stosowanie odpowiednich mechanizmów transferowych, w tym EU-U.S. Data Privacy Framework oraz standardowych klauzul umownych Komisji Europejskiej, zależnie od danego przepływu danych.</p>
+  <p>OK Agency nie sprzedaje danych osobowych i nie udostępnia ich brokerom danych ani sieciom reklamowym.</p>
+</section>
+<section class="policy-section" id="retencja" aria-labelledby="retencja-title">
+  <h2 id="retencja-title"><span>09 /</span>Jak długo dane są przechowywane</h2>
+  <p><strong>Zapytanie, które nie doprowadziło do współpracy.</strong> do zakończenia korespondencji, a następnie przez 12 miesięcy od ostatniej wiadomości, aby zachować ciągłość kontaktu i móc wykazać przebieg ustaleń. Dane mogą być przechowywane dłużej tylko wtedy, gdy jest to potrzebne do ustalenia, dochodzenia lub obrony roszczeń.</p>
+  <p><strong>Zapytanie, które doprowadziło do zawarcia umowy.</strong> przez czas realizacji współpracy, a następnie przez okres wymagany przepisami prawa oraz do upływu właściwych terminów przedawnienia roszczeń.</p>
+  <p><strong>Dokumentacja podatkowa i rachunkowa.</strong> przez okres wymagany właściwymi przepisami.</p>
+  <p><strong>Jednorazowy token Turnstile.</strong> jest używany do pojedynczej weryfikacji formularza i nie jest przechowywany przez OK Agency po zakończeniu weryfikacji.</p>
+  <p><strong>Odpowiedzi w „Diagnozie”.</strong> nie są przechowywane przez OK Agency.</p>
+  <p><strong>Logi i dane techniczne.</strong> przez okres wynikający z ustawień i zasad właściwej usługi oraz tak długo, jak jest to potrzebne do zapewnienia bezpieczeństwa, analizy awarii lub obrony przed nadużyciem. Logi funkcji formularza nie zawierają treści zapytania.</p>
+</section>
+<section class="policy-section" id="prawa" aria-labelledby="prawa-title">
+  <h2 id="prawa-title"><span>10 /</span>Prawa osoby, której dane dotyczą</h2>
+  <p>W granicach przewidzianych przez RODO przysługuje prawo dostępu do danych i otrzymania ich kopii, sprostowania danych, usunięcia danych, ograniczenia przetwarzania, przenoszenia danych oraz wniesienia sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie. Jeżeli w przyszłości określone przetwarzanie będzie oparte na zgodzie, zgodę można wycofać w dowolnym momencie bez wpływu na zgodność wcześniejszego przetwarzania z prawem.</p>
+  <p>Żądanie można wysłać na hello@okagency.pl albo pocztą na adres Administratora. Dla ochrony danych Administrator może poprosić o informacje potrzebne do potwierdzenia tożsamości wnioskodawcy. Poszczególne prawa nie mają charakteru bezwzględnego i mogą nie przysługiwać w konkretnej sytuacji, na przykład gdy dalsze przechowywanie danych jest wymagane prawem lub potrzebne do obrony roszczeń.</p>
+  <p>Osoba, która uważa, że jej dane są przetwarzane niezgodnie z prawem, ma prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+  <p><strong>Więcej informacji:</strong></p>
+  <p><a href="https://uodo.gov.pl/" target="_blank" rel="noopener noreferrer">Urząd Ochrony Danych Osobowych</a></p>
+</section>
+<section class="policy-section" id="automatyzacja" aria-labelledby="automatyzacja-title">
+  <h2 id="automatyzacja-title"><span>11 /</span>Automatyczne mechanizmy i profilowanie</h2>
+  <p>Cloudflare Turnstile automatycznie ocenia sygnały techniczne w celu rozróżnienia użytkownika od bota. Negatywny wynik może uniemożliwić wysłanie formularza, ale nie wywołuje skutków prawnych ani w podobny sposób istotnie nie wpływa na osobę.</p>
+  <p>Narzędzie „Diagnoza” automatycznie oblicza rekomendowany kierunek na podstawie odpowiedzi udzielonych w przeglądarce. Wynik ma charakter informacyjny, nie jest ofertą ani wyceną i nie powoduje podjęcia decyzji wywołującej skutki prawne.</p>
+  <p>OK Agency nie stosuje profilowania marketingowego ani zautomatyzowanego podejmowania decyzji w rozumieniu art. 22 RODO.</p>
+</section>
+<section class="policy-section" id="bezpieczenstwo" aria-labelledby="bezpieczenstwo-title">
+  <h2 id="bezpieczenstwo-title"><span>12 /</span>Bezpieczeństwo i zmiany dokumentu</h2>
+  <p>Administrator stosuje środki adekwatne do charakteru serwisu, w tym szyfrowanie HTTPS, ograniczenie dozwolonych źródeł połączeń, walidację pól i rozmiaru żądania, jednorazową weryfikację Turnstile, ograniczenie zakresu logów oraz kontrolę dostępu do skrzynki i usług administracyjnych.</p>
+  <p>Polityka może zostać zmieniona, jeżeli zmieni się prawo, zakres usług, dostawcy lub konfiguracja techniczna strony. Aktualna wersja jest publikowana pod adresem okagency.pl/polityka-prywatnosci wraz z datą aktualizacji.</p>
+  <p>Wersja 1.0. Stan na 29 lipca 2026 r.</p>
+</section>
       </article>
     </div>
   </main>
 
   <div data-site-footer></div>
-  <script src="assets/site-footer.js?v=20260729"></script>
-  <script src="assets/navigation.js"></script>
-  <script src="assets/route-transition.js"></script>
+  <script src="/assets/site-footer.js?v=20260729"></script>
+  <script src="/assets/navigation.js"></script>
+  <script src="/assets/route-transition.js"></script>
 </body>
 </html>

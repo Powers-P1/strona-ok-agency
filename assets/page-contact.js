@@ -1,13 +1,15 @@
 (() => {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const motionPaused = () => reduce || window.OKAgencyMotion?.isPaused();
   const fine = matchMedia("(pointer: fine)").matches;
 
   requestAnimationFrame(() => requestAnimationFrame(() => {
     document.body.classList.add("is-ready");
+    window.setTimeout(() => document.body.classList.add("is-settled"), motionPaused() ? 0 : 1400);
   }));
 
   // delikatny paralaks sceny
-  if (fine && !reduce) {
+  if (fine && !motionPaused()) {
     const img = document.querySelector(".scene img");
     let tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
     const tick = () => {
@@ -56,10 +58,14 @@
 
   const contextMap = new Map([
     ["web", "Strona internetowa"],
+    ["website", "Strona internetowa"],
     ["social", "Social media"],
     ["campaign", "Kampania płatna"],
     ["diagnosis", "Diagnoza / uporządkowanie problemu"],
     ["process", "Proces współpracy"],
+    ["about", "Inny temat"],
+    ["conversation", "Diagnoza / uporządkowanie problemu"],
+    ["none", "Inny temat"],
   ]);
   const params = new URLSearchParams(window.location.search);
   const context = params.get("context") || "";
@@ -246,18 +252,20 @@
   });
 
   // miękkie wyjście przy nawigacji
-  if (!reduce) {
+  if (!motionPaused()) {
     let routing = false;
     document.addEventListener("click", e => {
-      const a = e.target.closest("a[href$='.html']");
+      const a = e.target.closest("a[href]");
       if (!a || routing) return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank") return;
       const href = a.getAttribute("href");
-      if (!href || href.startsWith("http")) return;
+      if (!href || /^(?:https?:|mailto:|tel:|#)/i.test(href)) return;
+      const target = new URL(href, location.href);
+      if (target.origin !== location.origin) return;
       e.preventDefault();
       routing = true;
       document.body.classList.add("is-leaving");
-      setTimeout(() => { location.href = href; }, 300);
+      setTimeout(() => { location.href = target.href; }, 300);
     });
   }
 })();

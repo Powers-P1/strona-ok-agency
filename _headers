@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src https://challenges.cloudflare.com; form-action 'self' mailto:; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-hashes' {{STYLE_ATTRIBUTE_HASHES}} https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; manifest-src 'self'; worker-src 'self' blob:; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src https://challenges.cloudflare.com; form-action 'self' mailto:; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-hashes' {{STYLE_ATTRIBUTE_HASHES}}; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; manifest-src 'self'; worker-src 'self' blob:; upgrade-insecure-requests
   Permissions-Policy: accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff
@@ -9,4 +9,16 @@
   Cross-Origin-Resource-Policy: same-site
 
 /assets/*
-  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+  Cache-Control: public, max-age=604800, stale-while-revalidate=2592000
+
+/assets/*.webp
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=31536000
+
+/assets/*.png
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=31536000
+
+/assets/*.svg
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=31536000
+
+/assets/*.woff2
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=31536000

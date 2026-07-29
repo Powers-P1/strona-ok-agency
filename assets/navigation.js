@@ -2,52 +2,88 @@
   "use strict";
 
   const ROUTES = Object.freeze({
-    offer: "menu.html",
-    process: "proces.html",
-    contact: "kontakt.html",
+    offer: "/menu",
+    process: "/proces",
+    contact: "/kontakt",
   });
 
   const CONTEXTS = Object.freeze({
     web: {
-      href: "strony-internetowe.html",
+      href: "/strony-internetowe",
+      returnLabel: "Wróć do stron internetowych",
+      topic: "Strona internetowa",
+    },
+    website: {
+      href: "/strony-internetowe",
       returnLabel: "Wróć do stron internetowych",
       topic: "Strona internetowa",
     },
     social: {
-      href: "social-media.html",
+      href: "/social-media",
       returnLabel: "Wróć do social media",
       topic: "Social media",
     },
     campaign: {
-      href: "kampanie.html",
+      href: "/kampanie",
       returnLabel: "Wróć do kampanii",
       topic: "Kampania płatna",
     },
     diagnosis: {
-      href: "diagnoza.html",
+      href: "/diagnoza",
       returnLabel: "Wróć do diagnozy",
-      topic: "Diagnoza",
+      topic: "Diagnoza / uporządkowanie problemu",
     },
     process: {
-      href: "proces.html",
+      href: "/proces",
       returnLabel: "Wróć do procesu",
-      topic: "Coś innego",
+      topic: "Proces współpracy",
+    },
+    about: {
+      href: "/o-nas",
+      returnLabel: "Wróć do O nas",
+      topic: "Inny temat",
+    },
+    conversation: {
+      href: "/diagnoza",
+      returnLabel: "Wróć do diagnozy",
+      topic: "Diagnoza / uporządkowanie problemu",
+    },
+    none: {
+      href: "/diagnoza",
+      returnLabel: "Wróć do diagnozy",
+      topic: "Inny temat",
     },
   });
 
-  const fileName = location.pathname.split("/").pop() || "index.html";
-  const sectionByFile = Object.freeze({
-    "menu.html": "offer",
-    "strony-internetowe.html": "offer",
-    "social-media.html": "offer",
-    "kampanie.html": "offer",
-    "diagnoza.html": "offer",
-    "proces.html": "process",
-    "kontakt.html": "contact",
-  });
-  const currentSection = sectionByFile[fileName] || "";
+  const routeName = (() => {
+    const last = location.pathname.split("/").filter(Boolean).pop() || "index";
+    return last.replace(/\.html$/i, "");
+  })();
 
-  document.querySelectorAll("[data-nav-link]").forEach(link => {
+  const sectionByRoute = Object.freeze({
+    menu: "offer",
+    "strony-internetowe": "offer",
+    "social-media": "offer",
+    kampanie: "offer",
+    diagnoza: "offer",
+    proces: "process",
+    kontakt: "contact",
+  });
+  const currentSection = sectionByRoute[routeName] || "";
+
+  const repeatedMainNavigation = [
+    ...document.querySelectorAll('main nav[aria-label="Główna nawigacja"]'),
+  ];
+  if (repeatedMainNavigation.length > 1) {
+    repeatedMainNavigation.forEach((navigation, index) => {
+      navigation.setAttribute(
+        "aria-label",
+        `Główna nawigacja — sekcja ${index + 1} z ${repeatedMainNavigation.length}`,
+      );
+    });
+  }
+
+  document.querySelectorAll("[data-nav-link]").forEach((link) => {
     const key = link.dataset.navLink;
     if (ROUTES[key] && !link.getAttribute("href")) link.href = ROUTES[key];
 
@@ -60,28 +96,31 @@
   });
 
   const params = new URLSearchParams(location.search);
-  const sourceKey = fileName === "proces.html" ? params.get("from") : params.get("context");
+  const sourceKey = routeName === "proces" ? params.get("from") : params.get("context");
   const source = CONTEXTS[sourceKey];
 
-  if (fileName === "proces.html") {
-    const contactContext = source && sourceKey !== "process" ? sourceKey : "process";
+  if (routeName === "proces") {
+    const contactContext = source && sourceKey !== "process"
+      ? (sourceKey === "website" ? "web" : sourceKey)
+      : "process";
 
-    document.querySelectorAll('a[href^="kontakt.html"]').forEach(link => {
+    document.querySelectorAll('a[href*="kontakt"]').forEach((link) => {
       const target = new URL(link.getAttribute("href"), location.href);
+      if (!/\/kontakt(?:\.html)?$/i.test(target.pathname)) return;
       target.searchParams.set("context", contactContext);
       target.searchParams.set("source", "process");
-      link.setAttribute("href", `${target.pathname.split("/").pop()}${target.search}${target.hash}`);
+      link.setAttribute("href", `/kontakt${target.search}${target.hash}`);
     });
 
     if (source) {
-      document.querySelectorAll("[data-context-return]").forEach(link => {
+      document.querySelectorAll("[data-context-return]").forEach((link) => {
         link.href = source.href;
         link.textContent = source.returnLabel;
       });
     }
   }
 
-  if (fileName === "kontakt.html") {
+  if (routeName === "kontakt") {
     const backLink = document.querySelector("[data-context-back]");
     if (backLink && source) {
       backLink.href = source.href;
@@ -91,7 +130,7 @@
 
     const topic = document.getElementById("f-topic");
     if (topic && source?.topic && !topic.value) {
-      const option = [...topic.options].find(item => item.value === source.topic);
+      const option = [...topic.options].find((item) => item.value === source.topic);
       if (option) topic.value = source.topic;
     }
   }

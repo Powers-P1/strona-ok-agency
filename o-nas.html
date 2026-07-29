@@ -4,31 +4,55 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ead9cb">
-  <meta name="description" content="Poznaj Oliwię Karolewską i model pracy OK Agency: jedna osoba prowadząca, specjaliści dobrani do zakresu i jasna odpowiedzialność za całość.">
-  <title>OK Agency — O nas</title>
+  <meta name="description" content="Poznaj Oliwię Karolewską i OK Agency: jedna osoba prowadząca, specjaliści dobrani do zadania i jasna odpowiedzialność za cały projekt.">
+  <title>Oliwia Karolewska i OK Agency | O nas</title>
   <link rel="canonical" href="https://okagency.pl/o-nas">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta property="og:title" content="Oliwia Karolewska i OK Agency | O nas">
+  <meta property="og:description" content="Jedna osoba zna kontekst i prowadzi projekt, a zespół jest dobierany do rzeczywistego zadania.">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://okagency.pl/o-nas">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Oliwia Karolewska i OK Agency | O nas">
+  <meta name="twitter:description" content="Jedna osoba zna kontekst i prowadzi projekt, a zespół jest dobierany do rzeczywistego zadania.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://okagency.pl/o-nas#oliwia-karolewska",
+      "name": "Oliwia Karolewska",
+      "jobTitle": "Założycielka i osoba prowadząca projekty",
+      "url": "https://okagency.pl/o-nas",
+      "worksFor": { "@id": "https://okagency.pl/#organization" }
+    }
+  </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/services/about/about-art-responsibility-v1.webp" type="image/webp">
   <link rel="stylesheet" href="assets/services/about/styles.css">
   <link rel="stylesheet" href="assets/route-motion.css">
+  <link rel="stylesheet" href="assets/site-footer.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="about-page" data-theme="light">
   <a class="skip-link" href="#about-responsibility">Przejdź do treści</a>
 
   <header class="site-header">
-    <a class="wordmark" href="menu.html" aria-label="OK Agency — wróć do menu">
+    <a class="wordmark" href="/menu" aria-label="OK Agency — wróć do menu">
       <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
     </a>
     <nav aria-label="Główna nawigacja">
-      <a href="menu.html">Oferta</a>
-      <a href="proces.html?from=about">Proces</a>
+      <a href="/menu">Oferta</a>
+      <a href="/proces?from=about">Proces</a>
       <a class="is-active" href="#about-responsibility" aria-current="page">O nas</a>
-      <a href="kontakt.html?context=about">Kontakt</a>
+      <a href="/kontakt?context=about">Kontakt</a>
     </nav>
   </header>
 
@@ -45,7 +69,7 @@
             <li>Specjaliści do zakresu</li>
             <li>Odpowiedzialność za całość</li>
           </ul>
-          <div class="mobile-details" aria-label="Szczegóły odpowiedzialności">
+          <div class="mobile-details" role="group" aria-label="Szczegóły odpowiedzialności">
             <details open>
               <summary>Kontekst</summary>
               <p>Jedna osoba zna cel, ustalenia i historię decyzji.</p>
@@ -93,7 +117,7 @@
     </section>
 
     <section class="scene scene-dark scene-02" id="about-oliwia" aria-labelledby="oliwia-title" data-theme="dark" aria-hidden="true" inert>
-      <img class="scene-art" src="assets/services/about/about-art-oliwia-v1.webp" width="1672" height="941" alt="" loading="eager">
+      <img class="scene-art" src="assets/services/about/about-art-oliwia-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
       <div class="scene-inner">
         <figure class="portrait-frame">
           <img src="assets/services/about/photo-oliwia.jpg" alt="Oliwia Karolewska" width="688" height="1029">
@@ -110,7 +134,7 @@
             <li><span class="row-index" aria-hidden="true">03</span><span class="row-content"><strong>Wiele kanałów</strong><span>Facebook, Instagram, YouTube, TikTok i Pinterest.</span></span></li>
             <li><span class="row-index" aria-hidden="true">04</span><span class="row-content"><strong>Koordynacja A–Z</strong><span>Kontakt z klientem, podwykonawcami i influencerami.</span></span></li>
           </ul>
-          <div class="mobile-details tablet-details" aria-label="Szczegóły doświadczenia Oliwii">
+          <div class="mobile-details tablet-details" role="group" aria-label="Szczegóły doświadczenia Oliwii">
             <details open>
               <summary>Około 40 projektów</summary>
               <p>Kampanie sprzedażowe e-commerce, portal branżowy i landing pages.</p>
@@ -154,7 +178,7 @@
     </section>
 
     <section class="scene scene-light scene-03" id="about-model" aria-labelledby="model-title" data-theme="light" aria-hidden="true" inert>
-      <img class="scene-art" src="assets/services/about/about-art-model-v1.webp" width="1672" height="941" alt="" loading="eager">
+      <img class="scene-art" src="assets/services/about/about-art-model-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
       <div class="scene-inner">
         <article class="copy-panel copy-left">
           <p class="kicker">Model pracy / 03</p>
@@ -166,7 +190,7 @@
             <li><span class="row-index" aria-hidden="true">03</span><span class="row-content"><strong>Jedna ścieżka decyzji</strong><span>Akceptacje i zmiany przechodzą przez osobę, która zna cel projektu.</span></span></li>
             <li><span class="row-index" aria-hidden="true">04</span><span class="row-content"><strong>Kontrola całości</strong><span>Odpowiedzialność za koordynację i jakość pozostaje po jednej stronie.</span></span></li>
           </ul>
-          <div class="mobile-details tablet-details" aria-label="Szczegóły modelu pracy">
+          <div class="mobile-details tablet-details" role="group" aria-label="Szczegóły modelu pracy">
             <details open>
               <summary>Prowadzenie</summary>
               <p>Oliwia zbiera kontekst, pilnuje ustaleń i prowadzi rozmowę z klientem.</p>
@@ -210,7 +234,7 @@
     </section>
 
     <section class="scene scene-dark scene-04" id="about-credibility" aria-labelledby="credibility-title" data-theme="dark" aria-hidden="true" inert>
-      <img class="scene-art" src="assets/services/about/about-art-credibility-v1.webp" width="1672" height="941" alt="" loading="eager">
+      <img class="scene-art" src="assets/services/about/about-art-credibility-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
       <div class="scene-inner">
         <article class="copy-panel copy-left">
           <p class="kicker">Wiarygodność / 04</p>
@@ -255,11 +279,11 @@
 
           <p class="result">Jeśli zależy Ci na jednej osobie prowadzącej i specjalistach dobranych do zadania, porozmawiajmy.</p>
           <div class="actions">
-            <a class="primary-cta" href="kontakt.html?context=about">
+            <a class="primary-cta" href="/kontakt?context=about">
               <span>Porozmawiajmy o projekcie</span>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 7l5 5-5 5"></path></svg>
             </a>
-            <a class="text-link" href="proces.html?from=about">Zobacz proces</a>
+            <a class="text-link" href="/proces?from=about">Zobacz proces</a>
           </div>
         </article>
       </div>
@@ -272,7 +296,10 @@
     <button type="button" data-go="2" aria-label="Widok 3: Model pracy">03</button>
     <button type="button" data-go="3" aria-label="Widok 4: Wiarygodność">04</button>
   </nav>
+  <div data-site-footer></div>
   <script src="assets/art-coordinate-system.js"></script>
+  <script src="assets/navigation.js"></script>
   <script src="assets/services/about/script.js" defer></script>
+  <script src="assets/site-footer.js?v=20260729"></script>
 </body>
 </html>

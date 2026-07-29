@@ -2,22 +2,25 @@
   const mounts = document.querySelectorAll("[data-site-footer]");
   if (!mounts.length) return;
 
-  const currentPath = location.pathname.split("/").pop() || "index.html";
+  const currentPath = (location.pathname.split("/").filter(Boolean).pop() || "index")
+    .replace(/\.html$/i, "");
   const directionLinks = [
-    ["Strony internetowe", "strony-internetowe.html"],
-    ["Social media", "social-media.html"],
-    ["Kampanie płatne", "kampanie.html"],
-    ["Diagnoza", "diagnoza.html"]
+    ["Strony internetowe", "/strony-internetowe"],
+    ["Social media", "/social-media"],
+    ["Kampanie płatne", "/kampanie"],
+    ["Diagnoza", "/diagnoza"]
   ];
   const agencyLinks = [
-    ["O nas", "o-nas.html"],
-    ["Proces", "proces.html"],
-    ["Kontakt", "kontakt.html"],
-    ["Polityka prywatności", "polityka-prywatnosci.html"]
+    ["O nas", "/o-nas"],
+    ["Proces", "/proces"],
+    ["Kontakt", "/kontakt"],
+    ["Polityka prywatności", "/polityka-prywatnosci"],
+    ["Dostępność", "/dostepnosc"]
   ];
 
   const linkMarkup = (label, href) => {
-    const current = currentPath === href ? ' aria-current="page"' : "";
+    const route = href.split("/").filter(Boolean).pop() || "index";
+    const current = currentPath === route ? ' aria-current="page"' : "";
     return `<li><a href="${href}"${current}>${label}</a></li>`;
   };
 
@@ -30,8 +33,8 @@
     footer.innerHTML = `
       <div class="site-footer__top">
         <section class="site-footer__brand" aria-labelledby="site-footer-brand-title">
-          <a class="site-footer__wordmark" href="index.html" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
+          <a class="site-footer__wordmark" href="/" aria-label="OK Agency — strona główna">
+            <img src="/assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
           </a>
           <h2 class="site-footer__description" id="site-footer-brand-title">
             Agencja marketingowa dla małych i średnich firm.
@@ -39,7 +42,7 @@
           </h2>
         </section>
 
-        <a class="site-footer__diagnosis" href="diagnoza.html"${currentPath === "diagnoza.html" ? ' aria-current="page"' : ""}>
+        <a class="site-footer__diagnosis" href="/diagnoza"${currentPath === "diagnoza" ? ' aria-current="page"' : ""}>
           <strong>Zrób diagnozę — 4 pytania</strong>
           <small>Rekomendowany kierunek i pierwszy krok od razu na ekranie.</small>
           <span class="site-footer__diagnosis-icon" aria-hidden="true">↗</span>
@@ -72,7 +75,7 @@
 
       <div class="site-footer__bottom">
         <p>© 2026 OK Agency</p>
-        <a href="polityka-prywatnosci.html"${currentPath === "polityka-prywatnosci.html" ? ' aria-current="page"' : ""}>Prywatność / jasne zasady</a>
+        <a href="/polityka-prywatnosci"${currentPath === "polityka-prywatnosci" ? ' aria-current="page"' : ""}>Prywatność / jasne zasady</a>
       </div>`;
 
     mount.replaceChildren(footer);

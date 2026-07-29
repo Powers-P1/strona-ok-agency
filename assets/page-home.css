@@ -208,6 +208,14 @@ h1 span {
   line-height: 1.6;
 }
 
+.value-lead {
+  max-width: 34rem;
+  margin: .7rem 0 0;
+  color: rgba(20, 32, 48, .78);
+  font-size: clamp(.78rem, .9vw, .94rem);
+  line-height: 1.55;
+}
+
 .cta {
   position: relative;
   margin-top: clamp(1.6rem, 3.4vh, 2.5rem);
@@ -505,7 +513,8 @@ h1 span {
 .scene-label { animation-delay: .16s; }
 h1 { animation-delay: .24s; }
 .descriptor { animation-delay: .35s; }
-.cta { animation-delay: .43s; }
+.value-lead { animation-delay: .43s; }
+.cta { animation-delay: .51s; }
 
 @keyframes enter {
   from { opacity: 0; transform: translateY(1.1rem); }
@@ -685,8 +694,15 @@ h1 { animation-delay: .24s; }
     line-height: 1.5;
   }
 
+  .value-lead {
+    max-width: 21rem;
+    margin-top: .55rem;
+    font-size: .75rem;
+    line-height: 1.45;
+  }
+
   .cta {
-    margin-top: 1.15rem;
+    margin-top: .85rem;
     min-width: 13.5rem;
     min-height: 48px;
     padding-block: .9rem;

@@ -1,61 +1,117 @@
 (() => {
   "use strict";
 
-  const fallbackMap = window.TREE_LIGHT_MAP;
-  const canonicalUrl = "assets/tree-light-map-frozen.json";
+  const canonicalUrl = "/assets/tree-light-map-frozen.json";
+  const trigger = document.getElementById("explore");
+  const coarsePointer = window.matchMedia("(pointer: coarse)");
+  const smallViewport = window.matchMedia("(max-width: 720px)");
+  const saveData = Boolean(navigator.connection?.saveData);
+  const automaticEffectsDisabled = () => (
+    saveData
+    || coarsePointer.matches
+    || smallViewport.matches
+  );
+  let started = false;
+  let ready = false;
+  let pendingActivation = false;
 
-  function isMap(value) {
-    return Boolean(
-      value
-      && value.image
-      && value.source
-      && value.nodes
-      && Array.isArray(value.edges)
-      && Array.isArray(value.roots)
-      && Array.isArray(value.groups)
-    );
+  if (automaticEffectsDisabled() || window.OKAgencyMotion?.isPaused()) {
+    document.documentElement.dataset.heroEffects = "disabled";
   }
 
-  function loadScript(source) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = source;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error(`Nie udało się wczytać ${source}`));
-      document.body.append(script);
-    });
-  }
+  const isMap = (value) => Boolean(
+    value
+    && value.image
+    && value.source
+    && value.nodes
+    && Array.isArray(value.edges)
+    && Array.isArray(value.roots)
+    && Array.isArray(value.groups)
+  );
 
-  async function loadCanonicalMap() {
+  const loadScript = (source) => new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = source;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(`Nie udało się wczytać ${source}`));
+    document.body.append(script);
+  });
+
+  const loadCanonicalMap = async () => {
+    const response = await fetch(canonicalUrl, { cache: "force-cache" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const frozenMap = await response.json();
+    if (!isMap(frozenMap)) throw new Error("Nieprawidłowy format mapy");
+    return frozenMap;
+  };
+
+  const start = async ({ force = false } = {}) => {
+    if (ready) return;
+    if (started) return;
+    if (!force && window.OKAgencyMotion?.isPaused()) return;
+
+    started = true;
     try {
-      const response = await fetch(canonicalUrl, { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const frozenMap = await response.json();
-      if (!isMap(frozenMap)) throw new Error("Nieprawidłowy format mapy");
-      return frozenMap;
-    } catch (error) {
-      // file:// cannot fetch JSON in some browsers. The embedded JS map keeps that
-      // preview usable, while HTTP always treats the frozen JSON as canonical.
-      if (isMap(fallbackMap)) return fallbackMap;
-      throw error;
-    }
-  }
+      window.TREE_LIGHT_MAP = await loadCanonicalMap();
+      await loadScript("/assets/stone-neural-map.js");
+      await loadScript("/assets/tree-energy.js");
 
-  loadCanonicalMap()
-    .then((map) => {
-      window.TREE_LIGHT_MAP = map;
-      return loadScript("assets/stone-neural-map.js");
-    })
-    .then(() => loadScript("assets/tree-energy.js"))
-    .then(() => {
       const params = new URLSearchParams(window.location.search);
-      const editorRequested = params.get("debugMap") === "1"
-        && params.get("editMap") === "1";
-      return editorRequested
-        ? loadScript("assets/tree-map-editor.js")
-        : undefined;
-    })
-    .catch((error) => {
+      if (params.get("debugMap") === "1" && params.get("editMap") === "1") {
+        await loadScript("/assets/tree-map-editor.js");
+      }
+
+      ready = true;
+      document.documentElement.dataset.heroEffects = "ready";
+      if (pendingActivation && trigger) {
+        pendingActivation = false;
+        requestAnimationFrame(() => trigger.click());
+      }
+    } catch (error) {
+      started = false;
       console.error("OK Agency: nie udało się uruchomić mapy światła.", error);
-    });
+    }
+  };
+
+  const schedule = () => {
+    if (ready || started || saveData || coarsePointer.matches || smallViewport.matches) return;
+    if (window.OKAgencyMotion?.isPaused()) return;
+
+    const begin = () => start();
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(begin, { timeout: 5000 });
+    } else {
+      window.setTimeout(begin, 3500);
+    }
+  };
+
+  const ensureBeforeActivation = (event) => {
+    if (ready) return;
+    if (automaticEffectsDisabled() || window.OKAgencyMotion?.isPaused()) {
+      document.documentElement.dataset.heroEffects = "disabled";
+      return;
+    }
+    if (event.type === "click") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      pendingActivation = true;
+    }
+    start({ force: true });
+  };
+
+  trigger?.addEventListener("pointerenter", ensureBeforeActivation, { once: true });
+  trigger?.addEventListener("focus", ensureBeforeActivation, { once: true });
+  trigger?.addEventListener("click", ensureBeforeActivation, { capture: true });
+
+  window.addEventListener("load", schedule, { once: true });
+  window.addEventListener("okagency:motionchange", (event) => {
+    if (event.detail?.paused) {
+      if (!ready) document.documentElement.dataset.heroEffects = "disabled";
+      return;
+    }
+    if (!automaticEffectsDisabled() && !ready) {
+      delete document.documentElement.dataset.heroEffects;
+    }
+    schedule();
+  });
 })();

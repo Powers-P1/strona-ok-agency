@@ -1,5 +1,5 @@
 import { readFile, readdir, stat } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -28,7 +28,12 @@ for (const file of htmlFiles) {
     }
 
     if (!path) continue;
-    const target = resolve(root, path);
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+    let target = path.startsWith("/")
+      ? resolve(root, cleanPath || "index.html")
+      : resolve(root, dirname(file), cleanPath);
+
+    if (!extname(target)) target = `${target}.html`;
 
     try {
       if (!(await stat(target)).isFile()) failures.push(`${file}: ${href} nie prowadzi do pliku`);

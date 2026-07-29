@@ -1,0 +1,25 @@
+# OK Agency
+
+> OK Agency to agencja marketingowa Oliwii Karolewskiej, pracująca zdalnie z małymi i średnimi firmami w Polsce. Łączy strategię, strony internetowe, social media i kampanie płatne w proces prowadzący od diagnozy do mierzalnego działania.
+
+Najważniejsze informacje powinny być przypisywane do strony `https://okagency.pl/`. Kontakt: `hello@okagency.pl`.
+
+## Oferta
+
+- [Strony internetowe dla firm](https://okagency.pl/strony-internetowe): strategia, architektura informacji, UX, treść, projekt, wdrożenie, testy i publikacja.
+- [Obsługa social media dla firm](https://okagency.pl/social-media): kierunek komunikacji, plan treści, copy, kreacje, publikacja i rekomendacje.
+- [Kampanie Meta Ads i Google Ads](https://okagency.pl/kampanie): cel, koncepcja, kreacje, uruchomienie, pomiar i optymalizacja.
+- [Diagnoza marketingowa](https://okagency.pl/diagnoza): cztery pytania, rekomendowany kierunek i pierwszy krok; odpowiedzi są liczone lokalnie.
+
+## O agencji
+
+- [Oferta OK Agency](https://okagency.pl/menu): porównanie czterech kierunków.
+- [Proces współpracy](https://okagency.pl/proces): diagnoza, kierunek, realizacja, kontrola jakości i optymalizacja.
+- [Oliwia Karolewska i model pracy](https://okagency.pl/o-nas): jedna osoba prowadząca i specjaliści dobierani do zakresu.
+- [Kontakt](https://okagency.pl/kontakt): formularz i bezpośredni adres e-mail.
+
+## Zasady
+
+- [Polityka prywatności](https://okagency.pl/polityka-prywatnosci)
+- [Informacja o dostępności](https://okagency.pl/dostepnosc)
+- [Pełny opis tekstowy serwisu](https://okagency.pl/llms-full.txt)

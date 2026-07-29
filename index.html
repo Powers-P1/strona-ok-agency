@@ -4,20 +4,79 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e9d8c8">
-  <meta name="description" content="OK Agency — strategie, strony internetowe i kampanie, które pracują na wynik.">
-  <title>OK Agency — Ładnie to za mało</title>
+  <meta name="description" content="Agencja marketingowa dla MŚP: strategia, strony internetowe, social media i kampanie płatne. Jedna osoba prowadząca, zdalnie w całej Polsce.">
+  <title>Agencja marketingowa dla MŚP | OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/">
+  <meta property="og:title" content="Agencja marketingowa dla MŚP | OK Agency">
+  <meta property="og:description" content="Strategia, strony internetowe, social media i kampanie płatne — od diagnozy do działania.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okagency.pl/">
+  <meta property="og:site_name" content="OK Agency">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agencja marketingowa dla MŚP | OK Agency">
+  <meta name="twitter:description" content="Strategia, strony internetowe, social media i kampanie płatne — od diagnozy do działania.">
+  <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
+  <link rel="alternate" type="text/plain" href="https://okagency.pl/llms.txt" title="Opis OK Agency dla systemów AI">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://okagency.pl/#organization",
+          "name": "OK Agency",
+          "legalName": "OK Agency - Oliwia Karolewska",
+          "url": "https://okagency.pl/",
+          "logo": "https://okagency.pl/assets/ok-agency-wordmark-navy.svg",
+          "image": "https://okagency.pl/assets/ok-agency-social.webp",
+          "email": "hello@okagency.pl",
+          "taxID": "5223377514",
+          "identifier": "REGON 545140510",
+          "founder": { "@id": "https://okagency.pl/o-nas#oliwia-karolewska" },
+          "areaServed": { "@type": "Country", "name": "Polska" },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "ul. Mieczysława Wolfkego 16 lok. 64",
+            "postalCode": "01-494",
+            "addressLocality": "Warszawa",
+            "addressCountry": "PL"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://okagency.pl/o-nas#oliwia-karolewska",
+          "name": "Oliwia Karolewska",
+          "jobTitle": "Założycielka i osoba prowadząca projekty",
+          "worksFor": { "@id": "https://okagency.pl/#organization" },
+          "url": "https://okagency.pl/o-nas"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://okagency.pl/#website",
+          "name": "OK Agency",
+          "url": "https://okagency.pl/",
+          "inLanguage": "pl-PL",
+          "publisher": { "@id": "https://okagency.pl/#organization" }
+        }
+      ]
+    }
+  </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..700&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="prefetch" href="menu.html">
-  <link rel="prefetch" href="kontakt.html">
+  <link rel="prefetch" href="/menu">
+  <link rel="prefetch" href="/kontakt">
   <link rel="stylesheet" href="assets/page-home.css">
 <link rel="stylesheet" href="assets/route-motion.css">
 <link rel="stylesheet" href="assets/site-footer.css">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <script src="/assets/motion-control.js"></script>
 </head>
 <body class="home-page">
   <a class="skip-link" href="#hero">Przejdź do treści</a>
@@ -25,13 +84,13 @@
     <section class="hero" id="hero" tabindex="-1" aria-labelledby="hero-title">
       <div class="grid" aria-hidden="true"></div>
       <header class="topbar">
-        <a href="index.html" aria-label="OK Agency — strona główna">
+        <a href="/" aria-label="OK Agency — strona główna">
           <img class="wordmark" src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
         </a>
         <nav class="nav" aria-label="Główna nawigacja">
-          <a class="route-link" href="menu.html" data-nav-link="offer">Oferta</a>
-          <a class="route-link" href="proces.html" data-nav-link="process">Jak pracujemy</a>
-          <a class="route-link" href="kontakt.html" data-nav-link="contact">Kontakt</a>
+          <a class="route-link" href="/menu" data-nav-link="offer">Oferta</a>
+          <a class="route-link" href="/proces" data-nav-link="process">Jak pracujemy</a>
+          <a class="route-link" href="/kontakt" data-nav-link="contact">Kontakt</a>
         </nav>
       </header>
 
@@ -41,19 +100,20 @@
             <source
               type="image/webp"
               srcset="
-                assets/editorial-atelier-scene-v1.webp 1672w,
-                assets/editorial-atelier-scene-v1@2x.webp 3344w
+                assets/editorial-atelier-scene-v1-640.webp 640w,
+                assets/editorial-atelier-scene-v1-960.webp 960w,
+                assets/editorial-atelier-scene-v1-1280.webp 1280w
               "
-              sizes="100vw"
+              sizes="(max-width: 640px) 173vw, (max-width: 1024px) 132vw, 100vw"
             >
             <img
               class="sculpture"
               id="sculpture"
-              src="assets/editorial-atelier-scene-v1.png"
+              src="assets/editorial-atelier-scene-v1-1280.webp"
               data-fallback-src="assets/wire-cherry-sculpture-epic-v3.png"
               alt=""
-              width="1672"
-              height="941"
+              width="1280"
+              height="720"
               fetchpriority="high"
             >
           </picture>
@@ -68,6 +128,7 @@
         <p class="scene-label">Agencja marketingowa</p>
         <h1 id="hero-title">Ładnie to <span>za mało</span></h1>
         <p class="descriptor">Strony internetowe · Social media · Kampanie płatne</p>
+        <p class="value-lead">Strategia, design i wdrożenie dla MŚP, które chcą więcej właściwych zapytań — z jedną osobą odpowiedzialną za całość.</p>
         <button class="cta" id="explore" type="button" data-menu-entry>
           Wybierz kierunek
         </button>
@@ -87,7 +148,6 @@
     </section>
   </main>
   <div data-site-footer></div>
-  <script src="assets/tree-light-map.js"></script>
   <script src="assets/tree-map-loader.js"></script>
   <script src="assets/site-footer.js?v=20260729"></script>
   <script src="assets/page-home.js"></script>

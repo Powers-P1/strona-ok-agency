@@ -252,8 +252,9 @@ Finalne nagłówki po buildzie obejmują:
 - COOP i Cross-Origin-Resource-Policy;
 - `upgrade-insecure-requests`.
 
-Źródła zewnętrzne w CSP są ograniczone do Google Fonts, Cloudflare Turnstile
-i Cloudflare Web Analytics.
+Fonty Archivo, Barlow Condensed i Manrope są publikowane lokalnie z
+`/assets/fonts/`, dlatego przeglądarka nie łączy się z Google Fonts. Zewnętrzne
+źródła w CSP są ograniczone do Cloudflare Turnstile i Cloudflare Web Analytics.
 
 SEO:
 
@@ -261,6 +262,10 @@ SEO:
 - canonicale znajdują się w HTML;
 - sitemap używa adresów bez `.html`;
 - `robots.txt` wskazuje sitemapę;
+- `robots.txt` rozdziela crawlery wyszukiwania i cytowania AI od botów
+  treningowych;
+- `llms.txt` i `llms-full.txt` są kopiowane do artefaktu produkcyjnego jako
+  dodatkowy, niewiążący opis serwisu dla systemów, które obsługują ten format;
 - `ok-agency.pages.dev` nie publikuje duplikatu treści;
 - `security.txt` znajduje się w
   [`.well-known/security.txt`](../.well-known/security.txt).

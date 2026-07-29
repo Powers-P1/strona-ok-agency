@@ -1,3 +1,27 @@
+# OK Agency pozwala indeksować i cytować publiczne treści w wynikach
+# wyszukiwania oraz odpowiedziach opartych na pobranym źródle.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+# Trening modelu nie jest potrzebny do pokazania strony w odpowiedzi AI.
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
 User-agent: *
 Allow: /
 

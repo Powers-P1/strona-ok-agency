@@ -23,6 +23,8 @@ await cp(join(root, "assets"), join(dist, "assets"), { recursive: true });
 const staticFiles = [
   "robots.txt",
   "sitemap.xml",
+  "llms.txt",
+  "llms-full.txt",
 ];
 
 for (const file of staticFiles) {

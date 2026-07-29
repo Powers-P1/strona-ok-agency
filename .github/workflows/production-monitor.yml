@@ -21,11 +21,17 @@ jobs:
           set -Eeuo pipefail
           exec > >(tee monitor-report.txt) 2>&1
 
+          web_curl() {
+            curl --silent --show-error --max-time 20 \
+              --user-agent 'Mozilla/5.0 (compatible; OKAgency-Monitor/1.0; +https://github.com/Powers-P1/strona-ok-agency)' \
+              "$@"
+          }
+
           check_status() {
             local url="$1"
             local expected="$2"
             local actual
-            actual="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 "$url")"
+            actual="$(web_curl --output /dev/null --write-out '%{http_code}' "$url")"
             test "$actual" = "$expected" || {
               echo "FAIL: $url returned $actual, expected $expected"
               return 1
@@ -49,24 +55,24 @@ jobs:
           check_status "https://okagency.pl/.well-known/security.txt" "200"
           check_status "https://okagency.pl/api/contact" "405"
 
-          test "$(curl --silent --show-error --head --max-time 20 https://www.okagency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+          test "$(web_curl --head https://www.okagency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: www redirect" \
             || { echo "FAIL: www redirect"; exit 1; }
 
-          test "$(curl --silent --show-error --head --max-time 20 https://ok-agency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+          test "$(web_curl --head https://ok-agency.pl/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: alternate-domain redirect" \
             || { echo "FAIL: alternate-domain redirect"; exit 1; }
 
-          test "$(curl --silent --show-error --head --max-time 20 https://ok-agency.pages.dev/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
+          test "$(web_curl --head https://ok-agency.pages.dev/ | awk 'tolower($1) == "location:" {gsub(/\r/, ""); print $2}')" = "https://okagency.pl/" \
             && echo "OK: pages.dev redirect" \
             || { echo "FAIL: pages.dev redirect"; exit 1; }
 
-          curl --silent --show-error --head --max-time 20 https://okagency.pl/ \
+          web_curl --head https://okagency.pl/ \
             | grep --ignore-case --quiet '^strict-transport-security:.*max-age=' \
             && echo "OK: primary HSTS" \
             || { echo "FAIL: primary HSTS missing"; exit 1; }
 
-          curl --silent --show-error --head --max-time 20 https://ok-agency.pl/ \
+          web_curl --head https://ok-agency.pl/ \
             | grep --ignore-case --quiet '^strict-transport-security:.*max-age=' \
             && echo "OK: alternate-domain HSTS" \
             || { echo "FAIL: alternate-domain HSTS missing"; exit 1; }

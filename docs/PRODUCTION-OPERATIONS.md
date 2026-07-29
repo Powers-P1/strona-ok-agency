@@ -248,6 +248,8 @@ TLS:
 Finalne nagłówki po buildzie obejmują:
 
 - CSP bez `unsafe-inline`;
+- losowy, 128-bitowy nonce dodawany do `script-src` osobno dla każdej
+  odpowiedzi HTML przez [`functions/_middleware.js`](../functions/_middleware.js);
 - `frame-ancestors 'none'` i `X-Frame-Options: DENY`;
 - `X-Content-Type-Options: nosniff`;
 - `Referrer-Policy: strict-origin-when-cross-origin`;
@@ -258,6 +260,13 @@ Finalne nagłówki po buildzie obejmują:
 Fonty Archivo, Barlow Condensed i Manrope są publikowane lokalnie z
 `/assets/fonts/`, dlatego przeglądarka nie łączy się z Google Fonts. Zewnętrzne
 źródła w CSP są ograniczone do Cloudflare Turnstile i Cloudflare Web Analytics.
+
+Cloudflare Bot Fight Mode na planie Free automatycznie uruchamia JavaScript
+Detections i dokleja skrypt do odpowiedzi HTML. Middleware dodaje nonce do
+nagłówka CSP, a Cloudflare przenosi tę samą wartość na wstrzyknięty skrypt.
+Dzięki temu JavaScript Detections działa bez `unsafe-inline`, stałego nonce ani
+wyłączania Bot Fight Mode. Nonce nie jest zapisywany w statycznych plikach i nie
+wolno zastępować go wartością stałą.
 
 SEO:
 

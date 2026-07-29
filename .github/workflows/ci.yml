@@ -32,7 +32,9 @@ jobs:
         run: npm run build
 
       - name: Validate Pages redirect middleware
-        run: npm run check:pages-functions
+        run: |
+          node --test functions/_middleware.test.mjs
+          npm run check:pages-functions
 
       - name: Validate contact Worker
         run: npm run check:worker

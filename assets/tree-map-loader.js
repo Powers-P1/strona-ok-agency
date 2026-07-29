@@ -73,18 +73,6 @@
     }
   };
 
-  const schedule = () => {
-    if (ready || started || saveData || coarsePointer.matches || smallViewport.matches) return;
-    if (window.OKAgencyMotion?.isPaused()) return;
-
-    const begin = () => start();
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(begin, { timeout: 5000 });
-    } else {
-      window.setTimeout(begin, 3500);
-    }
-  };
-
   const ensureBeforeActivation = (event) => {
     if (ready) return;
     if (automaticEffectsDisabled() || window.OKAgencyMotion?.isPaused()) {
@@ -103,7 +91,6 @@
   trigger?.addEventListener("focus", ensureBeforeActivation, { once: true });
   trigger?.addEventListener("click", ensureBeforeActivation, { capture: true });
 
-  window.addEventListener("load", schedule, { once: true });
   window.addEventListener("okagency:motionchange", (event) => {
     if (event.detail?.paused) {
       if (!ready) document.documentElement.dataset.heroEffects = "disabled";
@@ -112,6 +99,5 @@
     if (!automaticEffectsDisabled() && !ready) {
       delete document.documentElement.dataset.heroEffects;
     }
-    schedule();
   });
 })();

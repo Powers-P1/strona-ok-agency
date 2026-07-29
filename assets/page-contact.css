@@ -126,6 +126,7 @@ a { color: inherit; }
   display: grid;
   grid-template-columns: minmax(560px, 43.5%) 1fr;
   min-height: 100svh;
+  background-color: #f6dac2;
 }
 
 /* ---------- kolumna formularza ---------- */
@@ -174,7 +175,7 @@ a { color: inherit; }
   line-height: .98;
   letter-spacing: -.01em;
 }
-.page-title .accent { display: block; color: var(--pink); }
+.page-title .accent { display: block; color: #b52454; }
 .page-title .mask { display: block; overflow: visible; padding-bottom: .1em; margin-bottom: -.1em; }
 .page-title .line { display: block; }
 
@@ -225,7 +226,12 @@ a { color: inherit; }
 }
 
 .field { position: relative; display: flex; flex-direction: column; }
-.field--wide { grid-column: 1 / -1; }
+.field--wide { grid-column: 1 / -1; min-width: 0; }
+
+.cf-turnstile {
+  width: 100%;
+  min-width: 0;
+}
 
 .field label {
   font-size: 13.5px;
@@ -751,6 +757,11 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   }
   .copy-address { width: 100%; }
   .state-link { width: fit-content; }
+}
+
+@media (max-width: 360px) {
+  :root { --gutter: 10px; }
+  .panel { padding-right: var(--gutter); }
 }
 
 @media (min-width: 1025px) and (max-height: 850px) {

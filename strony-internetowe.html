@@ -68,7 +68,18 @@
       ]
     }
   </script>
-  <link rel="preload" as="image" href="assets/services/web/web-art-opening-v1.webp" type="image/webp">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://okagency.pl/" },
+        { "@type": "ListItem", "position": 2, "name": "Oferta", "item": "https://okagency.pl/menu" },
+        { "@type": "ListItem", "position": 3, "name": "Strony internetowe", "item": "https://okagency.pl/strony-internetowe" }
+      ]
+    }
+  </script>
+  <link rel="preload" as="image" href="assets/services/web/web-art-opening-v1-1280.webp" type="image/webp" imagesrcset="assets/services/web/web-art-opening-v1-960.webp 960w, assets/services/web/web-art-opening-v1-1280.webp 1280w, assets/services/web/web-art-opening-v1.webp 1672w" imagesizes="100vw">
   <link rel="stylesheet" href="assets/services/web/styles.css">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/story-standard.css">
@@ -76,7 +87,7 @@
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
   <link rel="stylesheet" href="/assets/fonts.css">
-  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-3">
   <script src="/assets/motion-control.js"></script>
 </head>
 <body class="web-service">
@@ -88,6 +99,8 @@
         <img
           class="campaign-art"
           src="assets/services/web/web-art-opening-v1.webp"
+          srcset="assets/services/web/web-art-opening-v1-960.webp 960w, assets/services/web/web-art-opening-v1-1280.webp 1280w, assets/services/web/web-art-opening-v1.webp 1672w"
+          sizes="100vw"
           width="1672"
           height="941"
           alt=""
@@ -106,7 +119,7 @@
 
         <header class="site-header site-header-light">
           <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
+            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
           </a>
           <nav aria-label="Główna nawigacja">
             <a href="/menu" data-nav-link="offer">Oferta</a>
@@ -192,10 +205,13 @@
         <img
           class="campaign-art"
           src="assets/services/web/web-art-architecture-v1.webp"
+          srcset="assets/services/web/web-art-architecture-v1-960.webp 960w, assets/services/web/web-art-architecture-v1-1280.webp 1280w, assets/services/web/web-art-architecture-v1.webp 1672w"
+          sizes="100vw"
           width="1672"
           height="941"
           alt=""
           loading="lazy"
+          decoding="async"
         >
 
         <svg class="energy-shimmer" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
@@ -211,7 +227,7 @@
 
         <header class="site-header site-header-dark">
           <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency">
+            <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
           </a>
           <nav aria-label="Główna nawigacja">
             <a href="/menu" data-nav-link="offer">Oferta</a>
@@ -295,17 +311,20 @@
         <img
           class="campaign-art"
           src="assets/services/web/web-art-foundation-v1.webp"
+          srcset="assets/services/web/web-art-foundation-v1-960.webp 960w, assets/services/web/web-art-foundation-v1-1280.webp 1280w, assets/services/web/web-art-foundation-v1.webp 1672w"
+          sizes="100vw"
           width="1672"
           height="941"
           alt=""
           loading="lazy"
+          decoding="async"
         >
 
         <span class="proof-bloom" aria-hidden="true"></span>
 
         <header class="site-header site-header-light">
           <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
+            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
           </a>
           <nav aria-label="Główna nawigacja">
             <a href="/menu" data-nav-link="offer">Oferta</a>
@@ -407,7 +426,7 @@
         </article>
       </div>
 
-      <div class="decision-guide__faq" aria-labelledby="web-faq-title">
+      <section class="decision-guide__faq" aria-labelledby="web-faq-title">
         <h2 id="web-faq-title">Najczęstsze pytania</h2>
         <details>
           <summary>Ile trwa przygotowanie strony internetowej?</summary>
@@ -421,7 +440,7 @@
           <summary>Co dokładnie otrzymuję po publikacji?</summary>
           <p>Uzgodnioną architekturę i treść, projekt responsywny, wdrożenie, CMS w ustalonym zakresie, podstawy SEO i analityki, testy kluczowych ścieżek oraz gotowy do publikacji serwis.</p>
         </details>
-      </div>
+      </section>
     </section>
   </main>
   <div data-site-footer></div>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pl">
+<meta charset="utf-8">
+<title>OK Agency site QA</title>
+<style>
+  body { font: 14px monospace; }
+  iframe { position: absolute; left: -10000px; top: 0; height: 900px; border: 0; }
+</style>
+<p id="status">start</p>
+<pre id="report"></pre>
+<script>
+  const defaultRoutes = [
+    "/", "/menu", "/strony-internetowe", "/social-media", "/kampanie",
+    "/diagnoza", "/proces", "/o-nas", "/kontakt", "/polityka-prywatnosci",
+    "/dostepnosc", "/404.html",
+  ];
+  const focusedRoutes = new URLSearchParams(location.search).get("routes");
+  const routes = focusedRoutes ? focusedRoutes.split(",") : defaultRoutes;
+  const widths = [320, 360, 390, 1440];
+  const results = [];
+  const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const loadFrame = (route, width, source, axeSource) => new Promise(resolve => {
+    const frame = document.createElement("iframe");
+    frame.width = width;
+    frame.title = `${route} ${width}`;
+    const finish = () => resolve(frame);
+    const timer = setTimeout(finish, 8000);
+    frame.addEventListener("load", () => {
+      clearTimeout(timer);
+      finish();
+    }, { once: true });
+    const base = new URL(route, location.origin).href;
+    frame.srcdoc = source
+      .replace(/<head>/i, `<head><base href="${base}">`)
+      .replace(/<\/head>/i, `<script>${axeSource}<\/script></head>`);
+    document.body.append(frame);
+  });
+
+  (async () => {
+    const axeSource = (await fetch("/node_modules/axe-core/axe.min.js").then(response => response.text()))
+      .replace(/<\/script/gi, "<\\/script");
+    for (const route of routes) {
+      document.querySelector("#status").textContent = `test ${route}`;
+      const source = await fetch(route).then(response => response.text());
+      const frames = await Promise.all(widths.map(width => loadFrame(route, width, source, axeSource)));
+      await wait(1400);
+      for (const frame of frames) {
+        const width = Number(frame.width);
+        const document = frame.contentDocument;
+        const root = document.documentElement;
+        let axeViolations = null;
+        if (width === 320 || width === 1440) {
+          const axeResult = await frame.contentWindow.axe.run(document, {
+            runOnly: {
+              type: "tag",
+              values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"],
+            },
+          });
+          axeViolations = axeResult.violations.map(violation => ({
+            id: violation.id,
+            nodes: violation.nodes.length,
+            details: violation.nodes.map(node => ({
+              target: node.target,
+              html: node.html,
+              failureSummary: node.failureSummary,
+            })),
+          }));
+        }
+        const aboutCtas = [];
+        if (route === "/o-nas") {
+          for (const button of document.querySelectorAll("main [data-go]")) {
+            button.click();
+            await wait(80);
+            aboutCtas.push({
+              target: button.dataset.go,
+              hash: frame.contentWindow.location.hash,
+              current: document.querySelector('.scene-nav [aria-current="true"]')?.dataset.go,
+            });
+          }
+        }
+        results.push({
+          route,
+          width,
+          innerWidth: frame.contentWindow.innerWidth,
+          scrollWidth: root.scrollWidth,
+          h1: document.querySelectorAll("h1").length,
+          main: Boolean(document.querySelector("main")),
+          axeViolations,
+          aboutCtas,
+        });
+      }
+      frames.forEach(frame => frame.remove());
+      document.querySelector("#report").textContent = JSON.stringify(results);
+    }
+    document.querySelector("#status").textContent = "done";
+  })().catch(error => {
+    document.querySelector("#status").textContent = `error: ${error.message}`;
+    document.querySelector("#report").textContent = JSON.stringify(results);
+  });
+</script>
+</html>

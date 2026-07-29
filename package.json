@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "check:quality": "node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs",
+    "check:quality": "node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs && node scripts/check-about-navigation.mjs",
     "check:pages-functions": "wrangler pages functions build functions --outfile dist/pages-worker.js",
     "check:worker": "wrangler deploy --config wrangler.contact.jsonc --dry-run --outdir dist/worker-dry-run",
     "prebuild": "npm run check:links && npm run check:quality",
@@ -16,6 +16,7 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "axe-core": "^4.12.1",
     "wrangler": "^4.115.0"
   }
 }

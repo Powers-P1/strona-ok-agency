@@ -67,11 +67,13 @@ for (const file of publicFiles) {
   }
 
   const jsonBlocks = [...source.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  const schemaNodes = [];
   if (!jsonBlocks.length) failures.push(`${file}: brak JSON-LD`);
   for (const [, json] of jsonBlocks) {
     try {
       const parsed = JSON.parse(json);
       const nodes = Array.isArray(parsed?.["@graph"]) ? parsed["@graph"] : [parsed];
+      schemaNodes.push(...nodes);
       for (const node of nodes) {
         if (node?.["@type"] !== "FAQPage") continue;
         for (const question of node.mainEntity || []) {
@@ -84,12 +86,63 @@ for (const file of publicFiles) {
     }
   }
 
+  if (file !== "index.html") {
+    const breadcrumbs = schemaNodes.find(node => node?.["@type"] === "BreadcrumbList");
+    const items = breadcrumbs?.itemListElement || [];
+    if (!breadcrumbs) {
+      failures.push(`${file}: brak BreadcrumbList`);
+    } else {
+      if (items[0]?.item !== "https://okagency.pl/") failures.push(`${file}: BreadcrumbList nie zaczyna się od strony głównej`);
+      if (items.at(-1)?.item !== expectedUrl) failures.push(`${file}: BreadcrumbList nie kończy się bieżącym adresem`);
+      if (items.some((item, index) => item?.position !== index + 1)) failures.push(`${file}: nieciągłe pozycje BreadcrumbList`);
+    }
+  }
+
+  const imageTags = [...source.matchAll(/<img\b[^>]*>/gis)].map(match => match[0]);
+  for (const image of imageTags) {
+    if (!/\bwidth=["'][^"']+["']/i.test(image) || !/\bheight=["'][^"']+["']/i.test(image)) {
+      failures.push(`${file}: obraz bez jawnych wymiarów`);
+    }
+  }
+
   if (!/href=["']\/assets\/fonts\.css["']/i.test(source)) failures.push(`${file}: brak lokalnych fontów`);
-  if (!/href=["']\/assets\/site-enhancements\.css["']/i.test(source)) failures.push(`${file}: brak warstwy dostępności`);
+  if (!/href=["']\/assets\/site-enhancements\.css(?:\?[^"']*)?["']/i.test(source)) failures.push(`${file}: brak warstwy dostępności`);
   if (!/rel=["']icon["']/i.test(source)) failures.push(`${file}: brak jawnej ikony strony`);
   if (/href=["'][^"']*\.html(?:[?#"'])/i.test(source)) failures.push(`${file}: wewnętrzny link zawiera .html`);
   if (/fonts\.(?:googleapis|gstatic)\.com/i.test(source)) failures.push(`${file}: zewnętrzne Google Fonts`);
   if (/\[(?:DO UZUPEŁNIENIA|UZUPEŁNIJ)[^\]]*\]|TODO|FIXME/i.test(source)) failures.push(`${file}: znacznik roboczy`);
+
+  if (file === "index.html") {
+    const homeIntro = source.match(/<section class=["']home-intro["'][\s\S]*?<\/section>/i)?.[0] || "";
+    const homeIntroText = decodeEntities(homeIntro.replace(/<[^>]+>/g, " "));
+    const homeIntroWords = homeIntroText.match(/\p{L}[\p{L}\p{M}’'-]*/gu) || [];
+    if (homeIntroWords.length < 150 || homeIntroWords.length > 250) {
+      failures.push(`${file}: blok home-intro ma ${homeIntroWords.length} słów zamiast 150–250`);
+    }
+  }
+
+  if (["strony-internetowe.html", "social-media.html", "kampanie.html"].includes(file)) {
+    if (!/<section\b[^>]*class=["'][^"']*\bdecision-guide__faq\b[^"']*["'][^>]*aria-labelledby=/i.test(source)) {
+      failures.push(`${file}: FAQ nie jest semantyczną sekcją`);
+    }
+    for (const image of imageTags.filter(tag => /\bclass=["'][^"']*\bcampaign-art\b/i.test(tag))) {
+      if (!/\bsrcset=["'][^"']+["']/i.test(image) || !/\bsizes=["'][^"']+["']/i.test(image)) {
+        failures.push(`${file}: grafika usługi nie ma responsywnego srcset i sizes`);
+      }
+    }
+  }
+
+  if (file === "kontakt.html" && !/<div\b[^>]*class=["'][^"']*\bcf-turnstile\b[^"']*["'][^>]*data-size=["']flexible["']/i.test(source)) {
+    failures.push(`${file}: Turnstile nie używa wariantu flexible`);
+  }
+
+  if (file === "o-nas.html") {
+    for (const target of ["1", "2", "3"]) {
+      if (!new RegExp(`<button\\b[^>]*data-go=["']${target}["'][^>]*>`, "i").test(source)) {
+        failures.push(`${file}: brak głównego CTA data-go="${target}"`);
+      }
+    }
+  }
 }
 
 for (const url of sitemapUrls) {
@@ -107,6 +160,7 @@ const requiredFiles = [
   "llms-full.txt",
   "assets/fonts.css",
   "assets/motion-control.js",
+  "assets/editorial-atelier-scene-v1-1280.avif",
   "dostepnosc.html",
 ];
 for (const path of requiredFiles) {

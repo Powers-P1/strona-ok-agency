@@ -67,15 +67,23 @@
     }
   </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link
+    rel="preload"
+    as="image"
+    type="image/avif"
+    imagesrcset="assets/editorial-atelier-scene-v1-640.avif 640w, assets/editorial-atelier-scene-v1-960.avif 960w, assets/editorial-atelier-scene-v1-1280.avif 1280w"
+    imagesizes="(max-width: 640px) 173vw, (max-width: 1024px) 132vw, 100vw"
+    fetchpriority="high"
+  >
   <link rel="prefetch" href="/menu">
   <link rel="prefetch" href="/kontakt">
-  <link rel="stylesheet" href="assets/page-home.css?v=20260729-2">
+  <link rel="stylesheet" href="assets/page-home.css?v=20260729-3">
 <link rel="stylesheet" href="assets/route-motion.css">
 <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
   <link rel="stylesheet" href="assets/site-navigation.css">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
   <link rel="stylesheet" href="/assets/fonts.css">
-  <link rel="stylesheet" href="/assets/site-enhancements.css">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-3">
   <script src="/assets/motion-control.js"></script>
 </head>
 <body class="home-page">
@@ -85,7 +93,7 @@
       <div class="grid" aria-hidden="true"></div>
       <header class="topbar">
         <a href="/" aria-label="OK Agency — strona główna">
-          <img class="wordmark" src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency">
+          <img class="wordmark" src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
         </a>
         <nav class="nav" aria-label="Główna nawigacja">
           <a class="route-link" href="/menu" data-nav-link="offer">Oferta</a>
@@ -97,6 +105,15 @@
       <div class="art-stage" aria-hidden="true">
         <div class="image-rig" id="image-rig">
           <picture class="scene-picture">
+            <source
+              type="image/avif"
+              srcset="
+                assets/editorial-atelier-scene-v1-640.avif 640w,
+                assets/editorial-atelier-scene-v1-960.avif 960w,
+                assets/editorial-atelier-scene-v1-1280.avif 1280w
+              "
+              sizes="(max-width: 640px) 173vw, (max-width: 1024px) 132vw, 100vw"
+            >
             <source
               type="image/webp"
               srcset="
@@ -115,6 +132,7 @@
               width="1280"
               height="720"
               fetchpriority="high"
+              decoding="async"
             >
           </picture>
           <div class="stone-contact" aria-hidden="true"></div>
@@ -145,10 +163,42 @@
         <p class="anchor-spec">Korzeń konstrukcyjny · 42 mm wewnątrz odlewu</p>
         <button class="back" id="back" type="button">← Wróć do całości</button>
       </section>
+      </section>
+
+    <section class="home-intro" aria-labelledby="home-intro-title">
+      <div class="home-intro__inner">
+        <p class="home-intro__eyebrow">Strategia · komunikacja · wdrożenie</p>
+        <h2 id="home-intro-title">Marketing, który prowadzi do właściwej decyzji.</h2>
+
+        <div class="home-intro__copy">
+          <p>OK Agency to agencja marketingowa dla małych i średnich firm. Pomagamy uporządkować ofertę, komunikację i drogę klienta, zanim powstaną kolejne ekrany, posty albo reklamy. Dzięki temu projekt nie zaczyna się od przypadkowej kreacji, lecz od odpowiedzi na pytanie: co ma zrozumieć i zrobić właściwy odbiorca?</p>
+          <p>Pracujemy zdalnie w całej Polsce. Łączymy strategię, treść, design i technologię w jeden proces, prowadzony przez jedną osobę. Zakres dobieramy do realnego problemu firmy: od miejsca, które wyjaśnia ofertę, przez regularną komunikację, po płatną dystrybucję i pomiar rezultatów.</p>
+        </div>
+
+        <nav class="home-services" aria-label="Główne usługi OK Agency">
+          <a href="/strony-internetowe">
+            <span>01</span>
+            <strong>Strony internetowe</strong>
+            <p>Strategia, architektura, treść, projekt i wdrożenie serwisu, który prowadzi użytkownika do decyzji.</p>
+          </a>
+          <a href="/social-media">
+            <span>02</span>
+            <strong>Social media</strong>
+            <p>Kierunek komunikacji, plan treści, copy, kreacje i wnioski układane w stały, mierzalny rytm.</p>
+          </a>
+          <a href="/kampanie">
+            <span>03</span>
+            <strong>Kampanie płatne</strong>
+            <p>Meta Ads i Google Ads oparte na konkretnym celu, gotowej ścieżce i poprawnie skonfigurowanym pomiarze.</p>
+          </a>
+        </nav>
+
+        <p class="home-intro__trust">Każdy projekt prowadzi Oliwia Karolewska, która zna kontekst i odpowiada za całość. Specjaliści są dobierani do rzeczywistego zadania, a nie odwrotnie. <a href="/o-nas">Poznaj model pracy OK Agency</a>.</p>
+      </div>
     </section>
   </main>
   <div data-site-footer></div>
-  <script src="assets/tree-map-loader.js?v=20260729-2"></script>
+  <script src="assets/tree-map-loader.js?v=20260729-3"></script>
   <script src="assets/site-footer.js?v=20260729-2"></script>
   <script src="assets/page-home.js"></script>
   <script src="assets/navigation.js?v=20260729-2"></script>

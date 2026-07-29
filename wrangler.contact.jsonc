@@ -16,7 +16,7 @@
     }
   ],
   "vars": {
-    "CONTACT_FROM": "formularz@okagency.pl",
+    "CONTACT_FROM": "formularz@ok-agency.pl",
     "CONTACT_TO": "hello@okagency.pl",
     "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl"
   },
@@ -24,7 +24,7 @@
     {
       "name": "SEND_EMAIL",
       "destination_address": "hello@okagency.pl",
-      "allowed_sender_addresses": ["formularz@okagency.pl"]
+      "allowed_sender_addresses": ["formularz@ok-agency.pl"]
     }
   ],
   "observability": {

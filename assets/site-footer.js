@@ -65,7 +65,7 @@
 
         <address class="site-footer__contact">
           <h2 class="site-footer__heading">Kontakt</h2>
-          <a class="site-footer__email" href="mailto:kontakt@okagency.pl">kontakt@okagency.pl</a>
+          <a class="site-footer__email" href="mailto:hello@okagency.pl">hello@okagency.pl</a>
           <p class="site-footer__work-mode">Zdalnie / cała Polska</p>
         </address>
       </div>

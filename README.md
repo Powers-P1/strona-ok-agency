@@ -5,7 +5,8 @@ Oficjalny, wielostronicowy serwis OK Agency publikowany pod
 
 ## Praca lokalna
 
-Wymagany jest Node.js 22 lub nowszy.
+Lokalnie wymagany jest Node.js 22 lub nowszy. Cloudflare Pages buduje stronę
+na Node.js 24 zgodnie z `.nvmrc`.
 
 ```powershell
 npm install
@@ -21,12 +22,16 @@ npm run check:links
 npm run build
 ```
 
-Polecenie `build` przygotowuje w `dist/` wyłącznie pliki publikowane przez
-GitHub Pages. Materiały robocze i mockupy nie trafiają do repozytorium ani na
-serwer produkcyjny.
+Polecenie `build` przygotowuje w `dist/` wyłącznie pliki produkcyjne oraz
+konfigurację Cloudflare Pages z `_headers` i `_redirects`.
 
 ## Publikacja
 
-Zmiany na gałęzi `main` są automatycznie sprawdzane i wdrażane przez GitHub
-Actions. Domena `okagency.pl` korzysta z DNS Cloudflare i wskazuje na GitHub
-Pages.
+Cloudflare Pages jest połączone z repozytorium GitHub:
+
+- push do `main` uruchamia produkcyjny build i deploy,
+- pozostałe gałęzie oraz pull requesty otrzymują wdrożenia podglądowe,
+- polecenie budowania: `npm run build`,
+- katalog wynikowy: `dist`.
+
+Konfiguracja projektu dla Wranglera znajduje się w `wrangler.jsonc`.

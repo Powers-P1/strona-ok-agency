@@ -9,7 +9,7 @@
 (() => {
   "use strict";
 
-  const PIXEL_ID = "PIXEL_ID";            // ← META PIXEL ID
+  const PIXEL_ID = "1057817209974571";    // ← META PIXEL ID
   const AW_ID = "AW-CONVERSION";          // ← GOOGLE ADS ID
   const AW_LABEL_LEAD = "AW_LABEL_LEAD";  // ← etykieta: wysłanie formularza
   const AW_LABEL_DIAG = "AW_LABEL_DIAG";  // ← etykieta: ukończenie diagnozy

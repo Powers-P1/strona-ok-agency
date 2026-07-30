@@ -96,11 +96,11 @@ body.home-page {
   }
 
   /*
-    The branch map belongs to the horizontal master and would no longer align
-    with either recomposed sculpture. Keep the baked highlights; retain the
-    correctly positioned neural activity only on the portrait base.
+    The decorative contact shadow belongs to the horizontal master. The branch
+    canvas stays active because tree-energy.js registers its master map to the
+    compact and portrait sculpture compositions.
   */
-  .home-page .hero[data-ok-safe-mobile-hero] :is(.light-canvas, .stone-contact) {
+  .home-page .hero[data-ok-safe-mobile-hero] .stone-contact {
     display: none;
   }
 

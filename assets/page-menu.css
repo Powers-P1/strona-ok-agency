@@ -8,6 +8,7 @@
   --card-inset: clamp(26px, 4.66vw, 78px);
   --header-height: clamp(112px, 14.5vh, 136px);
   --ease: cubic-bezier(.16, 1, .3, 1);
+  --entry-ease: cubic-bezier(.22, .72, .18, 1);
 }
 
 * { box-sizing: border-box; }
@@ -284,14 +285,14 @@ main {
 .js .site-header { opacity: 0; transform: translateY(-10px); }
 .js .is-ready .site-header {
   opacity: 1; transform: none;
-  transition: opacity .7s var(--ease) .12s, transform .8s var(--ease) .12s;
+  transition: opacity .62s var(--entry-ease) .04s, transform .7s var(--entry-ease) .04s;
 }
 
 .js .page-title .mask { overflow: hidden; }
 .js .page-title .line { transform: translateY(112%); }
 .js .is-ready .page-title .line {
   transform: none;
-  transition: transform 1s var(--ease) calc(.22s + var(--d, 0s));
+  transition: transform .9s var(--entry-ease) calc(.08s + var(--d, 0s));
 }
 .js .is-settled .page-title .mask,
 html[data-motion="paused"] .page-title .mask { overflow: visible; }
@@ -300,16 +301,16 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .js .is-ready .card {
   opacity: 1; transform: none;
   transition:
-    opacity .8s var(--ease) calc(.48s + var(--i) * .1s),
-    transform 1s var(--ease) calc(.48s + var(--i) * .1s);
+    opacity .68s var(--entry-ease) calc(.16s + var(--i) * .07s),
+    transform .88s var(--entry-ease) calc(.16s + var(--i) * .07s);
 }
 
 .js .card-img img { transform: scale(1.13); filter: blur(6px) brightness(1.06); }
 .js .is-ready .card-img img {
   transform: scale(1.05); filter: none;
   transition:
-    transform 1.25s var(--ease) calc(.5s + var(--i) * .1s),
-    filter 1.1s var(--ease) calc(.5s + var(--i) * .1s);
+    transform 1.1s var(--entry-ease) calc(.2s + var(--i) * .07s),
+    filter .95s var(--entry-ease) calc(.2s + var(--i) * .07s);
 }
 .js .is-ready.is-settled .card-img img {
   transition: transform .5s var(--ease), filter .5s var(--ease);
@@ -318,13 +319,13 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .js .card-num::after { transform: scaleX(0); }
 .js .is-ready .card-num::after {
   transform: scaleX(1);
-  transition: transform .6s var(--ease) calc(.85s + var(--i) * .1s), width .55s var(--ease);
+  transition: transform .6s var(--entry-ease) calc(.48s + var(--i) * .07s), width .55s var(--ease);
 }
 
 .js .cards-note { opacity: 0; }
 .js .is-ready .cards-note {
   opacity: 1;
-  transition: opacity .8s var(--ease) 1.05s;
+  transition: opacity .7s var(--entry-ease) .65s;
 }
 
 /* ---------- wyjście ze strony ---------- */

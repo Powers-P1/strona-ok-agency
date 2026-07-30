@@ -76,6 +76,18 @@
   filter: blur(3px);
 }
 
+.hero.is-route-leaving .detail {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 8px, 0) scale(.992);
+  filter: blur(3px);
+  transition:
+    opacity .28s var(--ok-motion-standard),
+    transform .48s var(--ok-motion-spring),
+    filter .4s var(--ok-motion-standard),
+    visibility 0s;
+}
+
 .hero.is-route-leaving .image-rig {
   will-change: transform, opacity, filter;
   opacity: .68;
@@ -157,6 +169,7 @@
 
   .hero .topbar,
   .hero .copy,
+  .hero .detail,
   .hero .image-rig,
   .hero::after {
     transition: none;

@@ -636,7 +636,7 @@ canvas {
 
   .home-page .copy h1 {
     max-width: 6.8ch;
-    font-size: clamp(68px, min(8.5vw, 8svh), 84px);
+    font-size: clamp(68px, min(10.5vw, 12.5svh), 120px);
     line-height: .78;
   }
 
@@ -696,5 +696,45 @@ canvas {
   .home-page .hero[data-ok-safe-compact-density="condensed"] .cta {
     margin-top: .45rem;
     padding-block: .72rem;
+  }
+}
+
+/*
+  A tall desktop uses the compact artwork, but it must retain desktop type
+  hierarchy. The generic stacked values above are intentionally tablet-sized;
+  this ratio-specific layer keeps the headline and supporting copy visually
+  proportional on large windows without changing the mobile composition.
+*/
+@media (min-width: 1181px) and (max-aspect-ratio: 4 / 3) {
+  .home-page .copy {
+    max-width: min(46rem, calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
+  .home-page .scene-label {
+    margin-bottom: clamp(1rem, 1.6svh, 1.35rem);
+    font-size: clamp(.8rem, 1vw, 1rem);
+  }
+
+  .home-page .copy h1 {
+    font-size: clamp(7.5rem, min(12.5vw, 12.5svh), 11.25rem);
+  }
+
+  .home-page .descriptor {
+    max-width: 38rem;
+    margin-top: clamp(.8rem, 1.3svh, 1.1rem);
+    font-size: clamp(.95rem, 1.2vw, 1.1rem);
+  }
+
+  .home-page .value-lead {
+    max-width: 42rem;
+    margin-top: clamp(.45rem, .8svh, .7rem);
+    font-size: clamp(1rem, 1.25vw, 1.15rem);
+  }
+
+  .home-page .cta {
+    min-width: clamp(19rem, 22vw, 22rem);
+    margin-top: clamp(1rem, 1.7svh, 1.4rem);
+    padding-block: clamp(1rem, 1.6svh, 1.25rem);
+    font-size: clamp(.9rem, 1.05vw, 1rem);
   }
 }

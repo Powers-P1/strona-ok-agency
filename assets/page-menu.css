@@ -477,6 +477,57 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
     height: 100dvh;
     min-height: 0;
   }
+
+  .menu-page .menu-stage .page-title {
+    margin-top: clamp(24px, 4vh, 40px);
+    margin-bottom: clamp(12px, 2vh, 18px);
+    font-size: clamp(82px, 10svh, 112px);
+  }
+
+  .menu-page .menu-stage .offer-intro {
+    padding-bottom: clamp(14px, 2vh, 20px);
+  }
+
+  .menu-page .menu-stage .offer-intro p {
+    font-size: clamp(14px, 1.15vw, 17px);
+    line-height: 1.5;
+  }
+
+  .menu-page .menu-stage .card-img {
+    height: 40%;
+  }
+
+  .menu-page .menu-stage .card-text {
+    height: 60%;
+    padding-top: clamp(8px, 1.2vh, 14px);
+  }
+
+  .menu-page .menu-stage .card-title {
+    min-height: 1.9em;
+    margin-top: 10px;
+  }
+
+  .menu-page .menu-stage .card-quote {
+    min-height: 2.5em;
+    margin-top: 8px;
+    font-size: clamp(12.5px, 1.2svh, 14px);
+    line-height: 1.4;
+  }
+
+  .menu-page .menu-stage .card-effect {
+    margin-top: 8px;
+    font-size: clamp(11px, 1.1svh, 12.5px);
+  }
+
+  .menu-page .menu-stage .card-effect-desc {
+    margin-top: 4px;
+    font-size: clamp(12px, 1.2svh, 14px);
+    line-height: 1.4;
+  }
+
+  .menu-page .menu-stage .card-arrow {
+    padding-top: 8px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -501,9 +552,16 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 
 @media (min-width: 1101px) and (max-height: 800px) {
   .menu-page .menu-stage .page-title {
+    display: flex;
+    align-items: baseline;
+    gap: .22ch;
     margin-top: clamp(16px, 2.6vh, 22px);
     margin-bottom: clamp(12px, 2vh, 18px);
     font-size: clamp(72px, 11svh, 92px);
+    line-height: .82;
+  }
+  .menu-page .menu-stage .page-title .mask {
+    display: inline-block;
   }
   .menu-page .offer-intro {
     padding-bottom: clamp(10px, 1.8vh, 14px);

@@ -393,6 +393,7 @@
   const measureCards = () => {
     const cards = document.querySelector(".menu-page .cards");
     if (!cards) return;
+    if (document.fonts && document.fonts.status !== "loaded") return;
 
     const cardItems = [...cards.querySelectorAll(".card")];
     const menuStage = cards.closest(".menu-stage");

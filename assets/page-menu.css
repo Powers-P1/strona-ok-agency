@@ -150,6 +150,7 @@ main {
   margin-block: -.22em;
 }
 .page-title .line { display: block; }
+.page-title .title-accent { color: var(--pink); }
 
 /* ---------- karty ---------- */
 .cards {

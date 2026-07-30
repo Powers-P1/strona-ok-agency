@@ -607,3 +607,94 @@ canvas {
     transform: translate3d(0, 0, 0);
   }
 }
+
+/*
+  Homepage stacked state
+  ----------------------
+  This block intentionally lives last in the responsive type owner. It must
+  override the earlier min-width: 1025px desktop scale when the image has
+  already moved below the copy because of width or aspect ratio.
+*/
+@media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
+  .home-page .copy {
+    left: clamp(1.25rem, 4vw, 4rem);
+    right: clamp(1.25rem, 4vw, 4rem);
+    top: calc(var(--ok-nav-rail-height, 68px) + clamp(.45rem, 1svh, .8rem));
+    width: auto;
+    max-width: 38rem;
+  }
+
+  .home-page .scene-label {
+    gap: clamp(.6rem, 1.4vw, .85rem);
+    margin-bottom: clamp(.35rem, .8svh, .6rem);
+    font-size: clamp(.66rem, 1.2vw, .76rem);
+  }
+
+  .home-page .scene-label::before {
+    width: clamp(2.2rem, 4vw, 2.9rem);
+  }
+
+  .home-page .copy h1 {
+    max-width: 6.8ch;
+    font-size: clamp(64px, 7.5vw, 76px);
+    line-height: .78;
+  }
+
+  .home-page .descriptor {
+    max-width: 30rem;
+    margin-top: clamp(.4rem, .8svh, .65rem);
+    font-size: clamp(.8rem, 1.2vw, .9rem);
+    line-height: 1.45;
+  }
+
+  .home-page .value-lead {
+    max-width: 34rem;
+    margin-top: clamp(.2rem, .45svh, .35rem);
+    font-size: clamp(.8rem, 1.35vw, 1rem);
+    line-height: 1.45;
+  }
+
+  .home-page .cta {
+    margin-top: clamp(.45rem, .9svh, .7rem);
+    min-height: 48px;
+    padding-block: clamp(.72rem, 1.4svh, .9rem);
+    font-size: clamp(.8rem, 1.2vw, .9rem);
+  }
+
+  .home-page .detail {
+    left: clamp(1.25rem, 4vw, 4rem);
+    right: clamp(1.25rem, 4vw, 4rem);
+    top: calc(var(--ok-nav-rail-height, 68px) + clamp(.45rem, 1svh, .8rem));
+    width: auto;
+    max-width: 34rem;
+  }
+
+  .home-page .hero[data-ok-safe-compact-density="condensed"] .scene-label {
+    gap: .6rem;
+    margin-bottom: .35rem;
+    font-size: .66rem;
+  }
+
+  .home-page .hero[data-ok-safe-compact-density="condensed"] .scene-label::before {
+    width: 2.2rem;
+  }
+
+  .home-page .hero[data-ok-safe-compact-density="condensed"] .copy h1 {
+    font-size: 56px;
+  }
+
+  .home-page .hero[data-ok-safe-compact-density="condensed"] .descriptor {
+    margin-top: .4rem;
+    font-size: .8rem;
+  }
+
+  .home-page .hero[data-ok-safe-compact-density="condensed"] .value-lead {
+    margin-top: .2rem;
+    font-size: .8rem;
+  }
+
+  .home-page .hero[data-ok-safe-compact-density="condensed"] .cta {
+    margin-top: .45rem;
+    padding-block: .72rem;
+  }
+}

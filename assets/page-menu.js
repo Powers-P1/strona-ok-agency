@@ -44,7 +44,7 @@
       routing = true;
       document.body.classList.add("is-leaving");
       document.body.setAttribute("aria-busy", "true");
-      setTimeout(() => { location.href = target.href; }, 300);
+      setTimeout(() => { location.href = target.href; }, 560);
     });
   }
 })();

@@ -3,13 +3,18 @@
   cross-document transition so the end of the hero move and the first menu
   frame share one uninterrupted timeline.
 */
+:root {
+  --ok-motion-spring: cubic-bezier(.22, 1, .36, 1);
+  --ok-motion-standard: cubic-bezier(.4, 0, .2, 1);
+}
+
 @view-transition {
   navigation: auto;
 }
 
 ::view-transition-group(root) {
-  animation-duration: .72s;
-  animation-timing-function: cubic-bezier(.22, .72, .18, 1);
+  animation-duration: .76s;
+  animation-timing-function: var(--ok-motion-spring);
 }
 
 ::view-transition-image-pair(root) {
@@ -17,12 +22,12 @@
 }
 
 ::view-transition-old(root) {
-  animation: .72s cubic-bezier(.4, 0, .2, 1) both ok-view-old;
+  animation: .76s var(--ok-motion-standard) both ok-view-old;
   mix-blend-mode: normal;
 }
 
 ::view-transition-new(root) {
-  animation: .72s cubic-bezier(.22, .72, .18, 1) both ok-view-new;
+  animation: .76s var(--ok-motion-spring) both ok-view-new;
   mix-blend-mode: normal;
 }
 
@@ -35,16 +40,16 @@
 .hero .topbar,
 .hero .copy {
   transition:
-    opacity .34s cubic-bezier(.4, 0, 1, 1),
-    transform .52s cubic-bezier(.4, 0, .2, 1),
-    filter .4s cubic-bezier(.4, 0, .2, 1);
+    opacity .42s var(--ok-motion-standard),
+    transform .58s var(--ok-motion-spring),
+    filter .48s var(--ok-motion-standard);
 }
 
 .hero .image-rig {
   transition:
-    opacity .48s cubic-bezier(.4, 0, .2, 1),
-    transform .62s cubic-bezier(.32, .72, 0, 1),
-    filter .52s cubic-bezier(.4, 0, .2, 1);
+    opacity .5s var(--ok-motion-standard),
+    transform .66s var(--ok-motion-spring),
+    filter .54s var(--ok-motion-standard);
 }
 
 .hero::after {
@@ -59,28 +64,28 @@
     rgba(8, 21, 35, .22);
   backdrop-filter: blur(0);
   transition:
-    opacity .42s cubic-bezier(.4, 0, .2, 1),
-    backdrop-filter .5s cubic-bezier(.4, 0, .2, 1);
+    opacity .48s var(--ok-motion-standard),
+    backdrop-filter .56s var(--ok-motion-standard);
 }
 
 .hero.is-route-leaving .topbar,
 .hero.is-route-leaving .copy {
   will-change: transform, opacity, filter;
   opacity: 0;
-  transform: translate3d(0, -12px, 0) scale(.985);
-  filter: blur(5px);
+  transform: translate3d(0, -8px, 0) scale(.992);
+  filter: blur(3px);
 }
 
 .hero.is-route-leaving .image-rig {
   will-change: transform, opacity, filter;
-  opacity: .72;
-  transform: translate3d(1.2%, .7%, 0) scale(1.045);
-  filter: blur(6px) saturate(.92);
+  opacity: .68;
+  transform: translate3d(.7%, .35%, 0) scale(1.026);
+  filter: blur(3.5px) saturate(.95);
 }
 
 .hero.is-route-leaving::after {
   opacity: 1;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(2px);
 }
 
 .skip-link {
@@ -107,31 +112,38 @@
 @keyframes ok-view-old {
   from {
     opacity: 1;
+    transform: scale(1);
     filter: blur(0);
+  }
+  32% {
+    opacity: .96;
+    transform: scale(1.002);
+    filter: blur(.25px);
   }
   to {
     opacity: 0;
-    transform: scale(.988);
-    filter: blur(6px);
+    transform: scale(1.018);
+    filter: blur(4px);
   }
 }
 
 @keyframes ok-view-new {
   from {
-    opacity: .14;
-    transform: scale(1.012);
-    filter: blur(5px);
+    opacity: 0;
+    transform: translateY(9px) scale(.984);
+    filter: blur(3.5px);
   }
-  52% {
-    opacity: .82;
-    filter: blur(1.2px);
+  34% {
+    opacity: .48;
+    filter: blur(1.5px);
   }
-  78% {
+  74% {
     opacity: 1;
     filter: blur(0);
   }
   to {
-    transform: scale(1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

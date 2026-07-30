@@ -226,6 +226,7 @@
       } else {
         renderResult(calculateOutcome(answers));
         showAct("outcome");
+        window.okAnalytics?.diagnoza();
       }
       return;
     }

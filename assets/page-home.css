@@ -294,7 +294,7 @@ h1 span {
   background:
     linear-gradient(90deg, var(--pink), var(--cream), var(--pink));
   background-size: 220% 100%;
-  animation: charge-cta 1.15s ease-in-out infinite;
+  animation: charge-cta 1.15s ease-in-out infinite alternate;
 }
 
 .cta.is-charging::after {

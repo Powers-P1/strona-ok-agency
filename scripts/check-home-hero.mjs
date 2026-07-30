@@ -176,6 +176,20 @@ if (/addEventListener\("(?:pointerenter|focus)"[\s\S]{0,120}\{\s*once:\s*true/.t
 }
 requireText(energy, "pixelBudgetDpr", "canvas nie ma adaptacyjnego budżetu pikseli");
 
+requireText(energy, "responsiveArtMaps", "canvas impulsow nie ma map responsywnych kompozycji");
+requireText(energy, 'sourceMatch: "editorial-atelier-scene-compact-v2"', "canvas impulsow nie obsluguje kompozycji 4:3");
+requireText(energy, 'sourceMatch: "editorial-atelier-scene-mobile-v1"', "canvas impulsow nie obsluguje kompozycji portretowej");
+requireText(energy, "syncArtTransform();", "canvas impulsow nie synchronizuje transformacji po resize");
+requireText(energy, 'sculpture.addEventListener("load", resizeCanvas)', "canvas impulsow nie reaguje na podmiane obrazu");
+const responsiveSafetyCss = await read("assets/responsive-safety.css");
+if (
+  /data-ok-safe-mobile-hero[^}]*light-canvas[^}]*display:\s*none/s.test(
+    responsiveSafetyCss,
+  )
+) {
+  failures.push("responsywna warstwa bezpieczenstwa nie moze ukrywac impulsow drzewa");
+}
+
 if (failures.length) {
   console.error(`Błędy hero (${failures.length}):`);
   failures.forEach(failure => console.error(`- ${failure}`));

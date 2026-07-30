@@ -63,6 +63,35 @@
   const speedByKind = { root: 250, trunk: 285, branch: 360, twig: 430 };
   const widthByKind = { root: 5.2, trunk: 4.5, branch: 3.2, twig: 2.15 };
   const depthAlpha = { front: 1, mid: .79, back: .56 };
+  /*
+   * Responsive hero plates use the same sculpture as the 1672 x 941 master,
+   * but recompose it inside 4:3 and portrait canvases. These registrations map
+   * master-image pixels into the native pixels of each responsive plate.
+   */
+  const responsiveArtMaps = [
+    {
+      id: "compact",
+      sourceMatch: "editorial-atelier-scene-compact-v2",
+      image: { width: 1448, height: 1086 },
+      registration: {
+        scaleX: .6084,
+        scaleY: .632,
+        offsetX: 249.7,
+        offsetY: 478.2
+      }
+    },
+    {
+      id: "portrait",
+      sourceMatch: "editorial-atelier-scene-mobile-v1",
+      image: { width: 941, height: 1672 },
+      registration: {
+        scaleX: .7149,
+        scaleY: .7251,
+        offsetX: -270.3,
+        offsetY: 841
+      }
+    }
+  ];
   const idleIntervals = [1.7, 3.8, 2.25, 4.55, 1.9, 3.05, 2.6, 4.2, 2.05, 3.45, 1.8, 4.75];
   const groupOrder = [2, 0, 4, 1, 5, 3, 2, 5, 0, 4, 1, 3];
   const bloomMeta = {
@@ -122,6 +151,13 @@
   let stoneEdgeCache = new Map();
   let stoneRoutes = [];
   let stoneSprites = {};
+  let artTransform = {
+    id: "desktop",
+    scaleX: 1,
+    scaleY: 1,
+    offsetX: 0,
+    offsetY: 0
+  };
   const stoneDirectionCounts = { forward: 0, reverse: 0 };
 
   emissiveMap.decoding = "async";
@@ -606,6 +642,80 @@
 
   function mapPoint(point) {
     return [point[0] * cssWidth, point[1] * cssHeight];
+  }
+
+  function objectPositionFraction(value, axis) {
+    const parts = String(value || "").trim().split(/\s+/);
+    const token = parts[axis] || parts[0] || "50%";
+    const keywords = {
+      left: 0,
+      top: 0,
+      center: .5,
+      right: 1,
+      bottom: 1
+    };
+    if (token in keywords) return keywords[token];
+    const match = token.match(/^(-?\d+(?:\.\d+)?)%$/);
+    return match ? Number(match[1]) / 100 : .5;
+  }
+
+  function syncArtTransform() {
+    const currentSource = sculpture.currentSrc || sculpture.src || "";
+    const preset = responsiveArtMaps.find(({ sourceMatch }) => (
+      currentSource.includes(sourceMatch)
+    ));
+
+    if (!preset || !cssWidth || !cssHeight) {
+      artTransform = {
+        id: "desktop",
+        scaleX: 1,
+        scaleY: 1,
+        offsetX: 0,
+        offsetY: 0
+      };
+      canvas.dataset.artMode = artTransform.id;
+      return;
+    }
+
+    const style = getComputedStyle(sculpture);
+    const fitScale = style.objectFit === "contain"
+      ? Math.min(
+          cssWidth / preset.image.width,
+          cssHeight / preset.image.height
+        )
+      : Math.max(
+          cssWidth / preset.image.width,
+          cssHeight / preset.image.height
+        );
+    const renderedWidth = preset.image.width * fitScale;
+    const renderedHeight = preset.image.height * fitScale;
+    const objectLeft = (
+      cssWidth - renderedWidth
+    ) * objectPositionFraction(style.objectPosition, 0);
+    const objectTop = (
+      cssHeight - renderedHeight
+    ) * objectPositionFraction(style.objectPosition, 1);
+
+    artTransform = {
+      id: preset.id,
+      scaleX:
+        preset.registration.scaleX
+        * map.image.width
+        * fitScale
+        / cssWidth,
+      scaleY:
+        preset.registration.scaleY
+        * map.image.height
+        * fitScale
+        / cssHeight,
+      offsetX:
+        objectLeft
+        + preset.registration.offsetX * fitScale,
+      offsetY:
+        objectTop
+        + preset.registration.offsetY * fitScale
+    };
+    canvas.dataset.artMode = artTransform.id;
   }
 
   function beginSourceClip() {
@@ -1563,8 +1673,16 @@
   function findPointerHighlight(clientX, clientY) {
     if (coarsePointer.matches || motionPaused() || detailOpen) return null;
     const rect = rig.getBoundingClientRect();
-    const px = (clientX - rect.left) / rect.width;
-    const py = (clientY - rect.top) / rect.height;
+    const localX = (clientX - rect.left) * cssWidth / Math.max(1, rect.width);
+    const localY = (clientY - rect.top) * cssHeight / Math.max(1, rect.height);
+    const px = (
+      (localX - artTransform.offsetX)
+      / Math.max(.001, artTransform.scaleX)
+    ) / cssWidth;
+    const py = (
+      (localY - artTransform.offsetY)
+      / Math.max(.001, artTransform.scaleY)
+    ) / cssHeight;
     let nearest = null;
     let nearestDistance = Number.POSITIVE_INFINITY;
 
@@ -1844,6 +1962,15 @@
   function drawFrame(now) {
     drawStoneNeural(now);
     context.clearRect(0, 0, cssWidth, cssHeight);
+    context.save();
+    context.transform(
+      artTransform.scaleX,
+      0,
+      0,
+      artTransform.scaleY,
+      artTransform.offsetX,
+      artTransform.offsetY
+    );
     drawInternalSource(now);
     drawCoreFeeds(now);
     drawSynapses(now);
@@ -1857,6 +1984,7 @@
     }
 
     if (debugMap) drawDebugMap();
+    context.restore();
   }
 
   function render(now) {
@@ -1909,6 +2037,7 @@
     canvas.style.width = `${cssWidth}px`;
     canvas.style.height = `${cssHeight}px`;
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    syncArtTransform();
     resizeStoneCanvas();
     drawFrame(performance.now());
   }
@@ -2186,6 +2315,7 @@
   reducedMotion.addEventListener("change", syncMotionPreference);
   window.addEventListener("okagency:motionchange", syncMotionPreference);
   coarsePointer.addEventListener("change", resizeCanvas);
+  sculpture.addEventListener("load", resizeCanvas);
   new ResizeObserver(resizeCanvas).observe(rig);
 
   if (editMap) {

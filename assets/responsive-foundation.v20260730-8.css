@@ -1,5 +1,5 @@
 /*
-  OK Agency responsive foundation
+  OK Agency responsive foundation — 20260730-8
   --------------------------------
   A single, late-loaded layer for viewport scaling and art direction.
   Page styles keep ownership of color and scene-specific composition;
@@ -109,27 +109,6 @@ canvas {
 
   .home-page .detail {
     left: var(--ok-canvas-inset);
-  }
-}
-
-/*
-  A tall desktop window still has a desktop-sized navigation rail, but it
-  must not inherit display type driven by 18svh. Cap the heading by width
-  and let the portrait art direction occupy the lower half of the stage.
-*/
-@media (min-width: 1025px) and (max-aspect-ratio: 2 / 3) {
-  .home-page .copy {
-    top: clamp(136px, 11.5svh, 220px);
-    width: min(820px, calc(100vw - (2 * var(--ok-canvas-inset))));
-  }
-
-  .home-page .copy h1 {
-    font-size: clamp(112px, 16vw, 180px);
-  }
-
-  .home-page .descriptor,
-  .home-page .value-lead {
-    max-width: 720px;
   }
 }
 

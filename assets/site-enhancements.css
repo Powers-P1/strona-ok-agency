@@ -616,12 +616,6 @@ body.about-page {
     width: 100%;
   }
 
-  .diagnosis-service:has(.tablet-annotations[open]) .motion-toggle {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-
   .proof-label small,
   .proof-detail p,
   .proof-output,

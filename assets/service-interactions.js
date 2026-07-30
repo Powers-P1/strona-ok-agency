@@ -3,6 +3,7 @@ const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const closeCallout = callout => {
   callout.classList.remove("is-open");
   callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "false");
+  callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "true");
   const frame = callout.closest(".campaign-frame, .social-frame");
   const line = frame?.querySelector(`[data-line="${callout.dataset.annotation}"]`);
   line?.classList.remove("is-open");
@@ -15,6 +16,7 @@ const openCallout = callout => {
 
   callout.classList.add("is-open");
   callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "true");
+  callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "false");
   const frame = callout.closest(".campaign-frame, .social-frame");
   const line = frame?.querySelector(`[data-line="${callout.dataset.annotation}"]`);
   line?.classList.add("is-open");
@@ -24,6 +26,10 @@ document.querySelectorAll(".annotation-callout").forEach(callout => {
   const dot = callout.querySelector(".annotation-dot");
   const copy = callout.querySelector(".annotation-copy");
   if (!dot || !copy) return;
+  copy.setAttribute(
+    "aria-hidden",
+    String(!callout.classList.contains("is-open")),
+  );
 
   let closeTimer;
   const cancelClose = () => clearTimeout(closeTimer);

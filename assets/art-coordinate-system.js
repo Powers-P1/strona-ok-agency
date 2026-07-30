@@ -14,6 +14,11 @@
     return match ? Number(match[1]) / 100 : null;
   };
 
+  const finiteNumber = value => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+
   const positionPart = (value, axis) => {
     const parts = String(value || "").trim().split(/\s+/);
     const token = parts[axis] || parts[0] || "50%";
@@ -36,6 +41,10 @@
       art.naturalWidth || Number(art.getAttribute("width")) || 1672;
     const naturalHeight =
       art.naturalHeight || Number(art.getAttribute("height")) || 941;
+    const coordinateWidth =
+      Number(art.getAttribute("width")) || naturalWidth;
+    const coordinateHeight =
+      Number(art.getAttribute("height")) || naturalHeight;
     const style = getComputedStyle(art);
     const scale =
       style.objectFit === "contain"
@@ -63,6 +72,8 @@
       scale,
       naturalWidth,
       naturalHeight,
+      coordinateWidth,
+      coordinateHeight,
     };
   };
 
@@ -70,6 +81,8 @@
     if (serviceGeometry.has(callout)) return serviceGeometry.get(callout);
     const style = getComputedStyle(callout);
     const values = {
+      artX: finiteNumber(callout.dataset.artX),
+      artY: finiteNumber(callout.dataset.artY),
       dotX: percentage(style.getPropertyValue("--dot-x")),
       dotY: percentage(style.getPropertyValue("--dot-y")),
       copyLeft: percentage(style.getPropertyValue("--copy-left")),
@@ -78,6 +91,51 @@
     };
     serviceGeometry.set(callout, values);
     return values;
+  };
+
+  const updateAnnotationWire = (
+    frame,
+    callout,
+    copy,
+    geometry,
+    dotX,
+    dotY,
+  ) => {
+    const annotationId = callout.dataset.annotation;
+    if (!annotationId) return;
+    const wire = [...frame.querySelectorAll(".annotation-wire")].find(
+      layer => layer.dataset.line === annotationId,
+    );
+    const path = wire?.querySelector("path");
+    if (!path || dotX === null || dotY === null) return;
+
+    const copyLeft = copy.offsetLeft;
+    const copyTop = copy.offsetTop;
+    const copyWidth = copy.offsetWidth;
+    const copyHeight = copy.offsetHeight;
+    const copyIsRight = copyLeft + copyWidth / 2 > dotX;
+    const targetX = copyIsRight
+      ? copyLeft
+      : copyLeft + copyWidth;
+    const targetY = clamp(
+      dotY,
+      copyTop + 14,
+      copyTop + copyHeight - 14,
+    );
+    const elbowX = dotX + (targetX - dotX) * 0.55;
+    const naturalX = value =>
+      ((value - geometry.left) / geometry.width) *
+      geometry.coordinateWidth;
+    const naturalY = value =>
+      ((value - geometry.top) / geometry.height) *
+      geometry.coordinateHeight;
+
+    path.setAttribute(
+      "d",
+      `M ${naturalX(dotX).toFixed(1)} ${naturalY(dotY).toFixed(1)} ` +
+        `L ${naturalX(elbowX).toFixed(1)} ${naturalY(dotY).toFixed(1)} ` +
+        `L ${naturalX(targetX).toFixed(1)} ${naturalY(targetY).toFixed(1)}`,
+    );
   };
 
   const mapCoordinate = (start, size, ratio) =>
@@ -104,19 +162,27 @@
           height: `${geometry.height}px`,
         });
       });
+    frame.querySelectorAll(".annotation-lines").forEach(layer => {
+      layer.setAttribute(
+        "viewBox",
+        `0 0 ${geometry.coordinateWidth} ${geometry.coordinateHeight}`,
+      );
+    });
 
-    frame.querySelectorAll(".annotation-callout").forEach(callout => {
+    frame.querySelectorAll(".annotation-callout").forEach((callout, index) => {
       const original = rememberServiceCallout(callout);
-      const dotX = mapCoordinate(
-        geometry.left,
-        geometry.width,
-        original.dotX,
-      );
-      const dotY = mapCoordinate(
-        geometry.top,
-        geometry.height,
-        original.dotY,
-      );
+      const dotX =
+        original.artX === null
+          ? mapCoordinate(geometry.left, geometry.width, original.dotX)
+          : geometry.left +
+            geometry.width *
+              (original.artX / geometry.coordinateWidth);
+      const dotY =
+        original.artY === null
+          ? mapCoordinate(geometry.top, geometry.height, original.dotY)
+          : geometry.top +
+            geometry.height *
+              (original.artY / geometry.coordinateHeight);
       const copyLeft = mapCoordinate(
         geometry.left,
         geometry.width,
@@ -150,10 +216,21 @@
 
       if (dotX !== null) callout.style.setProperty("--dot-x", `${dotX}px`);
       if (dotY !== null) callout.style.setProperty("--dot-y", `${dotY}px`);
+      callout.style.setProperty(
+        "--annotation-delay",
+        `${index * -0.42}s`,
+      );
+      if (original.copyLeft === null) {
+        callout.style.setProperty("--copy-left", "auto");
+      }
+      if (original.copyRight === null) {
+        callout.style.setProperty("--copy-right", "auto");
+      }
       if (copyLeft !== null) {
         callout.style.setProperty("--copy-left", `${copyLeft}px`);
       }
       if (copyRight !== null) {
+        callout.style.setProperty("--copy-left", "auto");
         callout.style.setProperty("--copy-right", `${copyRight}px`);
       }
       if (copyTop !== null) {
@@ -165,10 +242,23 @@
       const safeInset = 24;
       const copyWidth = copy.offsetWidth;
       const copyHeight = copy.offsetHeight;
+      const frameRect = frame.getBoundingClientRect();
+      const frameIsVisible =
+        frameRect.bottom > safeInset &&
+        frameRect.top < innerHeight - safeInset;
+      const visibleMinimumTop = frameIsVisible
+        ? Math.max(safeInset, -frameRect.top + safeInset)
+        : safeInset;
+      const visibleMaximumTop = frameIsVisible
+        ? Math.min(
+            frame.clientHeight - copyHeight - 76,
+            innerHeight - frameRect.top - copyHeight - safeInset,
+          )
+        : frame.clientHeight - copyHeight - 76;
       const boundedTop = clamp(
         copyTop ?? safeInset,
-        safeInset,
-        frame.clientHeight - copyHeight - safeInset,
+        visibleMinimumTop,
+        visibleMaximumTop,
       );
       callout.style.setProperty("--copy-top", `${boundedTop}px`);
 
@@ -191,6 +281,37 @@
           `${frame.clientWidth - boundedLeft - copyWidth}px`,
         );
       }
+
+      const renderedLeft = copy.offsetLeft;
+      const renderedTop = copy.offsetTop;
+      const overlapsDot =
+        dotX !== null &&
+        dotY !== null &&
+        dotX >= renderedLeft - 22 &&
+        dotX <= renderedLeft + copyWidth + 22 &&
+        dotY >= renderedTop - 22 &&
+        dotY <= renderedTop + copyHeight + 22;
+      if (overlapsDot) {
+        const copyIsLeft = renderedLeft + copyWidth / 2 <= dotX;
+        const separatedLeft = copyIsLeft
+          ? dotX - copyWidth - 30
+          : dotX + 30;
+        const boundedLeft = clamp(
+          separatedLeft,
+          safeInset,
+          frame.clientWidth - copyWidth - safeInset,
+        );
+        callout.style.setProperty("--copy-left", `${boundedLeft}px`);
+        callout.style.setProperty("--copy-right", "auto");
+      }
+      updateAnnotationWire(
+        frame,
+        callout,
+        copy,
+        geometry,
+        dotX,
+        dotY,
+      );
     });
 
     const hasMobileAlternative = Boolean(
@@ -217,6 +338,8 @@
     if (aboutGeometry.has(annotation)) return aboutGeometry.get(annotation);
     const style = getComputedStyle(annotation);
     const values = {
+      artX: finiteNumber(annotation.dataset.artX),
+      artY: finiteNumber(annotation.dataset.artY),
       x: percentage(style.getPropertyValue("--x")),
       y: percentage(style.getPropertyValue("--y")),
     };
@@ -231,17 +354,43 @@
     const geometry = coverGeometry(scene, art);
     const headerHeight = inner.offsetTop;
     const referenceHeader = 90;
-    const referenceInnerHeight = geometry.naturalHeight - referenceHeader;
+    const referenceInnerHeight =
+      geometry.coordinateHeight - referenceHeader;
 
-    inner.querySelectorAll(":scope > .annotation").forEach(annotation => {
+    inner
+      .querySelectorAll(":scope > .annotation")
+      .forEach((annotation, index) => {
       const original = rememberAboutAnnotation(annotation);
-      if (original.x !== null) {
+      annotation.style.setProperty(
+        "--annotation-delay",
+        `${index * -0.42}s`,
+      );
+      if (original.artX !== null) {
+        annotation.style.setProperty(
+          "--x",
+          `${
+            geometry.left +
+            geometry.width *
+              (original.artX / geometry.coordinateWidth)
+          }px`,
+        );
+      } else if (original.x !== null) {
         annotation.style.setProperty(
           "--x",
           `${geometry.left + geometry.width * original.x}px`,
         );
       }
-      if (original.y !== null) {
+      if (original.artY !== null) {
+        annotation.style.setProperty(
+          "--y",
+          `${
+            geometry.top +
+            geometry.height *
+              (original.artY / geometry.coordinateHeight) -
+            headerHeight
+          }px`,
+        );
+      } else if (original.y !== null) {
         const sourceY =
           referenceHeader + referenceInnerHeight * original.y;
         annotation.style.setProperty(
@@ -249,7 +398,42 @@
           `${geometry.top + sourceY * geometry.scale - headerHeight}px`,
         );
       }
-    });
+
+      const copy = annotation.querySelector(".annotation-copy");
+      if (!copy || copy.hidden) return;
+      copy.style.setProperty("--copy-shift-y", "0px");
+      annotation.style.removeProperty("--leader-height");
+      const copyTop =
+        headerHeight + annotation.offsetTop + copy.offsetTop;
+      const sceneRect = scene.getBoundingClientRect();
+      const sceneIsVisible =
+        sceneRect.bottom > 16 && sceneRect.top < innerHeight - 16;
+      const minimumTop = sceneIsVisible
+        ? Math.max(headerHeight + 16, -sceneRect.top + 16)
+        : headerHeight + 16;
+      const maximumBottom = sceneIsVisible
+        ? Math.min(
+            scene.clientHeight - 76,
+            innerHeight - sceneRect.top - 76,
+          )
+        : scene.clientHeight - 76;
+      let shift = 0;
+      if (copyTop < minimumTop) {
+        shift = minimumTop - copyTop;
+      } else if (copyTop + copy.offsetHeight > maximumBottom) {
+        shift = maximumBottom - copyTop - copy.offsetHeight;
+      }
+      copy.style.setProperty("--copy-shift-y", `${shift}px`);
+      const drop = parseFloat(
+        getComputedStyle(annotation).getPropertyValue("--drop"),
+      );
+      if (Number.isFinite(drop)) {
+        annotation.style.setProperty(
+          "--leader-height",
+          `${Math.max(0, drop + shift)}px`,
+        );
+      }
+      });
   };
 
   const addTabletAnnotationSummaries = () => {
@@ -297,9 +481,46 @@
   addEventListener("resize", update, { passive: true });
   document.fonts?.ready.then(update);
 
+  serviceFrames.forEach(frame => {
+    frame.querySelectorAll(".annotation-callout").forEach(callout => {
+      const refresh = () =>
+        requestAnimationFrame(() => updateServiceFrame(frame));
+      callout.addEventListener("pointerenter", refresh);
+      callout
+        .querySelector(".annotation-dot")
+        ?.addEventListener("focus", refresh);
+      callout
+        .querySelector(".annotation-dot")
+        ?.addEventListener("click", refresh);
+    });
+  });
+
+  aboutScenes.forEach(scene => {
+    scene.querySelectorAll(":scope .annotation").forEach(annotation => {
+      const refresh = () =>
+        requestAnimationFrame(() => updateAboutScene(scene));
+      annotation.addEventListener("mouseenter", refresh);
+      annotation
+        .querySelector(".annotation-dot")
+        ?.addEventListener("focus", refresh);
+      annotation
+        .querySelector(".annotation-dot")
+        ?.addEventListener("click", refresh);
+    });
+  });
+
   if ("ResizeObserver" in window) {
     const observer = new ResizeObserver(update);
     serviceFrames.forEach(frame => observer.observe(frame));
     aboutScenes.forEach(scene => observer.observe(scene));
+  }
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) updateServiceFrame(entry.target);
+      });
+    });
+    serviceFrames.forEach(frame => observer.observe(frame));
   }
 })();

@@ -435,19 +435,6 @@ body.about-page {
   z-index: 1;
 }
 
-.campaign-page .campaign-opening .energy-shimmer {
-  mix-blend-mode: normal;
-}
-
-.campaign-page .campaign-opening .energy-shimmer .glint {
-  stroke: rgba(164, 86, 40, .72);
-  stroke-width: 2.35;
-  stroke-dasharray: none;
-  stroke-linecap: round;
-  opacity: .72;
-  filter: drop-shadow(0 0 5px rgba(255, 177, 95, .5));
-}
-
 .process-frame.process-discovery-scene {
   background-image: url("services/process/process-art-discovery-v3.webp");
   background-position: center;

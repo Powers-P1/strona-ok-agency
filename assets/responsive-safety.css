@@ -70,6 +70,8 @@ body.home-page {
     height: 100%;
     aspect-ratio: auto;
     transform: none !important;
+    scale: var(--ok-home-compact-art-scale, 1);
+    transform-origin: 62% 100%;
     -webkit-mask-image: none !important;
     mask-image: none !important;
   }

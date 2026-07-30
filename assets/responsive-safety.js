@@ -135,6 +135,7 @@
     delete layout.scene.dataset.okSafeCompactFit;
     delete layout.scene.dataset.okSafeCompactDensity;
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
+    layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     layout.art.style.removeProperty("--ok-safe-mask-image");
     layout.scene.querySelectorAll("[data-ok-safe-content]").forEach(content => {
       restoreScrollRegion(content);
@@ -195,6 +196,9 @@
     const compactHome = isHome
       && (viewportWidth <= 1180 || viewportRatio <= 4 / 3);
     const portraitHomeAsset = compactHome && viewportRatio <= 2 / 3;
+    if (!compactHome) {
+      layout.scene.style.removeProperty("--ok-home-compact-art-scale");
+    }
     if (!compactHome && layout.scene.dataset.okSafeCompactDensity) {
       delete layout.scene.dataset.okSafeCompactDensity;
       requestAnimationFrame(schedule);
@@ -208,7 +212,25 @@
     }
 
     if (compactHome) {
-      const compactCopySafeZone = .5;
+      /*
+       * The compact 4:3 plate deliberately reserves a clear copy zone above
+       * the sculpture. As the viewport becomes taller, zoom that plate around
+       * the tree base so the reserved zone does not grow into a visual void.
+       * The portrait asset already has its own crop and stays at natural scale.
+       */
+      const compactArtScale = portraitHomeAsset
+        ? 1
+        : Math.min(1.22, Math.max(1, 1 + (4 / 3 - viewportRatio) * .85));
+      layout.scene.style.setProperty(
+        "--ok-home-compact-art-scale",
+        compactArtScale.toFixed(3),
+      );
+
+      const compactCopySafeZone = window.innerWidth > 1180
+        ? .68
+        : window.innerWidth > 640
+          ? .6
+          : .5;
       const copyEnd = contentRect.bottom - sceneRect.top + gap;
       const compactSafeBoundary = sceneRect.top + viewportHeight * compactCopySafeZone;
       const compactCopyFitsFirstView = contentRect.bottom + gap <= compactSafeBoundary;

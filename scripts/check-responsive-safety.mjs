@@ -32,8 +32,8 @@ const requireText = (source, text, message) => {
 
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
-  requireText(html, "/assets/responsive-safety.css?v=20260730-13", `${page}: brak responsive-safety.css`);
-  requireText(html, "/assets/responsive-safety.js?v=20260730-12", `${page}: brak responsive-safety.js`);
+  requireText(html, "/assets/responsive-safety.css?v=20260730-14", `${page}: brak responsive-safety.css`);
+  requireText(html, "/assets/responsive-safety.js?v=20260730-13", `${page}: brak responsive-safety.js`);
 });
 
 for (const token of [
@@ -49,6 +49,7 @@ for (const token of [
   "okSafeMobileHero",
   "okSafeCompactFit",
   "okSafeCompactDensity",
+  "compactArtScale",
   "data-ok-safe-scroll",
   "data-ok-safe-cards",
   "OKAgencyResponsiveSafety",
@@ -97,6 +98,12 @@ requireText(script, "portraitHomeAsset", "JS nie rozróżnia assetu kompaktowego
 requireText(script, "viewportWidth * 1.35", "JS nie rozróżnia wysokiego portretu od krótkiego okna");
 requireText(css, ":root[data-ok-tall-portrait]", "CSS nie korzysta ze wspólnego profilu wysokiego portretu");
 requireText(css, "min-height: max(100svh, var(--ok-safe-required-height", "CSS nie honoruje wyliczonej wysokości hero");
+
+requireText(
+  css,
+  "scale: var(--ok-home-compact-art-scale, 1)",
+  "CSS nie stosuje wyliczonej skali kompaktowego kadru hero",
+);
 
 if (/\bfont-size\s*:/.test(css)) {
   failures.push("responsive-safety.css nie może zmieniać rozmiarów fontów");

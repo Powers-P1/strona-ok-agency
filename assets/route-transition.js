@@ -3,6 +3,7 @@
 
   const hero = document.getElementById("hero");
   if (!hero) return;
+  const globalHeader = document.querySelector("[data-ok-global-nav]");
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let routing = false;
@@ -20,6 +21,7 @@
       settled = true;
       clearTimeout(fallback);
       hero.removeEventListener("transitionend", onEnd);
+      globalHeader?.removeEventListener("transitionend", onEnd);
       resolve();
     };
     const onEnd = event => {
@@ -31,6 +33,7 @@
     };
     const fallback = setTimeout(finish, 760);
     hero.addEventListener("transitionend", onEnd);
+    globalHeader?.addEventListener("transitionend", onEnd);
   });
 
   const leave = async target => {
@@ -38,6 +41,7 @@
     routing = true;
     hero.classList.remove("is-panel-transition", "is-panel-returning");
     hero.classList.add("is-route-leaving");
+    globalHeader?.classList.add("is-route-leaving");
     document.body.setAttribute("aria-busy", "true");
     await waitForLeave();
     location.href = target;

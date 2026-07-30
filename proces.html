@@ -46,7 +46,7 @@
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/story-standard.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260730-7">
@@ -56,6 +56,29 @@
 </head>
 <body class="process-page">
   <a class="skip-link" href="#process-opening">Przejdź do procesu</a>
+
+  <header class="site-header site-header-light" data-ok-global-nav data-ok-nav-state="docked">
+    <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
+      <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
+    </a>
+    <nav aria-label="Główna nawigacja" data-ok-primary-nav>
+      <details class="ok-nav-offer" data-ok-offer>
+        <summary data-nav-link="offer">Oferta<span class="ok-nav-offer__mark" aria-hidden="true"></span></summary>
+        <div class="ok-nav-offer__popover">
+          <a href="/menu" data-offer-route>Zobacz całą ofertę</a>
+          <a href="/strony-internetowe" data-offer-route>Strony internetowe</a>
+          <a href="/social-media" data-offer-route>Social media</a>
+          <a href="/kampanie" data-offer-route>Kampanie</a>
+          <a href="/diagnoza" data-offer-route>Diagnoza — nie wiem, od czego zacząć</a>
+        </div>
+      </details>
+      <a href="/o-nas" data-nav-link="about">O nas</a>
+      <a href="/proces" data-nav-link="process">Jak pracujemy</a>
+      <a href="/faq" data-nav-link="faq">FAQ</a>
+      <a class="ok-nav-cta" href="/kontakt?context=process" data-nav-link="contact">Porozmawiajmy</a>
+    </nav>
+  </header>
+  <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="campaign-story process-story">
     <div class="story-stage">
@@ -78,17 +101,6 @@
           <path class="glint glint-a" filter="url(#process-opening-glint)" pathLength="1" d="M 1090 735 C 1130 694 1168 652 1201 611 C 1235 570 1262 523 1290 466 C 1317 414 1334 382 1350 354"></path>
           <path class="glint glint-b" filter="url(#process-opening-glint)" pathLength="1" d="M 1214 700 C 1260 650 1294 607 1327 557 C 1356 513 1375 467 1394 418"></path>
         </svg>
-
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=process" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <svg class="annotation-lines process-opening-lines" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="process-context">
@@ -160,17 +172,6 @@
           loading="lazy"
         >
 
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=process" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
-
         <svg class="annotation-lines discovery-lines" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="discovery-fact"><path pathLength="1" d="M 516 477 L 461 416 H 363"></path></g>
           <g class="annotation-wire" data-line="discovery-assumption"><path pathLength="1" d="M 656 439 L 712 357 H 807"></path></g>
@@ -238,17 +239,6 @@
           <path class="glint glint-a" filter="url(#process-method-glint)" pathLength="1" d="M 260 919 C 433 817 608 737 792 657 C 930 598 1129 633 1255 584 C 1329 555 1368 433 1377 286 C 1384 196 1268 149 1151 175"></path>
           <path class="glint glint-b" filter="url(#process-method-glint)" pathLength="1" d="M 754 941 C 781 827 778 733 792 657 C 815 527 1039 557 1255 584 C 1372 597 1431 657 1518 727"></path>
         </svg>
-
-        <header class="site-header site-header-dark">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=process" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <div class="journey-intro process-method-intro">
           <h2 id="process-direction-title">Kierunek to wybór.<br>Nie lista <em>życzeń.</em></h2>
@@ -330,17 +320,6 @@
           loading="lazy"
         >
 
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=process" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
-
         <div class="process-editorial-content process-editorial-right process-delivery-content">
           <span class="process-act">03 / Realizacja</span>
           <h2 id="process-delivery-title">Robimy, sprawdzamy<br>i <em>dowozimy.</em></h2>
@@ -368,17 +347,6 @@
           alt=""
           loading="lazy"
         >
-
-        <header class="site-header site-header-dark">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=process" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <div class="process-editorial-content process-editorial-right process-editorial-dark process-optimization-content">
           <span class="process-act">04 / Optymalizacja</span>
@@ -409,17 +377,6 @@
         >
 
         <span class="proof-bloom process-proof-bloom" aria-hidden="true"></span>
-
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=process" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <div class="proof-content process-proof-content">
           <h2 id="process-proof-title">Profesjonalizm widać<br>w tym, co <em>dostajesz.</em></h2>
@@ -504,8 +461,8 @@
   </main>
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.v20260730-3.js"></script>
-  <script src="assets/navigation.js?v=20260730-2"></script>
+  <script src="assets/navigation.js?v=20260730-4"></script>
   <script src="assets/service-interactions.js?v=20260730-1"></script>
-  <script src="assets/site-footer.js?v=20260729-2"></script>
+  <script src="assets/site-footer.js?v=20260730-3"></script>
 </body>
 </html>

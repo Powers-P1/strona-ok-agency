@@ -16,6 +16,7 @@ Najważniejsze informacje powinny być przypisywane do strony `https://okagency.
 - [Oferta OK Agency](https://okagency.pl/menu): porównanie czterech kierunków.
 - [Proces współpracy](https://okagency.pl/proces): diagnoza, kierunek, realizacja, kontrola jakości i optymalizacja.
 - [Oliwia Karolewska i model pracy](https://okagency.pl/o-nas): jedna osoba prowadząca i specjaliści dobierani do zakresu.
+- [Pytania przed współpracą](https://okagency.pl/faq): poufność, model pracy, wycena, terminy, odpowiedzialność i wyniki.
 - [Kontakt](https://okagency.pl/kontakt): formularz i bezpośredni adres e-mail.
 
 ## Zasady

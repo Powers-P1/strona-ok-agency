@@ -99,7 +99,7 @@
   <link rel="stylesheet" href="assets/page-home.css?v=20260730-15">
 <link rel="stylesheet" href="assets/route-motion.v20260730-5.css">
 <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-4">
@@ -110,6 +110,28 @@
 </head>
 <body class="home-page">
   <a class="skip-link" href="#hero">Przejdź do treści</a>
+  <header class="topbar" data-ok-global-nav data-ok-nav-state="docked">
+    <a href="/" aria-label="OK Agency — strona główna">
+      <img class="wordmark" src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
+    </a>
+    <nav class="nav" aria-label="Główna nawigacja" data-ok-primary-nav>
+      <details class="ok-nav-offer" data-ok-offer>
+        <summary data-nav-link="offer">Oferta<span class="ok-nav-offer__mark" aria-hidden="true"></span></summary>
+        <div class="ok-nav-offer__popover">
+          <a class="route-link" href="/menu" data-offer-route>Zobacz całą ofertę</a>
+          <a class="route-link" href="/strony-internetowe" data-offer-route>Strony internetowe</a>
+          <a class="route-link" href="/social-media" data-offer-route>Social media</a>
+          <a class="route-link" href="/kampanie" data-offer-route>Kampanie</a>
+          <a class="route-link" href="/diagnoza" data-offer-route>Diagnoza — nie wiem, od czego zacząć</a>
+        </div>
+      </details>
+      <a class="route-link" href="/o-nas" data-nav-link="about">O nas</a>
+      <a class="route-link" href="/proces" data-nav-link="process">Jak pracujemy</a>
+      <a class="route-link" href="/faq" data-nav-link="faq">FAQ</a>
+      <a class="route-link ok-nav-cta" href="/kontakt" data-nav-link="contact">Porozmawiajmy</a>
+    </nav>
+  </header>
+  <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
   <main>
     <section class="hero" id="hero" tabindex="-1" aria-labelledby="hero-title">
       <picture class="hero-backdrop" aria-hidden="true">
@@ -143,17 +165,6 @@
         >
       </picture>
       <div class="grid" aria-hidden="true"></div>
-      <header class="topbar">
-        <a href="/" aria-label="OK Agency — strona główna">
-          <img class="wordmark" src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-        </a>
-        <nav class="nav" aria-label="Główna nawigacja">
-          <a class="route-link" href="/menu" data-nav-link="offer">Oferta</a>
-          <a class="route-link" href="/proces" data-nav-link="process">Jak pracujemy</a>
-          <a class="route-link" href="/kontakt" data-nav-link="contact">Kontakt</a>
-        </nav>
-      </header>
-
       <div class="art-stage" aria-hidden="true">
         <div class="image-rig" id="image-rig">
           <picture class="scene-picture">
@@ -324,9 +335,9 @@
   </main>
   <div data-site-footer></div>
   <script src="assets/tree-map-loader.js?v=20260730-6"></script>
-  <script src="assets/site-footer.js?v=20260729-2"></script>
+  <script src="assets/site-footer.js?v=20260730-3"></script>
   <script src="assets/page-home.js"></script>
-  <script src="assets/navigation.js?v=20260730-2"></script>
+  <script src="assets/navigation.js?v=20260730-4"></script>
   <script src="assets/route-transition.js?v=20260730-3"></script>
 </body>
 </html>

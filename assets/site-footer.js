@@ -13,6 +13,7 @@
   const agencyLinks = [
     ["O nas", "/o-nas"],
     ["Proces", "/proces"],
+    ["FAQ", "/faq"],
     ["Kontakt", "/kontakt"],
     ["Polityka prywatności", "/polityka-prywatnosci"],
     ["Dostępność", "/dostepnosc"]

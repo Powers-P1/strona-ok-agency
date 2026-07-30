@@ -190,7 +190,9 @@ for (const file of ["llms.txt", "llms-full.txt"]) {
   if (!buildScript.includes(`"${file}"`)) failures.push(`build: ${file} nie jest kopiowany`);
 }
 
-if (publicFiles.length !== 11) failures.push(`liczba indeksowanych stron: ${publicFiles.length}, oczekiwano 11`);
+if (publicFiles.length !== sitemapUrls.size) {
+  failures.push(`liczba indeksowanych stron (${publicFiles.length}) nie odpowiada sitemap.xml (${sitemapUrls.size})`);
+}
 
 if (failures.length) {
   console.error(`Błędy jakości serwisu (${failures.length}):`);

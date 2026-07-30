@@ -1,31 +1,54 @@
 /*
- * OK Agency — global editorial navigation
+ * OK Agency — one page-level global navigation.
  *
- * One material rail across every public route. Existing page headers retain
- * their positioning model (absolute, relative or fixed); this layer owns the
- * shared dimensions, surface, navigation states and compact menu.
+ * The HTML owns one header and one reserved slot per document. This stylesheet
+ * owns both visual states, the accessible Oferta disclosure and the compact
+ * dialog. Page-specific styles must not need navigation overrides.
  */
 
 :root {
-  --ok-nav-rail-height: 80px;
+  --ok-nav-docked-height: 80px;
+  --ok-nav-floating-height: 64px;
+  --ok-nav-slot-height: var(--ok-nav-docked-height);
   --ok-nav-canvas: #f0dfcf;
+  --ok-nav-canvas-solid: #efe0d2;
   --ok-nav-navy: #142030;
   --ok-nav-rose: #b52454;
-  --ok-nav-hairline: rgba(20, 32, 48, .25);
+  --ok-nav-rose-strong: #8f173f;
+  --ok-nav-hairline: rgba(20, 32, 48, .24);
   --ok-nav-gutter: var(--ok-canvas-inset, clamp(24px, 4vw, 68px));
+  --ok-nav-ease: cubic-bezier(.22, 1, .36, 1);
 }
 
 html {
-  scroll-padding-top: calc(var(--ok-nav-rail-height) + 16px);
+  scroll-padding-top: calc(var(--ok-nav-floating-height) + 36px);
   scrollbar-gutter: stable;
 }
 
 :where(main, section, article)[id] {
-  scroll-margin-top: calc(var(--ok-nav-rail-height) + 16px);
+  scroll-margin-top: calc(var(--ok-nav-floating-height) + 36px);
 }
 
 body.ok-nav-open {
   overflow: hidden;
+}
+
+.ok-nav-slot {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: var(--ok-nav-slot-height);
+  min-height: var(--ok-nav-slot-height);
+  flex: 0 0 var(--ok-nav-slot-height);
+  pointer-events: none;
+}
+
+.ok-nav-sentinel {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 1px;
+  height: 1px;
 }
 
 .ok-global-menu .visually-hidden {
@@ -40,40 +63,75 @@ body.ok-nav-open {
   border: 0 !important;
 }
 
-/*
- * The low-contrast weave is code-native and intentionally restrained. The
- * opaque base keeps navigation contrast stable over every page illustration.
- */
-body header:is(.topbar, .site-header, .legal-header) {
+body header[data-ok-global-nav] {
+  position: fixed !important;
+  z-index: 140;
+  top: 0 !important;
+  right: 0 !important;
+  left: 0 !important;
   box-sizing: border-box;
-  width: 100%;
-  height: var(--ok-nav-rail-height) !important;
-  min-height: var(--ok-nav-rail-height) !important;
+  width: auto !important;
+  height: var(--ok-nav-docked-height) !important;
+  min-height: var(--ok-nav-docked-height) !important;
+  margin: 0 !important;
   padding-block: 0 !important;
   padding-inline: var(--ok-nav-gutter) !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(24px, 4vw, 64px);
+  gap: clamp(22px, 3vw, 54px);
   overflow: visible;
-  color: var(--ok-nav-navy);
-  border: 0;
-  background-color: var(--ok-nav-canvas);
+  color: var(--ok-nav-navy) !important;
+  border: 0 !important;
+  border-radius: 0;
+  background-color: var(--ok-nav-canvas-solid) !important;
   background-image:
-    radial-gradient(circle at 18% 32%, rgba(255, 255, 255, .22) 0 1px, transparent 1.25px),
+    radial-gradient(circle at 18% 32%, rgba(255, 255, 255, .24) 0 1px, transparent 1.25px),
     radial-gradient(circle at 72% 66%, rgba(20, 32, 48, .045) 0 .8px, transparent 1.1px),
-    linear-gradient(92deg, rgba(255, 255, 255, .16), transparent 32%, rgba(112, 69, 50, .035) 74%, transparent);
-  background-size: 11px 13px, 13px 17px, 100% 100%;
+    linear-gradient(92deg, rgba(255, 255, 255, .15), transparent 34%, rgba(112, 69, 50, .035) 76%, transparent) !important;
+  background-size: 11px 13px, 13px 17px, 100% 100% !important;
+  box-shadow: inset 0 -1px var(--ok-nav-hairline) !important;
+  isolation: isolate;
+  transition:
+    top .46s var(--ok-nav-ease),
+    right .46s var(--ok-nav-ease),
+    left .46s var(--ok-nav-ease),
+    height .46s var(--ok-nav-ease),
+    min-height .46s var(--ok-nav-ease),
+    padding .46s var(--ok-nav-ease),
+    border-radius .46s var(--ok-nav-ease),
+    background-color .34s ease,
+    box-shadow .46s var(--ok-nav-ease);
+}
+
+body header[data-ok-global-nav]::after {
+  display: none !important;
+}
+
+body header[data-ok-global-nav][data-ok-nav-state="detached"] {
+  top: max(14px, env(safe-area-inset-top)) !important;
+  right: 14px !important;
+  left: 14px !important;
+  height: var(--ok-nav-floating-height) !important;
+  min-height: var(--ok-nav-floating-height) !important;
+  padding-inline: clamp(18px, 3vw, 42px) !important;
+  border-radius: 16px;
+  background-color: rgba(239, 224, 210, .96) !important;
   box-shadow:
-    inset 0 -1px var(--ok-nav-hairline),
-    0 8px 24px rgba(20, 32, 48, .045);
+    inset 0 1px rgba(255, 255, 255, .54),
+    inset 0 -1px rgba(20, 32, 48, .18),
+    0 12px 32px rgba(12, 27, 43, .12) !important;
 }
 
-body header:is(.topbar, .site-header, .legal-header)::after {
-  display: none;
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body header[data-ok-global-nav][data-ok-nav-state="detached"] {
+    background-color: rgba(239, 224, 210, .85) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(.96);
+    backdrop-filter: blur(20px) saturate(.96);
+  }
 }
 
-body header:is(.topbar, .site-header, .legal-header) > a:first-child {
+body header[data-ok-global-nav] > a:first-child {
   position: relative;
   z-index: 2;
   min-width: 44px;
@@ -83,14 +141,20 @@ body header:is(.topbar, .site-header, .legal-header) > a:first-child {
   flex: 0 0 auto;
 }
 
-body header:is(.topbar, .site-header, .legal-header) > a:first-child > img {
-  width: clamp(142px, 9vw, 154px);
-  height: auto;
+body header[data-ok-global-nav] > a:first-child > img {
+  width: clamp(142px, 9vw, 154px) !important;
+  height: auto !important;
   display: block;
   filter: none !important;
+  transition: width .46s var(--ok-nav-ease);
 }
 
-body header:is(.topbar, .site-header, .legal-header) > a:first-child:focus-visible,
+body header[data-ok-global-nav][data-ok-nav-state="detached"] > a:first-child > img {
+  width: clamp(126px, 8vw, 140px) !important;
+}
+
+body header[data-ok-global-nav] > a:first-child:focus-visible,
+.ok-nav-offer > summary:focus-visible,
 .ok-global-menu a:focus-visible,
 .ok-nav-trigger:focus-visible,
 .ok-global-menu__close:focus-visible {
@@ -104,10 +168,11 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: clamp(28px, 3.2vw, 52px);
+  gap: clamp(18px, 2.15vw, 36px);
 }
 
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a {
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
+.ok-nav-offer > summary {
   position: relative;
   min-width: 44px;
   min-height: 44px;
@@ -115,19 +180,67 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--ok-nav-navy);
+  gap: 7px;
+  color: var(--ok-nav-navy) !important;
   font-family: "Archivo", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 720;
   line-height: 1.2;
-  letter-spacing: .12em;
+  letter-spacing: .105em;
   text-decoration: none;
-  text-shadow: none;
+  text-shadow: none !important;
   text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
   transition: color .22s ease;
 }
 
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after {
+.ok-nav-offer {
+  position: relative;
+}
+
+.ok-nav-offer > summary {
+  list-style: none;
+}
+
+.ok-nav-offer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ok-nav-offer__mark {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  transition: transform .3s var(--ok-nav-ease);
+}
+
+.ok-nav-offer__mark::before,
+.ok-nav-offer__mark::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 1px;
+  width: 10px;
+  height: 1px;
+  background: currentColor;
+}
+
+.ok-nav-offer__mark::after {
+  transform: rotate(90deg);
+  transition: opacity .2s ease;
+}
+
+.ok-nav-offer[open] .ok-nav-offer__mark {
+  transform: rotate(180deg);
+}
+
+.ok-nav-offer[open] .ok-nav-offer__mark::after {
+  opacity: 0;
+}
+
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta)::after,
+.ok-nav-offer > summary::after {
   content: "";
   position: absolute;
   right: 2px;
@@ -140,24 +253,109 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after {
   transition: transform .24s ease;
 }
 
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:hover,
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):hover,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):focus-visible,
 body header[data-ok-global-nav] nav[data-ok-primary-nav] > a.is-active,
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"] {
-  color: #8f173f;
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"],
+.ok-nav-offer > summary:hover,
+.ok-nav-offer > summary:focus-visible,
+.ok-nav-offer > summary.is-active,
+.ok-nav-offer[open] > summary {
+  color: var(--ok-nav-rose-strong) !important;
 }
 
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:hover::after,
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible::after,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):hover::after,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):focus-visible::after,
 body header[data-ok-global-nav] nav[data-ok-primary-nav] > a.is-active::after,
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"]::after {
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"]::after,
+.ok-nav-offer > summary:hover::after,
+.ok-nav-offer > summary:focus-visible::after,
+.ok-nav-offer > summary.is-active::after,
+.ok-nav-offer[open] > summary::after {
   transform: scaleX(1);
 }
 
-body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
-  outline: 3px solid var(--ok-nav-rose);
-  outline-offset: 4px;
-  border-radius: 1px;
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta {
+  min-height: 44px !important;
+  padding: 0 18px !important;
+  color: var(--ok-nav-canvas) !important;
+  border: 1px solid var(--ok-nav-navy);
+  background: var(--ok-nav-navy);
+  transition:
+    color .25s ease,
+    border-color .25s ease,
+    background-color .25s ease,
+    transform .3s var(--ok-nav-ease) !important;
+}
+
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta:hover,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta:focus-visible,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta.is-active,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-current="page"] {
+  color: #fff8ef !important;
+  border-color: var(--ok-nav-rose-strong);
+  background: var(--ok-nav-rose-strong);
+  transform: translateY(-1px);
+}
+
+.ok-nav-offer__popover {
+  position: absolute;
+  z-index: 4;
+  top: calc(100% + 10px);
+  left: -22px;
+  width: min(340px, calc(100vw - 40px));
+  padding: 10px;
+  display: grid;
+  color: var(--ok-nav-navy);
+  border: 1px solid rgba(20, 32, 48, .16);
+  background:
+    radial-gradient(circle at 18% 32%, rgba(255, 255, 255, .25) 0 1px, transparent 1.25px),
+    var(--ok-nav-canvas-solid);
+  background-size: 11px 13px;
+  box-shadow: 0 20px 44px rgba(12, 27, 43, .16);
+}
+
+.ok-nav-offer__popover::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  right: 0;
+  left: 0;
+  height: 12px;
+}
+
+.ok-nav-offer__popover a {
+  min-height: 44px;
+  padding: 9px 12px;
+  display: grid;
+  align-items: center;
+  color: var(--ok-nav-navy);
+  border-bottom: 1px solid rgba(20, 32, 48, .11);
+  font-family: "Archivo", sans-serif;
+  font-size: 13px;
+  font-weight: 590;
+  line-height: 1.35;
+  text-decoration: none;
+  transition:
+    color .2s ease,
+    background-color .2s ease,
+    padding-left .3s var(--ok-nav-ease);
+}
+
+.ok-nav-offer__popover a:last-child {
+  border-bottom: 0;
+}
+
+.ok-nav-offer__popover a:hover,
+.ok-nav-offer__popover a:focus-visible,
+.ok-nav-offer__popover a[aria-current="page"] {
+  padding-left: 17px;
+  color: var(--ok-nav-rose-strong);
+  background: rgba(255, 255, 255, .31);
+}
+
+.ok-nav-offer__popover a:first-child {
+  font-weight: 740;
 }
 
 .ok-nav-trigger {
@@ -182,25 +380,6 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
   cursor: pointer;
 }
 
-.ok-nav-trigger::after {
-  content: "";
-  position: absolute;
-  right: 31px;
-  bottom: 5px;
-  left: 0;
-  height: 2px;
-  background: var(--ok-nav-rose);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform .22s ease;
-}
-
-.ok-nav-trigger:hover::after,
-.ok-nav-trigger:focus-visible::after,
-.ok-nav-trigger[aria-expanded="true"]::after {
-  transform: scaleX(1);
-}
-
 .ok-nav-trigger__signal {
   width: 22px;
   height: 14px;
@@ -216,6 +395,7 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
   height: 2px;
   display: block;
   background: var(--ok-nav-rose);
+  transition: width .3s var(--ok-nav-ease);
 }
 
 .ok-nav-trigger__signal::before {
@@ -226,13 +406,19 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
   width: 14px;
 }
 
+.ok-nav-trigger:hover .ok-nav-trigger__signal::after,
+.ok-nav-trigger:focus-visible .ok-nav-trigger__signal::after,
+.ok-nav-trigger[aria-expanded="true"] .ok-nav-trigger__signal::after {
+  width: 22px;
+}
+
 /* ---------- compact dialog ---------- */
 
 .ok-global-menu {
   position: fixed;
   inset: 0;
-  width: 100%;
-  max-width: none;
+  width: 100vw;
+  max-width: 100vw;
   height: 100dvh;
   max-height: none;
   margin: 0;
@@ -252,21 +438,25 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
 }
 
 .ok-global-menu__surface {
-  min-height: 100%;
+  height: 100%;
   display: grid;
-  grid-template-rows: var(--ok-nav-rail-height) minmax(0, 1fr) auto;
-  background-color: var(--ok-nav-canvas);
+  grid-template-rows: var(--ok-nav-docked-height) minmax(0, 1fr) auto;
+  overflow: hidden;
+  background-color: var(--ok-nav-canvas-solid);
   background-image:
     radial-gradient(circle at 18% 32%, rgba(255, 255, 255, .24) 0 1px, transparent 1.25px),
     radial-gradient(circle at 72% 66%, rgba(20, 32, 48, .05) 0 .8px, transparent 1.1px),
     linear-gradient(145deg, rgba(255, 255, 255, .14), transparent 48%, rgba(181, 36, 84, .055));
   background-size: 11px 13px, 13px 17px, 100% 100%;
-  animation: ok-nav-enter .28s ease-out both;
+  animation: ok-nav-enter .38s var(--ok-nav-ease) both;
 }
 
 .ok-global-menu__rail {
-  min-height: var(--ok-nav-rail-height);
-  padding-inline: var(--ok-nav-gutter);
+  min-height: var(--ok-nav-docked-height);
+  padding:
+    env(safe-area-inset-top)
+    var(--ok-nav-gutter)
+    0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -330,58 +520,134 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
 }
 
 .ok-global-menu__nav {
-  width: min(100%, 980px);
+  width: min(100%, 760px);
   margin-inline: auto;
-  padding: clamp(36px, 8svh, 92px) var(--ok-nav-gutter);
+  padding: clamp(18px, 4svh, 38px) var(--ok-nav-gutter);
   display: grid;
   align-content: center;
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 
-.ok-global-menu__nav a {
+.ok-global-menu__offer {
+  border-bottom: 1px solid var(--ok-nav-hairline);
+}
+
+.ok-global-menu__offer > summary,
+.ok-global-menu__nav > a {
   position: relative;
-  min-height: clamp(72px, 12svh, 112px);
-  padding: 16px 52px 16px 0;
+  min-height: 54px;
+  padding: 8px 44px 8px 0;
   display: flex;
   align-items: center;
   color: var(--ok-nav-navy);
   border-bottom: 1px solid var(--ok-nav-hairline);
-  font-family: "Archivo", sans-serif;
-  font-size: clamp(30px, 6.8vw, 66px);
-  font-weight: 650;
-  line-height: .96;
-  letter-spacing: -.035em;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-size: clamp(29px, 6.8vw, 48px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
   text-decoration: none;
 }
 
-.ok-global-menu__nav a::after {
-  content: "";
+.ok-global-menu__offer > summary {
+  border-bottom: 0;
+  list-style: none;
+  cursor: pointer;
+}
+
+.ok-global-menu__offer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ok-global-menu__offer > summary::after,
+.ok-global-menu__nav > a::after {
+  content: "↗";
   position: absolute;
   right: 4px;
-  width: 28px;
-  height: 2px;
-  background: var(--ok-nav-rose);
-  box-shadow: 8px 7px 0 -1px var(--ok-nav-rose);
-  transition: transform .22s ease;
+  color: var(--ok-nav-rose);
+  font-family: "Archivo", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  transition: transform .3s var(--ok-nav-ease);
+}
+
+.ok-global-menu__offer > summary::after {
+  content: "+";
+  font-size: 28px;
+}
+
+.ok-global-menu__offer[open] > summary::after {
+  content: "−";
+}
+
+.ok-global-menu__offer-links {
+  padding: 0 0 10px clamp(12px, 4vw, 28px);
+  display: grid;
+}
+
+.ok-global-menu__offer-links a {
+  min-height: 42px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  color: rgba(20, 32, 48, .82);
+  border-top: 1px solid rgba(20, 32, 48, .1);
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(14px, 3.8vw, 18px);
+  font-weight: 590;
+  line-height: 1.25;
+  text-decoration: none;
 }
 
 .ok-global-menu__nav a:hover,
 .ok-global-menu__nav a:focus-visible,
-.ok-global-menu__nav a[aria-current="page"] {
-  color: #8f173f;
+.ok-global-menu__nav a[aria-current="page"],
+.ok-global-menu__offer > summary:hover,
+.ok-global-menu__offer > summary:focus-visible,
+.ok-global-menu__offer > summary.is-active {
+  color: var(--ok-nav-rose-strong);
 }
 
-.ok-global-menu__nav a:hover::after,
-.ok-global-menu__nav a:focus-visible::after {
-  transform: translateX(5px);
+.ok-global-menu__nav > a:hover::after,
+.ok-global-menu__nav > a:focus-visible::after {
+  transform: translate(3px, -3px);
+}
+
+.ok-global-menu__nav > .ok-global-menu__cta {
+  width: 100%;
+  min-height: 58px;
+  margin-top: 14px;
+  padding: 8px 50px 8px 18px;
+  color: var(--ok-nav-canvas);
+  border: 1px solid var(--ok-nav-navy);
+  background: var(--ok-nav-navy);
+  font-size: clamp(27px, 6vw, 42px);
+}
+
+.ok-global-menu__nav > .ok-global-menu__cta:hover,
+.ok-global-menu__nav > .ok-global-menu__cta:focus-visible,
+.ok-global-menu__nav > .ok-global-menu__cta[aria-current="page"] {
+  color: #fff8ef;
+  border-color: var(--ok-nav-rose-strong);
+  background: var(--ok-nav-rose-strong);
+}
+
+.ok-global-menu__nav > .ok-global-menu__cta::after {
+  right: 18px;
+  color: inherit;
 }
 
 .ok-global-menu__meta {
   margin: 0;
-  padding: 18px var(--ok-nav-gutter) 22px;
-  color: rgba(20, 32, 48, .72);
+  padding:
+    15px
+    var(--ok-nav-gutter)
+    max(18px, env(safe-area-inset-bottom));
+  color: rgba(20, 32, 48, .7);
   border-top: 1px solid var(--ok-nav-hairline);
   font-family: "Archivo", sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 650;
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -390,7 +656,7 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
 @keyframes ok-nav-enter {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;
@@ -398,38 +664,65 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
   }
 }
 
-/*
- * The navigation follows the same spatial contract as the hero: compact below
- * 1180px or at 4:3. The data attribute is added only after JavaScript has
- * created a working MENU control, so navigation remains usable if enhancement
- * fails.
- */
 @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
   :root {
-    --ok-nav-rail-height: 68px;
+    --ok-nav-docked-height: 68px;
+    --ok-nav-floating-height: 59px;
     --ok-nav-gutter: var(--ok-canvas-inset, clamp(20px, 4vw, 34px));
+    --ok-nav-compact-trigger-width: 76px;
+  }
+
+  html {
+    scrollbar-gutter: auto;
   }
 
   body header[data-ok-global-nav] {
     gap: 18px;
   }
 
-  body header[data-ok-global-nav] > a:first-child > img {
-    width: clamp(118px, 18vw, 132px);
+  body header[data-ok-global-nav][data-ok-nav-state="detached"] {
+    top: max(12px, env(safe-area-inset-top)) !important;
+    right: 12px !important;
+    left: 12px !important;
+    padding-inline: clamp(16px, 4vw, 24px) !important;
+    border-radius: 15px;
   }
 
-  body header[data-ok-global-nav] nav[data-ok-primary-nav] {
+  body header[data-ok-global-nav] > a:first-child > img,
+  body header[data-ok-global-nav][data-ok-nav-state="detached"] > a:first-child > img {
+    width: clamp(118px, 18vw, 132px) !important;
+  }
+
+  body header[data-ok-global-nav][data-ok-nav-ready] nav[data-ok-primary-nav] {
     display: none;
   }
 
-  .ok-nav-trigger {
+  body header[data-ok-global-nav][data-ok-nav-ready] .ok-nav-trigger {
+    min-width: var(--ok-nav-compact-trigger-width);
     display: inline-flex;
+  }
+}
+
+@media (max-width: 420px) {
+  .ok-global-menu__nav {
+    align-content: start;
+    padding-top: 18px;
+  }
+
+  .ok-global-menu__offer > summary,
+  .ok-global-menu__nav > a {
+    min-height: 50px;
+  }
+
+  .ok-global-menu__offer-links a {
+    min-height: 39px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 360px) {
   .ok-nav-trigger {
-    min-width: 88px;
+    min-width: var(--ok-nav-compact-trigger-width);
     gap: 10px;
     font-size: 12px;
   }
@@ -437,47 +730,58 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
   .ok-global-menu__close {
     min-width: 96px;
   }
+
+  .ok-global-menu__offer > summary,
+  .ok-global-menu__nav > a {
+    font-size: 27px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  body header[data-ok-global-nav],
+  body header[data-ok-global-nav] > a:first-child > img,
   body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
   body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after,
-  .ok-nav-trigger::after,
+  .ok-nav-offer > summary::after,
+  .ok-nav-offer__mark,
+  .ok-nav-trigger__signal::before,
+  .ok-nav-trigger__signal::after,
   .ok-global-menu__surface,
   .ok-global-menu__nav a::after {
-    animation: none;
-    transition: none;
+    animation: none !important;
+    transition-duration: .01ms !important;
   }
 }
 
 @media (forced-colors: active) {
-  body header:is(.topbar, .site-header, .legal-header),
+  body header[data-ok-global-nav],
+  body header[data-ok-global-nav][data-ok-nav-state="detached"],
+  .ok-nav-offer__popover,
   .ok-global-menu__surface {
-    color: CanvasText;
-    border-color: CanvasText;
-    background: Canvas;
-    box-shadow: inset 0 -1px CanvasText;
+    color: CanvasText !important;
+    border: 1px solid CanvasText !important;
+    background: Canvas !important;
+    box-shadow: none !important;
     forced-color-adjust: auto;
   }
 
   body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
+  .ok-nav-offer > summary,
   .ok-nav-trigger,
   .ok-global-menu__close,
   .ok-global-menu__nav a {
-    color: LinkText;
+    color: LinkText !important;
   }
 
-  body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after,
-  .ok-nav-trigger__signal::before,
-  .ok-nav-trigger__signal::after,
-  .ok-global-menu__close-mark::before,
-  .ok-global-menu__close-mark::after,
-  .ok-global-menu__nav a::after {
-    background: currentColor;
+  .ok-nav-cta,
+  .ok-global-menu__nav > .ok-global-menu__cta {
+    border: 2px solid LinkText;
+    background: Canvas !important;
   }
 
-  body header:is(.topbar, .site-header, .legal-header) > a:first-child:focus-visible,
+  body header[data-ok-global-nav] > a:first-child:focus-visible,
   body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible,
+  .ok-nav-offer > summary:focus-visible,
   .ok-nav-trigger:focus-visible,
   .ok-global-menu a:focus-visible,
   .ok-global-menu__close:focus-visible {
@@ -487,8 +791,13 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
 
 @media print {
   .ok-nav-trigger,
-  .ok-global-menu {
+  .ok-global-menu,
+  .ok-nav-slot {
     display: none !important;
+  }
+
+  body header[data-ok-global-nav] {
+    position: static !important;
   }
 
   body header[data-ok-global-nav] nav[data-ok-primary-nav] {

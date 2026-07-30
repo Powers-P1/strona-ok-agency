@@ -49,7 +49,7 @@
   <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260729-2">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260730-7">
@@ -59,6 +59,29 @@
 </head>
 <body class="web-service diagnosis-service">
   <a class="skip-link" href="#diagnosis-opening">Przejdź do Diagnozy</a>
+
+  <header class="site-header site-header-light" data-ok-global-nav data-ok-nav-state="docked">
+    <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
+      <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
+    </a>
+    <nav aria-label="Główna nawigacja" data-ok-primary-nav>
+      <details class="ok-nav-offer" data-ok-offer>
+        <summary data-nav-link="offer">Oferta<span class="ok-nav-offer__mark" aria-hidden="true"></span></summary>
+        <div class="ok-nav-offer__popover">
+          <a href="/menu" data-offer-route>Zobacz całą ofertę</a>
+          <a href="/strony-internetowe" data-offer-route>Strony internetowe</a>
+          <a href="/social-media" data-offer-route>Social media</a>
+          <a href="/kampanie" data-offer-route>Kampanie</a>
+          <a href="/diagnoza" data-offer-route>Diagnoza — nie wiem, od czego zacząć</a>
+        </div>
+      </details>
+      <a href="/o-nas" data-nav-link="about">O nas</a>
+      <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
+      <a href="/faq" data-nav-link="faq">FAQ</a>
+      <a class="ok-nav-cta" href="/kontakt?context=diagnosis" data-nav-link="contact">Porozmawiajmy</a>
+    </nav>
+  </header>
+  <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="diagnosis-story" data-diagnosis-tool>
     <div class="story-stage">
@@ -78,15 +101,6 @@
           <path class="glint glint-a" filter="url(#opening-glint)" pathLength="1" d="M 1536 768 C 1408 701 1349 642 1303 570 C 1258 501 1173 501 1092 490 C 1028 481 980 449 965 406"></path>
           <path class="glint glint-b" filter="url(#opening-glint)" pathLength="1" d="M 1303 570 C 1274 492 1240 429 1217 365"></path>
         </svg>
-
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103"></a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=diagnosis" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <svg class="annotation-lines" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="opening-symptom"><path pathLength="1" d="M 995 419 L 925 355 H 824"></path></g>
@@ -138,15 +152,6 @@
           <path class="glint glint-b" filter="url(#map-glint)" pathLength="1" d="M 1112 475 C 1189 425 1239 362 1276 315"></path>
           <path class="glint glint-c" filter="url(#map-glint)" pathLength="1" d="M 897 421 C 823 405 779 432 760 486"></path>
         </svg>
-
-        <header class="site-header site-header-dark">
-          <a class="wordmark" href="/" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103"></a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=diagnosis" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <svg class="annotation-lines map-annotation-lines" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="map-facts"><path pathLength="1" d="M 758 486 L 695 555 H 622"></path></g>
@@ -248,15 +253,6 @@
       <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-outcome-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
         <span class="proof-bloom" aria-hidden="true"></span>
 
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency - strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103"></a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces?from=diagnosis" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=diagnosis" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
-
         <article class="result-content">
           <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
           <h2 id="result-title" tabindex="-1">Najpierw strona internetowa.</h2>
@@ -279,8 +275,8 @@
 
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.v20260730-3.js"></script>
-  <script src="assets/navigation.js?v=20260730-2"></script>
+  <script src="assets/navigation.js?v=20260730-4"></script>
   <script src="assets/services/diagnosis/script.js?v=20260730-1"></script>
-  <script src="assets/site-footer.js?v=20260729-2"></script>
+  <script src="assets/site-footer.js?v=20260730-3"></script>
 </body>
 </html>

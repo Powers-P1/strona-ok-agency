@@ -84,7 +84,7 @@
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/story-standard.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260730-7">
@@ -96,21 +96,33 @@
 <body class="social-page">
   <a class="skip-link" href="#social-opening">Przejdź do Social Media</a>
 
+  <header class="site-header site-header-light" data-ok-global-nav data-ok-nav-state="docked">
+    <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
+      <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
+    </a>
+    <nav aria-label="Główna nawigacja" data-ok-primary-nav>
+      <details class="ok-nav-offer" data-ok-offer>
+        <summary data-nav-link="offer">Oferta<span class="ok-nav-offer__mark" aria-hidden="true"></span></summary>
+        <div class="ok-nav-offer__popover">
+          <a href="/menu" data-offer-route>Zobacz całą ofertę</a>
+          <a href="/strony-internetowe" data-offer-route>Strony internetowe</a>
+          <a href="/social-media" data-offer-route>Social media</a>
+          <a href="/kampanie" data-offer-route>Kampanie</a>
+          <a href="/diagnoza" data-offer-route>Diagnoza — nie wiem, od czego zacząć</a>
+        </div>
+      </details>
+      <a href="/o-nas" data-nav-link="about">O nas</a>
+      <a href="/proces?from=social" data-nav-link="process">Jak pracujemy</a>
+      <a href="/faq" data-nav-link="faq">FAQ</a>
+      <a class="ok-nav-cta" href="/kontakt?context=social" data-nav-link="contact">Porozmawiajmy</a>
+    </nav>
+  </header>
+  <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
+
   <main class="social-story">
     <div class="story-stage">
       <section class="social-frame social-opening" id="social-opening" aria-labelledby="opening-title">
         <img class="campaign-art" src="assets/services/social/social-art-opening-veins-v3.webp" srcset="assets/services/social/social-art-opening-veins-v3-960.webp 960w, assets/services/social/social-art-opening-veins-v3-1280.webp 1280w, assets/services/social/social-art-opening-veins-v3.webp 1671w" sizes="100vw" width="1671" height="941" alt="" fetchpriority="high">
-
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-            <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-          </a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces?from=social" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=social" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <svg class="annotation-lines" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="opening-direction"><path pathLength="1" d="M 694 567 L 646 516 H 562"></path></g>
@@ -157,15 +169,6 @@
       <section class="social-frame social-rhythm" id="social-rhythm" aria-labelledby="rhythm-title">
         <img class="campaign-art" src="assets/services/social/social-art-rhythm-veins-v3.webp" srcset="assets/services/social/social-art-rhythm-veins-v3-960.webp 960w, assets/services/social/social-art-rhythm-veins-v3-1280.webp 1280w, assets/services/social/social-art-rhythm-veins-v3.webp 1672w" sizes="100vw" width="1672" height="941" alt="" loading="lazy" decoding="async">
 
-        <header class="site-header site-header-dark">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna"><img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103"></a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces?from=social" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=social" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
-
         <div class="journey-intro">
           <h2 id="rhythm-title">Rytm,<br>nie <em>taśma</em><br>produkcyjna.</h2>
           <p>Jeden miesięczny obieg. Każdy etap kończy się<br>decyzją, materiałem albo wnioskiem na kolejny cykl.</p>
@@ -211,15 +214,6 @@
       <section class="social-frame social-signals" id="social-signals" aria-labelledby="signals-title">
         <img class="campaign-art" src="assets/services/social/social-art-signals-veins-v3.webp" srcset="assets/services/social/social-art-signals-veins-v3-960.webp 960w, assets/services/social/social-art-signals-veins-v3-1280.webp 1280w, assets/services/social/social-art-signals-veins-v3.webp 1672w" sizes="100vw" width="1672" height="941" alt="" loading="lazy" decoding="async">
         <span class="proof-bloom" aria-hidden="true"></span>
-
-        <header class="site-header site-header-light">
-          <a class="wordmark" href="/" aria-label="OK Agency — strona główna"><img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103"></a>
-          <nav aria-label="Główna nawigacja">
-            <a href="/menu" data-nav-link="offer">Oferta</a>
-            <a href="/proces?from=social" data-nav-link="process">Jak pracujemy</a>
-            <a href="/kontakt?context=social" data-nav-link="contact">Kontakt</a>
-          </nav>
-        </header>
 
         <div class="proof-content">
           <h2 id="signals-title">Patrzymy na sygnały,<br>które prowadzą <em>dalej.</em></h2>
@@ -344,8 +338,8 @@
   </main>
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.v20260730-3.js"></script>
-  <script src="assets/navigation.js?v=20260730-2"></script>
+  <script src="assets/navigation.js?v=20260730-4"></script>
   <script src="assets/service-interactions.js?v=20260730-1"></script>
-  <script src="assets/site-footer.js?v=20260729-2"></script>
+  <script src="assets/site-footer.js?v=20260730-3"></script>
 </body>
 </html>

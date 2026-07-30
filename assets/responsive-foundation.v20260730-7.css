@@ -278,12 +278,12 @@ canvas {
 
   .menu-page .page-title {
     margin-inline: var(--ok-canvas-inset);
-    font-size: clamp(64px, 8.2svh, 128px);
+    font-size: clamp(96px, 12svh, 144px);
   }
 
   .menu-page .cards {
-    width: auto;
-    margin-inline: var(--ok-canvas-inset);
+    width: 100%;
+    margin-inline: 0;
   }
 
   .menu-page .card-title {

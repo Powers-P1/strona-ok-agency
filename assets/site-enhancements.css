@@ -435,6 +435,16 @@ body.about-page {
   z-index: 1;
 }
 
+/*
+ * Pierwszy kadr Kampanii jest kompletną kompozycją z hotspotami osadzonymi
+ * bezpośrednio na konarze. Dynamiczna osłona responsywna nie może po starcie
+ * strony wycinać tej grafiki i odsłaniać papierowego tła.
+ */
+.campaign-page .campaign-opening > .campaign-art {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
 .process-frame.process-discovery-scene {
   background-image: url("services/process/process-art-discovery-v3.webp");
   background-position: center;

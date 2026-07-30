@@ -1,0 +1,264 @@
+/*
+  OK Agency responsive safety
+  ---------------------------
+  This late-loaded layer owns collision avoidance and reflow only.
+  Typography remains owned by the page styles and responsive-foundation.css.
+*/
+
+:root {
+  --ok-safety-gap: clamp(20px, 3vw, 56px);
+}
+
+body.home-page {
+  overflow-y: auto;
+}
+
+.home-page .hero[data-ok-safe-scene] {
+  min-height: max(100svh, var(--ok-safe-required-height, 100svh));
+  height: auto;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.home-page .hero[data-ok-safe-scene] :is(.art-stage, .hero-backdrop) {
+  min-height: inherit;
+}
+
+.home-page .hero[data-ok-safe-curtain="active"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 10% 16%, rgba(255, 245, 228, .66), transparent 48%),
+    radial-gradient(ellipse at 10% 100%, rgba(255, 92, 141, .1), transparent 32%),
+    linear-gradient(105deg, #ead9c9 0%, #e8d6c5 100%);
+  -webkit-mask-image: var(--ok-safe-curtain-mask);
+  mask-image: var(--ok-safe-curtain-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.home-page .hero[data-ok-safe-curtain="active"] .hero-backdrop {
+  visibility: hidden;
+}
+
+/*
+  Below 1180px of usable width, or at 4:3 and narrower, the hero switches
+  atomically to purpose-built compact/portrait plates. Their upper halves are
+  real photographed canvas and their sculptures start below the copy safe zone,
+  so this mode needs neither the desktop backdrop nor a collision mask.
+*/
+@media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
+  .home-page .hero[data-ok-safe-mobile-hero] .hero-backdrop {
+    display: none;
+  }
+
+  .home-page .hero[data-ok-safe-mobile-hero] .art-stage {
+    inset: 0;
+    min-height: inherit;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+
+  .home-page .hero[data-ok-safe-mobile-hero] .image-rig {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    transform: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+
+  .home-page .hero[data-ok-safe-mobile-hero] :is(.scene-picture, .sculpture) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .home-page .hero[data-ok-safe-mobile-hero] .sculpture {
+    object-fit: cover;
+    object-position: 56% top;
+  }
+
+  /*
+    The branch map belongs to the horizontal master and would no longer align
+    with either recomposed sculpture. Keep the baked highlights; retain the
+    correctly positioned neural activity only on the portrait base.
+  */
+  .home-page .hero[data-ok-safe-mobile-hero] :is(.light-canvas, .stone-contact) {
+    display: none;
+  }
+
+  .home-page .hero[data-ok-safe-mobile-hero="compact"] :is(.stone-neural-canvas, .stone-shell) {
+    display: none;
+  }
+
+  .home-page .hero[data-ok-safe-mobile-hero="portrait"] :is(.stone-neural-canvas, .stone-shell) {
+    left: 29%;
+    top: 79.5%;
+    width: 50%;
+    height: 11.5%;
+  }
+}
+
+[data-ok-safe-scene] {
+  --ok-safe-required-height: 0px;
+}
+
+/*
+  The viewport profile is shared by every illustrated route. Tall portrait
+  scenes stay composited as one frame, while short windows gain document
+  height instead of splitting the artwork into a separate rectangle.
+*/
+:root[data-ok-tall-portrait] [data-ok-safe-scene] {
+  overflow-x: clip;
+}
+
+[data-ok-safe-content] {
+  min-width: 0;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+[data-ok-safe-content] :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+[data-ok-safe-art="active"] {
+  -webkit-mask-image: var(--ok-safe-mask-image);
+  mask-image: var(--ok-safe-mask-image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+[data-ok-safe-content][data-ok-safe-scroll="true"] {
+  max-height: var(--ok-safe-content-max-height);
+  padding-inline-end: max(8px, env(scrollbar-width, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+/* The focused home state hides the measured intro and owns its own panel. */
+.home-page .hero.is-focused .art-stage {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+/*
+  A short window must create scrollable space instead of reducing copy or
+  clipping it to one viewport. The photographic backdrop remains full bleed.
+*/
+@media (max-height: 720px) {
+  .home-page .hero {
+    min-height: max(100svh, var(--ok-safe-required-height, 680px), 680px);
+    height: auto;
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  .home-page .art-stage,
+  .home-page .hero-backdrop {
+    min-height: inherit;
+  }
+
+  .error-page {
+    overflow-y: auto;
+  }
+
+  .error-page .error-main {
+    min-height: max(100svh, var(--ok-safe-required-height, 680px), 680px);
+    align-items: start;
+  }
+
+  .contact-page .layout {
+    min-height: max(100svh, var(--ok-safe-required-height, 680px), 680px);
+  }
+}
+
+/*
+  About scenes are intentionally app-like and keep the fixed scene navigation.
+  Their inner content becomes independently scrollable instead of being scaled
+  below the approved type size.
+*/
+@media (max-width: 900px), (max-height: 720px) {
+  .about-page .scene-inner {
+    overflow-x: clip;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
+
+  .about-page .copy-panel,
+  .about-page .scene-02 .copy-panel,
+  .about-page .scene-03 .copy-panel,
+  .about-page .scene-04 .copy-panel {
+    transform: none !important;
+  }
+}
+
+/*
+  If a card's measured text no longer fits above the image, all cards switch
+  together to a natural vertical layout. This keeps the comparison grid even.
+*/
+.menu-page .cards[data-ok-safe-cards="stacked"] .card {
+  min-height: var(--ok-safe-card-height, 660px);
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.menu-page .cards[data-ok-safe-cards="stacked"] .card-text {
+  height: auto;
+  min-height: 0;
+  padding-bottom: 24px;
+  flex: 0 0 auto;
+}
+
+.menu-page .cards[data-ok-safe-cards="stacked"] .card-img {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  min-height: clamp(220px, 34svh, 440px);
+  margin-top: auto;
+  flex: 1 0 clamp(220px, 34svh, 440px);
+}
+
+@media (max-width: 640px) {
+  [data-ok-safe-content] {
+    max-width: calc(100% - (2 * var(--ok-safety-gap)));
+  }
+
+  .home-page [data-ok-safe-content] {
+    max-width: calc(100% - 2.5rem);
+  }
+}
+
+/*
+  Contact and Offer use intentional document/card flow rather than overlay
+  scenes. Keep their illustrations proportionate in tall portrait windows so
+  a decorative image cannot become an accidental second viewport.
+*/
+:root[data-ok-tall-portrait] .contact-page .scene {
+  min-height: clamp(280px, 42svh, 420px);
+}
+
+:root[data-ok-tall-portrait] .menu-page .cards[data-ok-safe-cards="stacked"] .card-img {
+  min-height: clamp(220px, 30svh, 360px);
+  flex-basis: clamp(220px, 30svh, 360px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-ok-safe-art] {
+    transition: none !important;
+  }
+}

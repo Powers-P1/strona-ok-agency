@@ -18,7 +18,7 @@
   --ok-home-display: clamp(96px, 18svh, 320px);
   --ok-service-display: clamp(68px, 8.7svh, 144px);
   --ok-section-display: clamp(58px, 7.8svh, 128px);
-  --ok-body-copy: clamp(13px, 1.35svh, 18px);
+  --ok-body-copy: clamp(15px, 1.55svh, 21px);
 }
 
 html {
@@ -84,19 +84,19 @@ canvas {
 
   .home-page .scene-label,
   .home-page .detail-kicker {
-    font-size: clamp(10px, 1.1svh, 15px);
+    font-size: clamp(12px, 1.25svh, 17px);
   }
 
   .home-page .descriptor {
     margin-top: clamp(24px, 3.4svh, 54px);
-    font-size: clamp(13px, 1.4svh, 18px);
+    font-size: clamp(15px, 1.6svh, 21px);
   }
 
   .home-page .cta {
     margin-top: clamp(22px, 3svh, 48px);
-    min-width: clamp(248px, 15vw, 400px);
-    padding-block: clamp(17px, 1.9svh, 26px);
-    font-size: clamp(13px, 1.25svh, 17px);
+    min-width: clamp(268px, 16.5vw, 440px);
+    padding-block: clamp(19px, 2.1svh, 28px);
+    font-size: clamp(15px, 1.45svh, 20px);
   }
 
   .home-page .wordmark {
@@ -104,11 +104,32 @@ canvas {
   }
 
   .home-page .nav a {
-    font-size: clamp(11px, 1.05svh, 15px);
+    font-size: clamp(13px, 1.2svh, 17px);
   }
 
   .home-page .detail {
     left: var(--ok-canvas-inset);
+  }
+}
+
+/*
+  A tall desktop window still has a desktop-sized navigation rail, but it
+  must not inherit display type driven by 18svh. Cap the heading by width
+  and let the portrait art direction occupy the lower half of the stage.
+*/
+@media (min-width: 1025px) and (max-aspect-ratio: 2 / 3) {
+  .home-page .copy {
+    top: clamp(136px, 11.5svh, 220px);
+    width: min(820px, calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
+  .home-page .copy h1 {
+    font-size: clamp(112px, 16vw, 180px);
+  }
+
+  .home-page .descriptor,
+  .home-page .value-lead {
+    max-width: 720px;
   }
 }
 
@@ -140,7 +161,7 @@ canvas {
   .social-page .site-header nav a,
   .web-service .site-header nav a,
   .process-page .site-header nav a {
-    font-size: clamp(11px, 1.05svh, 15px);
+    font-size: clamp(13px, 1.2svh, 17px);
   }
 
   .campaign-page .opening-copy h1,
@@ -271,7 +292,7 @@ canvas {
 
   .menu-page .card-quote,
   .menu-page .card-description {
-    font-size: clamp(13px, 1.25svh, 16px);
+    font-size: clamp(14px, 1.4svh, 18px);
   }
 }
 
@@ -292,7 +313,11 @@ canvas {
   }
 
   .contact-page .lead {
-    font-size: clamp(15px, 1.45svh, 18px);
+    font-size: clamp(17px, 1.65svh, 21px);
+  }
+
+  .contact-page .kicker {
+    font-size: 13px;
   }
 }
 
@@ -579,6 +604,6 @@ canvas {
 
 @media (prefers-reduced-motion: reduce) and (min-width: 1025px) and (min-aspect-ratio: 1672 / 941) {
   .home-page .image-rig {
-    transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, 0, 0);
   }
 }

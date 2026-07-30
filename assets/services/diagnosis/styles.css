@@ -220,17 +220,17 @@ svg { display: block; }
   background: var(--pink);
 }
 .outline-cta {
-  width: 255px;
-  min-height: 50px;
+  width: 275px;
+  min-height: 56px;
   margin-top: 17px;
-  padding: 0 17px;
+  padding: 0 19px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--pink);
   border-radius: 0;
   background: transparent;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 550;
   text-align: left;
   cursor: pointer;

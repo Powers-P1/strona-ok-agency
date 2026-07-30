@@ -17,9 +17,15 @@
   let paused = initialPreference
     ? initialPreference === "paused"
     : media.matches;
+  if (!paused) root.classList.add("motion-intro-enabled");
+
+  window.setTimeout(() => {
+    root.classList.remove("motion-intro-enabled");
+  }, 1600);
 
   const applyState = ({ persist = false, announce = false } = {}) => {
     root.dataset.motion = paused ? "paused" : "running";
+    if (paused) root.classList.remove("motion-intro-enabled");
 
     const button = document.querySelector("[data-motion-toggle]");
     if (button) {

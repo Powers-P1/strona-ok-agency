@@ -1,215 +1,497 @@
 /*
- * Shared primary-navigation contract.
+ * OK Agency — global editorial navigation
  *
- * The header protection surfaces keep navigation contrast independent from
- * animated artwork and responsive image crops. Interactive states follow
- * WCAG 2.2 AA and use the stronger 44px target/focus treatment where the
- * editorial layout allows it.
+ * One material rail across every public route. Existing page headers retain
+ * their positioning model (absolute, relative or fixed); this layer owns the
+ * shared dimensions, surface, navigation states and compact menu.
  */
 
 :root {
-  --ok-nav-light-text: #071a2c;
-  --ok-nav-light-hover: #8f1642;
-  --ok-nav-dark-text: #f0dfcf;
-  --ok-nav-dark-hover: #fff8f0;
-  --ok-nav-light-focus: #8f1642;
-  --ok-nav-dark-focus: #ff7da4;
-  --ok-nav-accent: #d73568;
+  --ok-nav-rail-height: 80px;
+  --ok-nav-canvas: #f0dfcf;
+  --ok-nav-navy: #142030;
+  --ok-nav-rose: #b52454;
+  --ok-nav-hairline: rgba(20, 32, 48, .25);
+  --ok-nav-gutter: var(--ok-canvas-inset, clamp(24px, 4vw, 68px));
 }
 
-/* Theme tokens inherited by every primary navigation link. */
-.site-header-light,
-.topbar,
-.header-nav,
-.about-page[data-theme="light"] > .site-header,
-.privacy-page .legal-header nav {
-  --ok-nav-text: var(--ok-nav-light-text);
-  --ok-nav-hover: var(--ok-nav-light-hover);
-  --ok-nav-focus: var(--ok-nav-light-focus);
+html {
+  scroll-padding-top: calc(var(--ok-nav-rail-height) + 16px);
+  scrollbar-gutter: stable;
 }
 
-.site-header-dark,
-.site-nav,
-.about-page[data-theme="dark"] > .site-header,
-.error-page .legal-header nav {
-  --ok-nav-text: var(--ok-nav-dark-text);
-  --ok-nav-hover: var(--ok-nav-dark-hover);
-  --ok-nav-focus: var(--ok-nav-dark-focus);
+:where(main, section, article)[id] {
+  scroll-margin-top: calc(var(--ok-nav-rail-height) + 16px);
 }
 
-/*
- * A high-opacity theme-aware veil removes local image detail from behind
- * glyphs. It fades below the controls, preserving the cinematic artwork.
- */
-.site-header-light {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(234, 217, 203, .96) 0%,
-      rgba(234, 217, 203, .91) 58%,
-      rgba(234, 217, 203, .68) 78%,
-      rgba(234, 217, 203, 0) 100%
-    );
+body.ok-nav-open {
+  overflow: hidden;
 }
 
-.site-header-dark {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(4, 19, 33, .96) 0%,
-      rgba(4, 19, 33, .91) 58%,
-      rgba(4, 19, 33, .7) 78%,
-      rgba(4, 19, 33, 0) 100%
-    );
-}
-
-.topbar {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(234, 217, 203, .96) 0%,
-      rgba(234, 217, 203, .91) 62%,
-      rgba(234, 217, 203, 0) 100%
-    );
-}
-
-.about-page[data-theme="light"] > .site-header {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(234, 217, 203, .96) 0%,
-      rgba(234, 217, 203, .91) 62%,
-      rgba(234, 217, 203, 0) 100%
-    );
-}
-
-.about-page[data-theme="dark"] > .site-header {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(4, 19, 33, .96) 0%,
-      rgba(4, 19, 33, .91) 62%,
-      rgba(4, 19, 33, 0) 100%
-    );
+.ok-global-menu .visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 /*
- * Contact uses a split paper/image composition. The surface follows that
- * composition so both the navy wordmark and cream navigation stay legible.
+ * The low-contrast weave is code-native and intentionally restrained. The
+ * opaque base keeps navigation contrast stable over every page illustration.
  */
-.contact-page > .site-header {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(246, 218, 194, .96) 0%,
-      rgba(246, 218, 194, .93) 39%,
-      rgba(4, 19, 33, .72) 68%,
-      rgba(4, 19, 33, .94) 100%
-    );
+body header:is(.topbar, .site-header, .legal-header) {
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--ok-nav-rail-height) !important;
+  min-height: var(--ok-nav-rail-height) !important;
+  padding-block: 0 !important;
+  padding-inline: var(--ok-nav-gutter) !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 64px);
+  overflow: visible;
+  color: var(--ok-nav-navy);
+  border: 0;
+  background-color: var(--ok-nav-canvas);
+  background-image:
+    radial-gradient(circle at 18% 32%, rgba(255, 255, 255, .22) 0 1px, transparent 1.25px),
+    radial-gradient(circle at 72% 66%, rgba(20, 32, 48, .045) 0 .8px, transparent 1.1px),
+    linear-gradient(92deg, rgba(255, 255, 255, .16), transparent 32%, rgba(112, 69, 50, .035) 74%, transparent);
+  background-size: 11px 13px, 13px 17px, 100% 100%;
+  box-shadow:
+    inset 0 -1px var(--ok-nav-hairline),
+    0 8px 24px rgba(20, 32, 48, .045);
 }
 
-header nav a[data-nav-link],
-.about-page > .site-header nav a {
+body header:is(.topbar, .site-header, .legal-header)::after {
+  display: none;
+}
+
+body header:is(.topbar, .site-header, .legal-header) > a:first-child {
+  position: relative;
+  z-index: 2;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+body header:is(.topbar, .site-header, .legal-header) > a:first-child > img {
+  width: clamp(142px, 9vw, 154px);
+  height: auto;
+  display: block;
+  filter: none !important;
+}
+
+body header:is(.topbar, .site-header, .legal-header) > a:first-child:focus-visible,
+.ok-global-menu a:focus-visible,
+.ok-nav-trigger:focus-visible,
+.ok-global-menu__close:focus-visible {
+  outline: 3px solid var(--ok-nav-rose);
+  outline-offset: 4px;
+}
+
+body header[data-ok-global-nav] nav[data-ok-primary-nav] {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(28px, 3.2vw, 52px);
+}
+
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a {
+  position: relative;
   min-width: 44px;
   min-height: 44px;
   padding: 0 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--ok-nav-text, currentColor);
-  font-size: 13px;
+  color: var(--ok-nav-navy);
+  font-family: "Archivo", sans-serif;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: .09em;
+  letter-spacing: .12em;
   text-decoration: none;
-  text-transform: uppercase;
   text-shadow: none;
-  transition:
-    color .22s ease,
-    text-decoration-color .22s ease;
+  text-transform: uppercase;
+  transition: color .22s ease;
 }
 
-header nav a[data-nav-link]:hover,
-header nav a[data-nav-link]:focus-visible,
-header nav a[data-nav-link].is-active,
-header nav a[data-nav-link][aria-current="page"],
-.about-page > .site-header nav a:hover,
-.about-page > .site-header nav a:focus-visible,
-.about-page > .site-header nav a.is-active,
-.about-page > .site-header nav a[aria-current="page"] {
-  color: var(--ok-nav-hover, currentColor);
-}
-
-header nav a[data-nav-link]::after,
-.about-page > .site-header nav a::after {
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after {
+  content: "";
+  position: absolute;
   right: 2px;
-  bottom: 3px;
+  bottom: 2px;
   left: 2px;
   height: 2px;
-  background: var(--ok-nav-accent);
+  background: var(--ok-nav-rose);
+  transform: scaleX(0);
   transform-origin: left;
+  transition: transform .24s ease;
 }
 
-header nav a[data-nav-link]:hover::after,
-header nav a[data-nav-link]:focus-visible::after,
-header nav a[data-nav-link].is-active::after,
-header nav a[data-nav-link][aria-current="page"]::after,
-.about-page > .site-header nav a:hover::after,
-.about-page > .site-header nav a:focus-visible::after,
-.about-page > .site-header nav a.is-active::after,
-.about-page > .site-header nav a[aria-current="page"]::after {
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:hover,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a.is-active,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"] {
+  color: #8f173f;
+}
+
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:hover::after,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible::after,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a.is-active::after,
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"]::after {
   transform: scaleX(1);
 }
 
-header nav a[data-nav-link]:focus-visible,
-.about-page > .site-header nav a:focus-visible {
-  outline: 3px solid var(--ok-nav-focus, var(--ok-nav-accent));
-  outline-offset: 3px;
-  border-radius: 2px;
+body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible {
+  outline: 3px solid var(--ok-nav-rose);
+  outline-offset: 4px;
+  border-radius: 1px;
 }
 
-@media (max-width: 1024px) {
-  .contact-page > .site-header {
-    background: rgba(246, 218, 194, .97);
-  }
+.ok-nav-trigger {
+  position: relative;
+  z-index: 2;
+  min-width: 96px;
+  min-height: 44px;
+  padding: 0;
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 13px;
+  color: var(--ok-nav-navy);
+  border: 0;
+  background: transparent;
+  font-family: "Archivo", sans-serif;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
 
-  .site-nav {
-    --ok-nav-text: #142030;
-    --ok-nav-hover: #8f1642;
-    --ok-nav-focus: #8f1642;
+.ok-nav-trigger::after {
+  content: "";
+  position: absolute;
+  right: 31px;
+  bottom: 5px;
+  left: 0;
+  height: 2px;
+  background: var(--ok-nav-rose);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .22s ease;
+}
+
+.ok-nav-trigger:hover::after,
+.ok-nav-trigger:focus-visible::after,
+.ok-nav-trigger[aria-expanded="true"]::after {
+  transform: scaleX(1);
+}
+
+.ok-nav-trigger__signal {
+  width: 22px;
+  height: 14px;
+  display: grid;
+  align-content: center;
+  justify-items: end;
+  gap: 5px;
+}
+
+.ok-nav-trigger__signal::before,
+.ok-nav-trigger__signal::after {
+  content: "";
+  height: 2px;
+  display: block;
+  background: var(--ok-nav-rose);
+}
+
+.ok-nav-trigger__signal::before {
+  width: 22px;
+}
+
+.ok-nav-trigger__signal::after {
+  width: 14px;
+}
+
+/* ---------- compact dialog ---------- */
+
+.ok-global-menu {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--ok-nav-navy);
+  border: 0;
+  background: transparent;
+}
+
+.ok-global-menu[open] {
+  display: block;
+}
+
+.ok-global-menu::backdrop {
+  background: rgba(8, 19, 31, .58);
+}
+
+.ok-global-menu__surface {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: var(--ok-nav-rail-height) minmax(0, 1fr) auto;
+  background-color: var(--ok-nav-canvas);
+  background-image:
+    radial-gradient(circle at 18% 32%, rgba(255, 255, 255, .24) 0 1px, transparent 1.25px),
+    radial-gradient(circle at 72% 66%, rgba(20, 32, 48, .05) 0 .8px, transparent 1.1px),
+    linear-gradient(145deg, rgba(255, 255, 255, .14), transparent 48%, rgba(181, 36, 84, .055));
+  background-size: 11px 13px, 13px 17px, 100% 100%;
+  animation: ok-nav-enter .28s ease-out both;
+}
+
+.ok-global-menu__rail {
+  min-height: var(--ok-nav-rail-height);
+  padding-inline: var(--ok-nav-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ok-nav-hairline);
+}
+
+.ok-global-menu__brand {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ok-global-menu__brand img {
+  width: 128px;
+  height: auto;
+  display: block;
+}
+
+.ok-global-menu__close {
+  min-width: 104px;
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  color: var(--ok-nav-navy);
+  border: 0;
+  background: transparent;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.ok-global-menu__close-mark {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.ok-global-menu__close-mark::before,
+.ok-global-menu__close-mark::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 1px;
+  width: 19px;
+  height: 2px;
+  background: var(--ok-nav-rose);
+}
+
+.ok-global-menu__close-mark::before {
+  transform: rotate(45deg);
+}
+
+.ok-global-menu__close-mark::after {
+  transform: rotate(-45deg);
+}
+
+.ok-global-menu__nav {
+  width: min(100%, 980px);
+  margin-inline: auto;
+  padding: clamp(36px, 8svh, 92px) var(--ok-nav-gutter);
+  display: grid;
+  align-content: center;
+}
+
+.ok-global-menu__nav a {
+  position: relative;
+  min-height: clamp(72px, 12svh, 112px);
+  padding: 16px 52px 16px 0;
+  display: flex;
+  align-items: center;
+  color: var(--ok-nav-navy);
+  border-bottom: 1px solid var(--ok-nav-hairline);
+  font-family: "Archivo", sans-serif;
+  font-size: clamp(30px, 6.8vw, 66px);
+  font-weight: 650;
+  line-height: .96;
+  letter-spacing: -.035em;
+  text-decoration: none;
+}
+
+.ok-global-menu__nav a::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  width: 28px;
+  height: 2px;
+  background: var(--ok-nav-rose);
+  box-shadow: 8px 7px 0 -1px var(--ok-nav-rose);
+  transition: transform .22s ease;
+}
+
+.ok-global-menu__nav a:hover,
+.ok-global-menu__nav a:focus-visible,
+.ok-global-menu__nav a[aria-current="page"] {
+  color: #8f173f;
+}
+
+.ok-global-menu__nav a:hover::after,
+.ok-global-menu__nav a:focus-visible::after {
+  transform: translateX(5px);
+}
+
+.ok-global-menu__meta {
+  margin: 0;
+  padding: 18px var(--ok-nav-gutter) 22px;
+  color: rgba(20, 32, 48, .72);
+  border-top: 1px solid var(--ok-nav-hairline);
+  font-family: "Archivo", sans-serif;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+@keyframes ok-nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-@media (max-width: 640px) {
-  header nav a[data-nav-link],
-  .about-page > .site-header nav a {
+/*
+ * The navigation follows the same spatial contract as the hero: compact below
+ * 1180px or at 4:3. The data attribute is added only after JavaScript has
+ * created a working MENU control, so navigation remains usable if enhancement
+ * fails.
+ */
+@media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
+  :root {
+    --ok-nav-rail-height: 68px;
+    --ok-nav-gutter: var(--ok-canvas-inset, clamp(20px, 4vw, 34px));
+  }
+
+  body header[data-ok-global-nav] {
+    gap: 18px;
+  }
+
+  body header[data-ok-global-nav] > a:first-child > img {
+    width: clamp(118px, 18vw, 132px);
+  }
+
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] {
+    display: none;
+  }
+
+  .ok-nav-trigger {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 360px) {
+  .ok-nav-trigger {
+    min-width: 88px;
+    gap: 10px;
     font-size: 12px;
-    letter-spacing: .08em;
+  }
+
+  .ok-global-menu__close {
+    min-width: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after,
+  .ok-nav-trigger::after,
+  .ok-global-menu__surface,
+  .ok-global-menu__nav a::after {
+    animation: none;
+    transition: none;
   }
 }
 
 @media (forced-colors: active) {
-  .site-header-light,
-  .site-header-dark,
-  .topbar,
-  .about-page > .site-header,
-  .contact-page > .site-header {
+  body header:is(.topbar, .site-header, .legal-header),
+  .ok-global-menu__surface {
+    color: CanvasText;
+    border-color: CanvasText;
     background: Canvas;
-  }
-
-  header nav a[data-nav-link],
-  .about-page > .site-header nav a {
-    color: LinkText;
+    box-shadow: inset 0 -1px CanvasText;
     forced-color-adjust: auto;
   }
 
-  header nav a[data-nav-link]::after,
-  .about-page > .site-header nav a::after {
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
+  .ok-nav-trigger,
+  .ok-global-menu__close,
+  .ok-global-menu__nav a {
+    color: LinkText;
+  }
+
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after,
+  .ok-nav-trigger__signal::before,
+  .ok-nav-trigger__signal::after,
+  .ok-global-menu__close-mark::before,
+  .ok-global-menu__close-mark::after,
+  .ok-global-menu__nav a::after {
     background: currentColor;
   }
 
-  header nav a[data-nav-link]:focus-visible,
-  .about-page > .site-header nav a:focus-visible {
-    outline: 3px solid Highlight;
+  body header:is(.topbar, .site-header, .legal-header) > a:first-child:focus-visible,
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:focus-visible,
+  .ok-nav-trigger:focus-visible,
+  .ok-global-menu a:focus-visible,
+  .ok-global-menu__close:focus-visible {
+    outline-color: Highlight;
+  }
+}
+
+@media print {
+  .ok-nav-trigger,
+  .ok-global-menu {
+    display: none !important;
+  }
+
+  body header[data-ok-global-nav] nav[data-ok-primary-nav] {
+    display: flex !important;
   }
 }

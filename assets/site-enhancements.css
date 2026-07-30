@@ -99,7 +99,9 @@ html[data-motion="paused"] {
 html[data-motion="paused"] *,
 html[data-motion="paused"] *::before,
 html[data-motion="paused"] *::after {
-  animation-play-state: paused !important;
+  animation-duration: .01ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
   scroll-behavior: auto !important;
   transition-duration: .01ms !important;
   transition-delay: 0s !important;
@@ -149,7 +151,7 @@ html[data-motion="paused"] *::after {
 .decision-guide__eyebrow {
   margin: 0 0 16px;
   color: var(--ok-pink-on-light);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 750;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -190,7 +192,7 @@ html[data-motion="paused"] *::after {
 .decision-guide__item h3 {
   margin: 0 0 12px;
   color: var(--ok-pink-on-light);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 750;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -199,7 +201,7 @@ html[data-motion="paused"] *::after {
 .decision-guide__item p,
 .decision-guide__item li {
   color: #34424c;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.65;
 }
 
@@ -259,7 +261,7 @@ html[data-motion="paused"] *::after {
   margin: 0;
   padding: 0 0 22px;
   color: #34424c;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.7;
 }
 
@@ -390,6 +392,11 @@ body.about-page {
   *,
   *::before,
   *::after {
-    animation-play-state: paused !important;
+    animation-duration: .01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
   }
 }

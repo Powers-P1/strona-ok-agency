@@ -58,6 +58,24 @@ button { color: inherit; }
   mix-blend-mode: soft-light;
 }
 
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-backdrop img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .grid {
   position: absolute;
   inset: 0;
@@ -212,7 +230,7 @@ h1 span {
   max-width: 34rem;
   margin: .7rem 0 0;
   color: rgba(20, 32, 48, .78);
-  font-size: clamp(.78rem, .9vw, .94rem);
+  font-size: clamp(.95rem, 1.05vw, 1.12rem);
   line-height: 1.55;
 }
 
@@ -505,16 +523,29 @@ h1 span {
 
 .copy > *,
 .topbar {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.motion-intro-enabled[data-motion="running"] .copy > *,
+html.motion-intro-enabled[data-motion="running"] .topbar {
   opacity: 0;
   animation: enter .85s var(--ease) forwards;
 }
 
-.topbar { animation-delay: .05s; }
-.scene-label { animation-delay: .16s; }
-h1 { animation-delay: .24s; }
-.descriptor { animation-delay: .35s; }
-.value-lead { animation-delay: .43s; }
-.cta { animation-delay: .51s; }
+html.motion-intro-enabled[data-motion="running"] .topbar { animation-delay: .05s; }
+html.motion-intro-enabled[data-motion="running"] .scene-label { animation-delay: .16s; }
+html.motion-intro-enabled[data-motion="running"] h1 { animation-delay: .24s; }
+html.motion-intro-enabled[data-motion="running"] .descriptor { animation-delay: .35s; }
+html.motion-intro-enabled[data-motion="running"] .value-lead { animation-delay: .43s; }
+html.motion-intro-enabled[data-motion="running"] .cta { animation-delay: .51s; }
+
+html[data-motion="paused"] .copy > *,
+html[data-motion="paused"] .topbar {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  animation: none !important;
+}
 
 @keyframes enter {
   from { opacity: 0; transform: translateY(1.1rem); }
@@ -824,6 +855,13 @@ h1 { animation-delay: .24s; }
 
   .image-rig { transform: none; }
   .stone-neural-canvas { transform: none !important; }
+
+  .copy > *,
+  .topbar {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    animation: none !important;
+  }
 }
 
 /* Editorial Atelier — light gallery treatment */
@@ -1046,18 +1084,66 @@ h1 {
 }
 
 /*
-  On viewports wider than the 1672:941 source plate, a height-fitted rig
-  previously stopped inside the left edge of the viewport. Use a true
-  cover fit and crop the small vertical excess instead, keeping the plate
-  continuous from edge to edge without distorting the sculpture.
+  Wide screens gain background space instead of enlarging the sculpture.
+  The plate remains height-fitted, which preserves the approved 16:9 scale
+  and prevents 21:9/32:9 layouts from cropping the crown and the base.
 */
 @media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941) {
   .image-rig {
-    top: calc(50% + var(--py, 0px));
-    right: -1px;
-    width: calc(100vw + 2px);
+    top: 0;
+    right: 0;
+    width: auto;
+    height: 100svh;
+    transform: translate3d(var(--px, 0), var(--py, 0), 0);
+  }
+}
+
+/*
+  Feather only the environment edge on ultrawide screens. A dedicated empty
+  atelier plate continues the wall, floor, grain and lighting behind it, while
+  the sculpture and canvases remain in one unchanged 1672:941 coordinate system.
+*/
+@media (min-width: 1025px) and (min-aspect-ratio: 2 / 1) {
+  .image-rig {
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 100%);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+}
+
+/*
+  Tall desktop/tablet windows need portrait art direction. Keep the approved
+  plate and map, but size it as a bottom-anchored scene so the copy owns the
+  upper viewport instead of sitting behind an oversized full-height tree.
+*/
+@media (min-width: 641px) and (min-aspect-ratio: 2 / 3) and (max-aspect-ratio: 4 / 5) {
+  .image-rig {
+    top: auto;
+    right: -15vw;
+    bottom: -5svh;
+    width: 145vw;
     height: auto;
-    transform: translate3d(var(--px, 0), -50%, 0);
+    transform: translate3d(var(--px, 0), var(--py, 0), 0);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 100%);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+}
+
+@media (min-width: 641px) and (max-aspect-ratio: 2 / 3) {
+  .image-rig {
+    top: auto;
+    right: -20vw;
+    bottom: -1svh;
+    width: 170vw;
+    height: auto;
+    transform: translate3d(var(--px, 0), var(--py, 0), 0);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 10%, #000 100%);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
   }
 }
 
@@ -1155,6 +1241,103 @@ h1 {
   }
 }
 
+/*
+  Below 1180px of usable width, or at 4:3 and narrower, the first view switches
+  as one deliberate composition: compact navigation and copy occupy the upper
+  half, while the complete sculpture remains visible below. Height participates
+  in the type scale so resizing never exposes an unsafe intermediate state.
+*/
+@media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
+  .copy {
+    left: clamp(1.25rem, 4vw, 4rem);
+    right: clamp(1.25rem, 4vw, 4rem);
+    top: calc(var(--ok-nav-rail-height, 68px) + clamp(.45rem, 1svh, .8rem));
+    width: auto;
+    max-width: 38rem;
+  }
+
+  .scene-label {
+    gap: clamp(.6rem, 1.4vw, .85rem);
+    margin-bottom: clamp(.35rem, .8svh, .6rem);
+    font-size: clamp(.66rem, 1.2vw, .76rem);
+  }
+
+  .scene-label::before {
+    width: clamp(2.2rem, 4vw, 2.9rem);
+  }
+
+  h1 {
+    max-width: 6.8ch;
+    font-size: clamp(4.5rem, min(12vw, 10svh), 7.5rem);
+    line-height: .78;
+  }
+
+  .descriptor {
+    max-width: 30rem;
+    margin-top: clamp(.4rem, .8svh, .65rem);
+    font-size: clamp(.8rem, 1.2vw, .9rem);
+    line-height: 1.45;
+  }
+
+  .value-lead {
+    max-width: 34rem;
+    margin-top: clamp(.2rem, .45svh, .35rem);
+    font-size: clamp(.8rem, 1.35vw, 1rem);
+    line-height: 1.45;
+  }
+
+  .cta {
+    margin-top: clamp(.45rem, .9svh, .7rem);
+    min-height: 48px;
+    padding-block: clamp(.72rem, 1.4svh, .9rem);
+  }
+
+  .detail {
+    left: clamp(1.25rem, 4vw, 4rem);
+    right: clamp(1.25rem, 4vw, 4rem);
+    top: calc(var(--ok-nav-rail-height, 68px) + clamp(.45rem, 1svh, .8rem));
+    width: auto;
+    max-width: 34rem;
+  }
+}
+
+/*
+  Geometry-triggered density step. Responsive safety applies this state only
+  when the measured copy would cross into the lower-half sculpture zone.
+  Values intentionally equal the compact scale seen at the narrow end of the
+  fluid range, avoiding both overlap and an arbitrary extra breakpoint.
+*/
+@media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
+  .hero[data-ok-safe-compact-density="condensed"] .scene-label {
+    gap: .6rem;
+    margin-bottom: .35rem;
+    font-size: .66rem;
+  }
+
+  .hero[data-ok-safe-compact-density="condensed"] .scene-label::before {
+    width: 2.2rem;
+  }
+
+  .hero[data-ok-safe-compact-density="condensed"] h1 {
+    font-size: 4.5rem;
+  }
+
+  .hero[data-ok-safe-compact-density="condensed"] .descriptor {
+    margin-top: .4rem;
+    font-size: .8rem;
+  }
+
+  .hero[data-ok-safe-compact-density="condensed"] .value-lead {
+    margin-top: .2rem;
+    font-size: .8rem;
+  }
+
+  .hero[data-ok-safe-compact-density="condensed"] .cta {
+    margin-top: .45rem;
+    padding-block: .72rem;
+  }
+}
+
 .home-intro {
   position: relative;
   z-index: 2;
@@ -1176,7 +1359,7 @@ h1 {
   gap: 14px;
   margin: 0 0 24px;
   color: #b52454;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: .18em;
   text-transform: uppercase;
@@ -1248,7 +1431,7 @@ h1 {
   display: block;
   margin-bottom: 24px;
   color: #b52454;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: .16em;
 }

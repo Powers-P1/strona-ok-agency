@@ -252,6 +252,7 @@
   const closeCallout = callout => {
     callout.classList.remove("is-open");
     callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "false");
+    callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "true");
     callout.closest(".diagnosis-frame")
       ?.querySelector(`[data-line="${callout.dataset.annotation}"]`)
       ?.classList.remove("is-open");
@@ -263,6 +264,7 @@
     });
     callout.classList.add("is-open");
     callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "true");
+    callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "false");
     callout.closest(".diagnosis-frame")
       ?.querySelector(`[data-line="${callout.dataset.annotation}"]`)
       ?.classList.add("is-open");
@@ -271,6 +273,10 @@
   tool.querySelectorAll(".annotation-callout").forEach(callout => {
     const dot = callout.querySelector(".annotation-dot");
     const copy = callout.querySelector(".annotation-copy");
+    copy.setAttribute(
+      "aria-hidden",
+      String(!callout.classList.contains("is-open")),
+    );
     let closeTimer;
     const cancelClose = () => clearTimeout(closeTimer);
     const queueClose = () => {

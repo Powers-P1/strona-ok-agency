@@ -1268,7 +1268,7 @@ h1 {
 
   h1 {
     max-width: 6.8ch;
-    font-size: clamp(4.5rem, min(12vw, 10svh), 7.5rem);
+    font-size: clamp(4rem, 7.5vw, 4.75rem);
     line-height: .78;
   }
 
@@ -1319,7 +1319,7 @@ h1 {
   }
 
   .hero[data-ok-safe-compact-density="condensed"] h1 {
-    font-size: 4.5rem;
+    font-size: 3.5rem;
   }
 
   .hero[data-ok-safe-compact-density="condensed"] .descriptor {

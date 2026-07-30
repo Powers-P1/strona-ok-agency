@@ -75,6 +75,21 @@ requireText(html, 'height="941"', "obraz hero nie ma bazowej wysokości 941");
 requireText(html, 'class="hero-backdrop"', "hero nie ma pełnoekranowej płyty tła");
 requireText(html, "editorial-atelier-backdrop-v2-3840.avif 3840w", "tło hero nie ma wariantu 3840 AVIF");
 requireText(homeCss, ".hero-backdrop img", "płyta tła hero nie ma pełnoekranowego układu");
+requireText(
+  homeCss,
+  "font-size: clamp(4rem, 7.5vw, 4.75rem);",
+  "tryb stacked nie ma odrębnej skali H1 64–76 px",
+);
+requireText(
+  homeCss,
+  '.hero[data-ok-safe-compact-density="condensed"] h1',
+  "hero nie ma trzeciego stanu typografii dla faktycznej kolizji",
+);
+requireText(
+  homeCss,
+  "font-size: 3.5rem;",
+  "stan kolizyjny nie zmniejsza H1 do 56 px",
+);
 
 requireText(homeCss, "@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941)", "brak reguły szerokiego desktopu");
 requireText(homeCss, "height: 100svh;", "szeroki desktop nie jest skalowany wysokością");

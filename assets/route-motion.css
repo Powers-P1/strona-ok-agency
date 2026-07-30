@@ -1,3 +1,31 @@
+/*
+  Home and menu are separate HTML documents. Opt both into the browser's
+  cross-document transition so the end of the hero move and the first menu
+  frame share one uninterrupted timeline.
+*/
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(root) {
+  animation-duration: .72s;
+  animation-timing-function: cubic-bezier(.22, .72, .18, 1);
+}
+
+::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
+::view-transition-old(root) {
+  animation: .72s cubic-bezier(.4, 0, .2, 1) both ok-view-old;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: .72s cubic-bezier(.22, .72, .18, 1) both ok-view-new;
+  mix-blend-mode: normal;
+}
+
 .hero .topbar,
 .hero .copy,
 .hero .image-rig {
@@ -77,28 +105,28 @@
 }
 
 @keyframes ok-view-old {
-  0%, 48% {
+  from {
     opacity: 1;
     filter: blur(0);
   }
   to {
     opacity: 0;
-    transform: scale(.985);
-    filter: blur(7px);
+    transform: scale(.988);
+    filter: blur(6px);
   }
 }
 
 @keyframes ok-view-new {
   from {
-    opacity: .18;
-    transform: scale(1.014);
-    filter: blur(6px);
+    opacity: .14;
+    transform: scale(1.012);
+    filter: blur(5px);
   }
-  48% {
-    opacity: .9;
-    filter: blur(1px);
+  52% {
+    opacity: .82;
+    filter: blur(1.2px);
   }
-  72% {
+  78% {
     opacity: 1;
     filter: blur(0);
   }
@@ -109,6 +137,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(root),
+  ::view-transition-image-pair(root),
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;

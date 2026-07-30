@@ -80,16 +80,9 @@ requireText(
   "font-size: clamp(68px, min(10.5vw, 12.5svh), 120px);",
   "tryb stacked nie ma płynnej skali H1 68–120 px zależnej od szerokości i wysokości",
 );
-requireText(
-  foundationCss,
-  '.hero[data-ok-safe-compact-density="condensed"] .copy h1',
-  "hero nie ma trzeciego stanu typografii dla faktycznej kolizji",
-);
-requireText(
-  foundationCss,
-  "font-size: 56px;",
-  "stan kolizyjny nie zmniejsza H1 do 56 px",
-);
+if (foundationCss.includes("data-ok-safe-compact-density")) {
+  failures.push("hero nie może zachowywać lepkiego stanu zmniejszonej typografii");
+}
 requireText(
   foundationCss,
   "@media (min-width: 1181px) and (max-aspect-ratio: 4 / 3)",
@@ -100,7 +93,7 @@ requireText(
   "font-size: clamp(7.5rem, min(12.5vw, 12.5svh), 11.25rem);",
   "nagłówek hero na wysokim desktopie nie zachowuje skali desktopowej",
 );
-requireText(html, "responsive-foundation.css?v=20260730-5", "strona główna nie ładuje poprawionej warstwy kaskady");
+requireText(html, "responsive-foundation.css?v=20260730-6", "strona główna nie ładuje poprawionej warstwy kaskady");
 const desktopHomeType = foundationCss.indexOf("font-size: var(--ok-home-display);");
 const stackedHomeType = foundationCss.lastIndexOf("font-size: clamp(68px, min(10.5vw, 12.5svh), 120px);");
 if (desktopHomeType < 0 || stackedHomeType <= desktopHomeType) {

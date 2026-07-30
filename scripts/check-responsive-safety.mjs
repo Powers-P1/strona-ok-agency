@@ -33,7 +33,7 @@ const requireText = (source, text, message) => {
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
   requireText(html, "/assets/responsive-safety.css?v=20260730-14", `${page}: brak responsive-safety.css`);
-  requireText(html, "/assets/responsive-safety.js?v=20260730-13", `${page}: brak responsive-safety.js`);
+  requireText(html, "/assets/responsive-safety.js?v=20260730-14", `${page}: brak responsive-safety.js`);
 });
 
 for (const token of [
@@ -48,7 +48,6 @@ for (const token of [
   "okSafeCurtain",
   "okSafeMobileHero",
   "okSafeCompactFit",
-  "okSafeCompactDensity",
   "compactArtScale",
   "data-ok-safe-scroll",
   "data-ok-safe-cards",
@@ -89,8 +88,6 @@ requireText(script, "--ok-safe-mask-image", "JS nie generuje liniowego featheru 
 requireText(script, "minimumArtSpace", "JS nie rezerwuje miejsca na ilustrację w niskim hero");
 requireText(script, "compactCopySafeZone", "JS nie utrzymuje tekstu nad koroną kompaktowego drzewka");
 requireText(script, "compactCopyFitsFirstView", "JS nie utrzymuje kompaktowego hero w pierwszym widoku");
-requireText(script, 'compactDensity !== "condensed"', "JS nie zagęszcza rzeczywiście kolidującego copy");
-requireText(script, "requestAnimationFrame(schedule)", "JS nie wykonuje drugiego pomiaru po zagęszczeniu");
 requireText(script, 'Math.ceil(viewportHeight)', "JS nie kotwiczy kompaktowego hero do jednego viewportu");
 requireText(script, '"accessible-overflow"', "JS nie zachowuje dostępnego reflow po powiększeniu tekstu");
 requireText(script, "viewportWidth <= 1180 || viewportRatio <= 4 / 3", "JS nie ma wspólnego progu kompaktowego hero");
@@ -117,6 +114,8 @@ for (const deadToken of [
   "data-ok-narrow-viewport",
   "data-ok-short-viewport",
   "data-ok-sequential-viewport",
+  "okSafeCompactDensity",
+  "data-ok-safe-compact-density",
 ]) {
   if (`${css}\n${script}`.includes(deadToken)) {
     failures.push(`responsive safety zawiera martwy mechanizm ${deadToken}`);

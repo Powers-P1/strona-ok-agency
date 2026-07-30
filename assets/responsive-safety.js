@@ -133,7 +133,6 @@
     delete layout.scene.dataset.okSafeCurtain;
     delete layout.scene.dataset.okSafeMobileHero;
     delete layout.scene.dataset.okSafeCompactFit;
-    delete layout.scene.dataset.okSafeCompactDensity;
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
     layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     layout.art.style.removeProperty("--ok-safe-mask-image");
@@ -199,10 +198,6 @@
     if (!compactHome) {
       layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     }
-    if (!compactHome && layout.scene.dataset.okSafeCompactDensity) {
-      delete layout.scene.dataset.okSafeCompactDensity;
-      requestAnimationFrame(schedule);
-    }
     if (isHome && compact) {
       const minimumArtSpace = Math.max(300, Math.min(520, viewportWidth * .5));
       requiredHeight = Math.max(
@@ -234,29 +229,6 @@
       const copyEnd = contentRect.bottom - sceneRect.top + gap;
       const compactSafeBoundary = sceneRect.top + viewportHeight * compactCopySafeZone;
       const compactCopyFitsFirstView = contentRect.bottom + gap <= compactSafeBoundary;
-      const compactDensity = layout.scene.dataset.okSafeCompactDensity;
-
-      /*
-       * Measure the real copy block instead of guessing another breakpoint.
-       * Once regular compact typography crosses the image safe zone, switch
-       * the complete composition to its condensed rhythm and keep that state
-       * until the wide layout returns. The sticky state prevents resize-loop
-       * oscillation around a one-pixel boundary.
-       */
-      if (!compactCopyFitsFirstView && compactDensity !== "condensed") {
-        layout.scene.dataset.okSafeCompactDensity = "condensed";
-        layout.scene.dataset.okSafeMobileHero = portraitHomeAsset ? "portrait" : "compact";
-        layout.scene.dataset.okSafeCompactFit = "remeasuring";
-        layout.scene.style.setProperty(
-          "--ok-safe-required-height",
-          `${Math.ceil(viewportHeight)}px`,
-        );
-        layout.art.dataset.okSafeArt = "idle";
-        delete layout.art.dataset.okSafeReveal;
-        layout.art.style.removeProperty("--ok-safe-mask-image");
-        requestAnimationFrame(schedule);
-        return;
-      }
 
       /*
        * The compact plates already contain the complete tree inside their

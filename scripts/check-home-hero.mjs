@@ -7,7 +7,7 @@ const read = path => readFile(join(root, path), "utf8");
 const [html, homeCss, foundationCss, enhancementsCss, motion, loader, energy] = await Promise.all([
   read("index.html"),
   read("assets/page-home.css"),
-  read("assets/responsive-foundation.css"),
+  read("assets/responsive-foundation.v20260730-7.css"),
   read("assets/site-enhancements.css"),
   read("assets/motion-control.js"),
   read("assets/tree-map-loader.js"),
@@ -93,7 +93,7 @@ requireText(
   "font-size: clamp(7.5rem, min(12.5vw, 12.5svh), 11.25rem);",
   "nagłówek hero na wysokim desktopie nie zachowuje skali desktopowej",
 );
-requireText(html, "responsive-foundation.css?v=20260730-6", "strona główna nie ładuje poprawionej warstwy kaskady");
+requireText(html, "responsive-foundation.v20260730-7.css", "strona główna nie ładuje wersjonowanej warstwy kaskady");
 const desktopHomeType = foundationCss.indexOf("font-size: var(--ok-home-display);");
 const stackedHomeType = foundationCss.lastIndexOf("font-size: clamp(68px, min(10.5vw, 12.5svh), 120px);");
 if (desktopHomeType < 0 || stackedHomeType <= desktopHomeType) {

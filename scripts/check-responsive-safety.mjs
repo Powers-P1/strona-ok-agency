@@ -33,7 +33,7 @@ const requireText = (source, text, message) => {
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
   requireText(html, "/assets/responsive-safety.css?v=20260730-15", `${page}: brak responsive-safety.css`);
-  requireText(html, "/assets/responsive-safety.js?v=20260730-17", `${page}: brak responsive-safety.js`);
+  requireText(html, "/assets/responsive-safety.js?v=20260730-18", `${page}: brak responsive-safety.js`);
 });
 
 for (const token of [

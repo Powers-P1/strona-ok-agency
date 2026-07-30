@@ -1113,6 +1113,12 @@ h1 {
     linear-gradient(145deg, #f4e8dc 0%, #ead7c7 100%);
 }
 
+.home-page .home-intro {
+  background:
+    radial-gradient(circle at 92% 8%, rgba(245, 81, 122, .08), transparent 28rem),
+    linear-gradient(105deg, #ead9c9 0%, #e8d6c5 53%, #aeb8bb 100%);
+}
+
 .home-intro__inner {
   width: min(100%, 1440px);
   margin-inline: auto;
@@ -1165,10 +1171,22 @@ h1 {
 }
 
 .home-services {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: clamp(54px, 7vw, 96px);
   border-block: 1px solid rgba(20, 32, 48, .18);
+  background:
+    linear-gradient(
+      105deg,
+      rgba(248, 238, 228, .96) 0%,
+      rgba(237, 221, 206, .92) 58%,
+      rgba(226, 217, 208, .91) 100%
+    );
+  box-shadow: 0 18px 54px rgba(20, 32, 48, .055);
+  -webkit-backdrop-filter: blur(16px) saturate(.72);
+  backdrop-filter: blur(16px) saturate(.72);
 }
 
 .home-service {
@@ -1196,11 +1214,12 @@ h1 {
   font-size: clamp(32px, 3.1vw, 48px);
   font-weight: 500;
   line-height: 1;
+  color: #142030;
 }
 
 .home-service p {
   margin: 18px 0 0;
-  color: #46515d;
+  color: #34414e;
   font-size: 15px;
   line-height: 1.65;
 }

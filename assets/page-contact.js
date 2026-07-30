@@ -242,6 +242,7 @@
       form.reset();
       resetTurnstile();
       showState(handoffState, handoffTitle);
+      window.okAnalytics?.lead();
     } catch {
       resetTurnstile();
       showState(fallbackState, fallbackTitle);

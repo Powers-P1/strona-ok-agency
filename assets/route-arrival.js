@@ -27,7 +27,7 @@
     const root = document.documentElement;
     const body = document.body;
     root.dataset.routeArrival = "hero-menu";
-    body?.classList.add("is-ready", "is-settled", "is-route-arriving");
+    body?.classList.add("is-ready", "is-route-arriving");
 
     const cleanup = () => {
       delete root.dataset.routeArrival;

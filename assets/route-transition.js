@@ -25,10 +25,11 @@
     const onEnd = event => {
       if (
         hero.classList.contains("is-route-leaving")
-        && [".topbar", ".copy", ".image-rig"].some(selector => event.target.matches?.(selector))
+        && event.target.matches?.(".image-rig")
+        && event.propertyName === "transform"
       ) finish();
     };
-    const fallback = setTimeout(finish, 520);
+    const fallback = setTimeout(finish, 760);
     hero.addEventListener("transitionend", onEnd);
   });
 

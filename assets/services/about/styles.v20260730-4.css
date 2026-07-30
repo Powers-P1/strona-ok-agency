@@ -731,6 +731,8 @@ h2 {
 .annotation {
   --leader: 64px;
   --drop: 25px;
+  --leader-length: 30px;
+  --leader-angle: 0rad;
   --copy-w: 235px;
   position: absolute;
   z-index: 12;
@@ -741,56 +743,32 @@ h2 {
   pointer-events: none;
 }
 
-.annotation::before,
-.annotation::after {
+.annotation::before {
   content: "";
   position: absolute;
   z-index: 0;
+  top: 0;
+  left: 4px;
+  width: var(--leader-length);
+  height: 1px;
   display: block;
   background: var(--pink);
   opacity: 0;
   pointer-events: none;
-}
-
-.annotation::before {
-  top: 0;
-  left: 4px;
-  width: var(--leader);
-  height: 1px;
-  transform: scaleX(0);
+  transform: rotate(var(--leader-angle)) scaleX(0);
   transform-origin: left;
   transition: transform .34s var(--ease), opacity .12s ease;
 }
 
 .annotation::after {
-  top: 0;
-  left: calc(var(--leader) + 4px);
-  width: 1px;
-  height: var(--drop);
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: transform .28s var(--ease) .1s, opacity .12s ease .08s;
-}
-
-.annotation.flip::before {
-  right: 4px;
-  left: auto;
-  transform-origin: right;
-}
-
-.annotation.flip::after {
-  right: calc(var(--leader) + 4px);
-  left: auto;
+  content: none;
 }
 
 .annotation.is-open::before,
-.annotation.is-open::after,
 .annotation:hover::before,
-.annotation:hover::after,
-.annotation:focus-within::before,
-.annotation:focus-within::after {
+.annotation:focus-within::before {
   opacity: 1;
-  transform: none;
+  transform: rotate(var(--leader-angle)) scaleX(1);
 }
 
 .annotation-dot {

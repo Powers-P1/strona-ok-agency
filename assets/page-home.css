@@ -168,9 +168,6 @@ button { color: inherit; }
 .copy {
   position: absolute;
   z-index: 12;
-  left: var(--gutter);
-  top: clamp(10rem, 22vh, 13.5rem);
-  width: min(42rem, 43vw);
   transition:
     opacity .55s var(--ease),
     transform .75s var(--ease),
@@ -181,8 +178,11 @@ button { color: inherit; }
 .detail-kicker {
   text-transform: uppercase;
   letter-spacing: .2em;
-  font-size: clamp(.6rem, .68vw, .72rem);
   font-weight: 600;
+}
+
+.detail-kicker {
+  font-size: clamp(.6rem, .68vw, .72rem);
 }
 
 .scene-label {
@@ -202,9 +202,7 @@ button { color: inherit; }
 
 h1 {
   margin: 0;
-  max-width: 7.1ch;
   font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
-  font-size: clamp(6.1rem, 10.7vw, 11rem);
   font-weight: 500;
   font-stretch: condensed;
   line-height: .775;
@@ -219,9 +217,8 @@ h1 span {
 }
 
 .descriptor {
-  margin: clamp(1.7rem, 3.6vh, 2.8rem) 0 0;
+  margin: 0;
   color: rgba(240, 223, 207, .82);
-  font-size: clamp(.72rem, .82vw, .88rem);
   letter-spacing: .07em;
   line-height: 1.6;
 }
@@ -236,7 +233,6 @@ h1 span {
 
 .cta {
   position: relative;
-  margin-top: clamp(1.6rem, 3.4vh, 2.5rem);
   min-width: 15.5rem;
   padding: 1.05rem 3.6rem 1.05rem 1.25rem;
   border: 1px solid rgba(255, 92, 141, .65);
@@ -245,7 +241,6 @@ h1 span {
   overflow: hidden;
   cursor: pointer;
   text-align: left;
-  font-size: .78rem;
   font-weight: 600;
   letter-spacing: .035em;
   backdrop-filter: blur(6px);
@@ -589,32 +584,6 @@ html[data-motion="paused"] .topbar {
 
   .grid::after { top: 6.3rem; }
 
-  .copy {
-    left: 2rem;
-    top: 14.5vh;
-    width: min(31rem, 62vw);
-  }
-
-  .scene-label {
-    margin-bottom: 1.6rem;
-  }
-
-  h1 {
-    max-width: 6.8ch;
-    font-size: clamp(6.6rem, 14vw, 8rem);
-    line-height: .79;
-  }
-
-  .descriptor {
-    margin-top: 1.65rem;
-    font-size: .78rem;
-  }
-
-  .cta {
-    margin-top: 1.5rem;
-    min-height: 48px;
-  }
-
   .image-rig {
     top: auto;
     right: -2vw;
@@ -701,43 +670,8 @@ html[data-motion="paused"] .topbar {
     letter-spacing: .12em;
   }
 
-  .copy {
-    left: 1.25rem;
-    top: 7rem;
-    width: calc(100% - 2.5rem);
-  }
-
-  .scene-label {
-    margin-bottom: 1rem;
-    font-size: .56rem;
-  }
-
-  h1 {
-    max-width: 6.7ch;
-    font-size: clamp(4.3rem, 23vw, 6.2rem);
-    line-height: .78;
-  }
-
-  .descriptor {
-    max-width: 18rem;
-    margin-top: 1.2rem;
-    font-size: .78rem;
-    line-height: 1.5;
-  }
-
-  .value-lead {
-    max-width: 21rem;
-    margin-top: .55rem;
-    font-size: .75rem;
-    line-height: 1.45;
-  }
-
   .cta {
-    margin-top: .85rem;
     min-width: 13.5rem;
-    min-height: 48px;
-    padding-block: .9rem;
-    font-size: .74rem;
   }
 
   .image-rig {
@@ -774,34 +708,6 @@ html[data-motion="paused"] .topbar {
   .topbar { height: 4.5rem; }
   .wordmark { width: 6.2rem; }
 
-  .copy {
-    top: 5.25rem;
-  }
-
-  .scene-label {
-    margin-bottom: .65rem;
-    font-size: .55rem;
-  }
-
-  h1 {
-    max-width: 6.7ch;
-    font-size: 4.25rem;
-    line-height: .78;
-  }
-
-  .descriptor {
-    max-width: 20rem;
-    margin-top: .75rem;
-    font-size: .75rem;
-    line-height: 1.45;
-  }
-
-  .cta {
-    margin-top: .7rem;
-    min-height: 46px;
-    padding-block: .72rem;
-  }
-
   .image-rig {
     right: -28vw;
     bottom: -.5rem;
@@ -834,13 +740,6 @@ html[data-motion="paused"] .topbar {
   .hero.is-focused .art-stage {
     transform: scale(1.18) translate3d(2%, -2%, 0);
   }
-}
-
-@media (max-height: 720px) and (min-width: 1025px) {
-  .copy { top: 16vh; }
-  h1 { font-size: clamp(5.3rem, 9.4vw, 8.7rem); }
-  .descriptor { margin-top: 1.35rem; }
-  .cta { margin-top: 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1160,20 +1059,6 @@ h1 {
 }
 
 /*
-  Match the approved desktop composition more closely without borrowing
-  space from the tablet/mobile layouts or the compact-height desktop rule.
-  This resolves to ~49.5px at 1440×900 and ~50.2px at 1653×912.
-*/
-@media (min-width: 1025px) and (min-height: 721px) {
-  .copy {
-    top: calc(
-      clamp(10rem, 22vh, 13.5rem)
-      - clamp(2.8rem, 5.5vh, 3.25rem)
-    );
-  }
-}
-
-/*
   Preserve the approved sculpture scale on large and high-DPI desktops,
   while letting the editorial typography and controls grow with the canvas.
   The base desktop layout remains unchanged below this breakpoint.
@@ -1200,12 +1085,6 @@ h1 {
     letter-spacing: .18em;
   }
 
-  .copy {
-    top: clamp(10rem, 15vh, 13rem);
-    width: min(51rem, 42vw);
-  }
-
-  .scene-label,
   .detail-kicker {
     font-size: .78rem;
   }
@@ -1217,22 +1096,6 @@ h1 {
 
   .scene-label::before {
     width: 3.45rem;
-  }
-
-  h1 {
-    font-size: clamp(12rem, 9vw, 14.5rem);
-  }
-
-  .descriptor {
-    margin-top: clamp(2.35rem, 3.2vh, 3.15rem);
-    font-size: clamp(.9rem, .72vw, 1.05rem);
-  }
-
-  .cta {
-    margin-top: clamp(2rem, 3vh, 2.8rem);
-    min-width: clamp(19.25rem, 16vw, 25rem);
-    padding: 1.38rem 4.4rem 1.38rem 1.65rem;
-    font-size: clamp(.9rem, .65vw, 1.02rem);
   }
 
   .cta::after {

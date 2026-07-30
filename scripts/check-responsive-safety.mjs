@@ -33,7 +33,7 @@ const requireText = (source, text, message) => {
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
   requireText(html, "/assets/responsive-safety.css?v=20260730-14", `${page}: brak responsive-safety.css`);
-  requireText(html, "/assets/responsive-safety.js?v=20260730-14", `${page}: brak responsive-safety.js`);
+  requireText(html, "/assets/responsive-safety.js?v=20260730-17", `${page}: brak responsive-safety.js`);
 });
 
 for (const token of [
@@ -41,14 +41,16 @@ for (const token of [
   "MutationObserver",
   "visualViewport",
   "visualContentRect",
+  "stableContentRect",
   "element.scrollWidth",
   "element.scrollHeight",
-  "document.fonts?.ready",
+  "document.fonts?.ready.then(() => requestAnimationFrame(schedule))",
   "data-ok-tall-portrait",
   "okSafeCurtain",
   "okSafeMobileHero",
   "okSafeCompactFit",
-  "compactArtScale",
+  "getHomeHeroLayout",
+  "artScale",
   "data-ok-safe-scroll",
   "data-ok-safe-cards",
   "OKAgencyResponsiveSafety",
@@ -86,12 +88,12 @@ requireText(script, 'compact ? ["bottom"] : ["right"]', "Hero nie używa pełnej
 requireText(script, "--ok-safe-curtain-mask", "Hero nie generuje pełnoszerokościowej kurtyny tła");
 requireText(script, "--ok-safe-mask-image", "JS nie generuje liniowego featheru grafiki");
 requireText(script, "minimumArtSpace", "JS nie rezerwuje miejsca na ilustrację w niskim hero");
-requireText(script, "compactCopySafeZone", "JS nie utrzymuje tekstu nad koroną kompaktowego drzewka");
-requireText(script, "compactCopyFitsFirstView", "JS nie utrzymuje kompaktowego hero w pierwszym widoku");
+requireText(script, "copySafeZone", "JS nie utrzymuje jednego źródła progu bezpiecznej strefy hero");
+requireText(script, "homeLayout.copyFitsFirstView", "JS nie utrzymuje kompaktowego hero w pierwszym widoku");
 requireText(script, 'Math.ceil(viewportHeight)', "JS nie kotwiczy kompaktowego hero do jednego viewportu");
 requireText(script, '"accessible-overflow"', "JS nie zachowuje dostępnego reflow po powiększeniu tekstu");
 requireText(script, "viewportWidth <= 1180 || viewportRatio <= 4 / 3", "JS nie ma wspólnego progu kompaktowego hero");
-requireText(script, "portraitHomeAsset", "JS nie rozróżnia assetu kompaktowego i portretowego");
+requireText(script, "homeLayout.portrait", "JS nie rozróżnia assetu kompaktowego i portretowego");
 requireText(script, "viewportWidth * 1.35", "JS nie rozróżnia wysokiego portretu od krótkiego okna");
 requireText(css, ":root[data-ok-tall-portrait]", "CSS nie korzysta ze wspólnego profilu wysokiego portretu");
 requireText(css, "min-height: max(100svh, var(--ok-safe-required-height", "CSS nie honoruje wyliczonej wysokości hero");

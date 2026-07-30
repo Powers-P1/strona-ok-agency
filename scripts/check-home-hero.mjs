@@ -1,13 +1,16 @@
 import { readFile, stat } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = path => readFile(join(root, path), "utf8");
+const require = createRequire(import.meta.url);
+const { getHomeHeroLayout } = require("../assets/responsive-safety.js");
 const [html, homeCss, foundationCss, enhancementsCss, motion, loader, energy] = await Promise.all([
   read("index.html"),
   read("assets/page-home.css"),
-  read("assets/responsive-foundation.v20260730-7.css"),
+  read("assets/responsive-foundation.v20260730-8.css"),
   read("assets/site-enhancements.css"),
   read("assets/motion-control.js"),
   read("assets/tree-map-loader.js"),
@@ -93,7 +96,7 @@ requireText(
   "font-size: clamp(7.5rem, min(12.5vw, 12.5svh), 11.25rem);",
   "nagłówek hero na wysokim desktopie nie zachowuje skali desktopowej",
 );
-requireText(html, "responsive-foundation.v20260730-7.css", "strona główna nie ładuje wersjonowanej warstwy kaskady");
+requireText(html, "responsive-foundation.v20260730-8.css", "strona główna nie ładuje wersjonowanej warstwy kaskady");
 const desktopHomeType = foundationCss.indexOf("font-size: var(--ok-home-display);");
 const stackedHomeType = foundationCss.lastIndexOf("font-size: clamp(68px, min(10.5vw, 12.5svh), 120px);");
 if (desktopHomeType < 0 || stackedHomeType <= desktopHomeType) {
@@ -102,11 +105,58 @@ if (desktopHomeType < 0 || stackedHomeType <= desktopHomeType) {
 if (homeCss.includes("font-size: clamp(68px, min(10.5vw, 12.5svh), 120px);")) {
   failures.push("page-home.css nie może duplikować typografii należącej do responsive-foundation.css");
 }
+const responsiveOwnerViolations = [
+  ["h1", "font-size"],
+  [".copy", "top"],
+  [".copy", "left"],
+  [".copy", "width"],
+  [".scene-label", "font-size"],
+  [".descriptor", "font-size"],
+  [".cta", "font-size"],
+  [".cta", "margin-top"],
+];
+for (const [selector, property] of responsiveOwnerViolations) {
+  const escapedSelector = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapedProperty = property.replace("-", "\\-");
+  const declaration = new RegExp(
+    `(?:^|\\})\\s*${escapedSelector}\\s*\\{[^}]*\\b${escapedProperty}\\s*:`,
+    "m",
+  );
+  if (declaration.test(homeCss)) {
+    failures.push(`page-home.css nie może definiować ${selector} / ${property}; właścicielem jest responsive foundation`);
+  }
+}
+if (foundationCss.includes("@media (min-width: 1025px) and (max-aspect-ratio: 2 / 3)")) {
+  failures.push("responsive foundation zawiera martwy profil 2:3 nadpisywany przez końcowy stan stacked");
+}
+
+const resizeFixture = viewportHeight => getHomeHeroLayout({
+  viewportWidth: 1024,
+  viewportHeight,
+  sceneTop: 0,
+  contentBottom: 295,
+  gap: 24,
+});
+const shortBeforeResize = resizeFixture(500);
+const tallAfterResize = resizeFixture(768);
+const shortAfterResize = resizeFixture(500);
+
+if (shortBeforeResize.copyFitsFirstView) {
+  failures.push("niski viewport 1024x500 powinien przejść do dostępnego overflow");
+}
+if (!tallAfterResize.copyFitsFirstView) {
+  failures.push("viewport 1024x768 powinien wrócić do układu mieszczącego się w pierwszym widoku");
+}
+if (JSON.stringify(shortBeforeResize) !== JSON.stringify(shortAfterResize)) {
+  failures.push("wynik hero zależy od historii resize zamiast od aktualnego viewportu");
+}
+if (shortBeforeResize.copySafeZone !== .6 || tallAfterResize.copySafeZone !== .6) {
+  failures.push("próg bezpiecznej strefy musi korzystać z tej samej szerokości viewportu co tryb compact");
+}
 
 requireText(homeCss, "@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941)", "brak reguły szerokiego desktopu");
 requireText(homeCss, "height: 100svh;", "szeroki desktop nie jest skalowany wysokością");
 requireText(homeCss, "@media (min-width: 641px) and (max-aspect-ratio: 2 / 3)", "brak art direction 9:16");
-requireText(foundationCss, "@media (min-width: 1025px) and (max-aspect-ratio: 2 / 3)", "brak typografii dla wysokiego desktopu");
 
 requireText(motion, 'root.classList.add("motion-intro-enabled")', "brak jednorazowego stanu intro");
 requireText(homeCss, 'html[data-motion="paused"] .copy > *', "pauza nie wymusza widocznej treści hero");
@@ -131,5 +181,5 @@ if (failures.length) {
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log("OK: hero ma responsywne źródła do 3840 px, art direction, bezpieczną pauzę i odporny loader sygnałów.");
+  console.log("OK: hero ma responsywne źródła do 3840 px, bezstanowy resize, art direction, bezpieczną pauzę i odporny loader sygnałów.");
 }

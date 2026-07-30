@@ -1,6 +1,63 @@
 (() => {
   "use strict";
 
+  const getHomeHeroLayout = ({
+    viewportWidth,
+    viewportHeight,
+    sceneTop,
+    contentBottom,
+    gap,
+  }) => {
+    const viewportRatio = viewportWidth / viewportHeight;
+    const compact = viewportWidth <= 1180 || viewportRatio <= 4 / 3;
+
+    if (!compact) {
+      return Object.freeze({
+        compact: false,
+        portrait: false,
+        artScale: 1,
+        copySafeZone: 1,
+        copyFitsFirstView: true,
+        requiredHeight: Math.ceil(viewportHeight),
+      });
+    }
+
+    const portrait = viewportRatio <= 2 / 3;
+    const artScale = portrait
+      ? 1
+      : Math.min(1.22, Math.max(1, 1 + (4 / 3 - viewportRatio) * .85));
+    const copySafeZone = viewportWidth > 1180
+      ? .68
+      : viewportWidth > 640
+        ? .6
+        : .5;
+    const copyEnd = contentBottom - sceneTop + gap;
+    const copySafeBoundary = sceneTop + viewportHeight * copySafeZone;
+    const copyFitsFirstView = contentBottom + gap <= copySafeBoundary;
+    const requiredHeight = copyFitsFirstView
+      ? Math.ceil(viewportHeight)
+      : Math.max(
+          Math.ceil(viewportHeight),
+          Math.ceil(copyEnd / copySafeZone),
+        );
+
+    return Object.freeze({
+      compact: true,
+      portrait,
+      artScale,
+      copySafeZone,
+      copyFitsFirstView,
+      requiredHeight,
+    });
+  };
+
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    if (typeof module !== "undefined") {
+      module.exports = { getHomeHeroLayout };
+    }
+    return;
+  }
+
   const root = document.documentElement;
   const body = document.body;
   const observed = new Set();
@@ -69,6 +126,16 @@
       bottom: Number.NEGATIVE_INFINITY,
       left: Number.POSITIVE_INFINITY,
     });
+  };
+
+  const stableContentRect = content => {
+    const rect = content.getBoundingClientRect();
+    return {
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+      left: rect.left,
+    };
   };
 
   const discover = () => {
@@ -161,7 +228,9 @@
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
     const sceneRect = layout.scene.getBoundingClientRect();
     const artRect = layout.art.getBoundingClientRect();
-    const contentBounds = visualContentRect(content);
+    const contentBounds = layout.mode === "grow"
+      ? stableContentRect(content)
+      : visualContentRect(content);
     const contentRect = {
       ...contentBounds,
       width: contentBounds.right - contentBounds.left,
@@ -191,10 +260,16 @@
     }
 
     const isHome = layout.mode === "grow" && body.classList.contains("home-page");
-    const viewportRatio = viewportWidth / viewportHeight;
-    const compactHome = isHome
-      && (viewportWidth <= 1180 || viewportRatio <= 4 / 3);
-    const portraitHomeAsset = compactHome && viewportRatio <= 2 / 3;
+    const homeLayout = isHome
+      ? getHomeHeroLayout({
+          viewportWidth,
+          viewportHeight,
+          sceneTop: sceneRect.top,
+          contentBottom: contentRect.bottom,
+          gap,
+        })
+      : null;
+    const compactHome = Boolean(homeLayout?.compact);
     if (!compactHome) {
       layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     }
@@ -213,22 +288,10 @@
        * the tree base so the reserved zone does not grow into a visual void.
        * The portrait asset already has its own crop and stays at natural scale.
        */
-      const compactArtScale = portraitHomeAsset
-        ? 1
-        : Math.min(1.22, Math.max(1, 1 + (4 / 3 - viewportRatio) * .85));
       layout.scene.style.setProperty(
         "--ok-home-compact-art-scale",
-        compactArtScale.toFixed(3),
+        homeLayout.artScale.toFixed(3),
       );
-
-      const compactCopySafeZone = window.innerWidth > 1180
-        ? .68
-        : window.innerWidth > 640
-          ? .6
-          : .5;
-      const copyEnd = contentRect.bottom - sceneRect.top + gap;
-      const compactSafeBoundary = sceneRect.top + viewportHeight * compactCopySafeZone;
-      const compactCopyFitsFirstView = contentRect.bottom + gap <= compactSafeBoundary;
 
       /*
        * The compact plates already contain the complete tree inside their
@@ -236,16 +299,11 @@
        * Only enlarged text/zoom that genuinely no longer fits may grow the
        * document, preserving WCAG reflow instead of shrinking typography.
        */
-      requiredHeight = compactCopyFitsFirstView
-        ? Math.ceil(viewportHeight)
-        : Math.max(
-            Math.ceil(viewportHeight),
-            Math.ceil(copyEnd / compactCopySafeZone),
-          );
+      requiredHeight = homeLayout.requiredHeight;
 
       layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
-      layout.scene.dataset.okSafeMobileHero = portraitHomeAsset ? "portrait" : "compact";
-      layout.scene.dataset.okSafeCompactFit = compactCopyFitsFirstView
+      layout.scene.dataset.okSafeMobileHero = homeLayout.portrait ? "portrait" : "compact";
+      layout.scene.dataset.okSafeCompactFit = homeLayout.copyFitsFirstView
         ? "first-view"
         : "accessible-overflow";
       layout.art.dataset.okSafeArt = "idle";
@@ -412,10 +470,11 @@
   window.addEventListener("resize", schedule, { passive: true });
   window.addEventListener("orientationchange", schedule, { passive: true });
   window.visualViewport?.addEventListener("resize", schedule, { passive: true });
-  document.fonts?.ready.then(schedule);
+  document.fonts?.ready.then(() => requestAnimationFrame(schedule));
   schedule();
 
   window.OKAgencyResponsiveSafety = Object.freeze({
+    getHomeHeroLayout,
     refresh: schedule,
     snapshot: () => ({
       tallPortrait: root.hasAttribute("data-ok-tall-portrait"),

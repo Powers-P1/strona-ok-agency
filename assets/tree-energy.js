@@ -1898,7 +1898,12 @@
     );
     cssWidth = rig.clientWidth || rect.width / Math.max(.001, scaleX);
     cssHeight = rig.clientHeight || rect.height / Math.max(.001, scaleX);
-    dpr = Math.min(window.devicePixelRatio || 1, coarsePointer.matches ? 1 : 1.25);
+    const requestedDpr = Math.min(
+      window.devicePixelRatio || 1,
+      coarsePointer.matches ? 1 : 2
+    );
+    const pixelBudgetDpr = Math.sqrt(8_000_000 / Math.max(1, cssWidth * cssHeight));
+    dpr = Math.max(1, Math.min(requestedDpr, pixelBudgetDpr));
     canvas.width = Math.max(1, Math.round(cssWidth * dpr));
     canvas.height = Math.max(1, Math.round(cssHeight * dpr));
     canvas.style.width = `${cssWidth}px`;

@@ -141,7 +141,7 @@ a { color: inherit; }
   align-items: center;
   gap: 9px;
   min-height: 44px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   text-decoration: none;
   transition: color .35s var(--ease);
@@ -199,7 +199,7 @@ a { color: inherit; }
   display: flex;
   align-items: flex-start;
   gap: 11px;
-  font-size: 12.5px;
+  font-size: 14px;
   line-height: 1.4;
   color: var(--navy-ink);
 }
@@ -234,7 +234,7 @@ a { color: inherit; }
 }
 
 .field label {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 500;
   margin-bottom: 2px;
 }
@@ -251,7 +251,7 @@ a { color: inherit; }
   background: transparent;
   padding: 9px 2px 10px;
   font: inherit;
-  font-size: 14.5px;
+  font-size: 16px;
   color: var(--navy);
   transition: border-color .35s var(--ease);
 }
@@ -308,7 +308,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--navy-ink);
   cursor: pointer;
@@ -381,7 +381,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   border: 0;
   background: var(--navy);
   color: var(--cream);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: .02em;
   cursor: pointer;
@@ -406,7 +406,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .form-status {
   margin: 0;
   max-width: 300px;
-  font-size: 12.5px;
+  font-size: 13.5px;
   line-height: 1.5;
   color: var(--navy-ink);
   opacity: 0;
@@ -434,7 +434,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .context-note p {
   margin: 0;
   color: var(--navy-ink);
-  font-size: 11.5px;
+  font-size: 13px;
   line-height: 1.45;
 }
 .direct-mail a {
@@ -451,7 +451,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .direct-mail small {
   display: block;
   color: var(--navy-ink);
-  font-size: 10.5px;
+  font-size: 12px;
   line-height: 1.4;
 }
 .context-note {
@@ -462,7 +462,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   display: block;
   margin-bottom: 3px;
   color: var(--navy);
-  font-size: 11.5px;
+  font-size: 13px;
 }
 .context-note[hidden] { display: none; }
 
@@ -488,13 +488,13 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   min-width: 266px;
   min-height: 54px;
   padding-inline: 21px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .mailto-helper {
   max-width: 300px;
   margin: 1px 0 0;
   color: var(--navy-ink);
-  font-size: 11.5px;
+  font-size: 13px;
   line-height: 1.45;
 }
 

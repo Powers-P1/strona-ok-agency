@@ -45,11 +45,13 @@
   <link rel="stylesheet" href="assets/services/about/styles.css?v=20260729-3">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
   <link rel="stylesheet" href="assets/responsive-foundation.css">
   <link rel="stylesheet" href="/assets/fonts.css">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-3">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-4">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260730-12">
   <script src="/assets/motion-control.js?v=20260729-4"></script>
+  <script src="/assets/responsive-safety.js?v=20260730-12" defer></script>
 </head>
 <body class="about-page" data-theme="light">
   <a class="skip-link" href="#about-responsibility">Przejdź do treści</a>
@@ -59,10 +61,9 @@
       <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
     </a>
     <nav aria-label="Główna nawigacja">
-      <a href="/menu">Oferta</a>
-      <a href="/proces?from=about">Proces</a>
-      <a class="is-active" href="#about-responsibility" aria-current="page">O nas</a>
-      <a href="/kontakt?context=about">Kontakt</a>
+      <a href="/menu" data-nav-link="offer">Oferta</a>
+      <a href="/proces?from=about" data-nav-link="process">Jak pracujemy</a>
+      <a href="/kontakt?context=about" data-nav-link="contact">Kontakt</a>
     </nav>
   </header>
 
@@ -308,7 +309,7 @@
   </nav>
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.js"></script>
-  <script src="assets/navigation.js?v=20260729-2"></script>
+  <script src="assets/navigation.js?v=20260730-2"></script>
   <script src="assets/services/about/script.js?v=20260729-3" defer></script>
   <script src="assets/site-footer.js?v=20260729-2"></script>
 </body>

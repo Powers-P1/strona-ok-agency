@@ -394,15 +394,15 @@ svg {
 }
 
 .outline-cta {
-  width: 225px;
-  min-height: 48px;
+  width: 245px;
+  min-height: 54px;
   margin-top: 16px;
-  padding: 0 17px;
+  padding: 0 19px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--pink);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 550;
   transition: color .3s var(--ease), background .3s var(--ease);
 }

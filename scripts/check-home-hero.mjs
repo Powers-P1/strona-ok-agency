@@ -1,0 +1,108 @@
+import { readFile, stat } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const read = path => readFile(join(root, path), "utf8");
+const [html, homeCss, foundationCss, enhancementsCss, motion, loader, energy] = await Promise.all([
+  read("index.html"),
+  read("assets/page-home.css"),
+  read("assets/responsive-foundation.css"),
+  read("assets/site-enhancements.css"),
+  read("assets/motion-control.js"),
+  read("assets/tree-map-loader.js"),
+  read("assets/tree-energy.js"),
+]);
+
+const failures = [];
+const requireText = (source, text, message) => {
+  if (!source.includes(text)) failures.push(message);
+};
+
+for (const width of [640, 960, 1280, 1672, 2560, 3344, 3840]) {
+  requireText(html, `editorial-atelier-scene-v1-${width}.avif ${width}w`, `brak AVIF ${width}w w srcset`);
+}
+for (const file of [
+  "assets/editorial-atelier-scene-v1-1672.avif",
+  "assets/editorial-atelier-scene-v1-2560.avif",
+  "assets/editorial-atelier-scene-v1-3344.avif",
+  "assets/editorial-atelier-scene-v1-3840.avif",
+]) {
+  const info = await stat(join(root, file)).catch(() => null);
+  if (!info?.isFile()) failures.push(`brak pliku ${file}`);
+  else if (info.size > 300_000) failures.push(`${file} przekracza budżet 300 kB`);
+}
+for (const width of [960, 1672, 2560, 3840]) {
+  for (const format of ["avif", "webp"]) {
+    const file = `assets/editorial-atelier-backdrop-v2-${width}.${format}`;
+    const info = await stat(join(root, file)).catch(() => null);
+    if (!info?.isFile()) failures.push(`brak pliku ${file}`);
+    else if (info.size > 100_000) failures.push(`${file} przekracza budżet 100 kB`);
+  }
+}
+for (const width of [480, 768, 941]) {
+  for (const format of ["avif", "webp"]) {
+    const file = `assets/editorial-atelier-scene-mobile-v1-${width}.${format}`;
+    const info = await stat(join(root, file)).catch(() => null);
+    if (!info?.isFile()) failures.push(`brak pliku ${file}`);
+    else if (info.size > 120_000) failures.push(`${file} przekracza budżet 120 kB`);
+  }
+}
+for (const width of [768, 1024, 1440]) {
+  for (const format of ["avif", "webp"]) {
+    const file = `assets/editorial-atelier-scene-compact-v2-${width}.${format}`;
+    const info = await stat(join(root, file)).catch(() => null);
+    if (!info?.isFile()) failures.push(`brak pliku ${file}`);
+    else if (info.size > 120_000) failures.push(`${file} przekracza budżet 120 kB`);
+  }
+}
+
+requireText(html, 'media="(max-aspect-ratio: 2/3)"', "hero nie ma osobnego źródła dla pionowego mobile");
+requireText(
+  html,
+  'media="(max-width: 1180px), (max-aspect-ratio: 4/3)"',
+  "hero nie przełącza atomowo art direction przed utratą bezpiecznej geometrii",
+);
+requireText(html, "editorial-atelier-scene-mobile-v1-941.avif 941w", "mobilny srcset nie ma źródła 941 px AVIF");
+requireText(html, "editorial-atelier-scene-mobile-v1-941.webp 941w", "mobilny srcset nie ma źródła 941 px WebP");
+requireText(html, "editorial-atelier-scene-compact-v2-1440.avif 1440w", "kompaktowy srcset nie ma źródła 1440 px AVIF");
+requireText(html, "editorial-atelier-scene-compact-v2-1440.webp 1440w", "kompaktowy srcset nie ma źródła 1440 px WebP");
+requireText(html, 'imagesizes="(max-width: 640px) and (max-height: 720px) 216vw', "preload nie rozróżnia krótkiego mobile");
+requireText(html, "(min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw", "sizes nie opisuje wysokiego desktopu 2:3–4:5");
+requireText(html, "178vh", "sizes nie opisuje wysokościowego desktopu");
+requireText(html, 'width="1672"', "obraz hero nie ma bazowej szerokości 1672");
+requireText(html, 'height="941"', "obraz hero nie ma bazowej wysokości 941");
+requireText(html, 'class="hero-backdrop"', "hero nie ma pełnoekranowej płyty tła");
+requireText(html, "editorial-atelier-backdrop-v2-3840.avif 3840w", "tło hero nie ma wariantu 3840 AVIF");
+requireText(homeCss, ".hero-backdrop img", "płyta tła hero nie ma pełnoekranowego układu");
+
+requireText(homeCss, "@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941)", "brak reguły szerokiego desktopu");
+requireText(homeCss, "height: 100svh;", "szeroki desktop nie jest skalowany wysokością");
+requireText(homeCss, "@media (min-width: 641px) and (max-aspect-ratio: 2 / 3)", "brak art direction 9:16");
+requireText(foundationCss, "@media (min-width: 1025px) and (max-aspect-ratio: 2 / 3)", "brak typografii dla wysokiego desktopu");
+
+requireText(motion, 'root.classList.add("motion-intro-enabled")', "brak jednorazowego stanu intro");
+requireText(homeCss, 'html[data-motion="paused"] .copy > *', "pauza nie wymusza widocznej treści hero");
+requireText(homeCss, "animation: none !important;", "pauza nie kończy animacji wejścia");
+if (enhancementsCss.includes("animation-play-state: paused !important")) {
+  failures.push("globalna pauza nadal zamraża animację w bieżącej klatce");
+}
+
+requireText(loader, "pendingIntent", "loader nie pamięta intencji użytkownika");
+requireText(loader, "scheduleAmbientStart", "loader nie ma lekkiego startu po load/idle");
+requireText(loader, "cancelAmbientStart", "loader nie anuluje oczekującego startu po zmianie preferencji");
+requireText(loader, "cancelIdleCallback", "loader nie anuluje requestIdleCallback");
+requireText(loader, "loadGeneration", "loader nie unieważnia trwającego ładowania po zatrzymaniu efektów");
+requireText(loader, "scriptPromises", "loader skryptów nie jest idempotentny");
+if (/addEventListener\("(?:pointerenter|focus)"[\s\S]{0,120}\{\s*once:\s*true/.test(loader)) {
+  failures.push("loader nadal zużywa pointerenter/focus jednorazowo");
+}
+requireText(energy, "pixelBudgetDpr", "canvas nie ma adaptacyjnego budżetu pikseli");
+
+if (failures.length) {
+  console.error(`Błędy hero (${failures.length}):`);
+  failures.forEach(failure => console.error(`- ${failure}`));
+  process.exitCode = 1;
+} else {
+  console.log("OK: hero ma responsywne źródła do 3840 px, art direction, bezpieczną pauzę i odporny loader sygnałów.");
+}

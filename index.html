@@ -71,25 +71,76 @@
     rel="preload"
     as="image"
     type="image/avif"
-    imagesrcset="assets/editorial-atelier-scene-v1-640.avif 640w, assets/editorial-atelier-scene-v1-960.avif 960w, assets/editorial-atelier-scene-v1-1280.avif 1280w"
-    imagesizes="(max-width: 640px) 173vw, (max-width: 1024px) 132vw, 100vw"
+    media="(max-aspect-ratio: 2/3)"
+    imagesrcset="assets/editorial-atelier-scene-mobile-v1-480.avif 480w, assets/editorial-atelier-scene-mobile-v1-768.avif 768w, assets/editorial-atelier-scene-mobile-v1-941.avif 941w"
+    imagesizes="100vw"
+    fetchpriority="high"
+  >
+  <link
+    rel="preload"
+    as="image"
+    type="image/avif"
+    media="(min-aspect-ratio: 2/3) and (max-width: 1180px), (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/3)"
+    imagesrcset="assets/editorial-atelier-scene-compact-v2-768.avif 768w, assets/editorial-atelier-scene-compact-v2-1024.avif 1024w, assets/editorial-atelier-scene-compact-v2-1440.avif 1440w"
+    imagesizes="100vw"
+    fetchpriority="high"
+  >
+  <link
+    rel="preload"
+    as="image"
+    type="image/avif"
+    media="(min-width: 1181px) and (min-aspect-ratio: 1334/1000)"
+    imagesrcset="assets/editorial-atelier-scene-v1-640.avif 640w, assets/editorial-atelier-scene-v1-960.avif 960w, assets/editorial-atelier-scene-v1-1280.avif 1280w, assets/editorial-atelier-scene-v1-1672.avif 1672w, assets/editorial-atelier-scene-v1-2560.avif 2560w, assets/editorial-atelier-scene-v1-3344.avif 3344w, assets/editorial-atelier-scene-v1-3840.avif 3840w"
+    imagesizes="(max-width: 640px) and (max-height: 720px) 216vw, (max-width: 640px) 173vw, (max-width: 1024px) and (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw, (max-width: 1024px) and (max-aspect-ratio: 2/3) 170vw, (max-width: 1024px) 132vw, (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw, (max-aspect-ratio: 2/3) 170vw, 178vh"
     fetchpriority="high"
   >
   <link rel="prefetch" href="/menu">
   <link rel="prefetch" href="/kontakt">
-  <link rel="stylesheet" href="assets/page-home.css?v=20260729-3">
+  <link rel="stylesheet" href="assets/page-home.css?v=20260730-9">
 <link rel="stylesheet" href="assets/route-motion.css">
 <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css">
-  <link rel="stylesheet" href="assets/responsive-foundation.css">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/responsive-foundation.css?v=20260729-2">
   <link rel="stylesheet" href="/assets/fonts.css">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-3">
-  <script src="/assets/motion-control.js?v=20260729-4"></script>
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-4">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260730-12">
+  <script src="/assets/motion-control.js?v=20260729-5"></script>
+  <script src="/assets/responsive-safety.js?v=20260730-12" defer></script>
 </head>
 <body class="home-page">
   <a class="skip-link" href="#hero">Przejdź do treści</a>
   <main>
     <section class="hero" id="hero" tabindex="-1" aria-labelledby="hero-title">
+      <picture class="hero-backdrop" aria-hidden="true">
+        <source
+          type="image/avif"
+          srcset="
+            assets/editorial-atelier-backdrop-v2-960.avif 960w,
+            assets/editorial-atelier-backdrop-v2-1672.avif 1672w,
+            assets/editorial-atelier-backdrop-v2-2560.avif 2560w,
+            assets/editorial-atelier-backdrop-v2-3840.avif 3840w
+          "
+          sizes="100vw"
+        >
+        <source
+          type="image/webp"
+          srcset="
+            assets/editorial-atelier-backdrop-v2-960.webp 960w,
+            assets/editorial-atelier-backdrop-v2-1672.webp 1672w,
+            assets/editorial-atelier-backdrop-v2-2560.webp 2560w,
+            assets/editorial-atelier-backdrop-v2-3840.webp 3840w
+          "
+          sizes="100vw"
+        >
+        <img
+          src="assets/editorial-atelier-backdrop-v2-1672.webp"
+          alt=""
+          width="1672"
+          height="941"
+          fetchpriority="high"
+          decoding="async"
+        >
+      </picture>
       <div class="grid" aria-hidden="true"></div>
       <header class="topbar">
         <a href="/" aria-label="OK Agency — strona główna">
@@ -106,22 +157,70 @@
         <div class="image-rig" id="image-rig">
           <picture class="scene-picture">
             <source
+              media="(max-aspect-ratio: 2/3)"
+              type="image/avif"
+              srcset="
+                assets/editorial-atelier-scene-mobile-v1-480.avif 480w,
+                assets/editorial-atelier-scene-mobile-v1-768.avif 768w,
+                assets/editorial-atelier-scene-mobile-v1-941.avif 941w
+              "
+              sizes="100vw"
+            >
+            <source
+              media="(max-aspect-ratio: 2/3)"
+              type="image/webp"
+              srcset="
+                assets/editorial-atelier-scene-mobile-v1-480.webp 480w,
+                assets/editorial-atelier-scene-mobile-v1-768.webp 768w,
+                assets/editorial-atelier-scene-mobile-v1-941.webp 941w
+              "
+              sizes="100vw"
+            >
+            <source
+              media="(max-width: 1180px), (max-aspect-ratio: 4/3)"
+              type="image/avif"
+              srcset="
+                assets/editorial-atelier-scene-compact-v2-768.avif 768w,
+                assets/editorial-atelier-scene-compact-v2-1024.avif 1024w,
+                assets/editorial-atelier-scene-compact-v2-1440.avif 1440w
+              "
+              sizes="100vw"
+            >
+            <source
+              media="(max-width: 1180px), (max-aspect-ratio: 4/3)"
+              type="image/webp"
+              srcset="
+                assets/editorial-atelier-scene-compact-v2-768.webp 768w,
+                assets/editorial-atelier-scene-compact-v2-1024.webp 1024w,
+                assets/editorial-atelier-scene-compact-v2-1440.webp 1440w
+              "
+              sizes="100vw"
+            >
+            <source
               type="image/avif"
               srcset="
                 assets/editorial-atelier-scene-v1-640.avif 640w,
                 assets/editorial-atelier-scene-v1-960.avif 960w,
-                assets/editorial-atelier-scene-v1-1280.avif 1280w
+                assets/editorial-atelier-scene-v1-1280.avif 1280w,
+                assets/editorial-atelier-scene-v1-1672.avif 1672w,
+                assets/editorial-atelier-scene-v1-2560.avif 2560w,
+                assets/editorial-atelier-scene-v1-3344.avif 3344w,
+                assets/editorial-atelier-scene-v1-3840.avif 3840w
               "
-              sizes="(max-width: 640px) 173vw, (max-width: 1024px) 132vw, 100vw"
+              sizes="(max-width: 640px) and (max-height: 720px) 216vw, (max-width: 640px) 173vw, (max-width: 1024px) and (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw, (max-width: 1024px) and (max-aspect-ratio: 2/3) 170vw, (max-width: 1024px) 132vw, (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw, (max-aspect-ratio: 2/3) 170vw, 178vh"
             >
             <source
               type="image/webp"
               srcset="
                 assets/editorial-atelier-scene-v1-640.webp 640w,
                 assets/editorial-atelier-scene-v1-960.webp 960w,
-                assets/editorial-atelier-scene-v1-1280.webp 1280w
+                assets/editorial-atelier-scene-v1-1280.webp 1280w,
+                assets/editorial-atelier-scene-v1.webp 1672w,
+                assets/editorial-atelier-scene-v1-2560.webp 2560w,
+                assets/editorial-atelier-scene-v1@2x.webp 3344w,
+                assets/editorial-atelier-scene-v1-3840.webp 3840w
               "
-              sizes="(max-width: 640px) 173vw, (max-width: 1024px) 132vw, 100vw"
+              sizes="(max-width: 640px) and (max-height: 720px) 216vw, (max-width: 640px) 173vw, (max-width: 1024px) and (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw, (max-width: 1024px) and (max-aspect-ratio: 2/3) 170vw, (max-width: 1024px) 132vw, (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/5) 145vw, (max-aspect-ratio: 2/3) 170vw, 178vh"
             >
             <img
               class="sculpture"
@@ -129,8 +228,8 @@
               src="assets/editorial-atelier-scene-v1-1280.webp"
               data-fallback-src="assets/wire-cherry-sculpture-epic-v3.png"
               alt=""
-              width="1280"
-              height="720"
+              width="1672"
+              height="941"
               fetchpriority="high"
               decoding="async"
             >
@@ -198,10 +297,10 @@
     </section>
   </main>
   <div data-site-footer></div>
-  <script src="assets/tree-map-loader.js?v=20260729-3"></script>
+  <script src="assets/tree-map-loader.js?v=20260729-4"></script>
   <script src="assets/site-footer.js?v=20260729-2"></script>
   <script src="assets/page-home.js"></script>
-  <script src="assets/navigation.js?v=20260729-2"></script>
+  <script src="assets/navigation.js?v=20260730-2"></script>
   <script src="assets/route-transition.js?v=20260729-2"></script>
 </body>
 </html>

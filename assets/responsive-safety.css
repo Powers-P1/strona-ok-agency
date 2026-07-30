@@ -85,6 +85,15 @@ body.home-page {
   }
 
   /*
+    The portrait plate is taller than most 4:3-to-mobile viewports. Anchor it
+    to the floor so cover-cropping removes surplus empty canvas above the tree
+    instead of hiding its base below the first view.
+  */
+  .home-page .hero[data-ok-safe-mobile-hero="portrait"] .sculpture {
+    object-position: 56% bottom;
+  }
+
+  /*
     The branch map belongs to the horizontal master and would no longer align
     with either recomposed sculpture. Keep the baked highlights; retain the
     correctly positioned neural activity only on the portrait base.
@@ -102,6 +111,17 @@ body.home-page {
     top: 79.5%;
     width: 50%;
     height: 11.5%;
+  }
+}
+
+/*
+  When the portrait plate is width-bound, follow the same bottom crop as the
+  image so the animated neural layer remains registered with the sculpture.
+*/
+@media (min-aspect-ratio: 941 / 1672) and (max-aspect-ratio: 2 / 3) {
+  .home-page .hero[data-ok-safe-mobile-hero="portrait"] :is(.stone-neural-canvas, .stone-shell) {
+    top: calc(100% - 36.43vw);
+    height: 20.43vw;
   }
 }
 

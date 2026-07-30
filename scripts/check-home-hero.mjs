@@ -77,8 +77,8 @@ requireText(html, "editorial-atelier-backdrop-v2-3840.avif 3840w", "tło hero ni
 requireText(homeCss, ".hero-backdrop img", "płyta tła hero nie ma pełnoekranowego układu");
 requireText(
   foundationCss,
-  "font-size: clamp(64px, 7.5vw, 76px);",
-  "tryb stacked nie ma odrębnej skali H1 64–76 px",
+  "font-size: clamp(68px, min(8.5vw, 8svh), 84px);",
+  "tryb stacked nie ma skali H1 68–84 px zależnej od szerokości i wysokości",
 );
 requireText(
   foundationCss,
@@ -90,13 +90,13 @@ requireText(
   "font-size: 56px;",
   "stan kolizyjny nie zmniejsza H1 do 56 px",
 );
-requireText(html, "responsive-foundation.css?v=20260730-3", "strona główna nie ładuje poprawionej warstwy kaskady");
+requireText(html, "responsive-foundation.css?v=20260730-4", "strona główna nie ładuje poprawionej warstwy kaskady");
 const desktopHomeType = foundationCss.indexOf("font-size: var(--ok-home-display);");
-const stackedHomeType = foundationCss.lastIndexOf("font-size: clamp(64px, 7.5vw, 76px);");
+const stackedHomeType = foundationCss.lastIndexOf("font-size: clamp(68px, min(8.5vw, 8svh), 84px);");
 if (desktopHomeType < 0 || stackedHomeType <= desktopHomeType) {
   failures.push("stan stacked musi występować po desktopowym --ok-home-display w kaskadzie");
 }
-if (homeCss.includes("font-size: clamp(64px, 7.5vw, 76px);")) {
+if (homeCss.includes("font-size: clamp(68px, min(8.5vw, 8svh), 84px);")) {
   failures.push("page-home.css nie może duplikować typografii należącej do responsive-foundation.css");
 }
 

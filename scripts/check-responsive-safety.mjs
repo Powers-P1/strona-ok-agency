@@ -32,7 +32,7 @@ const requireText = (source, text, message) => {
 
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
-  requireText(html, "/assets/responsive-safety.css?v=20260730-12", `${page}: brak responsive-safety.css`);
+  requireText(html, "/assets/responsive-safety.css?v=20260730-13", `${page}: brak responsive-safety.css`);
   requireText(html, "/assets/responsive-safety.js?v=20260730-12", `${page}: brak responsive-safety.js`);
 });
 
@@ -74,6 +74,9 @@ requireText(css, "mask-image: var(--ok-safe-mask-image)", "CSS nie korzysta z dy
 requireText(css, '[data-ok-safe-curtain="active"]::after', "CSS nie ma pełnoszerokościowej kurtyny hero");
 requireText(css, '[data-ok-safe-curtain="active"] .hero-backdrop', "CSS nie wyłącza rozciągniętego tła pod kurtyną");
 requireText(css, "[data-ok-safe-mobile-hero] .sculpture", "CSS nie ma dedykowanej kompozycji 4:3 i mobile");
+requireText(css, 'data-ok-safe-mobile-hero="portrait"] .sculpture', "CSS nie ma osobnego kadru portretowego");
+requireText(css, "object-position: 56% bottom", "portretowe drzewko nie jest zakotwiczone do dołu kadru");
+requireText(css, "top: calc(100% - 36.43vw)", "animacja podstawy nie podąża za dolnym kadrowaniem");
 requireText(css, ".about-page .scene-inner", "CSS nie ma scrolla scen O nas");
 requireText(css, '[data-ok-safe-cards="stacked"]', "CSS nie ma bezpiecznego układu kart");
 requireText(css, "@media (max-height: 720px)", "CSS nie ma obsługi niskiego okna");

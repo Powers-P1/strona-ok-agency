@@ -636,7 +636,7 @@ canvas {
 
   .home-page .copy h1 {
     max-width: 6.8ch;
-    font-size: clamp(64px, 7.5vw, 76px);
+    font-size: clamp(68px, min(8.5vw, 8svh), 84px);
     line-height: .78;
   }
 

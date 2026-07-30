@@ -84,7 +84,7 @@
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/story-standard.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260730-10">
@@ -95,6 +95,29 @@
 </head>
 <body class="campaign-page">
   <a class="skip-link" href="#campaign-opening">Przejdź do Kampanii</a>
+
+  <header class="site-header site-header-light" data-ok-global-nav data-ok-nav-state="docked">
+    <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
+      <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
+    </a>
+    <nav aria-label="Główna nawigacja" data-ok-primary-nav>
+      <details class="ok-nav-offer" data-ok-offer>
+        <summary data-nav-link="offer">Oferta<span class="ok-nav-offer__mark" aria-hidden="true"></span></summary>
+        <div class="ok-nav-offer__popover">
+          <a href="/menu" data-offer-route>Zobacz całą ofertę</a>
+          <a href="/strony-internetowe" data-offer-route>Strony internetowe</a>
+          <a href="/social-media" data-offer-route>Social media</a>
+          <a href="/kampanie" data-offer-route>Kampanie</a>
+          <a href="/diagnoza" data-offer-route>Diagnoza — nie wiem, od czego zacząć</a>
+        </div>
+      </details>
+      <a href="/o-nas" data-nav-link="about">O nas</a>
+      <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
+      <a href="/faq" data-nav-link="faq">FAQ</a>
+      <a class="ok-nav-cta" href="/kontakt?context=campaign" data-nav-link="contact">Porozmawiajmy</a>
+    </nav>
+  </header>
+  <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="campaign-story">
     <div class="story-stage">
@@ -119,17 +142,6 @@
         <path class="glint glint-a" filter="url(#opening-glint)" pathLength="1" d="M 0 914 C 128 831 213 756 278 646 C 353 520 402 410 501 323 C 572 260 654 246 733 279 C 782 300 806 305 832 310 C 904 319 963 355 1035 395 C 1100 432 1171 448 1238 424 C 1312 398 1358 339 1396 310"></path>
         <path class="glint glint-b" filter="url(#opening-glint)" pathLength="1" d="M 1106 433 C 1174 454 1234 436 1289 402 C 1330 376 1352 340 1396 310"></path>
       </svg>
-
-      <header class="site-header site-header-light">
-        <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-          <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-        </a>
-        <nav aria-label="Główna nawigacja">
-          <a href="/menu" data-nav-link="offer">Oferta</a>
-          <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
-          <a href="/kontakt?context=campaign" data-nav-link="contact">Kontakt</a>
-        </nav>
-      </header>
 
       <svg class="annotation-lines" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
         <g class="annotation-wire" data-line="opening-tension">
@@ -225,17 +237,6 @@
         <path class="glint glint-b" filter="url(#journey-glint)" pathLength="1" d="M 220 856 C 358 746 455 655 561 552 C 651 466 727 456 813 461 C 904 466 966 427 1021 424"></path>
       </svg>
 
-      <header class="site-header site-header-dark">
-        <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-          <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
-        </a>
-        <nav aria-label="Główna nawigacja">
-          <a href="/menu" data-nav-link="offer">Oferta</a>
-          <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
-          <a href="/kontakt?context=campaign" data-nav-link="contact">Kontakt</a>
-        </nav>
-      </header>
-
       <div class="journey-intro">
         <h2 id="journey-title">Od planu<br>do <em>wyniku</em></h2>
         <p>Cztery etapy. Każdy kończy się<br>konkretną decyzją albo gotowym elementem kampanii.</p>
@@ -320,17 +321,6 @@
       >
 
       <span class="proof-bloom" aria-hidden="true"></span>
-
-      <header class="site-header site-header-light">
-        <a class="wordmark" href="/" aria-label="OK Agency — strona główna">
-          <img src="assets/ok-agency-wordmark-navy.svg" alt="OK Agency" width="417" height="103">
-        </a>
-        <nav aria-label="Główna nawigacja">
-          <a href="/menu" data-nav-link="offer">Oferta</a>
-          <a href="/proces?from=campaign" data-nav-link="process">Jak pracujemy</a>
-          <a href="/kontakt?context=campaign" data-nav-link="contact">Kontakt</a>
-        </nav>
-      </header>
 
       <div class="proof-content">
         <h2 id="proof-title">Mierzymy decyzje,<br>nie tylko <em>kliknięcia.</em></h2>
@@ -471,8 +461,8 @@
   </main>
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.v20260730-3.js"></script>
-  <script src="assets/navigation.js?v=20260730-2"></script>
+  <script src="assets/navigation.js?v=20260730-4"></script>
   <script src="assets/service-interactions.js?v=20260730-1"></script>
-  <script src="assets/site-footer.js?v=20260729-2"></script>
+  <script src="assets/site-footer.js?v=20260730-3"></script>
 </body>
 </html>

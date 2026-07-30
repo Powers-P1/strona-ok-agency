@@ -31,13 +31,13 @@
   mix-blend-mode: normal;
 }
 
-.hero .topbar,
+.home-page > .topbar,
 .hero .copy,
 .hero .image-rig {
   transform-origin: 64% 62%;
 }
 
-.hero .topbar,
+.home-page > .topbar,
 .hero .copy {
   transition:
     opacity .42s var(--ok-motion-standard),
@@ -68,7 +68,7 @@
     backdrop-filter .56s var(--ok-motion-standard);
 }
 
-.hero.is-route-leaving .topbar,
+.home-page > .topbar.is-route-leaving,
 .hero.is-route-leaving .copy {
   will-change: transform, opacity, filter;
   opacity: 0;
@@ -167,7 +167,7 @@
     animation: none;
   }
 
-  .hero .topbar,
+  .home-page > .topbar,
   .hero .copy,
   .hero .detail,
   .hero .image-rig,

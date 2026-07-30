@@ -9,7 +9,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/legal-pages.css?v=20260729-2">
   <link rel="stylesheet" href="assets/route-motion.css">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260729-4">
@@ -23,16 +23,28 @@
   <img class="error-art" src="assets/services/process/process-art-opening-v1.webp" alt="" width="1672" height="941">
   <div class="error-veil" aria-hidden="true"></div>
 
-  <header class="legal-header">
+  <header class="legal-header" data-ok-global-nav data-ok-nav-state="docked">
     <a class="legal-header__brand" href="/" aria-label="OK Agency — strona główna">
       <img src="assets/ok-agency-wordmark-cream.svg" alt="OK Agency" width="417" height="103">
     </a>
-    <nav aria-label="Główna nawigacja">
-      <a href="/menu" data-nav-link="offer">Oferta</a>
+    <nav aria-label="Główna nawigacja" data-ok-primary-nav>
+      <details class="ok-nav-offer" data-ok-offer>
+        <summary data-nav-link="offer">Oferta<span class="ok-nav-offer__mark" aria-hidden="true"></span></summary>
+        <div class="ok-nav-offer__popover">
+          <a href="/menu" data-offer-route>Zobacz całą ofertę</a>
+          <a href="/strony-internetowe" data-offer-route>Strony internetowe</a>
+          <a href="/social-media" data-offer-route>Social media</a>
+          <a href="/kampanie" data-offer-route>Kampanie</a>
+          <a href="/diagnoza" data-offer-route>Diagnoza — nie wiem, od czego zacząć</a>
+        </div>
+      </details>
+      <a href="/o-nas" data-nav-link="about">O nas</a>
       <a href="/proces" data-nav-link="process">Jak pracujemy</a>
-      <a href="/kontakt" data-nav-link="contact">Kontakt</a>
+      <a href="/faq" data-nav-link="faq">FAQ</a>
+      <a class="ok-nav-cta" href="/kontakt" data-nav-link="contact">Porozmawiajmy</a>
     </nav>
   </header>
+  <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="error-main" id="main">
     <section class="error-copy" aria-labelledby="error-title">
@@ -49,7 +61,7 @@
 
   <p class="error-number" aria-hidden="true">404</p>
   <footer class="error-meta"><span>OK Agency</span><span>Zdalnie — cała Polska</span></footer>
-  <script src="assets/navigation.js?v=20260730-2"></script>
+  <script src="assets/navigation.js?v=20260730-4"></script>
   <script src="assets/route-transition.js?v=20260729-2"></script>
 </body>
 </html>

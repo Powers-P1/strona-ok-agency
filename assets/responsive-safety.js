@@ -395,12 +395,15 @@
     if (!cards) return;
 
     const cardItems = [...cards.querySelectorAll(".card")];
+    const menuStage = cards.closest(".menu-stage");
+    const setMenuOverflow = active => menuStage?.toggleAttribute("data-ok-safe-menu-overflow", active);
     const viewportKey = `${window.innerWidth}x${window.innerHeight}`;
     if (cards.dataset.okSafeCards === "stacked") {
       if (cards.dataset.okSafeViewport !== viewportKey) {
         delete cards.dataset.okSafeCards;
         delete cards.dataset.okSafeViewport;
         cards.style.removeProperty("--ok-safe-card-height");
+        setMenuOverflow(false);
         requestAnimationFrame(schedule);
         return;
       }
@@ -408,6 +411,7 @@
       const textHeight = Math.max(...cardItems.map(card => card.querySelector(".card-text")?.scrollHeight || 0));
       const imageHeight = Math.max(220, Math.min(440, window.innerHeight * .34));
       cards.style.setProperty("--ok-safe-card-height", `${Math.ceil(textHeight + imageHeight + 24)}px`);
+      setMenuOverflow(true);
       return;
     }
 
@@ -423,6 +427,7 @@
 
     if (!crowded) {
       cards.style.removeProperty("--ok-safe-card-height");
+      setMenuOverflow(false);
       return;
     }
 
@@ -431,6 +436,7 @@
     cards.dataset.okSafeCards = "stacked";
     cards.dataset.okSafeViewport = viewportKey;
     cards.style.setProperty("--ok-safe-card-height", `${Math.ceil(textHeight + imageHeight + 24)}px`);
+    setMenuOverflow(true);
   };
 
   const measure = () => {

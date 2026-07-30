@@ -38,11 +38,45 @@ body {
   min-height: 100dvh;
   display: grid;
   grid-template-rows: var(--header-height) minmax(0, 1fr);
-  overflow-x: clip;
+  overflow: hidden;
   background:
     radial-gradient(ellipse at 12% 18%, rgba(255, 245, 228, .88), transparent 34%),
-    radial-gradient(ellipse at 78% 100%, rgba(188, 124, 101, .08), transparent 31%),
     linear-gradient(105deg, #ead9c9 0%, #e8d6c5 53%, #aeb8bb 100%);
+}
+
+/*
+  The accepted paper plate returns as a layer owned by this one viewport.
+  It is deliberately shorter than the stage: its luminous horizon stays
+  below the copy instead of travelling through it when the window changes.
+*/
+.menu-stage::before {
+  content: "";
+  position: absolute;
+  inset: 18% 0 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("paper-plate.webp") center bottom / 100% 100% no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 20%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 20%, #000 100%);
+}
+
+.menu-stage > .site-header,
+.menu-stage > main {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-stage[data-ok-safe-menu-overflow] {
+  height: auto;
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.menu-stage[data-ok-safe-menu-overflow] > main,
+.menu-stage[data-ok-safe-menu-overflow] .cards {
+  overflow: visible;
 }
 
 /* ziarno identyczne jak w hero */
@@ -153,6 +187,7 @@ main {
 .menu-stage > main {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
 }
 
 .page-title {
@@ -189,6 +224,7 @@ main {
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: hidden;
 }
 
 .cards-note {
@@ -408,6 +444,15 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
     display: block;
     min-height: 100svh;
     min-height: 100dvh;
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+  .menu-stage::before {
+    inset: 0 0 auto;
+    width: 100%;
+    height: 100svh;
+    height: 100dvh;
+    background-size: cover;
   }
   .site-header { padding-inline: 24px; }
   main {
@@ -424,6 +469,14 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .card-arrow { margin-top: 16px; padding-top: 0; }
   .card-text { padding-left: clamp(26px, 6vw, 60px); }
   .cards-note { margin-top: 18px; }
+}
+
+@media (min-width: 1101px) {
+  .menu-stage {
+    height: 100svh;
+    height: 100dvh;
+    min-height: 0;
+  }
 }
 
 @media (max-width: 640px) {
@@ -447,7 +500,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 }
 
 @media (min-width: 1101px) and (max-height: 800px) {
-  .page-title {
+  .menu-page .menu-stage .page-title {
     margin-top: clamp(16px, 2.6vh, 22px);
     margin-bottom: clamp(12px, 2vh, 18px);
     font-size: clamp(72px, 11svh, 92px);
@@ -466,18 +519,18 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
     height: 64%;
     padding-top: 8px;
   }
-  .card-title { margin-top: 10px; font-size: clamp(19px, 1.6vw, 26px); }
-  .card-quote {
+  .menu-page .menu-stage .card-title { margin-top: 10px; font-size: clamp(19px, 1.6vw, 26px); }
+  .menu-page .menu-stage .card-quote {
     min-height: 2.65em;
     margin-top: 6px;
     font-size: 12px;
     line-height: 1.35;
   }
-  .card-effect {
+  .menu-page .menu-stage .card-effect {
     margin-top: 6px;
     font-size: 11px;
   }
-  .card-effect-desc {
+  .menu-page .menu-stage .card-effect-desc {
     margin-top: 4px;
     font-size: 12px;
     line-height: 1.35;
@@ -486,6 +539,82 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .cards-note {
     padding-block: 8px;
     font-size: 12px;
+  }
+}
+
+@media (min-width: 1101px) and (max-height: 720px) {
+  .menu-stage > main {
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+  }
+
+  .menu-page .menu-stage .page-title {
+    display: flex;
+    align-items: baseline;
+    gap: .22ch;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-size: clamp(58px, 10svh, 72px);
+    line-height: .82;
+  }
+
+  .menu-page .menu-stage .page-title .mask {
+    display: inline-block;
+  }
+
+  .menu-page .offer-intro {
+    padding-bottom: 8px;
+  }
+
+  .menu-page .offer-intro p {
+    max-width: 920px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .card-img { height: 32%; }
+
+  .card-text {
+    height: 68%;
+    padding-top: 5px;
+  }
+
+  .card-num {
+    padding-bottom: 8px;
+    font-size: 20px;
+  }
+
+  .menu-page .menu-stage .card-title {
+    min-height: 1.85em;
+    margin-top: 7px;
+    font-size: clamp(18px, 1.55vw, 23px);
+  }
+
+  .menu-page .menu-stage .card-quote {
+    min-height: 2.55em;
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.28;
+  }
+
+  .menu-page .menu-stage .card-effect {
+    margin-top: 4px;
+    font-size: 10px;
+  }
+
+  .menu-page .menu-stage .card-effect-desc {
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.28;
+  }
+
+  .card-arrow {
+    padding-top: 3px;
+    font-size: 18px;
+  }
+
+  .cards-note {
+    padding-block: 5px;
+    font-size: 11px;
   }
 }
 

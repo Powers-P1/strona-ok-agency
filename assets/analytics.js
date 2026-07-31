@@ -10,8 +10,8 @@
   "use strict";
 
   const PIXEL_ID = "1057817209974571";    // ← META PIXEL ID
-  const AW_ID = "AW-CONVERSION";          // ← GOOGLE ADS ID
-  const AW_LABEL_LEAD = "AW_LABEL_LEAD";  // ← etykieta: wysłanie formularza
+  const AW_ID = "AW-18361103115";         // ← GOOGLE ADS ID
+  const AW_LABEL_LEAD = "O7kQCOLA1dkcEIvmoLNE"; // ← etykieta: wysłanie formularza
   const AW_LABEL_DIAG = "AW_LABEL_DIAG";  // ← etykieta: ukończenie diagnozy
 
   const configured = v => v && !/^(PIXEL_ID|AW-CONVERSION|AW_LABEL)/.test(v);

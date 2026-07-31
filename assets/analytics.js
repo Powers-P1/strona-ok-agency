@@ -1,10 +1,9 @@
 /* OK Agency — analityka kampanii (Meta Pixel + Google Ads gtag)
-   WERSJA SZABLONU — przed wdrożeniem uzupełnić 2 identyfikatory:
-     PIXEL_ID      → z Meta Events Manager (15-16 cyfr)
-     AW-CONVERSION → z Google Ads, np. AW-123456789
-     AW_LABEL_LEAD → etykieta konwersji "Wysłanie formularza", np. abcDEF123
-     AW_LABEL_DIAG → etykieta konwersji "Ukończenie diagnozy"
-   Plik docelowy: assets/analytics.js (kopiować 1:1 po uzupełnieniu ID)
+   PIXEL_ID uzupełniony: 1057817209974571 (Meta Events Manager)
+   AW-CONVERSION → z Google Ads, np. AW-123456789 (do uzupełnienia przy starcie Google Ads)
+   AW_LABEL_LEAD → etykieta konwersji "Wysłanie formularza", np. abcDEF123
+   AW_LABEL_DIAG → etykieta konwersji "Ukończenie diagnozy"
+   Deploy trigger: 2026-07-31 (wymuszenie przebudowania Cloudflare Pages)
 */
 (() => {
   "use strict";

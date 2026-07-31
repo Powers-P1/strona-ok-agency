@@ -50,7 +50,11 @@
   window.okAnalytics = {
     /** Konwersja główna: wysłanie formularza kontaktowego. */
     lead() {
-      if (configured(PIXEL_ID) && window.fbq) window.fbq("track", "Lead");
+      if (configured(PIXEL_ID) && window.fbq) {
+        window.fbq("track", "Lead");
+        // Contact — zdarzenie, na które optymalizuje zestaw reklam w Meta
+        window.fbq("track", "Contact");
+      }
       if (configured(AW_ID) && window.gtag && configured(AW_LABEL_LEAD)) {
         window.gtag("event", "conversion", { send_to: `${AW_ID}/${AW_LABEL_LEAD}` });
       }

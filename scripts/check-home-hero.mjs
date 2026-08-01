@@ -77,6 +77,8 @@ requireText(html, 'width="1672"', "obraz hero nie ma bazowej szerokości 1672");
 requireText(html, 'height="941"', "obraz hero nie ma bazowej wysokości 941");
 requireText(html, 'class="hero-backdrop"', "hero nie ma pełnoekranowej płyty tła");
 requireText(html, "editorial-atelier-backdrop-v2-3840.avif 3840w", "tło hero nie ma wariantu 3840 AVIF");
+requireText(loader, "/assets/tree-energy.js?v=20260801-1", "loader nie unieważnia cache poprawionej animacji");
+requireText(energy, "Number.isFinite(flash.duration)", "animacja nie chroni gradientu przed wartością NaN");
 requireText(homeCss, ".hero-backdrop img", "płyta tła hero nie ma pełnoekranowego układu");
 requireText(
   foundationCss,
@@ -141,8 +143,8 @@ const shortBeforeResize = resizeFixture(500);
 const tallAfterResize = resizeFixture(768);
 const shortAfterResize = resizeFixture(500);
 
-if (shortBeforeResize.copyFitsFirstView) {
-  failures.push("niski viewport 1024x500 powinien przejść do dostępnego overflow");
+if (!shortBeforeResize.copyFitsFirstView) {
+  failures.push("niski viewport 1024x500 nie powinien tworzyć pustej rezerwy pod treścią");
 }
 if (!tallAfterResize.copyFitsFirstView) {
   failures.push("viewport 1024x768 powinien wrócić do układu mieszczącego się w pierwszym widoku");
@@ -150,8 +152,11 @@ if (!tallAfterResize.copyFitsFirstView) {
 if (JSON.stringify(shortBeforeResize) !== JSON.stringify(shortAfterResize)) {
   failures.push("wynik hero zależy od historii resize zamiast od aktualnego viewportu");
 }
-if (shortBeforeResize.copySafeZone !== .6 || tallAfterResize.copySafeZone !== .6) {
-  failures.push("próg bezpiecznej strefy musi korzystać z tej samej szerokości viewportu co tryb compact");
+if (shortBeforeResize.copySafeZone !== 1 || tallAfterResize.copySafeZone !== .6) {
+  failures.push("krótki landscape powinien wykorzystać pełną wysokość, a wysoki compact zachować strefę grafiki");
+}
+if (shortBeforeResize.requiredHeight !== 500) {
+  failures.push(`niski viewport 1024x500 ma sztuczną wysokość ${shortBeforeResize.requiredHeight}px`);
 }
 
 requireText(homeCss, "@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941)", "brak reguły szerokiego desktopu");

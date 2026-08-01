@@ -1,11 +1,14 @@
 /*
-  Home and menu are separate HTML documents. Opt both into the browser's
-  cross-document transition so the end of the hero move and the first menu
-  frame share one uninterrupted timeline.
+  Site-wide motion contract. Every document loads this file so route changes,
+  scene micro-interactions and reduced-motion behavior share the same timing.
 */
 :root {
   --ok-motion-spring: cubic-bezier(.22, 1, .36, 1);
   --ok-motion-standard: cubic-bezier(.4, 0, .2, 1);
+  --ok-motion-fast: .24s;
+  --ok-motion-medium: .36s;
+  --ok-motion-route: .76s;
+  --ok-motion-cue-duration: 2.4s;
 }
 
 @view-transition {
@@ -13,7 +16,7 @@
 }
 
 ::view-transition-group(root) {
-  animation-duration: .76s;
+  animation-duration: var(--ok-motion-route);
   animation-timing-function: var(--ok-motion-spring);
 }
 
@@ -22,12 +25,12 @@
 }
 
 ::view-transition-old(root) {
-  animation: .76s var(--ok-motion-standard) both ok-view-old;
+  animation: var(--ok-motion-route) var(--ok-motion-standard) both ok-view-old;
   mix-blend-mode: normal;
 }
 
 ::view-transition-new(root) {
-  animation: .76s var(--ok-motion-spring) both ok-view-new;
+  animation: var(--ok-motion-route) var(--ok-motion-spring) both ok-view-new;
   mix-blend-mode: normal;
 }
 

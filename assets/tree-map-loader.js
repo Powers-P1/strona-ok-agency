@@ -109,7 +109,7 @@
         return;
       }
 
-      await loadScript("/assets/tree-energy.js?v=20260730-4");
+      await loadScript("/assets/tree-energy.js?v=20260801-1");
       if (!isCurrent()) {
         abandon();
         return;

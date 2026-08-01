@@ -277,41 +277,6 @@ html[data-motion="paused"] *::after {
   line-height: 1.65;
 }
 
-/* „O nas” zachowuje pełnoekranowe sceny, ale używa natywnego przewijania. */
-html:has(body.about-page),
-html:has(body.about-page) body {
-  width: 100%;
-  height: auto !important;
-  min-height: 100%;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior: auto !important;
-}
-
-body.about-page {
-  position: static !important;
-  inset: auto !important;
-}
-
-.about-page .story {
-  height: auto !important;
-  overflow: visible !important;
-}
-
-.about-page .scene {
-  position: relative !important;
-  inset: auto !important;
-  min-height: 100svh;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
-  transform: none !important;
-}
-
-.about-page .scene-nav {
-  position: fixed;
-}
-
 /* Wspólny, czytelny system punktów na liniach energii. */
 .annotation-dot {
   width: 44px !important;
@@ -410,27 +375,6 @@ body.about-page {
   backdrop-filter: blur(13px) saturate(.92);
 }
 
-.about-page .annotation-copy {
-  top: calc(var(--drop) - 9px + var(--copy-shift-y, 0px));
-}
-
-.about-page .annotation::after {
-  height: var(--leader-height, var(--drop));
-}
-
-.about-page .scene-art {
-  z-index: 1;
-  transform: none !important;
-}
-
-.about-page .scene::before {
-  z-index: 2;
-}
-
-.about-page .scene-inner {
-  z-index: 3;
-}
-
 .process-frame .campaign-art {
   z-index: 1;
 }
@@ -447,27 +391,6 @@ body.about-page {
 
 .process-frame.process-discovery-scene {
   background-image: url("services/process/process-art-discovery-v3.webp");
-  background-position: center;
-  background-size: cover;
-}
-
-.about-page #about-responsibility {
-  background-image: url("services/about/about-art-responsibility-v1.webp");
-}
-
-.about-page #about-oliwia {
-  background-image: url("services/about/about-art-oliwia-v1.webp");
-}
-
-.about-page #about-model {
-  background-image: url("services/about/about-art-model-v1.webp");
-}
-
-.about-page #about-credibility {
-  background-image: url("services/about/about-art-credibility-v1.webp");
-}
-
-.about-page .scene {
   background-position: center;
   background-size: cover;
 }
@@ -585,10 +508,6 @@ body.about-page {
 }
 
 @media (max-width: 640px) {
-  .about-page .scene-nav {
-    bottom: 68px;
-  }
-
   .decision-guide {
     padding: 64px 20px 76px;
   }
@@ -610,10 +529,6 @@ body.about-page {
 
   .uses-annotation-summary .tablet-annotations ul {
     max-height: min(14svh, 88px);
-  }
-
-  .about-page .scene-02 .tablet-details {
-    width: 100%;
   }
 
   .proof-label small,

@@ -4,7 +4,7 @@
   --cream: #f0dfcf;
   --pink: #ee4d78;
   --copper: #b96f49;
-  --ease: cubic-bezier(.32, .72, 0, 1);
+  --ease: var(--ok-motion-spring);
 }
 
 * { box-sizing: border-box; }

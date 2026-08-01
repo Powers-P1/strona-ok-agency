@@ -4,6 +4,10 @@
  * scroll snapping, crossfade, blur or synthetic footer handoff.
  */
 
+:root {
+  --ease: var(--ok-motion-spring);
+}
+
 html {
   scroll-behavior: auto !important;
   scrollbar-width: auto !important;
@@ -14,7 +18,8 @@ html::-webkit-scrollbar {
 }
 
 .campaign-story,
-.social-story {
+.social-story,
+.about-page .story {
   height: auto !important;
   min-height: 0 !important;
   background: var(--paper, #ead9cb) !important;
@@ -31,7 +36,8 @@ html::-webkit-scrollbar {
 
 .campaign-frame,
 .social-frame,
-.process-frame {
+.process-frame,
+.about-page .scene {
   --art-opacity: 1 !important;
   --content-opacity: 1 !important;
   --art-blur: 0px !important;
@@ -49,6 +55,11 @@ html::-webkit-scrollbar {
   transform: none !important;
   transition: none !important;
   will-change: auto !important;
+}
+
+.about-page .scene {
+  height: auto !important;
+  min-height: max(100svh, var(--ok-safe-required-height, 100svh)) !important;
 }
 
 .campaign-journey,
@@ -72,6 +83,33 @@ html::-webkit-scrollbar {
   will-change: auto !important;
 }
 
+.about-page .scene-art {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
+.scroll-cue span {
+  animation: ok-story-cue var(--ok-motion-cue-duration) var(--ok-motion-spring) infinite !important;
+}
+
+.proof-detail,
+.accordion-detail {
+  transition-timing-function: var(--ok-motion-spring) !important;
+}
+
+@keyframes ok-story-cue {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
 @media (max-width: 820px) {
   .campaign-frame,
   .social-frame,
@@ -85,6 +123,8 @@ html::-webkit-scrollbar {
   .campaign-frame,
   .social-frame,
   .process-frame,
+  .about-page .scene,
+  .about-page .scene-art,
   .campaign-art {
     transition: none !important;
     animation: none !important;

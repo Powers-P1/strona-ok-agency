@@ -44,6 +44,7 @@ const serviceStyleFiles = [
 ];
 
 const [
+  aboutHtml,
   aboutCss,
   aboutScript,
   enhancementsCss,
@@ -52,6 +53,7 @@ const [
   interactions,
   routeMotion,
 ] = await Promise.all([
+  read("o-nas.html"),
   read("assets/services/about/styles.css"),
   read("assets/services/about/script.js"),
   read("assets/site-enhancements.css"),
@@ -84,7 +86,7 @@ for (const page of storyPages) {
   );
   requireText(
     html,
-    "assets/service-interactions.js?v=20260801-2",
+    "assets/service-interactions.js?v=20260801-3",
     `${page}: brak wspólnych interakcji`,
   );
 }
@@ -96,12 +98,16 @@ requireText(storyCss, "ok-story-cue", "scroll cue nie ma wspólnej animacji");
 requireText(interactions, '".annotation-callout, .annotation"', "callouty nie korzystają ze wspólnego skryptu");
 requireText(interactions, '".proof-item, .accordion-item"', "akordeony nie korzystają ze wspólnego skryptu");
 requireText(interactions, "window.OKAgencyMotion?.isPaused()", "interakcje ignorują globalną pauzę");
+requireText(interactions, 'callout.dataset.pinned = "false"', "callouty nie startują systemowo ze stanu zamkniętego");
 
 reject(aboutCss, /overflow:\s*hidden;\s*overscroll-behavior:\s*none;/, "O nas nadal blokuje dokument");
 reject(aboutCss, /\.scene\s*\{[^}]*filter:\s*blur/s, "O nas nadal ma lokalny blur scen");
 reject(aboutCss, /\.scene\s*\{[^}]*opacity:\s*0/s, "O nas nadal ukrywa sceny lokalnym systemem");
 reject(aboutCss, /\.scene\.is-active\s*\{/, "O nas nadal ma lokalny crossfade aktywnej sceny");
 reject(aboutScript, /syncCallout|syncAccordionItem|mobile-details/, "O nas duplikuje wspólne interakcje");
+reject(aboutHtml, /class="annotation[^\"]*\bis-open\b/, "O nas nadal otwiera callout przy starcie");
+reject(aboutHtml, /class="annotation-dot"[^>]*aria-expanded="true"/, "O nas ma niespójny stan aria calloutu przy starcie");
+reject(aboutCss, /\.annotation:(?:hover|focus-within).*\.annotation-copy/, "O nas omija wspólny mechanizm otwierania calloutów");
 reject(enhancementsCss, /about-page/, "site-enhancements.css nadal zawiera wyjątki O nas");
 reject(safetyCss, /about-page/, "responsive-safety.css nadal zawiera wyjątki O nas");
 

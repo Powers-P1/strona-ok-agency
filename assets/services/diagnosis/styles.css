@@ -594,6 +594,38 @@ svg { display: block; }
 .result-cta i { color:var(--pink);font-size:18px;font-style:normal; }
 .result-cta:hover { background:var(--pink);color:white; }
 .result-cta:hover i { color:white; }
+.result-lead { margin-top:22px;padding-top:20px;border-top:1px solid rgba(7,26,44,.12); }
+.result-lead-intro { margin:0 0 14px;max-width:52ch;color:rgba(7,26,44,.78);font-size:13px;line-height:1.5; }
+.result-lead-fields { display:flex;flex-wrap:wrap;gap:10px; }
+.result-lead-field { flex:1 1 210px;display:flex;flex-direction:column;gap:5px; }
+.result-lead-field span {
+  color:rgba(7,26,44,.72);
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.result-lead-field input {
+  min-height:44px;
+  padding:0 12px;
+  border:1px solid rgba(7,26,44,.22);
+  background:rgba(255,255,255,.72);
+  color:var(--navy);
+  font-family:inherit;
+  font-size:14px;
+  transition:border-color .2s ease;
+}
+.result-lead-field input:focus-visible { outline:none;border-color:var(--pink); }
+.result-lead-fax { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
+.result-lead-form .cf-turnstile { margin-top:12px; }
+.result-lead-submit { margin-top:12px;justify-content:space-between; }
+.result-lead-submit[disabled] { opacity:.55;cursor:not-allowed; }
+.result-lead-status { margin:10px 0 0;min-height:17px;font-size:12px;font-weight:600; }
+.result-lead-status[data-tone="error"] { color:#b3123c; }
+.result-lead-status[data-tone="success"] { color:#127a4b; }
+.result-lead-note { margin:8px 0 0;max-width:52ch;color:rgba(7,26,44,.55);font-size:10.5px;line-height:1.5; }
+.result-lead-note a { color:inherit;text-decoration:underline; }
 .result-controls { margin-top:3px;display:flex;gap:22px; }
 .result-controls button {
   min-height:40px;
@@ -711,6 +743,8 @@ svg { display: block; }
   .result-steps li { min-height:44px;grid-template-columns:38px 1fr;font-size:11px; }
   .result-actions { flex-direction:column; }
   .result-cta { width:100%;min-width:0; }
+  .result-lead-fields { flex-direction:column;gap:12px; }
+  .result-lead-submit { width:100%; }
   .result-controls { flex-wrap:wrap;gap:12px; }
 }
 

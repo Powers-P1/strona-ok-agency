@@ -192,6 +192,8 @@
     focusAfterPaint(next.querySelector("h3"));
   };
 
+  let currentOutcome = null;
+
   const setResultLink = (anchor, data) => {
     anchor.setAttribute("href", data[1]);
     anchor.querySelector("span").textContent = data[0];
@@ -199,6 +201,7 @@
 
   const renderResult = outcome => {
     const copy = RESULTS[outcome];
+    currentOutcome = outcome;
     resultTitle.textContent = copy.title;
     resultWhy.textContent = copy.why;
     resultSteps.forEach((item, index) => { item.textContent = copy.steps[index]; });
@@ -302,4 +305,121 @@
     if (event.key !== "Escape") return;
     tool.querySelectorAll(".annotation-callout.is-open").forEach(closeCallout);
   });
+
+  /* ---------- formularz kontaktowy na ekranie wyniku ---------- */
+
+  const leadForm = tool.querySelector("[data-result-lead-form]");
+
+  if (leadForm) {
+    const leadStatus = leadForm.querySelector("[data-result-lead-status]");
+    const leadSubmit = leadForm.querySelector(".result-lead-submit");
+    const leadName = leadForm.querySelector("#rl-name");
+    const leadEmail = leadForm.querySelector("#rl-email");
+    const leadFax = leadForm.querySelector("#rl-fax");
+    let leadWidgetId = null;
+    let leadSent = false;
+
+    window.onDiagnosisTurnstileLoad = () => {
+      leadWidgetId = window.turnstile.render("#diagnosis-turnstile");
+    };
+
+    const resetLeadTurnstile = () => {
+      if (window.turnstile && leadWidgetId !== null) window.turnstile.reset(leadWidgetId);
+    };
+
+    const setLeadStatus = (text, tone) => {
+      leadStatus.textContent = text;
+      leadStatus.dataset.tone = tone || "";
+    };
+
+    // Treść wiadomości powstaje z wyniku diagnozy — użytkownik podaje tylko imię i e-mail.
+    const buildLeadMessage = () => {
+      const copy = RESULTS[currentOutcome];
+      const chosen = ["q1", "q2", "q3", "q4"]
+        .map((key, index) => `${index + 1}. ${answers[key] || "—"}`)
+        .join("\n");
+      return [
+        `Zgłoszenie z diagnozy marketingowej.`,
+        ``,
+        `Wynik: ${copy.title}`,
+        `Uzasadnienie: ${copy.why}`,
+        ``,
+        `Rekomendowane pierwsze kroki:`,
+        ...copy.steps.map((step, index) => `${index + 1}) ${step}`),
+        ``,
+        `Odpowiedzi w diagnozie:`,
+        chosen,
+      ].join("\n");
+    };
+
+    leadForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (leadFax.value) return;
+      if (leadSent) return;
+      if (!currentOutcome) {
+        setLeadStatus("Najpierw ukończ diagnozę.", "error");
+        return;
+      }
+
+      const name = leadName.value.trim();
+      const email = leadEmail.value.trim();
+
+      if (name.length < 3) {
+        setLeadStatus("Podaj imię — co najmniej 3 znaki.", "error");
+        leadName.focus();
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        setLeadStatus("Podaj poprawny adres e-mail.", "error");
+        leadEmail.focus();
+        return;
+      }
+
+      const turnstileToken = leadForm.querySelector('[name="cf-turnstile-response"]')?.value || "";
+      if (!turnstileToken) {
+        setLeadStatus("Potwierdź, że formularz wysyła człowiek.", "error");
+        return;
+      }
+
+      leadSubmit.disabled = true;
+      leadSubmit.setAttribute("aria-busy", "true");
+      setLeadStatus("Wysyłamy…", "");
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            phone: "",
+            company: "",
+            topic: `Diagnoza: ${RESULTS[currentOutcome].title}`,
+            message: buildLeadMessage(),
+            fax: "",
+            turnstileToken,
+          }),
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.ok !== true) throw new Error("lead_send_failed");
+
+        leadSent = true;
+        leadForm.reset();
+        resetLeadTurnstile();
+        setLeadStatus("Dziękujemy — odezwiemy się z konkretem.", "success");
+        leadForm.querySelectorAll("input, button").forEach(element => { element.disabled = true; });
+        window.okAnalytics?.lead();
+      } catch {
+        resetLeadTurnstile();
+        setLeadStatus("Nie udało się wysłać. Napisz na hello@okagency.pl albo spróbuj z formularza kontaktowego.", "error");
+      } finally {
+        if (!leadSent) {
+          leadSubmit.disabled = false;
+          leadSubmit.removeAttribute("aria-busy");
+        }
+      }
+    });
+  }
 })();

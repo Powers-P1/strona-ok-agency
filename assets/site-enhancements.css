@@ -668,3 +668,111 @@ body.about-page {
     transform: translate(-50%, -50%) scale(.82);
   }
 }
+
+/* ==========================================================================
+   Zgoda na pliki cookie
+   Banner pojawia się tylko do momentu podjęcia decyzji. Narzędzia
+   marketingowe startują dopiero po akceptacji — patrz assets/analytics.js.
+   ========================================================================== */
+
+.ok-consent {
+  position: fixed;
+  z-index: 9999;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  max-width: 640px;
+  margin-inline: auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(7, 26, 44, .16);
+  border-radius: 2px;
+  background: #fdf7f1;
+  box-shadow: 0 18px 44px rgba(7, 26, 44, .18);
+}
+
+.ok-consent__text {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.ok-consent__title {
+  margin: 0 0 6px;
+  color: #071a2c;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.ok-consent__body {
+  margin: 0;
+  color: rgba(7, 26, 44, .78);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.ok-consent__body a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ok-consent__actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.ok-consent__button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid #d6285a;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+
+.ok-consent__button--ghost {
+  background: transparent;
+  color: #071a2c;
+}
+
+.ok-consent__button--solid {
+  background: #071a2c;
+  color: #f4e6d9;
+}
+
+.ok-consent__button:hover {
+  background: #d6285a;
+  color: #fff;
+}
+
+.ok-consent__button:focus-visible {
+  outline: 2px solid #d6285a;
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  .ok-consent {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    padding: 16px;
+  }
+
+  .ok-consent__actions {
+    width: 100%;
+  }
+
+  .ok-consent__button {
+    flex: 1 1 0;
+  }
+}

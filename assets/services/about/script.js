@@ -53,20 +53,27 @@
     });
   });
 
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visible) return;
-      const index = scenes.indexOf(visible.target);
-      if (index >= 0 && index !== activeIndex) updateActiveScene(index);
-    }, {
-      rootMargin: "-25% 0px -25% 0px",
-      threshold: [0.2, 0.45, 0.7],
-    });
-    scenes.forEach((scene) => observer.observe(scene));
-  }
+  let scrollFrame = 0;
+  const syncActiveScene = () => {
+    scrollFrame = 0;
+    const probe = window.innerHeight * .5;
+    const sceneRects = scenes.map((scene) => scene.getBoundingClientRect());
+    let index = sceneRects.findIndex((rect) => rect.top <= probe && rect.bottom > probe);
+    if (index < 0) {
+      index = sceneRects.reduce((closest, rect, current) => {
+        const distance = Math.abs((rect.top + rect.bottom) * .5 - probe);
+        return distance < closest.distance ? { index: current, distance } : closest;
+      }, { index: activeIndex, distance: Infinity }).index;
+    }
+    if (index >= 0 && index !== activeIndex) updateActiveScene(index);
+  };
+  const scheduleSceneSync = () => {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(syncActiveScene);
+  };
+
+  window.addEventListener("scroll", scheduleSceneSync, { passive: true });
+  window.addEventListener("resize", scheduleSceneSync, { passive: true });
 
   window.addEventListener("hashchange", () => {
     const index = hashes.indexOf(window.location.hash);
@@ -78,105 +85,12 @@
     });
   });
 
-  function syncCallout(callout, open) {
-    const button = callout.querySelector(".annotation-dot");
-    const panel = callout.querySelector(".annotation-copy");
-    callout.classList.toggle("is-open", open);
-    button?.setAttribute("aria-expanded", String(open));
-    if (panel) panel.hidden = !open;
-  }
-
-  function closeAllCallouts(except = null) {
-    document.querySelectorAll("[data-callout]").forEach((callout) => {
-      if (callout === except) return;
-      callout.dataset.pinned = "false";
-      delete callout.dataset.preview;
-      syncCallout(callout, false);
-    });
-  }
-
-  document.querySelectorAll("[data-callout]").forEach((callout) => {
-    const button = callout.querySelector(".annotation-dot");
-    const initiallyOpen = callout.classList.contains("is-open");
-    callout.dataset.pinned = String(initiallyOpen);
-    syncCallout(callout, initiallyOpen);
-
-    const previewOpen = () => {
-      if (callout.classList.contains("is-open")) return;
-      closeAllCallouts(callout);
-      callout.dataset.preview = "true";
-      syncCallout(callout, true);
-    };
-
-    const closePreview = () => {
-      if (callout.dataset.preview !== "true" || document.activeElement === button) return;
-      delete callout.dataset.preview;
-      syncCallout(callout, false);
-    };
-
-    callout.addEventListener("mouseenter", previewOpen);
-    callout.addEventListener("mouseleave", closePreview);
-    button?.addEventListener("focus", previewOpen);
-    button?.addEventListener("blur", () => {
-      if (callout.dataset.pinned !== "true") {
-        delete callout.dataset.preview;
-        syncCallout(callout, false);
-      }
-    });
-    button?.addEventListener("click", () => {
-      const willOpen = (
-        callout.dataset.preview === "true"
-        || callout.dataset.pinned !== "true"
-      );
-      closeAllCallouts();
-      if (willOpen) {
-        callout.dataset.pinned = "true";
-        syncCallout(callout, true);
-      }
-    });
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!event.target.closest("[data-callout]")) closeAllCallouts();
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeAllCallouts();
-  });
-
-  document.querySelectorAll(".mobile-details").forEach((group) => {
-    group.querySelectorAll("details").forEach((detail) => {
-      detail.addEventListener("toggle", () => {
-        if (!detail.open) return;
-        group.querySelectorAll("details").forEach((sibling) => {
-          if (sibling !== detail) sibling.open = false;
-        });
-      });
-    });
-  });
-
-  const syncAccordionItem = (item, open) => {
-    const trigger = item.querySelector(".accordion-trigger");
-    const panel = item.querySelector(".accordion-detail");
-    item.classList.toggle("is-open", open);
-    trigger?.setAttribute("aria-expanded", String(open));
-    if (panel) panel.hidden = !open;
-  };
-
-  document.querySelectorAll(".accordion-item").forEach((item) => {
-    syncAccordionItem(item, item.classList.contains("is-open"));
-    const trigger = item.querySelector(".accordion-trigger");
-    trigger?.addEventListener("click", () => {
-      const willOpen = trigger.getAttribute("aria-expanded") !== "true";
-      item.closest(".accordion")?.querySelectorAll(".accordion-item").forEach((row) => {
-        syncAccordionItem(row, false);
-      });
-      if (willOpen) syncAccordionItem(item, true);
-    });
-  });
-
   updateActiveScene(activeIndex, { updateHash: false });
   if (window.location.hash && scenes[activeIndex]) {
-    requestAnimationFrame(() => scenes[activeIndex].scrollIntoView({ block: "start" }));
+    requestAnimationFrame(() => scenes[activeIndex].scrollIntoView({
+      behavior: "auto",
+      block: "start",
+    }));
   }
+  scheduleSceneSync();
 })();

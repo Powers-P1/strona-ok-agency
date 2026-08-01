@@ -10,11 +10,13 @@
   }) => {
     const viewportRatio = viewportWidth / viewportHeight;
     const compact = viewportWidth <= 1180 || viewportRatio <= 4 / 3;
+    const shortLandscape = viewportHeight <= 760 && viewportRatio > 4 / 3;
 
     if (!compact) {
       return Object.freeze({
         compact: false,
         portrait: false,
+        shortLandscape,
         artScale: 1,
         copySafeZone: 1,
         copyFitsFirstView: true,
@@ -26,7 +28,9 @@
     const artScale = portrait
       ? 1
       : Math.min(1.22, Math.max(1, 1 + (4 / 3 - viewportRatio) * .85));
-    const copySafeZone = viewportWidth > 1180
+    const copySafeZone = shortLandscape
+      ? 1
+      : viewportWidth > 1180
       ? .68
       : viewportWidth > 640
         ? .6
@@ -44,6 +48,7 @@
     return Object.freeze({
       compact: true,
       portrait,
+      shortLandscape,
       artScale,
       copySafeZone,
       copyFitsFirstView,
@@ -87,7 +92,8 @@
     if (element.closest('[aria-hidden="true"]')) return false;
     const style = getComputedStyle(element);
     return style.display !== "none"
-      && style.visibility !== "hidden";
+      && style.visibility !== "hidden"
+      && element.getClientRects().length > 0;
   };
 
   const addLayout = (scene, contentSelector, artSelector, mode = "scene") => {
@@ -138,6 +144,18 @@
     };
   };
 
+  const contentBottomWithin = (content, scene) => {
+    let bottom = Math.max(content.offsetHeight, content.scrollHeight);
+    let current = content;
+
+    while (current && current !== scene) {
+      bottom += current.offsetTop;
+      current = current.offsetParent;
+    }
+
+    return current === scene ? bottom : null;
+  };
+
   const discover = () => {
     const home = document.querySelector(".home-page .hero");
     if (home) addLayout(home, ":scope > .copy, :scope > .detail", ":scope > .art-stage", "grow");
@@ -171,29 +189,6 @@
     }
   };
 
-  const makeScrollRegion = (content, availableHeight) => {
-    content.dataset.okSafeScroll = "true";
-    content.style.setProperty("--ok-safe-content-max-height", `${Math.max(180, availableHeight)}px`);
-
-    if (!content.hasAttribute("tabindex")) {
-      content.tabIndex = 0;
-      content.dataset.okSafeAddedTabindex = "true";
-    }
-    let labelled = content.hasAttribute("aria-label") || content.hasAttribute("aria-labelledby");
-    if (!content.hasAttribute("aria-label") && !content.hasAttribute("aria-labelledby")) {
-      const heading = content.querySelector("h1[id], h2[id], h3[id]");
-      if (heading) {
-        content.setAttribute("aria-labelledby", heading.id);
-        content.dataset.okSafeAddedLabelledby = "true";
-        labelled = true;
-      }
-    }
-    if (labelled && !content.hasAttribute("role")) {
-      content.setAttribute("role", "region");
-      content.dataset.okSafeAddedRole = "true";
-    }
-  };
-
   const clearLayout = layout => {
     layout.art.dataset.okSafeArt = "idle";
     delete layout.art.dataset.okSafeReveal;
@@ -222,6 +217,7 @@
     }
 
     content.dataset.okSafeContent = "";
+    restoreScrollRegion(content);
     delete layout.scene.dataset.okSafeCurtain;
     delete layout.scene.dataset.okSafeMobileHero;
     delete layout.scene.dataset.okSafeCompactFit;
@@ -249,15 +245,10 @@
       || contentRect.width >= sceneRect.width * .5;
 
     const gap = Math.max(20, Math.min(56, sceneRect.width * .03));
-    let requiredHeight = Math.ceil(contentRect.bottom - sceneRect.top + gap);
-
-    const naturalHeight = Math.max(content.scrollHeight, contentRect.height);
-    const availableHeight = Math.floor(sceneRect.bottom - Math.max(contentRect.top, sceneRect.top) - gap);
-    if (layout.mode !== "grow" && naturalHeight > availableHeight + 2) {
-      makeScrollRegion(content, availableHeight);
-    } else {
-      restoreScrollRegion(content);
-    }
+    const offsetBottom = contentBottomWithin(content, layout.scene);
+    let requiredHeight = Math.ceil(
+      (offsetBottom ?? contentRect.bottom - sceneRect.top) + gap,
+    );
 
     const isHome = layout.mode === "grow" && body.classList.contains("home-page");
     const homeLayout = isHome
@@ -273,14 +264,6 @@
     if (!compactHome) {
       layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     }
-    if (isHome && compact) {
-      const minimumArtSpace = Math.max(300, Math.min(520, viewportWidth * .5));
-      requiredHeight = Math.max(
-        requiredHeight,
-        Math.ceil(contentRect.bottom - sceneRect.top + minimumArtSpace),
-      );
-    }
-
     if (compactHome) {
       /*
        * The compact 4:3 plate deliberately reserves a clear copy zone above
@@ -312,6 +295,20 @@
       return;
     }
 
+    /*
+     * The wide/short composition already owns its art crop. Growing the hero
+     * to reserve a second, empty art band creates a visible gap before the
+     * next section (most noticeably in Safari on short Mac viewports).
+     */
+    if (isHome && !layout.scene.classList.contains("is-focused")) {
+      requiredHeight = Math.max(viewportHeight, requiredHeight);
+      layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
+      layout.art.dataset.okSafeArt = "idle";
+      delete layout.art.dataset.okSafeReveal;
+      layout.art.style.removeProperty("--ok-safe-mask-image");
+      return;
+    }
+
     if (layout.scene.classList.contains("is-focused")) {
       delete layout.scene.dataset.okSafeCurtain;
       layout.scene.style.removeProperty("--ok-safe-curtain-mask");
@@ -333,32 +330,13 @@
     layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
 
     const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
-    if (isHome && compact) {
-      const curtainCut = clamp(
-        contentRect.bottom - sceneRect.top + gap * .35,
-        sceneRect.height,
-      );
-      const curtainFeather = Math.max(120, Math.min(260, sceneRect.height * .2));
-      const curtainReveal = clamp(curtainCut + curtainFeather, sceneRect.height);
-      const curtainMask = `linear-gradient(to bottom, #000 0, #000 ${curtainCut}px, transparent ${curtainReveal}px, transparent 100%)`;
-
-      layout.scene.dataset.okSafeCurtain = "active";
-      layout.scene.style.setProperty("--ok-safe-curtain-mask", curtainMask);
-      layout.art.dataset.okSafeArt = "idle";
-      delete layout.art.dataset.okSafeReveal;
-      layout.art.style.removeProperty("--ok-safe-mask-image");
-      return;
-    }
-
     const spaces = {
       left: Math.max(0, contentRect.left - artRect.left),
       right: Math.max(0, artRect.right - contentRect.right),
       top: Math.max(0, contentRect.top - artRect.top),
       bottom: Math.max(0, artRect.bottom - contentRect.bottom),
     };
-    const allowedSides = isHome
-      ? (compact ? ["bottom"] : ["right"])
-      : ["left", "right", "top", "bottom"];
+    const allowedSides = ["left", "right", "top", "bottom"];
     const revealSide = allowedSides.reduce(
       (best, side) => spaces[side] > spaces[best] ? side : best,
       allowedSides[0],

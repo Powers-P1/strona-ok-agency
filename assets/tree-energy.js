@@ -1034,17 +1034,25 @@
       context.fill();
     });
     synapseFlashes.forEach((flash) => {
-      if (now < flash.start || now > flash.start + flash.duration) return;
+      const duration = Number.isFinite(flash.duration) && flash.duration > 0
+        ? flash.duration
+        : 1;
+      const intensity = Number.isFinite(flash.intensity)
+        ? Math.max(0, Math.min(1, flash.intensity))
+        : 0;
+      if (!Number.isFinite(now) || !Number.isFinite(flash.start) || intensity === 0) return;
+      if (now < flash.start || now > flash.start + duration) return;
       const point = map.nodes[flash.node];
       if (!point) return;
-      const phase = (now - flash.start) / flash.duration;
-      const envelope = phase < .22 ? phase / .22 : Math.pow(1 - (phase - .22) / .78, 1.6);
+      const phase = Math.max(0, Math.min(1, (now - flash.start) / duration));
+      const decay = Math.max(0, 1 - (phase - .22) / .78);
+      const envelope = phase < .22 ? phase / .22 : Math.pow(decay, 1.6);
       const [x, y] = mapPoint(point);
       const radius = Math.max(4.5, 7.5 * scale) * (1 + phase * .22);
       const glow = context.createRadialGradient(x, y, 0, x, y, radius);
-      glow.addColorStop(0, `rgba(255, 249, 225, ${.88 * envelope * flash.intensity})`);
-      glow.addColorStop(.25, `rgba(255, 188, 172, ${.55 * envelope * flash.intensity})`);
-      glow.addColorStop(.65, `rgba(255, 92, 141, ${.18 * envelope * flash.intensity})`);
+      glow.addColorStop(0, `rgba(255, 249, 225, ${.88 * envelope * intensity})`);
+      glow.addColorStop(.25, `rgba(255, 188, 172, ${.55 * envelope * intensity})`);
+      glow.addColorStop(.65, `rgba(255, 92, 141, ${.18 * envelope * intensity})`);
       glow.addColorStop(1, "rgba(255, 92, 141, 0)");
       context.fillStyle = glow;
       context.beginPath();

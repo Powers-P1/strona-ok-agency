@@ -25,10 +25,6 @@ html {
   scrollbar-gutter: stable;
 }
 
-:where(main, section, article)[id] {
-  scroll-margin-top: calc(var(--ok-nav-floating-height) + 36px);
-}
-
 body.ok-nav-open {
   overflow: hidden;
 }

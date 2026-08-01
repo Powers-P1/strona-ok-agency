@@ -1,111 +1,143 @@
-const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+(() => {
+  "use strict";
 
-const closeCallout = callout => {
-  callout.classList.remove("is-open");
-  callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "false");
-  callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "true");
-  const frame = callout.closest(".campaign-frame, .social-frame");
-  const line = frame?.querySelector(`[data-line="${callout.dataset.annotation}"]`);
-  line?.classList.remove("is-open");
-};
-
-const openCallout = callout => {
-  document.querySelectorAll(".annotation-callout.is-open").forEach(active => {
-    if (active !== callout) closeCallout(active);
-  });
-
-  callout.classList.add("is-open");
-  callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "true");
-  callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "false");
-  const frame = callout.closest(".campaign-frame, .social-frame");
-  const line = frame?.querySelector(`[data-line="${callout.dataset.annotation}"]`);
-  line?.classList.add("is-open");
-};
-
-document.querySelectorAll(".annotation-callout").forEach(callout => {
-  const dot = callout.querySelector(".annotation-dot");
-  const copy = callout.querySelector(".annotation-copy");
-  if (!dot || !copy) return;
-  copy.setAttribute(
-    "aria-hidden",
-    String(!callout.classList.contains("is-open")),
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const motionPaused = () => (
+    reducedMotion.matches || window.OKAgencyMotion?.isPaused()
   );
 
-  let closeTimer;
-  const cancelClose = () => clearTimeout(closeTimer);
-  const queueClose = () => {
-    clearTimeout(closeTimer);
-    closeTimer = setTimeout(() => {
-      if (!callout.matches(":focus-within") && !copy.matches(":hover")) closeCallout(callout);
-    }, 140);
+  const calloutSelector = ".annotation-callout, .annotation";
+  const disclosureSelector = ".proof-item, .accordion-item";
+
+  const calloutLine = callout => {
+    const frame = callout.closest(".campaign-frame, .social-frame, .process-frame");
+    const key = callout.dataset.annotation;
+    return key ? frame?.querySelector(`[data-line="${key}"]`) : null;
   };
 
-  dot.addEventListener("pointerenter", () => openCallout(callout));
-  dot.addEventListener("pointerleave", queueClose);
-  dot.addEventListener("focus", () => openCallout(callout));
-  dot.addEventListener("blur", queueClose);
-  dot.addEventListener("click", event => {
-    event.stopPropagation();
-    openCallout(callout);
-  });
+  const syncCallout = (callout, open) => {
+    const dot = callout.querySelector(".annotation-dot");
+    const copy = callout.querySelector(".annotation-copy");
 
-  copy.addEventListener("pointerenter", cancelClose);
-  copy.addEventListener("pointerleave", queueClose);
-});
-
-const closeProofItem = item => {
-  const trigger = item.querySelector(".proof-trigger");
-  const detail = item.querySelector(".proof-detail");
-
-  item.classList.remove("is-open");
-  trigger?.setAttribute("aria-expanded", "false");
-
-  if (!detail) return;
-  const hideDetail = () => {
-    if (!item.classList.contains("is-open")) detail.hidden = true;
+    callout.classList.toggle("is-open", open);
+    dot?.setAttribute("aria-expanded", String(open));
+    copy?.removeAttribute("hidden");
+    copy?.setAttribute("aria-hidden", String(!open));
+    calloutLine(callout)?.classList.toggle("is-open", open);
   };
 
-  if (reducedMotion.matches) {
-    hideDetail();
-  } else {
-    setTimeout(hideDetail, 360);
-  }
-};
+  const closeCallout = callout => {
+    delete callout.dataset.preview;
+    callout.dataset.pinned = "false";
+    syncCallout(callout, false);
+  };
 
-const openProofItem = item => {
-  document.querySelectorAll(".proof-item.is-open").forEach(active => {
-    if (active !== item) closeProofItem(active);
+  const closeAllCallouts = except => {
+    document.querySelectorAll(calloutSelector).forEach(callout => {
+      if (callout !== except) closeCallout(callout);
+    });
+  };
+
+  const openCallout = (callout, { preview = false } = {}) => {
+    closeAllCallouts(callout);
+    if (preview) callout.dataset.preview = "true";
+    else callout.dataset.pinned = "true";
+    syncCallout(callout, true);
+  };
+
+  document.querySelectorAll(calloutSelector).forEach(callout => {
+    const dot = callout.querySelector(".annotation-dot");
+    const copy = callout.querySelector(".annotation-copy");
+    if (!dot || !copy) return;
+
+    callout.dataset.pinned = String(callout.classList.contains("is-open"));
+    syncCallout(callout, callout.classList.contains("is-open"));
+
+    let closeTimer = 0;
+    const cancelClose = () => clearTimeout(closeTimer);
+    const previewOpen = () => {
+      if (callout.dataset.pinned === "true") return;
+      openCallout(callout, { preview: true });
+    };
+    const queueClose = () => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        if (callout.dataset.pinned !== "true" && !callout.matches(":focus-within")) {
+          closeCallout(callout);
+        }
+      }, motionPaused() ? 0 : 140);
+    };
+
+    dot.addEventListener("pointerenter", previewOpen);
+    dot.addEventListener("pointerleave", queueClose);
+    dot.addEventListener("focus", previewOpen);
+    dot.addEventListener("blur", queueClose);
+    dot.addEventListener("click", event => {
+      event.stopPropagation();
+      const shouldOpen = callout.dataset.pinned !== "true";
+      closeAllCallouts();
+      if (shouldOpen) openCallout(callout);
+    });
+
+    copy.addEventListener("pointerenter", cancelClose);
+    copy.addEventListener("pointerleave", queueClose);
   });
 
-  const trigger = item.querySelector(".proof-trigger");
-  const detail = item.querySelector(".proof-detail");
-  if (detail) detail.hidden = false;
-
-  requestAnimationFrame(() => {
-    item.classList.add("is-open");
-    trigger?.setAttribute("aria-expanded", "true");
+  const disclosureParts = item => ({
+    trigger: item.querySelector(".proof-trigger, .accordion-trigger"),
+    panel: item.querySelector(".proof-detail, .accordion-detail"),
   });
-};
 
-document.querySelectorAll(".proof-item").forEach(item => {
-  const trigger = item.querySelector(".proof-trigger");
-  if (!trigger) return;
+  const syncDisclosure = (item, open, { initial = false } = {}) => {
+    const { trigger, panel } = disclosureParts(item);
+    item.classList.toggle("is-open", open);
+    trigger?.setAttribute("aria-expanded", String(open));
+    if (!panel) return;
 
-  trigger.addEventListener("click", () => {
-    if (item.classList.contains("is-open")) {
-      closeProofItem(item);
-    } else {
-      openProofItem(item);
+    if (open) {
+      panel.hidden = false;
+      panel.setAttribute("aria-hidden", "false");
+      return;
     }
+
+    panel.setAttribute("aria-hidden", "true");
+    const hide = () => {
+      if (!item.classList.contains("is-open")) panel.hidden = true;
+    };
+    if (initial || motionPaused()) hide();
+    else setTimeout(hide, 380);
+  };
+
+  document.querySelectorAll(disclosureSelector).forEach(item => {
+    const { trigger } = disclosureParts(item);
+    if (!trigger) return;
+    syncDisclosure(item, item.classList.contains("is-open"), { initial: true });
+
+    trigger.addEventListener("click", () => {
+      const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
+      item.closest(".proof-list, .accordion")
+        ?.querySelectorAll(disclosureSelector)
+        .forEach(row => syncDisclosure(row, false));
+      if (shouldOpen) syncDisclosure(item, true);
+    });
   });
-});
 
-addEventListener("pointerdown", event => {
-  if (event.target.closest(".annotation-callout")) return;
-  document.querySelectorAll(".annotation-callout.is-open").forEach(closeCallout);
-});
+  document.querySelectorAll(".mobile-details").forEach(group => {
+    group.querySelectorAll("details").forEach(detail => {
+      detail.addEventListener("toggle", () => {
+        if (!detail.open) return;
+        group.querySelectorAll("details").forEach(sibling => {
+          if (sibling !== detail) sibling.open = false;
+        });
+      });
+    });
+  });
 
-addEventListener("keydown", event => {
-  if (event.key !== "Escape") return;
-  document.querySelectorAll(".annotation-callout.is-open").forEach(closeCallout);
-});
+  addEventListener("pointerdown", event => {
+    if (!event.target.closest(calloutSelector)) closeAllCallouts();
+  });
+
+  addEventListener("keydown", event => {
+    if (event.key === "Escape") closeAllCallouts();
+  });
+})();

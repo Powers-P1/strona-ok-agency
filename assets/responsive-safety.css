@@ -24,28 +24,6 @@ body.home-page {
   min-height: inherit;
 }
 
-.home-page .hero[data-ok-safe-curtain="active"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 7;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 10% 16%, rgba(255, 245, 228, .66), transparent 48%),
-    radial-gradient(ellipse at 10% 100%, rgba(255, 92, 141, .1), transparent 32%),
-    linear-gradient(105deg, #ead9c9 0%, #e8d6c5 100%);
-  -webkit-mask-image: var(--ok-safe-curtain-mask);
-  mask-image: var(--ok-safe-curtain-mask);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
-
-.home-page .hero[data-ok-safe-curtain="active"] .hero-backdrop {
-  visibility: hidden;
-}
-
 /*
   Below 1180px of usable width, or at 4:3 and narrower, the hero switches
   atomically to purpose-built compact/portrait plates. Their upper halves are
@@ -132,6 +110,34 @@ body.home-page {
 }
 
 /*
+  Service and About scenes stay in the document flow. When text needs more
+  room, the whole scene grows so the browser keeps one continuous scrollbar.
+*/
+:is(.campaign-frame, .social-frame, .process-frame)[data-ok-safe-scene] {
+  --ok-safe-stage-floor: 680px;
+  height: auto !important;
+  min-height: max(
+    100svh,
+    var(--ok-safe-required-height, 0px),
+    var(--ok-safe-stage-floor)
+  ) !important;
+}
+
+.uses-annotation-summary .tablet-annotations,
+.uses-annotation-summary .tablet-annotations ul {
+  max-height: none !important;
+  overflow: visible !important;
+  overscroll-behavior: auto;
+  scrollbar-gutter: auto;
+}
+
+@media (max-width: 820px) {
+  :is(.campaign-frame, .social-frame, .process-frame)[data-ok-safe-scene] {
+    --ok-safe-stage-floor: 720px;
+  }
+}
+
+/*
   The viewport profile is shared by every illustrated route. Tall portrait
   scenes stay composited as one frame, while short windows gain document
   height instead of splitting the artwork into a separate rectangle.
@@ -157,15 +163,6 @@ body.home-page {
   mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
-}
-
-[data-ok-safe-content][data-ok-safe-scroll="true"] {
-  max-height: var(--ok-safe-content-max-height);
-  padding-inline-end: max(8px, env(scrollbar-width, 0px));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
 }
 
 /* The focused home state hides the measured intro and owns its own panel. */
@@ -202,28 +199,6 @@ body.home-page {
 
   .contact-page .layout {
     min-height: max(100svh, var(--ok-safe-required-height, 680px), 680px);
-  }
-}
-
-/*
-  About scenes are intentionally app-like and keep the fixed scene navigation.
-  Their inner content becomes independently scrollable instead of being scaled
-  below the approved type size.
-*/
-@media (max-width: 900px), (max-height: 720px) {
-  .about-page .scene-inner {
-    overflow-x: clip;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-gutter: stable;
-    scrollbar-width: thin;
-  }
-
-  .about-page .copy-panel,
-  .about-page .scene-02 .copy-panel,
-  .about-page .scene-03 .copy-panel,
-  .about-page .scene-04 .copy-panel {
-    transform: none !important;
   }
 }
 

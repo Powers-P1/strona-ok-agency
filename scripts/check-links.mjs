@@ -10,10 +10,28 @@ const htmlFiles = (await readdir(root))
 const failures = [];
 const hrefPattern = /<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi;
 const idPattern = /\bid=["']([^"']+)["']/gi;
+const assetPattern = /<(?:link|script)\b[^>]*(?:href|src)=["']([^"']+)["'][^>]*>/gi;
 
 for (const file of htmlFiles) {
   const source = await readFile(join(root, file), "utf8");
   const ids = new Set([...source.matchAll(idPattern)].map(match => match[1]));
+
+  for (const match of source.matchAll(assetPattern)) {
+    const href = match[1];
+    if (/^(?:https?:|data:)/i.test(href)) continue;
+    const path = href.split(/[?#]/)[0];
+    if (!path) continue;
+    if (!extname(path)) continue;
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+    const target = path.startsWith("/")
+      ? resolve(root, cleanPath)
+      : resolve(root, dirname(file), cleanPath);
+    try {
+      if (!(await stat(target)).isFile()) failures.push(`${file}: brak zasobu ${href}`);
+    } catch {
+      failures.push(`${file}: brak zasobu ${href}`);
+    }
+  }
 
   for (const match of source.matchAll(hrefPattern)) {
     const href = match[1];

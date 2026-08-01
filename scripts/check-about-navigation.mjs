@@ -15,7 +15,7 @@ const makeClassList = initial => {
   };
 };
 
-const makeElement = ({ id = "", go, nav = false, theme = "light" } = {}) => {
+const makeElement = ({ id = "", go, nav = false, theme = "light", top = 0 } = {}) => {
   const listeners = new Map();
   const attributes = new Map();
   const element = {
@@ -26,6 +26,7 @@ const makeElement = ({ id = "", go, nav = false, theme = "light" } = {}) => {
     attributes,
     nav,
     scrolled: 0,
+    getBoundingClientRect() { return { top, bottom: top + 1000 }; },
     addEventListener(type, listener) { listeners.set(type, listener); },
     setAttribute(name, value) { attributes.set(name, String(value)); },
     removeAttribute(name) { attributes.delete(name); },
@@ -35,10 +36,10 @@ const makeElement = ({ id = "", go, nav = false, theme = "light" } = {}) => {
 };
 
 const scenes = [
-  makeElement({ id: "about-responsibility", theme: "light" }),
-  makeElement({ id: "about-oliwia", theme: "light" }),
-  makeElement({ id: "about-model", theme: "dark" }),
-  makeElement({ id: "about-credibility", theme: "light" }),
+  makeElement({ id: "about-responsibility", theme: "light", top: 0 }),
+  makeElement({ id: "about-oliwia", theme: "light", top: 1000 }),
+  makeElement({ id: "about-model", theme: "dark", top: 2000 }),
+  makeElement({ id: "about-credibility", theme: "light", top: 3000 }),
 ];
 const navButtons = [0, 1, 2, 3].map(go => makeElement({ go, nav: true }));
 const ctaButtons = [1, 2, 3].map(go => makeElement({ go }));
@@ -59,6 +60,7 @@ const document = {
   addEventListener() {},
 };
 const window = {
+  innerHeight: 1000,
   location: { hash: "" },
   matchMedia: () => ({ matches: false }),
   addEventListener() {},

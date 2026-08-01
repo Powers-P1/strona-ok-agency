@@ -133,11 +133,12 @@ Scroll pozostaje w pełni natywny. Sceny są kolejnymi sekcjami w zwykłym przep
 
 ### Globalny kontrakt wysokości sceny
 
-Każdy akt na podstronie scenicznej zajmuje dokładnie obszar dostępny pod
-globalną nawigacją: `100svh - var(--ok-nav-slot-height)`. Kontrakt jest
-zdefiniowany raz w `assets/scene-viewport.css` i obowiązuje wszystkie warianty
-usług oraz stronę „O nas”. Lokalne arkusze nie mogą nadpisywać `height`,
-`min-height` ani `max-height` sceny.
+Każdy akt na podstronie scenicznej zajmuje dokładnie pełny ekran: `100svh`.
+Globalna nawigacja jest warstwą nakładaną; nie odejmuje się jej od wysokości
+aktu, a jej slot w przepływie jest zerowany wspólnie na wszystkich stronach
+scenicznych. Kontrakt jest zdefiniowany raz w `assets/scene-viewport.css` i
+obowiązuje wszystkie warianty usług oraz stronę „O nas”. Lokalne arkusze nie
+mogą nadpisywać `height`, `min-height` ani `max-height` sceny.
 
 Przy niskim lub wąskim ekranie kompozycja ma przejść na właściwy breakpoint,
 zmienić układ treści albo ograniczyć elementy dekoracyjne. Nie wolno ratować

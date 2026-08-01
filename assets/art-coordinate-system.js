@@ -4,7 +4,7 @@
       ".campaign-frame, .social-frame, .process-frame, .diagnosis-frame",
     ),
   ];
-  const aboutScenes = [...document.querySelectorAll(".scene")];
+  const aboutScenes = [...document.querySelectorAll(".about-page .scene")];
   const serviceGeometry = new WeakMap();
   const aboutGeometry = new WeakMap();
   const preferredCopySides = new WeakMap();

@@ -288,59 +288,6 @@
     }
   });
 
-  const closeCallout = callout => {
-    callout.classList.remove("is-open");
-    callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "false");
-    callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "true");
-    callout.closest(".diagnosis-frame")
-      ?.querySelector(`[data-line="${callout.dataset.annotation}"]`)
-      ?.classList.remove("is-open");
-  };
-
-  const openCallout = callout => {
-    tool.querySelectorAll(".annotation-callout.is-open").forEach(active => {
-      if (active !== callout) closeCallout(active);
-    });
-    callout.classList.add("is-open");
-    callout.querySelector(".annotation-dot")?.setAttribute("aria-expanded", "true");
-    callout.querySelector(".annotation-copy")?.setAttribute("aria-hidden", "false");
-    callout.closest(".diagnosis-frame")
-      ?.querySelector(`[data-line="${callout.dataset.annotation}"]`)
-      ?.classList.add("is-open");
-  };
-
-  tool.querySelectorAll(".annotation-callout").forEach(callout => {
-    const dot = callout.querySelector(".annotation-dot");
-    const copy = callout.querySelector(".annotation-copy");
-    copy.setAttribute(
-      "aria-hidden",
-      String(!callout.classList.contains("is-open")),
-    );
-    let closeTimer;
-    const cancelClose = () => clearTimeout(closeTimer);
-    const queueClose = () => {
-      clearTimeout(closeTimer);
-      closeTimer = setTimeout(() => {
-        if (!callout.matches(":focus-within") && !copy.matches(":hover")) closeCallout(callout);
-      }, 140);
-    };
-    dot.addEventListener("pointerenter", () => openCallout(callout));
-    dot.addEventListener("pointerleave", queueClose);
-    dot.addEventListener("focus", () => openCallout(callout));
-    dot.addEventListener("blur", queueClose);
-    dot.addEventListener("click", event => {
-      event.stopPropagation();
-      openCallout(callout);
-    });
-    copy.addEventListener("pointerenter", cancelClose);
-    copy.addEventListener("pointerleave", queueClose);
-  });
-
-  addEventListener("keydown", event => {
-    if (event.key !== "Escape") return;
-    tool.querySelectorAll(".annotation-callout.is-open").forEach(closeCallout);
-  });
-
   /* ---------- formularz kontaktowy na ekranie wyniku ---------- */
 
   const leadForm = tool.querySelector("[data-result-lead-form]");

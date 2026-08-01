@@ -10,7 +10,9 @@
   const disclosureSelector = ".proof-item, .accordion-item";
 
   const calloutLine = callout => {
-    const frame = callout.closest(".campaign-frame, .social-frame, .process-frame");
+    const frame = callout.closest(
+      ".campaign-frame, .social-frame, .process-frame, .diagnosis-frame, .about-page .scene",
+    );
     const key = callout.dataset.annotation;
     return key ? frame?.querySelector(`[data-line="${key}"]`) : null;
   };

@@ -152,7 +152,6 @@ body[data-theme="dark"] .wordmark img {
 .site-header a:focus-visible,
 .text-link:focus-visible,
 .primary-cta:focus-visible,
-.annotation-dot:focus-visible,
 .accordion-trigger:focus-visible {
   outline: 2px solid var(--pink);
   outline-offset: 4px;
@@ -725,131 +724,12 @@ h2 {
   margin-top: 12px;
 }
 
-.annotation {
-  --leader: 64px;
-  --drop: 25px;
-  --leader-length: 30px;
-  --leader-angle: 0rad;
-  --copy-w: 235px;
-  position: absolute;
-  z-index: 12;
-  top: var(--y);
-  left: var(--x);
-  width: 1px;
-  height: 1px;
-  pointer-events: none;
-}
-
-.annotation::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  left: 4px;
-  width: var(--leader-length);
-  height: 1px;
-  display: block;
-  background: var(--pink);
-  opacity: 0;
-  pointer-events: none;
-  transform: rotate(var(--leader-angle)) scaleX(0);
-  transform-origin: left;
-  transition: transform .34s var(--ease), opacity .12s ease;
-}
-
-.annotation::after {
-  content: none;
-}
-
-.annotation.is-open::before {
-  opacity: 1;
-  transform: rotate(var(--leader-angle)) scaleX(1);
-}
-
-.annotation-dot {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow: none;
-  cursor: pointer;
-  pointer-events: auto;
-  transform: translate(-50%, -50%);
-}
-
-.annotation-copy {
-  position: absolute;
-  z-index: 2;
-  top: calc(var(--drop) - 9px + var(--copy-shift-y, 0px));
-  left: calc(var(--leader) + 15px);
-  width: var(--copy-w);
-  padding: 0;
-  color: var(--navy);
-  background: transparent;
-  box-shadow: none;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(7px);
-  transition:
-    opacity .26s ease .23s,
-    transform .38s var(--ease) .18s;
-}
-
-.scene-dark .annotation-copy {
-  color: var(--paper);
-}
-
-.annotation.flip .annotation-copy {
-  right: calc(var(--leader) + 15px);
-  left: auto;
-}
-
-.annotation-copy strong {
-  display: block;
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: clamp(17px, 1.08vw, 19px);
-  font-weight: 600;
-  letter-spacing: .045em;
-  text-transform: uppercase;
-  text-shadow: 0 1px 12px rgba(234, 217, 203, .5);
-}
-
-.annotation-copy span {
-  margin-top: 6px;
-  display: block;
-  color: rgba(6, 25, 43, .76);
-  font-size: 12px;
-  line-height: 1.45;
-  text-shadow: 0 1px 12px rgba(234, 217, 203, .7);
-}
-
-.scene-dark .annotation-copy strong {
-  text-shadow: 0 1px 12px rgba(3, 15, 27, .78);
-}
-
-.scene-dark .annotation-copy span {
-  color: rgba(234, 217, 203, .78);
-  text-shadow: 0 1px 12px rgba(3, 15, 27, .92);
-}
-
 .scene-03 #callout-leading strong,
 .scene-03 #callout-leading span {
   color: #fff8f1;
   text-shadow:
     0 1px 2px rgba(6, 25, 43, .98),
     0 0 14px rgba(6, 25, 43, .88);
-}
-
-.annotation.is-open .annotation-copy {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
 }
 
 .mobile-details {
@@ -962,9 +842,6 @@ h2 {
     width: 25vw;
   }
 
-  .annotation-copy {
-    width: 195px;
-  }
 }
 
 @media (max-height: 800px) and (min-width: 901px) {
@@ -1179,10 +1056,6 @@ h2 {
   .scene-01 .mobile-details,
   .tablet-details {
     display: block;
-  }
-
-  .annotation {
-    display: none;
   }
 
   .scene-02 .facts,
@@ -1410,10 +1283,6 @@ h2 {
 
   .text-link {
     min-height: 44px;
-  }
-
-  .annotation {
-    display: none;
   }
 
   .mobile-details {

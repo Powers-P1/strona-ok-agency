@@ -57,6 +57,8 @@ const stylesheetRefs = source => [...source.matchAll(/<link\b[^>]*>/gi)]
   .map(match => match[0])
   .filter(tag => /(?:^|\s)stylesheet(?:\s|$)/i.test(attribute(tag, "rel") || ""))
   .map(tag => normalizeAsset(attribute(tag, "href") || ""));
+const scriptRefs = source => [...source.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)]
+  .map(match => ({ raw: match[1], normalized: normalizeAsset(match[1]) }));
 const stripComments = source => source.replace(/\/\*[\s\S]*?\*\//g, match => match.replace(/[^\r\n]/g, " "));
 const cssRules = source => [...stripComments(source).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .map(match => ({ selector: match[1].trim(), declarations: match[2], index: match.index }));
@@ -152,6 +154,27 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     }
   }
   addCheck("centralne tokeny i system anotacji", failures);
+}
+
+// Every annotation route loads one stable, cache-versioned geometry module.
+{
+  const failures = [];
+  const stablePath = "assets/art-coordinate-system.js";
+  const expectedReference = `${stablePath}?v=20260801-1`;
+
+  if (!await exists(stablePath)) failures.push(`${stablePath}: brak stabilnego modułu geometrii`);
+  for (const path of annotationPages.keys()) {
+    const refs = scriptRefs(htmlSources.get(path));
+    const geometryRefs = refs.filter(({ normalized }) => normalized.startsWith("assets/art-coordinate-system"));
+    if (geometryRefs.length !== 1) {
+      failures.push(`${path}: moduł geometrii występuje ${geometryRefs.length} razy zamiast raz`);
+      continue;
+    }
+    if (geometryRefs[0].raw !== expectedReference) {
+      failures.push(`${path}: moduł geometrii ma referencję „${geometryRefs[0].raw}” zamiast „${expectedReference}”`);
+    }
+  }
+  addCheck("stabilny, wersjonowany moduł geometrii anotacji", failures);
 }
 
 // Every hotspot has one page-unique accessible ID and complete approved anchors.
@@ -364,8 +387,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   const scriptPath = "assets/services/diagnosis/script.js";
   const html = htmlSources.get(htmlPath);
   const source = await read(scriptPath);
-  const refs = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)]
-    .map(match => normalizeAsset(match[1]));
+  const refs = scriptRefs(html).map(({ normalized }) => normalized);
   const sharedCount = refs.filter(ref => ref === "assets/service-interactions.js").length;
   if (sharedCount !== 1) failures.push(`${htmlPath}: service-interactions.js występuje ${sharedCount} razy zamiast raz`);
 

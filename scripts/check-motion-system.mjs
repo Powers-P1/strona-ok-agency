@@ -94,16 +94,18 @@ for (const page of scenePages) {
   );
 }
 
-for (const page of storyPages) {
+for (const page of scenePages) {
   const html = await read(page);
+  if (storyPages.includes(page)) {
+    requireText(
+      html,
+      "assets/story-standard.css?v=20260801-3",
+      `${page}: brak wspólnego modelu scen`,
+    );
+  }
   requireText(
     html,
-    "assets/story-standard.css?v=20260801-3",
-    `${page}: brak wspólnego modelu scen`,
-  );
-  requireText(
-    html,
-    "assets/service-interactions.js?v=20260801-6",
+    "assets/service-interactions.js?v=20260801-7",
     `${page}: brak wspólnych interakcji`,
   );
 }

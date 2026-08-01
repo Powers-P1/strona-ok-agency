@@ -322,7 +322,6 @@ svg {
   border: 1px solid currentColor;
   border-radius: 50%;
   place-items: center;
-  animation: scroll-bob 2.4s var(--ease) infinite;
 }
 
 .scroll-icon svg {
@@ -390,7 +389,6 @@ svg {
     radial-gradient(circle, rgba(255, 250, 226, .74) 0 2%, rgba(255, 151, 127, .3) 12%, rgba(238, 77, 120, .12) 30%, transparent 68%);
   filter: blur(.3px);
   mix-blend-mode: screen;
-  animation: proof-bloom-pulse 4.8s ease-in-out infinite;
   will-change: opacity, transform;
 }
 
@@ -788,28 +786,6 @@ svg {
 
 .social-terms strong {
   color: var(--navy);
-}
-
-@keyframes scroll-bob {
-  0%,
-  100% {
-    transform: translateY(-3px);
-  }
-  50% {
-    transform: translateY(4px);
-  }
-}
-
-@keyframes proof-bloom-pulse {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(.92);
-    filter: blur(.5px);
-  }
-  48% {
-    transform: translate(-50%, -50%) scale(1.08);
-    filter: blur(0);
-  }
 }
 
 @media (min-width: 1400px) and (min-height: 850px) {

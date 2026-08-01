@@ -110,20 +110,6 @@ body.home-page {
 }
 
 /*
-  Story scenes own an exact viewport-minus-navigation height in
-  scene-viewport.css. Responsive safety may rearrange content and protect the
-  artwork, but it must never grow an individual story scene or add a local
-  scrolling region.
-*/
-.uses-annotation-summary .tablet-annotations,
-.uses-annotation-summary .tablet-annotations ul {
-  max-height: none !important;
-  overflow: visible !important;
-  overscroll-behavior: auto;
-  scrollbar-gutter: auto;
-}
-
-/*
   The viewport profile is shared by every illustrated route. Tall portrait
   scenes stay composited as one frame without splitting the artwork into a
   separate rectangle.
@@ -221,10 +207,8 @@ body.home-page {
   html.ok-scene-page :is(
     .annotation-lines,
     .annotation-callout,
-    .annotation,
-    .tablet-annotations
-  ),
-  html.ok-scene-page .uses-annotation-summary .tablet-annotations {
+    .annotation
+  ) {
     display: none;
   }
 

@@ -20,12 +20,19 @@
   const syncCallout = (callout, open) => {
     const dot = callout.querySelector(".annotation-dot");
     const copy = callout.querySelector(".annotation-copy");
+    const wasOpen = callout.classList.contains("is-open");
 
     callout.classList.toggle("is-open", open);
     dot?.setAttribute("aria-expanded", String(open));
     copy?.removeAttribute("hidden");
     copy?.setAttribute("aria-hidden", String(!open));
     calloutLine(callout)?.classList.toggle("is-open", open);
+
+    if (wasOpen !== open) {
+      window.dispatchEvent(new CustomEvent("okagency:annotationchange", {
+        detail: { callout, open },
+      }));
+    }
   };
 
   const closeCallout = callout => {
@@ -46,6 +53,23 @@
     else callout.dataset.pinned = "true";
     syncCallout(callout, true);
   };
+
+  const closeWithin = root => {
+    if (!root?.querySelectorAll) return;
+    root.querySelectorAll(calloutSelector).forEach(closeCallout);
+  };
+
+  window.OKAgencyAnnotations = Object.freeze({
+    close: callout => {
+      if (callout?.matches?.(calloutSelector)) closeCallout(callout);
+    },
+    closeAll: () => closeAllCallouts(),
+    closeWithin,
+    isOpen: callout => Boolean(callout?.classList?.contains("is-open")),
+    open: callout => {
+      if (callout?.matches?.(calloutSelector)) openCallout(callout);
+    },
+  });
 
   document.querySelectorAll(calloutSelector).forEach(callout => {
     const dot = callout.querySelector(".annotation-dot");

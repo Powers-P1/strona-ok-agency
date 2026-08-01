@@ -81,7 +81,7 @@
   color: #f8eee5;
   background: rgba(7, 26, 44, .92);
   box-shadow: 0 10px 28px rgba(7, 26, 44, .24);
-  font: 650 12px/1 "Archivo", "Aptos", "Segoe UI", sans-serif;
+  font: 650 12px/1 var(--ok-font-body);
   letter-spacing: .035em;
   cursor: pointer;
   backdrop-filter: blur(10px);
@@ -157,7 +157,7 @@ html[data-motion="paused"] *::after {
 .decision-guide h2 {
   margin: 0;
   max-width: 900px;
-  font: 550 clamp(46px, 6vw, 92px)/.95 "Barlow Condensed", "Arial Narrow", sans-serif;
+  font: 550 clamp(46px, 6vw, 92px)/.95 var(--ok-font-display);
   letter-spacing: -.025em;
 }
 
@@ -337,10 +337,6 @@ html[data-motion="paused"] *::after {
 
   .decision-guide__item:first-child {
     border-top: 0;
-  }
-
-  .uses-annotation-summary .tablet-annotations ul {
-    max-height: min(14svh, 88px);
   }
 
   html :is(

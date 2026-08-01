@@ -1,6 +1,7 @@
 import { readFile, readdir, stat } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { versionedAsset } from "./asset-versions.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const annotationPages = new Map([
@@ -128,6 +129,9 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
       [/\.annotation-wire\b/, ".annotation-wire"],
       [/\.is-open\b/, "stanu .is-open"],
       [/\.is-obscured\b/, "stanu .is-obscured"],
+      [/var\(--ok-annotation-core-size\b/, "tokenu rozmiaru rdzenia"],
+      [/var\(--ok-annotation-ring-size\b/, "tokenu rozmiaru pierścienia"],
+      [/html\[data-motion=["']paused["']\]/, "statycznego stanu paused"],
       [/@media\s*\([^)]*prefers-reduced-motion\s*:\s*reduce/i, "obsługi prefers-reduced-motion"],
     ];
     for (const [pattern, label] of requiredPatterns) {
@@ -160,7 +164,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
 {
   const failures = [];
   const stablePath = "assets/art-coordinate-system.js";
-  const expectedReference = `${stablePath}?v=20260801-1`;
+  const expectedReference = versionedAsset(stablePath);
 
   if (!await exists(stablePath)) failures.push(`${stablePath}: brak stabilnego modułu geometrii`);
   for (const path of annotationPages.keys()) {
@@ -175,6 +179,98 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     }
   }
   addCheck("stabilny, wersjonowany moduł geometrii anotacji", failures);
+}
+
+// One deterministic group solver owns safety, collision rejection and silent hiding.
+{
+  const failures = [];
+  const path = "assets/art-coordinate-system.js";
+  const source = await read(path);
+  for (const [pattern, label] of [
+    [/getArtBounds/, "publicznego kontraktu bezpiecznego obszaru"],
+    [/okagency:art-safety-change/, "reakcji na zmianę maski"],
+    [/okagency:annotationchange/, "reakcji na zmianę anotacji"],
+    [/const search = index =>/, "deterministycznego przeszukiwania grupy"],
+    [/\["short", "compact", "base"\]/, "kolejności profili short → compact → base"],
+    [/contains\(artBounds\.fullVisible, ring\)/, "twardego odrzucenia poza widocznym artworkiem"],
+    [/obstacles\.content\.some\(obstacle => intersects\(ring, obstacle\)\)/, "twardego odrzucenia kolizji punktu z treścią"],
+    [/visibleCopies\.some\(sibling => intersects\(copyRect, sibling\)\)/, "odrzucenia kolizji otwartych dymków"],
+    [/annotations-unavailable/, "cichego ukrycia niewykonalnej grupy"],
+    [/innerWidth <= 640/, "zachowania centralnego kontraktu mobile"],
+    [/annotation-debug-overlay/, "debug overlay dla audytu kotwic"],
+  ]) {
+    if (!pattern.test(source)) failures.push(`${path}: brak ${label}`);
+  }
+  if (/\b(?:collision)?score\s*[:=(]/i.test(source)) {
+    failures.push(`${path}: solver nie może akceptować kolizji przez score`);
+  }
+  if (/setProperty\(\s*["']display["'][\s\S]{0,80}["']important["']/i.test(source)) {
+    failures.push(`${path}: solver nie może lokalnie ukrywać UI przez !important`);
+  }
+  if (/energy-shimmer|path\.glint|getTotalLength/.test(source)) {
+    failures.push(`${path}: solver nie może zależeć od opcjonalnej animacji energy-shimmer`);
+  }
+  if (/tablet-annotations|uses-annotation-summary|Punkty na ilustracji/.test(source)) {
+    failures.push(`${path}: usunięte podsumowanie ilustracji nie może wrócić`);
+  }
+  addCheck("deterministyczny solver geometrii i ciche ukrycie", failures);
+}
+
+// Source anchors and rendered points follow energy → highlight → object hierarchy.
+{
+  const failures = [];
+  const energyPath = "scripts/check-annotation-energy.mjs";
+  const maskBuilderPath = "scripts/build-annotation-placement-masks.mjs";
+  const geometryPath = "scripts/check-annotation-geometry.mjs";
+  const packageSource = await read("package.json");
+  if (!await exists(energyPath)) failures.push(`${energyPath}: brak audytu energii artworku`);
+  if (!await exists(maskBuilderPath)) failures.push(`${maskBuilderPath}: brak generatora masek artworku`);
+  if (!await exists(geometryPath)) failures.push(`${geometryPath}: brak audytu geometrii przeglądarkowej`);
+  if (await exists(energyPath)) {
+    const source = await read(energyPath);
+    for (const [pattern, label] of [
+      [/getImageData/, "rastrowej maski artworku"],
+      [/nearestPlacement/, "deterministycznego wyszukania miejsca w artworku"],
+      [/CENTER_TOLERANCE/, "jawnej tolerancji środka punktu"],
+      [/centerPasses/, "twardej bramki zgodności kotwicy"],
+    ]) {
+      if (!pattern.test(source)) failures.push(`${energyPath}: brak ${label}`);
+    }
+  }
+  if (await exists(geometryPath)) {
+    const source = await read(geometryPath);
+    if (/energy-shimmer|path\.glint/.test(source)) {
+      failures.push(`${geometryPath}: geometria nie może traktować animacji jako źródła energii`);
+    }
+  }
+  if (!/"check:annotation-energy"\s*:/.test(packageSource)) {
+    failures.push("package.json: brak skryptu check:annotation-energy");
+  }
+  if (!/"build:annotation-masks"\s*:/.test(packageSource)) {
+    failures.push("package.json: brak skryptu build:annotation-masks");
+  }
+  addCheck("hierarchia punktów: energia, światło, obiekt — nigdy tło", failures);
+}
+
+// One interaction owner exposes state changes and a small public API for the solver.
+{
+  const failures = [];
+  const path = "assets/service-interactions.js";
+  const source = await read(path);
+  for (const [pattern, label] of [
+    [/window\.OKAgencyAnnotations\s*=\s*Object\.freeze/, "zamrożonego API OKAgencyAnnotations"],
+    [/okagency:annotationchange/, "zdarzenia okagency:annotationchange"],
+    [/detail:\s*\{\s*callout,\s*open\s*\}/, "payloadu { callout, open }"],
+    [/closeWithin/, "metody closeWithin"],
+  ]) {
+    if (!pattern.test(source)) failures.push(`${path}: brak ${label}`);
+  }
+  for (const htmlPath of annotationPages.keys()) {
+    const count = scriptRefs(htmlSources.get(htmlPath))
+      .filter(({ normalized }) => normalized === path).length;
+    if (count !== 1) failures.push(`${htmlPath}: ${path} występuje ${count} razy zamiast raz`);
+  }
+  addCheck("jeden właściciel interakcji i zdarzeń anotacji", failures);
 }
 
 // Every hotspot has one page-unique accessible ID and complete approved anchors.

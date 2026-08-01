@@ -253,26 +253,7 @@ svg { display: block; }
   text-transform: uppercase;
 }
 
-/* Zachowane świetlne przewody i anotacje */
-.energy-shimmer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.energy-shimmer { z-index: 4; mix-blend-mode: screen; }
-.energy-shimmer .glint {
-  fill: none;
-  stroke: rgba(255,249,224,.78);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-dasharray: .006 .094;
-  opacity: .42;
-  vector-effect: non-scaling-stroke;
-  animation: energy-glint 9s linear infinite;
-}
-.energy-shimmer .glint-b { stroke-width: 1.7; opacity: .32; animation-duration: 12.5s; }
+/* Trasa zachowuje wyłącznie wspólny system anotacji. */
 .callout-symptom { --dot-x:64.8%;--dot-y:48.5%;--copy-left:53.6%;--copy-top:32.5%;--copy-width:240px; }
 .callout-context { --dot-x:71%;--dot-y:58.1%;--copy-left:72.8%;--copy-top:47.5%;--copy-width:245px; }
 .callout-source { --dot-x:91%;--dot-y:70.3%;--copy-left:79%;--copy-top:64%;--copy-width:235px; }
@@ -440,6 +421,44 @@ svg { display: block; }
   text-transform: uppercase;
 }
 
+@media (min-width:821px) {
+  .map-interface {
+    color: var(--ok-color-text-on-light, var(--navy));
+  }
+
+  .map-intro p,
+  .quiz-question > p {
+    color: var(--ok-color-text-muted-on-light, #34424c);
+  }
+
+  .progress-track i {
+    background: rgba(7, 26, 44, .24);
+  }
+
+  .answers button {
+    border-color: rgba(7, 26, 44, .26);
+    background: rgba(255, 248, 239, .12);
+    color: var(--ok-color-text-on-light, var(--navy));
+  }
+
+  .answers button b {
+    border-color: rgba(7, 26, 44, .18);
+  }
+
+  .answers button:hover,
+  .answers button[aria-pressed="true"] {
+    background: rgba(255, 248, 239, .42);
+  }
+
+  .quiz-back {
+    color: rgba(7, 26, 44, .74);
+  }
+
+  .quiz-privacy {
+    color: var(--ok-color-text-muted-on-light, #34424c);
+  }
+}
+
 /* Oryginalny jasny finał z dynamiczną rekomendacją */
 .proof-bloom {
   position: absolute;
@@ -598,7 +617,6 @@ svg { display: block; }
 .result-controls button:hover,
 .return-to-result:hover { color:var(--pink); }
 
-@keyframes energy-glint { to { stroke-dashoffset:-1; } }
 @media (max-width: 1200px) and (min-width:821px) {
   .site-header { padding-inline:42px; }
   .site-header nav { margin-right:2vw;gap:26px; }
@@ -631,8 +649,6 @@ svg { display: block; }
   .site-header nav { margin-right:0;gap:18px; }
   .site-header nav a { font-size:var(--ok-type-label-min); }
   .site-header nav a:nth-child(2) { display:none; }
-  .energy-shimmer { display:none; }
-
   .campaign-opening .campaign-art { object-position:73% center; }
   .campaign-journey .campaign-art { object-position:72% center; }
   .campaign-proof .campaign-art { object-position:80% center; }

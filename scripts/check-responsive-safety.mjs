@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { versionedAsset } from "./asset-versions.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = path => readFile(join(root, path), "utf8");
@@ -36,8 +37,8 @@ const requireText = (source, text, message) => {
 
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
-  requireText(html, "/assets/responsive-safety.css?v=20260801-4", `${page}: brak responsive-safety.css`);
-  requireText(html, "/assets/responsive-safety.js?v=20260801-2", `${page}: brak responsive-safety.js`);
+  requireText(html, `/${versionedAsset("assets/responsive-safety.css")}`, `${page}: brak responsive-safety.css`);
+  requireText(html, `/${versionedAsset("assets/responsive-safety.js")}`, `${page}: brak responsive-safety.js`);
 });
 
 for (const token of [
@@ -60,6 +61,14 @@ for (const token of [
   "data-ok-safe-menu-overflow",
   'document.fonts.status !== "loaded"',
   "OKAgencyResponsiveSafety",
+  "getArtBounds",
+  "scene-css-px",
+  "okagency:art-safety-change",
+  "artBoundsChanged",
+  "deepFreeze",
+  "Object.isFrozen",
+  "fullVisible",
+  "feather",
 ]) {
   requireText(script, token, `responsive-safety.js: brak ${token}`);
 }
@@ -89,7 +98,6 @@ requireText(sceneViewport, "html.ok-scene-page .ok-nav-slot", "wspólny model ni
 requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "wspólny model pozwala scenom wyjść poza kadr");
 requireText(sceneViewport, ".diagnosis-story .story-stage", "wspólny model wysokości nie obejmuje Diagnozy");
 requireText(storyCss, "filter: none !important", "wspólny model nadal może rozmywać sceny O nas");
-requireText(css, ".tablet-annotations ul", "podsumowania ilustracji nadal mogą tworzyć lokalny scroller");
 requireText(css, '[data-ok-safe-cards="stacked"]', "CSS nie ma bezpiecznego układu kart");
 requireText(css, "@media (max-height: 720px)", "CSS nie ma obsługi niskiego okna");
 requireText(css, '[data-ok-safe-compact-fit="first-view"]', "mobile hero nie ma stabilnej wysokości 100svh");
@@ -112,6 +120,39 @@ requireText(css, ":root[data-ok-tall-portrait]", "CSS nie korzysta ze wspólnego
 requireText(css, "min-height: max(100svh, var(--ok-safe-required-height", "CSS nie honoruje wyliczonej wysokości hero");
 requireText(script, "contentBottomWithin", "JS nie mierzy stabilnej wysokości treści względem sceny");
 requireText(script, "element.getClientRects().length > 0", "JS traktuje dzieci ukrytych kontenerów jak widoczną treść");
+
+requireText(script, "const artBounds = new WeakMap()", "JS does not index scene/art safety bounds in a WeakMap");
+requireText(script, "getArtBounds: sceneOrArt => artBounds.get(sceneOrArt) || null", "public responsive safety API does not expose getArtBounds(sceneOrArt)");
+requireText(script, "artBounds.set(layout.scene, record)", "JS does not publish safety bounds under the scene key");
+requireText(script, "artBounds.set(layout.art, record)", "JS does not publish safety bounds under the artwork key");
+requireText(script, 'coordinateSpace: "scene-css-px"', "JS does not declare scene-relative CSS pixel coordinates");
+requireText(script, "masked: Boolean(mask)", "JS does not distinguish masked and unmasked artwork");
+requireText(script, "revealSide: mask?.revealSide ?? null", "JS does not publish the mask reveal side");
+requireText(script, "if (artBoundsChanged)", "JS does not consolidate bounds events per measurement cycle");
+requireText(script, 'new CustomEvent("okagency:art-safety-change"', "JS does not emit the artwork safety change event");
+requireText(script, "detail: { version: 1 }", "artwork safety event does not expose contract version 1");
+requireText(script, "Object.values(value).forEach(deepFreeze)", "artwork bounds are not frozen recursively");
+requireText(script, "const record = deepFreeze({", "public artwork bounds record is not deep-frozen");
+
+for (const maskToken of [
+  "const horizontalFeather = Math.max(96, Math.min(240, artRect.width * .18));",
+  "const verticalFeather = Math.max(96, Math.min(240, artRect.height * .18));",
+  "cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);",
+  "reveal = clamp(cut + horizontalFeather, artRect.width);",
+  "maskImage = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;",
+  "cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);",
+  "reveal = clamp(cut - horizontalFeather, artRect.width);",
+  "maskImage = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;",
+  "cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);",
+  "reveal = clamp(cut + verticalFeather, artRect.height);",
+  "maskImage = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;",
+  "cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);",
+  "reveal = clamp(cut - verticalFeather, artRect.height);",
+  "maskImage = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;",
+  'layout.art.style.setProperty("--ok-safe-mask-image", maskImage);',
+]) {
+  requireText(script, maskToken, `responsive-safety.js: baseline mask token/formula changed: ${maskToken}`);
+}
 
 if (/makeScrollRegion|dataset\.okSafeScroll\s*=/.test(script)) {
   failures.push("responsive safety nadal tworzy zagnieżdżone regiony przewijania");
@@ -156,11 +197,13 @@ for (const token of [
   "html.ok-scene-page :is(",
   ".annotation-lines,",
   ".annotation-callout,",
-  ".annotation,",
-  ".tablet-annotations",
-  "html.ok-scene-page .uses-annotation-summary .tablet-annotations",
+  ".annotation\n  )",
 ]) {
   requireText(css, token, `mobile annotation cleanup: brak ${token}`);
+}
+
+if (/tablet-annotations|uses-annotation-summary|Punkty na ilustracji/.test(css)) {
+  failures.push("responsive safety nie może przywracać usuniętego podsumowania ilustracji");
 }
 
 if (failures.length) {

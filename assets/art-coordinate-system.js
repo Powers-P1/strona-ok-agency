@@ -1,26 +1,63 @@
 (() => {
-  const serviceFrames = [
-    ...document.querySelectorAll(
-      ".campaign-frame, .social-frame, .process-frame, .diagnosis-frame",
-    ),
-  ];
-  const aboutScenes = [...document.querySelectorAll(".about-page .scene")];
-  const serviceGeometry = new WeakMap();
-  const aboutGeometry = new WeakMap();
-  const preferredCopySides = new WeakMap();
-  const summaryHomes = new WeakMap();
-  const safeInset = 24;
-  const dotClearance = 30;
+  "use strict";
+
+  const DEFAULT_ART_WIDTH = 1672;
+  const DEFAULT_ART_HEIGHT = 941;
+  const RING_SIZE = 44;
+  const RING_RADIUS = RING_SIZE / 2;
+  const SAFE_INSET = 24;
+  const BOTTOM_CLEARANCE = 88;
+  const COPY_CLEARANCE = 30;
+  const FIXED_UI_EXPANSION = 16;
+  const DEBUG_GEOMETRY = /(?:^|\b)hotspots(?:\b|$)/i.test(
+    new URLSearchParams(location.search).get("audit") || "",
+  );
+
+  const serviceSelector = [
+    ".campaign-frame",
+    ".social-frame",
+    ".process-frame",
+    ".diagnosis-frame",
+  ].join(",");
+  const contentSelector = [
+    ".opening-copy",
+    ".process-opening-copy",
+    ".journey-intro",
+    ".proof-content",
+    ".method-copy",
+    ".editorial-copy",
+    ".process-editorial-content",
+    ".map-interface",
+    ".result-content",
+    ".copy-panel",
+    ".portrait-frame",
+    ".scene-inner > .copy",
+  ].join(",");
+  const fixedUiSelector = ".site-header, .motion-toggle, .scroll-cue";
+  const adapters = [];
+  const runtimeStyles = new Map();
+  const runtimeAttributes = new Map();
+  const debugOverlays = new Map();
+  const debugSnapshots = new Map();
+  const cleanupCallbacks = [];
+  let solveFrame = 0;
+  let transitionFrame = 0;
+  let resizeObserver = null;
+  let destroyed = false;
+
+  const finiteNumber = value => {
+    if (value === null || value === undefined || String(value).trim() === "") return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
 
   const percentage = value => {
     const match = String(value || "").trim().match(/^(-?\d+(?:\.\d+)?)%$/);
     return match ? Number(match[1]) / 100 : null;
   };
 
-  const finiteNumber = value => {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : null;
-  };
+  const clamp = (value, minimum, maximum) =>
+    Math.min(Math.max(value, minimum), maximum);
 
   const positionPart = (value, axis) => {
     const parts = String(value || "").trim().split(/\s+/);
@@ -33,119 +70,334 @@
       bottom: 1,
     };
     if (token in keywords) return keywords[token];
-    const parsed = percentage(token);
-    return parsed === null ? 0.5 : parsed;
+    return percentage(token) ?? 0.5;
   };
 
-  const coverGeometry = (container, art) => {
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
-    const naturalWidth =
-      art.naturalWidth || Number(art.getAttribute("width")) || 1672;
-    const naturalHeight =
-      art.naturalHeight || Number(art.getAttribute("height")) || 941;
-    const coordinateWidth =
-      Number(art.getAttribute("width")) || naturalWidth;
-    const coordinateHeight =
-      Number(art.getAttribute("height")) || naturalHeight;
+  const coverGeometry = (scene, art) => {
     const style = getComputedStyle(art);
-    const scale =
-      style.objectFit === "contain"
-        ? Math.min(
-            containerWidth / naturalWidth,
-            containerHeight / naturalHeight,
-          )
-        : Math.max(
-            containerWidth / naturalWidth,
-            containerHeight / naturalHeight,
-          );
+    const naturalWidth = art.naturalWidth || Number(art.getAttribute("width")) || DEFAULT_ART_WIDTH;
+    const naturalHeight = art.naturalHeight || Number(art.getAttribute("height")) || DEFAULT_ART_HEIGHT;
+    const coordinateWidth = Number(art.getAttribute("width")) || naturalWidth;
+    const coordinateHeight = Number(art.getAttribute("height")) || naturalHeight;
+    const scale = style.objectFit === "contain"
+      ? Math.min(scene.clientWidth / naturalWidth, scene.clientHeight / naturalHeight)
+      : Math.max(scene.clientWidth / naturalWidth, scene.clientHeight / naturalHeight);
     const width = naturalWidth * scale;
     const height = naturalHeight * scale;
-    const left =
-      (containerWidth - width) *
-      positionPart(style.objectPosition, 0);
-    const top =
-      (containerHeight - height) *
-      positionPart(style.objectPosition, 1);
     return {
       width,
       height,
-      left,
-      top,
+      left: (scene.clientWidth - width) * positionPart(style.objectPosition, 0),
+      top: (scene.clientHeight - height) * positionPart(style.objectPosition, 1),
       scale,
-      naturalWidth,
-      naturalHeight,
       coordinateWidth,
       coordinateHeight,
     };
   };
 
-  const rememberServiceCallout = callout => {
-    if (serviceGeometry.has(callout)) return serviceGeometry.get(callout);
+  const rect = (left, top, width, height) => ({
+    left,
+    top,
+    right: left + width,
+    bottom: top + height,
+    width,
+    height,
+  });
+
+  const normalizeRect = value => {
+    if (!value || typeof value !== "object") return null;
+    const left = finiteNumber(value.left ?? value.x);
+    const top = finiteNumber(value.top ?? value.y);
+    const width = finiteNumber(value.width);
+    const height = finiteNumber(value.height);
+    const right = finiteNumber(value.right) ?? (left !== null && width !== null ? left + width : null);
+    const bottom = finiteNumber(value.bottom) ?? (top !== null && height !== null ? top + height : null);
+    if (left === null || top === null || right === null || bottom === null) return null;
+    if (right < left || bottom < top) return null;
+    return rect(left, top, right - left, bottom - top);
+  };
+
+  const viewportRectWithin = (element, sceneRect, expansion = 0) => {
+    const bounds = element.getBoundingClientRect();
+    return rect(
+      bounds.left - sceneRect.left - expansion,
+      bounds.top - sceneRect.top - expansion,
+      bounds.width + expansion * 2,
+      bounds.height + expansion * 2,
+    );
+  };
+
+  const intersects = (first, second) =>
+    first.left < second.right &&
+    first.right > second.left &&
+    first.top < second.bottom &&
+    first.bottom > second.top;
+
+  const contains = (outer, inner) =>
+    inner.left >= outer.left &&
+    inner.right <= outer.right &&
+    inner.top >= outer.top &&
+    inner.bottom <= outer.bottom;
+
+  const isBox = element => {
+    if (!element || element.hidden) return false;
+    const style = getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden") return false;
+    const bounds = element.getBoundingClientRect();
+    return bounds.width > 0 && bounds.height > 0;
+  };
+
+  const rememberRuntimeStyle = (element, property) => {
+    let properties = runtimeStyles.get(element);
+    if (!properties) {
+      properties = new Map();
+      runtimeStyles.set(element, properties);
+    }
+    if (!properties.has(property)) {
+      properties.set(property, {
+        value: element.style.getPropertyValue(property),
+        priority: element.style.getPropertyPriority(property),
+      });
+    }
+  };
+
+  const setRuntimeStyle = (element, property, value) => {
+    rememberRuntimeStyle(element, property);
+    element.style.setProperty(property, value);
+  };
+
+  const rememberRuntimeAttribute = (element, attribute) => {
+    let attributes = runtimeAttributes.get(element);
+    if (!attributes) {
+      attributes = new Map();
+      runtimeAttributes.set(element, attributes);
+    }
+    if (!attributes.has(attribute)) {
+      attributes.set(attribute, element.getAttribute(attribute));
+    }
+  };
+
+  const setRuntimeAttribute = (element, attribute, value) => {
+    rememberRuntimeAttribute(element, attribute);
+    element.setAttribute(attribute, value);
+  };
+
+  const clearRuntime = () => {
+    runtimeStyles.forEach((properties, element) => {
+      properties.forEach(({ value, priority }, property) => {
+        if (value) element.style.setProperty(property, value, priority);
+        else element.style.removeProperty(property);
+      });
+    });
+    runtimeStyles.clear();
+
+    runtimeAttributes.forEach((attributes, element) => {
+      attributes.forEach((value, attribute) => {
+        if (value === null) element.removeAttribute(attribute);
+        else element.setAttribute(attribute, value);
+      });
+    });
+    runtimeAttributes.clear();
+
+    adapters.forEach(adapter => {
+      adapter.scene.classList.remove("annotations-unavailable");
+      adapter.annotations.forEach(annotation => {
+        annotation.callout.classList.remove("is-obscured");
+        annotation.callout.classList.toggle("flip", annotation.originalFlip);
+      });
+    });
+  };
+
+  const clearDebugOverlays = () => {
+    debugOverlays.forEach(overlay => overlay.remove());
+    debugOverlays.clear();
+  };
+
+  const readAnchorPair = (callout, profile) => {
+    const suffix = profile === "base"
+      ? ""
+      : profile[0].toUpperCase() + profile.slice(1);
+    const x = finiteNumber(callout.dataset[`artX${suffix}`]);
+    const y = finiteNumber(callout.dataset[`artY${suffix}`]);
+    return x === null || y === null ? null : { x, y, profile };
+  };
+
+  const originalServiceAnchor = callout => {
     const style = getComputedStyle(callout);
-    const values = {
-      artX: finiteNumber(callout.dataset.artX),
-      artY: finiteNumber(callout.dataset.artY),
-      dotX: percentage(style.getPropertyValue("--dot-x")),
-      dotY: percentage(style.getPropertyValue("--dot-y")),
-      copyLeft: percentage(style.getPropertyValue("--copy-left")),
-      copyRight: percentage(style.getPropertyValue("--copy-right")),
-      copyTop: percentage(style.getPropertyValue("--copy-top")),
-    };
-    serviceGeometry.set(callout, values);
-    return values;
+    const x = percentage(style.getPropertyValue("--dot-x"));
+    const y = percentage(style.getPropertyValue("--dot-y"));
+    return x === null || y === null
+      ? null
+      : { relativeX: x, relativeY: y, profile: "base" };
   };
 
-  const updateAnnotationWire = (
-    frame,
-    callout,
-    copy,
-    geometry,
-    dotX,
-    dotY,
-  ) => {
-    const annotationId = callout.dataset.annotation;
-    if (!annotationId) return;
-    const wire = [...frame.querySelectorAll(".annotation-wire")].find(
-      layer => layer.dataset.line === annotationId,
-    );
-    const path = wire?.querySelector("path");
-    if (!path || dotX === null || dotY === null) return;
+  const originalAboutAnchor = callout => {
+    const style = getComputedStyle(callout);
+    const x = percentage(style.getPropertyValue("--x"));
+    const y = percentage(style.getPropertyValue("--y"));
+    return x === null || y === null
+      ? null
+      : { relativeX: x, relativeY: y, profile: "base" };
+  };
 
-    const copyLeft = copy.offsetLeft;
-    const copyTop = copy.offsetTop;
-    const copyWidth = copy.offsetWidth;
-    const copyHeight = copy.offsetHeight;
-    const copyIsRight = copyLeft + copyWidth / 2 > dotX;
-    const targetX = copyIsRight
+  const originalServiceSide = callout => {
+    const style = getComputedStyle(callout);
+    const dotX = percentage(style.getPropertyValue("--dot-x"));
+    const dotY = percentage(style.getPropertyValue("--dot-y"));
+    const copyLeft = percentage(style.getPropertyValue("--copy-left"));
+    const copyRight = percentage(style.getPropertyValue("--copy-right"));
+    const copyTop = percentage(style.getPropertyValue("--copy-top"));
+    if (dotX === null || dotY === null || copyTop === null) return "right";
+    const copyCenterX = copyLeft !== null
       ? copyLeft
-      : copyLeft + copyWidth;
-    const targetY = clamp(
-      dotY,
-      copyTop + 14,
-      copyTop + copyHeight - 14,
-    );
-    const elbowX = dotX + (targetX - dotX) * 0.55;
-    const naturalX = value =>
-      ((value - geometry.left) / geometry.width) *
-      geometry.coordinateWidth;
-    const naturalY = value =>
-      ((value - geometry.top) / geometry.height) *
-      geometry.coordinateHeight;
-
-    path.setAttribute(
-      "d",
-      `M ${naturalX(dotX).toFixed(1)} ${naturalY(dotY).toFixed(1)} ` +
-        `L ${naturalX(elbowX).toFixed(1)} ${naturalY(dotY).toFixed(1)} ` +
-        `L ${naturalX(targetX).toFixed(1)} ${naturalY(targetY).toFixed(1)}`,
-    );
+      : copyRight !== null
+        ? 1 - copyRight
+        : dotX;
+    const deltaX = copyCenterX - dotX;
+    const deltaY = copyTop - dotY;
+    if (Math.abs(deltaX) >= Math.abs(deltaY)) return deltaX < 0 ? "left" : "right";
+    return deltaY < 0 ? "above" : "below";
   };
 
-  const mapCoordinate = (start, size, ratio) =>
-    ratio === null ? null : start + size * ratio;
+  const createAnnotation = (callout, kind) => ({
+    callout,
+    dot: callout.querySelector(".annotation-dot"),
+    copy: callout.querySelector(".annotation-copy"),
+    baseFallback: kind === "service"
+      ? originalServiceAnchor(callout)
+      : originalAboutAnchor(callout),
+    preferredSide: kind === "service"
+      ? originalServiceSide(callout)
+      : callout.classList.contains("flip") ? "left" : "right",
+    originalFlip: callout.classList.contains("flip"),
+  });
 
-  const clamp = (value, minimum, maximum) =>
-    Math.min(Math.max(value, minimum), Math.max(minimum, maximum));
+  document.querySelectorAll(serviceSelector).forEach(scene => {
+    const art = scene.querySelector(":scope > .campaign-art");
+    const annotations = [...scene.querySelectorAll(":scope > .annotation-callout")]
+      .map(callout => createAnnotation(callout, "service"))
+      .filter(annotation => annotation.dot && annotation.copy);
+    if (art && annotations.length) adapters.push({ scene, art, annotations, kind: "service" });
+  });
+
+  document.querySelectorAll(".about-page .scene").forEach(scene => {
+    const art = scene.querySelector(":scope > .scene-art");
+    const inner = scene.querySelector(":scope > .scene-inner");
+    const annotations = inner
+      ? [...inner.querySelectorAll(":scope > .annotation")]
+        .map(callout => createAnnotation(callout, "about"))
+        .filter(annotation => annotation.dot && annotation.copy)
+      : [];
+    if (art && inner && annotations.length) adapters.push({ scene, art, inner, annotations, kind: "about" });
+  });
+
+  const activeProfiles = artBounds => {
+    if (innerHeight <= 800 && innerWidth > 640) return ["short", "compact", "base"];
+    if (artBounds.masked || innerWidth <= 1180) return ["compact", "base"];
+    return ["base", "compact"];
+  };
+
+  const annotationCandidates = (annotation, profiles, geometry) => {
+    const candidates = [];
+    profiles.forEach(profile => {
+      const natural = readAnchorPair(annotation.callout, profile)
+        || (profile === "base" ? annotation.baseFallback : null);
+      if (!natural) return;
+      const candidate = {
+        profile,
+        x: geometry.left + geometry.width * (
+          natural.relativeX ?? natural.x / geometry.coordinateWidth
+        ),
+        y: geometry.top + geometry.height * (
+          natural.relativeY ?? natural.y / geometry.coordinateHeight
+        ),
+      };
+      if (!candidates.some(item => item.x === candidate.x && item.y === candidate.y)) {
+        candidates.push(candidate);
+      }
+    });
+    return candidates;
+  };
+
+  const artBoundsFor = (scene, art, geometry) => {
+    const api = window.OKAgencyResponsiveSafety;
+    let safety = null;
+    if (typeof api?.getArtBounds === "function") {
+      try {
+        safety = api.getArtBounds(scene) || api.getArtBounds(art);
+      } catch {
+        safety = null;
+      }
+    }
+    if (safety) {
+      return {
+        masked: Boolean(safety.masked),
+        fullVisible: normalizeRect(safety.fullVisible),
+      };
+    }
+    const left = Math.max(0, geometry.left);
+    const top = Math.max(0, geometry.top);
+    const right = Math.min(scene.clientWidth, geometry.left + geometry.width);
+    const bottom = Math.min(scene.clientHeight, geometry.top + geometry.height);
+    return {
+      masked: art.dataset.okSafeArt === "active",
+      fullVisible: right >= left && bottom >= top
+        ? rect(left, top, right - left, bottom - top)
+        : null,
+    };
+  };
+
+  const obstaclesFor = (adapter, sceneRect) => {
+    const content = [...adapter.scene.querySelectorAll(contentSelector)]
+      .filter(isBox)
+      .map(element => viewportRectWithin(element, sceneRect));
+    const fixed = [...new Set([
+      ...adapter.scene.querySelectorAll(fixedUiSelector),
+      ...document.querySelectorAll(".site-header, .motion-toggle"),
+    ])]
+      .filter(isBox)
+      .map(element => viewportRectWithin(element, sceneRect, FIXED_UI_EXPANSION));
+    return { content, fixed };
+  };
+
+  const ringFor = point => rect(
+    point.x - RING_RADIUS,
+    point.y - RING_RADIUS,
+    RING_SIZE,
+    RING_SIZE,
+  );
+
+  const ringFits = (ring, point, adapter, artBounds, obstacles, siblings) => {
+    const sceneSafe = rect(
+      SAFE_INSET,
+      SAFE_INSET,
+      adapter.scene.clientWidth - SAFE_INSET * 2,
+      adapter.scene.clientHeight - SAFE_INSET * 2,
+    );
+    if (!artBounds.fullVisible || !contains(artBounds.fullVisible, ring)) return false;
+    if (!contains(sceneSafe, ring)) return false;
+    if (adapter.scene.clientHeight - point.y < BOTTOM_CLEARANCE) return false;
+    if (obstacles.content.some(obstacle => intersects(ring, obstacle))) return false;
+    if (obstacles.fixed.some(obstacle => intersects(ring, obstacle))) return false;
+    return siblings.every(sibling => !intersects(ring, sibling));
+  };
+
+  const ringRejections = (ring, point, adapter, artBounds, obstacles, siblings = []) => {
+    const reasons = [];
+    const sceneSafe = rect(
+      SAFE_INSET,
+      SAFE_INSET,
+      adapter.scene.clientWidth - SAFE_INSET * 2,
+      adapter.scene.clientHeight - SAFE_INSET * 2,
+    );
+    if (!artBounds.fullVisible || !contains(artBounds.fullVisible, ring)) reasons.push("visible-art");
+    if (!contains(sceneSafe, ring)) reasons.push("scene-inset");
+    if (adapter.scene.clientHeight - point.y < BOTTOM_CLEARANCE) reasons.push("bottom-clearance");
+    if (obstacles.content.some(obstacle => intersects(ring, obstacle))) reasons.push("content");
+    if (obstacles.fixed.some(obstacle => intersects(ring, obstacle))) reasons.push("fixed-ui");
+    if (siblings.some(sibling => intersects(ring, sibling))) reasons.push("sibling-ring");
+    return reasons;
+  };
 
   const oppositeSide = {
     above: "below",
@@ -171,645 +423,419 @@
     ];
   };
 
-  const idealCopyPosition = (
-    side,
-    dotX,
-    dotY,
-    copyWidth,
-    copyHeight,
-  ) => {
+  const idealCopyPosition = (side, point, width, height) => {
     if (side === "left") {
-      return {
-        left: dotX - copyWidth - dotClearance,
-        top: dotY - copyHeight / 2,
-      };
+      return { left: point.x - width - COPY_CLEARANCE, top: point.y - height / 2 };
     }
     if (side === "right") {
-      return {
-        left: dotX + dotClearance,
-        top: dotY - copyHeight / 2,
-      };
+      return { left: point.x + COPY_CLEARANCE, top: point.y - height / 2 };
     }
     if (side === "above") {
-      return {
-        left: dotX - copyWidth / 2,
-        top: dotY - copyHeight - dotClearance,
-      };
+      return { left: point.x - width / 2, top: point.y - height - COPY_CLEARANCE };
     }
-    return {
-      left: dotX - copyWidth / 2,
-      top: dotY + dotClearance,
-    };
+    return { left: point.x - width / 2, top: point.y + COPY_CLEARANCE };
   };
 
-  const headerSafeTop = (frame, frameRect) => {
-    const header =
-      frame.querySelector(".site-header") ||
-      document.querySelector(".site-header");
-    if (!header) return safeInset;
-    const headerRect = header.getBoundingClientRect();
-    const overlapsFrame =
-      headerRect.bottom > frameRect.top && headerRect.top < frameRect.bottom;
-    return overlapsFrame
-      ? Math.max(safeInset, headerRect.bottom - frameRect.top + 12)
-      : safeInset;
-  };
-
-  const copyBounds = (frame, frameRect, copyHeight) => {
-    const frameIsVisible =
-      frameRect.bottom > safeInset && frameRect.top < innerHeight - safeInset;
-    const minimumTop = frameIsVisible
-      ? Math.max(
-          safeInset,
-          -frameRect.top + safeInset,
-          headerSafeTop(frame, frameRect),
-        )
-      : safeInset;
-    const maximumTop = frameIsVisible
-      ? Math.min(
-          frame.clientHeight - copyHeight - 76,
-          innerHeight - frameRect.top - copyHeight - safeInset,
-        )
-      : frame.clientHeight - copyHeight - 76;
-    return {
-      minimumTop,
-      maximumTop: Math.max(minimumTop, maximumTop),
-    };
-  };
-
-  const copyOverlapsDot = (
-    left,
-    top,
-    copyWidth,
-    copyHeight,
-    dotX,
-    dotY,
-  ) =>
-    dotX >= left - 22 &&
-    dotX <= left + copyWidth + 22 &&
-    dotY >= top - 22 &&
-    dotY <= top + copyHeight + 22;
-
-  const protectedSelectors = [
-    ".site-header",
-    ".opening-copy",
-    ".process-opening-copy",
-    ".journey-intro",
-    ".proof-content",
-    ".method-copy",
-    ".editorial-copy",
-    ".process-editorial-content",
-    ".map-interface",
-    ".copy-panel",
-    ".scene-inner > .copy",
-    ".scroll-cue",
-  ].join(",");
-
-  const protectedRects = (frame, frameRect) => {
-    const elements = [
-      ...new Set([
-        ...frame.querySelectorAll(protectedSelectors),
-        ...document.querySelectorAll(
-          ".site-header, .motion-toggle",
-        ),
-      ]),
-    ];
-    return elements
-      .filter(element => {
-        const style = getComputedStyle(element);
-        return (
-          style.display !== "none" &&
-          style.visibility !== "hidden" &&
-          Number(style.opacity || 1) > 0
-        );
-      })
-      .map(element => element.getBoundingClientRect())
-      .filter(
-        rect =>
-          rect.width > 0 &&
-          rect.height > 0 &&
-          rect.right > frameRect.left &&
-          rect.left < frameRect.right &&
-          rect.bottom > frameRect.top &&
-          rect.top < frameRect.bottom,
-      )
-      .map(rect => ({
-        bottom: rect.bottom - frameRect.top + 12,
-        left: rect.left - frameRect.left - 12,
-        right: rect.right - frameRect.left + 12,
-        top: rect.top - frameRect.top - 12,
-      }));
-  };
-
-  const overlapArea = (left, top, width, height, obstacle) => {
-    const overlapWidth = Math.max(
-      0,
-      Math.min(left + width, obstacle.right) - Math.max(left, obstacle.left),
-    );
-    const overlapHeight = Math.max(
-      0,
-      Math.min(top + height, obstacle.bottom) - Math.max(top, obstacle.top),
-    );
-    return overlapWidth * overlapHeight;
-  };
-
-  const inferPreferredSide = (
-    callout,
-    preferredLeft,
-    preferredTop,
-    copyWidth,
-    copyHeight,
-    dotX,
-    dotY,
-  ) => {
-    if (preferredCopySides.has(callout)) {
-      return preferredCopySides.get(callout);
-    }
-    const deltaX = preferredLeft + copyWidth / 2 - dotX;
-    const deltaY = preferredTop + copyHeight / 2 - dotY;
-    const side =
-      Math.abs(deltaX) >= Math.abs(deltaY)
-        ? deltaX < 0
-          ? "left"
-          : "right"
-        : deltaY < 0
-          ? "above"
-          : "below";
-    preferredCopySides.set(callout, side);
-    return side;
-  };
+  const isOpen = annotation =>
+    annotation.callout.classList.contains("is-open") ||
+    annotation.dot.getAttribute("aria-expanded") === "true";
 
   const chooseCopyPosition = (
-    frame,
-    frameRect,
-    preferred,
-    dotX,
-    dotY,
-    copyWidth,
-    copyHeight,
-    sides = candidateOrder(preferred),
+    annotation,
+    point,
+    width,
+    height,
+    obstacles,
+    rings,
+    visibleCopies,
   ) => {
-    const { minimumTop, maximumTop } = copyBounds(
-      frame,
-      frameRect,
-      copyHeight,
-    );
-    const maximumLeft = Math.max(
-      safeInset,
-      frame.clientWidth - copyWidth - safeInset,
-    );
-    const obstacles = protectedRects(frame, frameRect);
+    const maximumLeft = annotation.adapter.scene.clientWidth - width - SAFE_INSET;
+    const maximumTop = annotation.adapter.scene.clientHeight - height - SAFE_INSET;
+    if (maximumLeft < SAFE_INSET || maximumTop < SAFE_INSET) return null;
 
-    return sides
-      .map((side, index) => {
-        const ideal = idealCopyPosition(
-          side,
-          dotX,
-          dotY,
-          copyWidth,
-          copyHeight,
-        );
-        const left = clamp(ideal.left, safeInset, maximumLeft);
-        const top = clamp(ideal.top, minimumTop, maximumTop);
-        const displacement = Math.hypot(left - ideal.left, top - ideal.top);
-        const overlap = copyOverlapsDot(
-          left,
-          top,
-          copyWidth,
-          copyHeight,
-          dotX,
-          dotY,
-        );
-        const collisionArea = obstacles.reduce(
-          (total, obstacle) =>
-            total +
-            overlapArea(left, top, copyWidth, copyHeight, obstacle),
-          0,
-        );
-        return {
-          left,
-          side,
-          top,
-          score:
-            (overlap ? 100000 : 0) +
-            (collisionArea ? 50000 + collisionArea : 0) +
-            displacement * 4 +
-            index * 28,
-        };
-      })
-      .sort((a, b) => a.score - b.score)[0];
+    for (const side of candidateOrder(annotation.preferredSide)) {
+      const ideal = idealCopyPosition(side, point, width, height);
+      const left = clamp(ideal.left, SAFE_INSET, maximumLeft);
+      const top = clamp(ideal.top, SAFE_INSET, maximumTop);
+      const copyRect = rect(left, top, width, height);
+      if (obstacles.content.some(obstacle => intersects(copyRect, obstacle))) continue;
+      if (obstacles.fixed.some(obstacle => intersects(copyRect, obstacle))) continue;
+      if (rings.some(ring => intersects(copyRect, ring))) continue;
+      if (visibleCopies.some(sibling => intersects(copyRect, sibling))) continue;
+      return { left, top, side, rect: copyRect };
+    }
+    return null;
   };
 
-  const updateServiceFrame = frame => {
-    const art = frame.querySelector(".campaign-art");
-    if (!art) return;
-    frame.classList.remove("uses-annotation-summary");
-    const geometry = coverGeometry(frame, art);
-    let hasClippedHotspot = false;
+  const placeCopies = (adapter, points, rings, obstacles) => {
+    const copies = new Array(adapter.annotations.length);
+    const openIndexes = [];
+    const closedIndexes = [];
+    adapter.annotations.forEach((annotation, index) => {
+      (isOpen(annotation) ? openIndexes : closedIndexes).push(index);
+    });
+    const visibleCopies = [];
 
-    frame
-      .querySelectorAll(".annotation-lines, .energy-shimmer")
+    for (const index of [...openIndexes, ...closedIndexes]) {
+      const annotation = adapter.annotations[index];
+      annotation.adapter = adapter;
+      const width = annotation.copy.offsetWidth;
+      const height = annotation.copy.offsetHeight;
+      if (!width || !height) return null;
+      const open = isOpen(annotation);
+      const position = chooseCopyPosition(
+        annotation,
+        points[index],
+        width,
+        height,
+        obstacles,
+        [rings[index]],
+        open ? visibleCopies : [],
+      );
+      if (!position) return null;
+      copies[index] = position;
+      if (open) visibleCopies.push(position.rect);
+    }
+    return copies;
+  };
+
+  const solveAdapter = adapter => {
+    const geometry = coverGeometry(adapter.scene, adapter.art);
+    const artBounds = artBoundsFor(adapter.scene, adapter.art, geometry);
+    const profiles = activeProfiles(artBounds);
+    const sceneRect = adapter.scene.getBoundingClientRect();
+    const obstacles = obstaclesFor(adapter, sceneRect);
+    const candidates = adapter.annotations.map(annotation =>
+      annotationCandidates(annotation, profiles, geometry));
+    if (candidates.some(list => !list.length)) return null;
+
+    const points = new Array(adapter.annotations.length);
+    const rings = new Array(adapter.annotations.length);
+    let solution = null;
+    let ringConfigurations = 0;
+    let copyFailures = 0;
+
+    const search = index => {
+      if (solution) return;
+      if (index === adapter.annotations.length) {
+        ringConfigurations += 1;
+        const copies = placeCopies(adapter, points, rings, obstacles);
+        if (copies) {
+          solution = {
+            geometry,
+            points: points.map(point => ({ ...point })),
+            rings: rings.map(item => ({ ...item })),
+            copies,
+          };
+        } else {
+          copyFailures += 1;
+        }
+        return;
+      }
+
+      for (const point of candidates[index]) {
+        const ring = ringFor(point);
+        if (!ringFits(
+          ring,
+          point,
+          adapter,
+          artBounds,
+          obstacles,
+          rings.slice(0, index),
+        )) continue;
+        points[index] = point;
+        rings[index] = ring;
+        search(index + 1);
+        if (solution) return;
+      }
+    };
+
+    search(0);
+    if (DEBUG_GEOMETRY) {
+      debugSnapshots.set(adapter.scene, {
+        scene: adapter.scene.id || null,
+        status: solution ? "solved" : "fallback",
+        masked: artBounds.masked,
+        profiles: [...profiles],
+        ringConfigurations,
+        copyFailures,
+        candidates: candidates.map((list, index) => list.map(point => ({
+          profile: point.profile,
+          x: Math.round(point.x * 10) / 10,
+          y: Math.round(point.y * 10) / 10,
+          rejectedBy: ringRejections(
+            ringFor(point),
+            point,
+            adapter,
+            artBounds,
+            obstacles,
+          ),
+          key: adapter.annotations[index].callout.dataset.annotation
+            || adapter.annotations[index].dot.getAttribute("aria-controls"),
+        }))),
+      });
+    }
+    return solution;
+  };
+
+  const updateServiceWire = (adapter, annotation, point, copy, geometry) => {
+    const annotationId = annotation.callout.dataset.annotation;
+    if (!annotationId) return;
+    const wire = [...adapter.scene.querySelectorAll(".annotation-wire")]
+      .find(layer => layer.dataset.line === annotationId);
+    const path = wire?.querySelector("path");
+    if (!path) return;
+
+    const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
+    const targetX = copyIsRight ? copy.left : copy.rect.right;
+    const targetY = clamp(point.y, copy.top + 14, copy.rect.bottom - 14);
+    const elbowX = point.x + (targetX - point.x) * 0.55;
+    const naturalX = value => ((value - geometry.left) / geometry.width) * geometry.coordinateWidth;
+    const naturalY = value => ((value - geometry.top) / geometry.height) * geometry.coordinateHeight;
+    setRuntimeAttribute(
+      path,
+      "d",
+      `M ${naturalX(point.x).toFixed(1)} ${naturalY(point.y).toFixed(1)} ` +
+        `L ${naturalX(elbowX).toFixed(1)} ${naturalY(point.y).toFixed(1)} ` +
+        `L ${naturalX(targetX).toFixed(1)} ${naturalY(targetY).toFixed(1)}`,
+    );
+  };
+
+  const applyServiceSolution = (adapter, solution) => {
+    adapter.scene
+      .querySelectorAll(".annotation-lines")
       .forEach(layer => {
-        Object.assign(layer.style, {
-          inset: "auto",
-          left: `${geometry.left}px`,
-          top: `${geometry.top}px`,
-          width: `${geometry.width}px`,
-          height: `${geometry.height}px`,
+        setRuntimeStyle(layer, "inset", "auto");
+        setRuntimeStyle(layer, "left", `${solution.geometry.left}px`);
+        setRuntimeStyle(layer, "top", `${solution.geometry.top}px`);
+        setRuntimeStyle(layer, "width", `${solution.geometry.width}px`);
+        setRuntimeStyle(layer, "height", `${solution.geometry.height}px`);
+      });
+    adapter.scene.querySelectorAll(".annotation-lines").forEach(layer => {
+      setRuntimeAttribute(
+        layer,
+        "viewBox",
+        `0 0 ${solution.geometry.coordinateWidth} ${solution.geometry.coordinateHeight}`,
+      );
+    });
+
+    adapter.annotations.forEach((annotation, index) => {
+      const point = solution.points[index];
+      const copy = solution.copies[index];
+      setRuntimeStyle(annotation.callout, "--dot-x", `${point.x}px`);
+      setRuntimeStyle(annotation.callout, "--dot-y", `${point.y}px`);
+      setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
+      setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
+      setRuntimeStyle(annotation.callout, "--copy-right", "auto");
+      setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
+      updateServiceWire(adapter, annotation, point, copy, solution.geometry);
+    });
+  };
+
+  const applyAboutSolution = (adapter, solution) => {
+    const sceneRect = adapter.scene.getBoundingClientRect();
+    const innerRect = adapter.inner.getBoundingClientRect();
+    const innerLeft = innerRect.left - sceneRect.left;
+    const innerTop = innerRect.top - sceneRect.top;
+
+    adapter.annotations.forEach((annotation, index) => {
+      const point = solution.points[index];
+      const copy = solution.copies[index];
+      setRuntimeStyle(annotation.callout, "--x", `${point.x - innerLeft}px`);
+      setRuntimeStyle(annotation.callout, "--y", `${point.y - innerTop}px`);
+      setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
+      setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
+      setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
+      setRuntimeStyle(annotation.copy, "right", "auto");
+      setRuntimeStyle(annotation.copy, "--copy-shift-y", "0px");
+
+      const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
+      const targetX = copyIsRight ? copy.left : copy.rect.right;
+      const targetY = clamp(point.y, copy.top + 14, copy.rect.bottom - 14);
+      const lineX = targetX - point.x;
+      const lineY = targetY - point.y;
+      annotation.callout.classList.toggle("flip", !copyIsRight);
+      setRuntimeStyle(annotation.callout, "--leader-length", `${Math.hypot(lineX, lineY)}px`);
+      setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
+    });
+  };
+
+  const requestCalloutClose = adapter => {
+    const owner = window.OKAgencyAnnotations;
+    if (typeof owner?.closeWithin === "function") {
+      owner.closeWithin(adapter.scene);
+      return;
+    }
+    if (typeof owner?.closeAll === "function") {
+      owner.closeAll();
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("okagency:annotationrequest", {
+      detail: { action: "closeAll", source: "art-coordinate-system" },
+    }));
+  };
+
+  const hideAnnotations = adapter => {
+    requestCalloutClose(adapter);
+    adapter.scene.classList.add("annotations-unavailable");
+  };
+
+  const appendDebugBox = (overlay, bounds, kind) => {
+    if (!bounds) return;
+    const box = document.createElement("span");
+    box.className = "annotation-debug-box";
+    box.dataset.debugKind = kind;
+    box.style.setProperty("left", `${bounds.left}px`);
+    box.style.setProperty("top", `${bounds.top}px`);
+    box.style.setProperty("width", `${bounds.width}px`);
+    box.style.setProperty("height", `${bounds.height}px`);
+    overlay.append(box);
+  };
+
+  const renderDebugOverlay = (adapter, solution) => {
+    if (!DEBUG_GEOMETRY) return;
+    const geometry = solution?.geometry || coverGeometry(adapter.scene, adapter.art);
+    const safety = artBoundsFor(adapter.scene, adapter.art, geometry);
+    const obstacles = obstaclesFor(adapter, adapter.scene.getBoundingClientRect());
+    const overlay = document.createElement("div");
+    overlay.className = "annotation-debug-overlay";
+    overlay.dataset.debugStatus = solution ? "solved" : "fallback";
+    overlay.setAttribute("aria-hidden", "true");
+
+    appendDebugBox(overlay, safety.fullVisible, "visible-art");
+    obstacles.content.forEach(bounds => appendDebugBox(overlay, bounds, "content"));
+    obstacles.fixed.forEach(bounds => appendDebugBox(overlay, bounds, "fixed-ui"));
+    solution?.rings.forEach(bounds => appendDebugBox(overlay, bounds, "ring"));
+    solution?.copies.forEach(copy => appendDebugBox(overlay, copy.rect, "copy"));
+
+    const label = document.createElement("span");
+    label.className = "annotation-debug-label";
+    label.textContent = solution ? "HOTSPOTS: SOLVED" : "HOTSPOTS: HIDDEN";
+    overlay.append(label);
+    adapter.scene.append(overlay);
+    debugOverlays.set(adapter.scene, overlay);
+  };
+
+  const syncOpenCopyOcclusion = (adapter, solution) => {
+    if (!solution) return;
+    const openIndex = adapter.annotations.findIndex(isOpen);
+    if (openIndex < 0) return;
+    const openCopy = solution.copies[openIndex]?.rect;
+    if (!openCopy) return;
+
+    adapter.annotations.forEach((annotation, index) => {
+      if (index === openIndex || !intersects(openCopy, solution.rings[index])) return;
+      annotation.callout.classList.add("is-obscured");
+      const key = annotation.callout.dataset.annotation;
+      if (key) adapter.scene.querySelector(`[data-line="${key}"]`)?.classList.add("is-obscured");
+    });
+  };
+
+  const guardTransitions = solutions => {
+    adapters.forEach(adapter => {
+      const openLineKeys = new Set();
+      adapter.annotations.forEach(annotation => {
+        if (isOpen(annotation)) {
+          const key = annotation.callout.dataset.annotation;
+          if (key) openLineKeys.add(key);
+          return;
+        }
+        annotation.callout.classList.add("is-obscured");
+      });
+      adapter.scene.querySelectorAll(".annotation-wire").forEach(wire => {
+        if (openLineKeys.has(wire.dataset.line)) return;
+        wire.classList.add("is-obscured");
+      });
+    });
+    if (transitionFrame) cancelAnimationFrame(transitionFrame);
+    transitionFrame = requestAnimationFrame(() => {
+      transitionFrame = 0;
+      adapters.forEach(adapter => {
+        adapter.annotations.forEach(annotation => {
+          annotation.callout.classList.remove("is-obscured");
+        });
+        adapter.scene.querySelectorAll(".annotation-wire").forEach(wire => {
+          wire.classList.remove("is-obscured");
         });
       });
-    frame.querySelectorAll(".annotation-lines").forEach(layer => {
-      layer.setAttribute(
-        "viewBox",
-        `0 0 ${geometry.coordinateWidth} ${geometry.coordinateHeight}`,
-      );
-    });
-
-    frame.querySelectorAll(".annotation-callout").forEach((callout, index) => {
-      const original = rememberServiceCallout(callout);
-      const dotX =
-        original.artX === null
-          ? mapCoordinate(geometry.left, geometry.width, original.dotX)
-          : geometry.left +
-            geometry.width *
-              (original.artX / geometry.coordinateWidth);
-      const dotY =
-        original.artY === null
-          ? mapCoordinate(geometry.top, geometry.height, original.dotY)
-          : geometry.top +
-            geometry.height *
-              (original.artY / geometry.coordinateHeight);
-      const originalCopyLeft = mapCoordinate(
-        geometry.left,
-        geometry.width,
-        original.copyLeft,
-      );
-      const originalCopyTop = mapCoordinate(
-        geometry.top,
-        geometry.height,
-        original.copyTop,
-      );
-      const originalCopyRight =
-        original.copyRight === null
-          ? null
-          : frame.clientWidth -
-            mapCoordinate(
-              geometry.left,
-              geometry.width,
-              1 - original.copyRight,
-            );
-
-      if (
-        dotX !== null &&
-        dotY !== null &&
-        (dotX < 12 ||
-          dotX > frame.clientWidth - 12 ||
-          dotY < 12 ||
-          dotY > frame.clientHeight - 12)
-      ) {
-        hasClippedHotspot = true;
-      }
-
-      if (dotX !== null) callout.style.setProperty("--dot-x", `${dotX}px`);
-      if (dotY !== null) callout.style.setProperty("--dot-y", `${dotY}px`);
-      callout.style.setProperty(
-        "--annotation-delay",
-        `${index * -0.42}s`,
-      );
-
-      const copy = callout.querySelector(".annotation-copy");
-      if (!copy || dotX === null || dotY === null) return;
-      const copyWidth = copy.offsetWidth;
-      const copyHeight = copy.offsetHeight;
-      if (!copyWidth || !copyHeight) return;
-      const frameRect = frame.getBoundingClientRect();
-      const preferredLeft =
-        originalCopyLeft ??
-        (originalCopyRight === null
-          ? copy.offsetLeft
-          : frame.clientWidth - originalCopyRight - copyWidth);
-      const preferredTop = originalCopyTop ?? copy.offsetTop;
-      const preferred = inferPreferredSide(
-        callout,
-        preferredLeft,
-        preferredTop,
-        copyWidth,
-        copyHeight,
-        dotX,
-        dotY,
-      );
-      const position = chooseCopyPosition(
-        frame,
-        frameRect,
-        preferred,
-        dotX,
-        dotY,
-        copyWidth,
-        copyHeight,
-      );
-      callout.style.setProperty("--copy-left", `${position.left}px`);
-      callout.style.setProperty("--copy-right", "auto");
-      callout.style.setProperty("--copy-top", `${position.top}px`);
-      updateAnnotationWire(
-        frame,
-        callout,
-        copy,
-        geometry,
-        dotX,
-        dotY,
-      );
-    });
-
-    const hasMobileAlternative = Boolean(
-      frame.querySelector(".journey-mobile-steps"),
-    );
-    const useSummary =
-      (innerWidth <= 640 && !hasMobileAlternative) ||
-      (innerWidth >= 641 && (innerWidth <= 820 || hasClippedHotspot));
-    frame.classList.toggle("uses-annotation-summary", useSummary);
-
-    frame.querySelectorAll(".tablet-annotations").forEach(details => {
-      const home = summaryHomes.get(details);
-      const useOverlay = useSummary && innerWidth > 1024;
-      details.classList.toggle("is-overlay", useOverlay);
-      if (useOverlay && details.parentElement !== frame) {
-        frame.append(details);
-      } else if (!useOverlay && home && details.parentElement !== home) {
-        home.append(details);
-      }
+      adapters.forEach((adapter, index) => syncOpenCopyOcclusion(adapter, solutions[index]));
     });
   };
 
-  const rememberAboutAnnotation = annotation => {
-    if (aboutGeometry.has(annotation)) return aboutGeometry.get(annotation);
-    const style = getComputedStyle(annotation);
-    const values = {
-      artX: finiteNumber(annotation.dataset.artX),
-      artY: finiteNumber(annotation.dataset.artY),
-      x: percentage(style.getPropertyValue("--x")),
-      y: percentage(style.getPropertyValue("--y")),
-    };
-    aboutGeometry.set(annotation, values);
-    return values;
-  };
+  const solveAll = () => {
+    solveFrame = 0;
+    if (destroyed) return;
+    clearRuntime();
+    clearDebugOverlays();
+    debugSnapshots.clear();
+    if (innerWidth <= 640) {
+      return;
+    }
 
-  const updateAboutScene = scene => {
-    const art = scene.querySelector(".scene-art");
-    const inner = scene.querySelector(".scene-inner");
-    if (!art || !inner) return;
-    const geometry = coverGeometry(scene, art);
-    const headerHeight = inner.offsetTop;
-    const referenceHeader = 90;
-    const referenceInnerHeight =
-      geometry.coordinateHeight - referenceHeader;
-
-    inner
-      .querySelectorAll(":scope > .annotation")
-      .forEach((annotation, index) => {
-        const original = rememberAboutAnnotation(annotation);
-        annotation.style.setProperty(
-          "--annotation-delay",
-          `${index * -0.42}s`,
-        );
-        if (original.artX !== null) {
-          annotation.style.setProperty(
-            "--x",
-            `${
-              geometry.left +
-              geometry.width *
-                (original.artX / geometry.coordinateWidth)
-            }px`,
-          );
-        } else if (original.x !== null) {
-          annotation.style.setProperty(
-            "--x",
-            `${geometry.left + geometry.width * original.x}px`,
-          );
-        }
-        if (original.artY !== null) {
-          annotation.style.setProperty(
-            "--y",
-            `${
-              geometry.top +
-              geometry.height *
-                (original.artY / geometry.coordinateHeight) -
-              headerHeight
-            }px`,
-          );
-        } else if (original.y !== null) {
-          const sourceY =
-            referenceHeader + referenceInnerHeight * original.y;
-          annotation.style.setProperty(
-            "--y",
-            `${geometry.top + sourceY * geometry.scale - headerHeight}px`,
-          );
-        }
-
-        const copy = annotation.querySelector(".annotation-copy");
-        if (!copy || copy.hidden) return;
-        const copyWidth = copy.offsetWidth;
-        const copyHeight = copy.offsetHeight;
-        if (!copyWidth || !copyHeight) return;
-        const sceneRect = scene.getBoundingClientRect();
-        const dot = annotation.querySelector(".annotation-dot");
-        const dotRect = dot?.getBoundingClientRect();
-        if (!dot || !dotRect) return;
-        const dotX = dotRect.left + dotRect.width / 2 - sceneRect.left;
-        const dotY = dotRect.top + dotRect.height / 2 - sceneRect.top;
-        const preferred = annotation.classList.contains("flip")
-          ? "left"
-          : "right";
-        const position = chooseCopyPosition(
-          scene,
-          sceneRect,
-          preferred,
-          dotX,
-          dotY,
-          copyWidth,
-          copyHeight,
-        );
-
-        copy.style.setProperty("top", `${position.top - dotY}px`);
-        copy.style.setProperty("left", `${position.left - dotX}px`);
-        copy.style.setProperty("right", "auto");
-        copy.style.setProperty("--copy-shift-y", "0px");
-        const copyIsRight = position.left + copyWidth / 2 > dotX;
-        const targetX = copyIsRight
-          ? position.left
-          : position.left + copyWidth;
-        const targetY = clamp(
-          dotY,
-          position.top + 14,
-          position.top + copyHeight - 14,
-        );
-        const lineX = targetX - dotX;
-        const lineY = targetY - dotY;
-        annotation.classList.toggle("flip", !copyIsRight);
-        annotation.style.setProperty(
-          "--leader-length",
-          `${Math.hypot(lineX, lineY)}px`,
-        );
-        annotation.style.setProperty(
-          "--leader-angle",
-          `${Math.atan2(lineY, lineX)}rad`,
-        );
-      });
-  };
-
-  const syncMotionToggleVisibility = () => {
-    const shouldHide =
-      innerWidth <= 640 &&
-      serviceFrames.some(
-        frame =>
-          frame.classList.contains("uses-annotation-summary") &&
-          frame.querySelector(".tablet-annotations[open]"),
-      );
-    document.querySelectorAll(".motion-toggle").forEach(toggle => {
-      if (shouldHide && !toggle.hidden) {
-        toggle.dataset.annotationSummaryHidden = "true";
-        toggle.hidden = true;
-        toggle.style.setProperty("display", "none", "important");
-      } else if (
-        !shouldHide &&
-        toggle.dataset.annotationSummaryHidden === "true"
-      ) {
-        delete toggle.dataset.annotationSummaryHidden;
-        toggle.hidden = false;
-        toggle.style.removeProperty("display");
-      }
-    });
-  };
-
-  const revealSummaryContent = details => {
-    if (!details.open || innerWidth > 640) return;
-    requestAnimationFrame(() => {
-      const scrollContainer = details.parentElement;
-      if (
-        !scrollContainer ||
-        scrollContainer.scrollHeight <= scrollContainer.clientHeight
-      ) {
+    const solutions = adapters.map(adapter => solveAdapter(adapter));
+    guardTransitions(solutions);
+    adapters.forEach((adapter, index) => {
+      const solution = solutions[index];
+      if (!solution) {
+        hideAnnotations(adapter);
+        renderDebugOverlay(adapter, null);
         return;
       }
-      const containerRect = scrollContainer.getBoundingClientRect();
-      const detailsRect = details.getBoundingClientRect();
-      const clippedHeight = detailsRect.bottom - (containerRect.bottom - 12);
-      if (clippedHeight > 0) {
-        scrollContainer.scrollTop += clippedHeight;
-      }
+      if (adapter.kind === "service") applyServiceSolution(adapter, solution);
+      else applyAboutSolution(adapter, solution);
+      renderDebugOverlay(adapter, solution);
     });
   };
 
-  const addTabletAnnotationSummaries = () => {
-    serviceFrames.forEach(frame => {
-      const callouts = [...frame.querySelectorAll(".annotation-callout")];
-      if (!callouts.length || frame.querySelector(".tablet-annotations")) {
-        return;
-      }
-      const target = frame.querySelector(
-        ".opening-copy, .process-opening-copy, .journey-intro, " +
-          ".proof-content, .method-copy, .editorial-copy, " +
-          ".process-editorial-content, .map-interface",
-      );
-      if (!target) return;
-
-      const details = document.createElement("details");
-      details.className = "tablet-annotations";
-      const summary = document.createElement("summary");
-      summary.textContent = "Punkty na ilustracji";
-      const list = document.createElement("ul");
-
-      callouts.forEach(callout => {
-        const source = callout.querySelector(".annotation-copy");
-        if (!source) return;
-        const item = document.createElement("li");
-        item.innerHTML = source.innerHTML;
-        list.append(item);
-      });
-
-      if (!list.children.length) return;
-      details.append(summary, list);
-      details.addEventListener("toggle", () => {
-        syncMotionToggleVisibility();
-        revealSummaryContent(details);
-      });
-      target.append(details);
-      summaryHomes.set(details, target);
-    });
+  const schedule = () => {
+    if (destroyed || solveFrame) return;
+    solveFrame = requestAnimationFrame(solveAll);
   };
 
-  const update = () => {
-    serviceFrames.forEach(updateServiceFrame);
-    aboutScenes.forEach(updateAboutScene);
-    syncMotionToggleVisibility();
-  };
-  const updateOpenCallouts = () => {
-    serviceFrames
-      .filter(frame => frame.querySelector(".annotation-callout.is-open"))
-      .forEach(updateServiceFrame);
-    aboutScenes
-      .filter(scene => scene.querySelector(".annotation.is-open"))
-      .forEach(updateAboutScene);
+  const listen = (target, type, listener, options) => {
+    target?.addEventListener(type, listener, options);
+    cleanupCallbacks.push(() => target?.removeEventListener(type, listener, options));
   };
 
-  addTabletAnnotationSummaries();
-  update();
-  addEventListener("load", update, { once: true });
-  addEventListener("resize", update, { passive: true });
-  let scrollUpdateQueued = false;
-  addEventListener(
-    "scroll",
-    () => {
-      if (scrollUpdateQueued) return;
-      scrollUpdateQueued = true;
-      requestAnimationFrame(() => {
-        scrollUpdateQueued = false;
-        updateOpenCallouts();
-      });
-    },
-    { passive: true },
-  );
-  document.fonts?.ready.then(update);
+  listen(window, "load", schedule, { once: true });
+  listen(window, "resize", schedule, { passive: true });
+  listen(window, "orientationchange", schedule, { passive: true });
+  listen(window.visualViewport, "resize", schedule, { passive: true });
+  listen(window, "okagency:art-safety-change", schedule);
+  listen(window, "okagency:annotationchange", schedule);
+  listen(window, "okagency:motionchange", schedule);
+  listen(window, "scroll", () => {
+    if (document.querySelector(".annotation-callout.is-open, .annotation.is-open")) schedule();
+  }, { passive: true });
 
-  serviceFrames.forEach(frame => {
-    frame.querySelectorAll(".annotation-callout").forEach(callout => {
-      const refresh = () =>
-        requestAnimationFrame(() => updateServiceFrame(frame));
-      callout.addEventListener("pointerenter", refresh);
-      callout
-        .querySelector(".annotation-dot")
-        ?.addEventListener("focus", refresh);
-      callout
-        .querySelector(".annotation-dot")
-        ?.addEventListener("click", refresh);
-    });
-  });
-
-  aboutScenes.forEach(scene => {
-    scene.querySelectorAll(":scope .annotation").forEach(annotation => {
-      const refresh = () =>
-        requestAnimationFrame(() => updateAboutScene(scene));
-      annotation.addEventListener("mouseenter", refresh);
-      annotation
-        .querySelector(".annotation-dot")
-        ?.addEventListener("focus", refresh);
-      annotation
-        .querySelector(".annotation-dot")
-        ?.addEventListener("click", refresh);
-    });
-  });
+  document.fonts?.ready.then(schedule);
 
   if ("ResizeObserver" in window) {
-    const observer = new ResizeObserver(update);
-    serviceFrames.forEach(frame => observer.observe(frame));
-    aboutScenes.forEach(scene => observer.observe(scene));
+    resizeObserver = new ResizeObserver(schedule);
+    adapters.forEach(adapter => {
+      resizeObserver.observe(adapter.scene);
+      resizeObserver.observe(adapter.art);
+      adapter.annotations.forEach(annotation => resizeObserver.observe(annotation.copy));
+    });
   }
 
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) updateServiceFrame(entry.target);
-      });
+  const destroy = () => {
+    destroyed = true;
+    if (solveFrame) cancelAnimationFrame(solveFrame);
+    if (transitionFrame) cancelAnimationFrame(transitionFrame);
+    resizeObserver?.disconnect();
+    cleanupCallbacks.splice(0).forEach(cleanup => cleanup());
+    clearRuntime();
+    clearDebugOverlays();
+  };
+  listen(window, "pagehide", destroy, { once: true });
+
+  if (DEBUG_GEOMETRY) {
+    window.OKAgencyAnnotationGeometryDebug = Object.freeze({
+      refresh: schedule,
+      snapshot: () => [...debugSnapshots.values()].map(entry => structuredClone(entry)),
     });
-    serviceFrames.forEach(frame => observer.observe(frame));
   }
+
+  schedule();
 })();

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { versionedAsset } from "./asset-versions.mjs";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const publicPages = readdirSync(projectRoot)
@@ -34,7 +35,7 @@ for (const page of publicPages) {
 
   assert.match(
     html,
-    /assets\/site-navigation\.css\?v=20260801-3/,
+    new RegExp(versionedAsset("assets/site-navigation.css").replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
     `${page}: versioned global navigation CSS is missing.`,
   );
   assert.match(

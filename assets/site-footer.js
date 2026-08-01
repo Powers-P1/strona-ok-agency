@@ -14,9 +14,7 @@
     ["O nas", "/o-nas"],
     ["Proces", "/proces"],
     ["FAQ", "/faq"],
-    ["Kontakt", "/kontakt"],
-    ["Polityka prywatności", "/polityka-prywatnosci"],
-    ["Dostępność", "/dostepnosc"]
+    ["Kontakt", "/kontakt"]
   ];
 
   const linkMarkup = (label, href) => {
@@ -76,8 +74,11 @@
 
       <div class="site-footer__bottom">
         <p>© 2026 OK Agency</p>
-        <a href="/polityka-prywatnosci"${currentPath === "polityka-prywatnosci" ? ' aria-current="page"' : ""}>Prywatność / jasne zasady</a>
-        <button type="button" class="site-footer__consent" data-consent-settings>Ustawienia cookies</button>
+        <nav class="site-footer__legal" aria-label="Informacje prawne">
+          <a href="/polityka-prywatnosci"${currentPath === "polityka-prywatnosci" ? ' aria-current="page"' : ""}>Polityka prywatności</a>
+          <a href="/dostepnosc" aria-label="Informacja o dostępności serwisu"${currentPath === "dostepnosc" ? ' aria-current="page"' : ""}>Standard serwisu</a>
+          <button type="button" class="site-footer__consent" data-consent-settings>Ustawienia cookies</button>
+        </nav>
       </div>`;
 
     mount.replaceChildren(footer);

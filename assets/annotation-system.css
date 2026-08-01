@@ -48,6 +48,11 @@
   transition: opacity .16s linear;
 }
 
+.annotation-callout.is-open,
+.annotation.is-open {
+  z-index: 30;
+}
+
 .annotation {
   --leader: 64px;
   --drop: 25px;
@@ -107,6 +112,7 @@
   cursor: pointer;
   pointer-events: auto;
   transform: translate(-50%, -50%);
+  transition: opacity .12s ease;
   animation: none !important;
 }
 
@@ -121,8 +127,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 17px;
-  height: 17px;
+  width: var(--ok-annotation-core-size, 22px);
+  height: var(--ok-annotation-core-size, 22px);
   box-sizing: border-box;
   border: 2px solid var(--pink, var(--ok-pink-on-light));
   border-radius: 50%;
@@ -142,13 +148,13 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 34px;
-  height: 34px;
+  width: var(--ok-annotation-ring-size, 44px);
+  height: var(--ok-annotation-ring-size, 44px);
   box-sizing: border-box;
   border: 1.5px solid rgba(238, 77, 120, .72);
   border-radius: 50%;
-  opacity: .25;
-  transform: translate(-50%, -50%) scale(.58);
+  opacity: .34;
+  transform: translate(-50%, -50%) scale(.9);
   transform-origin: center;
   animation: ok-energy-ring 2.45s ease-out infinite;
   animation-delay: var(--annotation-delay, 0s);
@@ -282,10 +288,12 @@
   transform: none;
 }
 
-/* Runtime hook used by the collision solver; Phase 3 keeps it visually neutral. */
-.annotation-callout.is-obscured,
-.annotation.is-obscured {
-  --ok-annotation-obscured: 1;
+/* Ukryj wyłącznie punkt i przewód, które znalazłyby się pod otwartą kartą. */
+.annotation-callout.is-obscured .annotation-dot,
+.annotation.is-obscured .annotation-dot,
+.annotation-wire.is-obscured {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Preserve the diagnosis route's original transition contract during no-op migration. */
@@ -306,20 +314,8 @@
     transform .38s var(--ease) .16s;
 }
 
-.uses-annotation-summary .tablet-annotations summary {
-  font-size: 12px;
-}
-
-.uses-annotation-summary .tablet-annotations strong {
-  font-size: 19px;
-  line-height: 1.1;
-}
-
-.uses-annotation-summary .tablet-annotations span,
-.uses-annotation-summary .tablet-annotations p,
-.uses-annotation-summary .tablet-annotations small {
-  font-size: 14px;
-  line-height: 1.5;
+.annotations-unavailable :is(.annotation-lines, .annotation-callout, .annotation) {
+  display: none;
 }
 
 @keyframes ok-energy-core {
@@ -335,16 +331,14 @@
 }
 
 @keyframes ok-energy-ring {
-  0% {
-    opacity: .12;
-    transform: translate(-50%, -50%) scale(.55);
+  0%,
+  100% {
+    opacity: .34;
+    transform: translate(-50%, -50%) scale(.9);
   }
   48% {
-    opacity: .82;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(1.22);
+    opacity: .92;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
@@ -363,7 +357,67 @@
 
   .annotation-dot::after {
     animation-name: none !important;
-    opacity: .62;
-    transform: translate(-50%, -50%) scale(.82) !important;
+    opacity: .72;
+    transform: translate(-50%, -50%) scale(1);
   }
+}
+
+html[data-motion="paused"] .annotation-dot::before {
+  animation-name: none;
+  filter: none;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+html[data-motion="paused"] .annotation-dot::after {
+  animation-name: none;
+  opacity: .72;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Query-only geometry audit: `?audit=hotspots`. Never rendered in normal visits. */
+.annotation-debug-overlay {
+  position: absolute;
+  z-index: 45;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.annotation-debug-box {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid #42e6ff;
+  background: rgb(66 230 255 / 7%);
+}
+
+.annotation-debug-box[data-debug-kind="content"] {
+  border-color: #ff4f69;
+  background: rgb(255 79 105 / 10%);
+}
+
+.annotation-debug-box[data-debug-kind="fixed-ui"] {
+  border-color: #ffb13b;
+  background: rgb(255 177 59 / 12%);
+}
+
+.annotation-debug-box[data-debug-kind="ring"] {
+  border: 2px solid #6cff8f;
+  border-radius: 50%;
+  background: rgb(108 255 143 / 10%);
+}
+
+.annotation-debug-box[data-debug-kind="copy"] {
+  border-color: #d68cff;
+  background: rgb(214 140 255 / 8%);
+}
+
+.annotation-debug-label {
+  position: absolute;
+  top: 84px;
+  right: 16px;
+  padding: 4px 7px;
+  color: #fff;
+  background: #06192b;
+  font: 700 var(--ok-type-label-min, 12px)/1.2 var(--ok-font-body, sans-serif);
+  letter-spacing: .08em;
 }

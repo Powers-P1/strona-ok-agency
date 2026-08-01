@@ -1,6 +1,7 @@
 import { readFile, stat } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { versionedAsset } from "./asset-versions.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = path => readFile(join(root, path), "utf8");
@@ -70,12 +71,12 @@ for (const page of publicPages) {
   const html = await read(page);
   requireText(
     html,
-    "assets/route-motion.css?v=20260801-2",
+    versionedAsset("assets/route-motion.css"),
     `${page}: brak wspólnego route-motion.css`,
   );
   requireText(
     html,
-    "/assets/site-enhancements.css?v=20260801-2",
+    `/${versionedAsset("assets/site-enhancements.css")}`,
     `${page}: niespójna wersja site-enhancements.css`,
   );
 }
@@ -84,7 +85,7 @@ for (const page of scenePages) {
   const html = await read(page);
   requireText(
     html,
-    "assets/scene-viewport.css?v=20260801-3",
+    versionedAsset("assets/scene-viewport.css"),
     `${page}: brak globalnego kontraktu wysokości scen`,
   );
   requireText(
@@ -99,13 +100,13 @@ for (const page of scenePages) {
   if (storyPages.includes(page)) {
     requireText(
       html,
-      "assets/story-standard.css?v=20260801-3",
+      versionedAsset("assets/story-standard.css"),
       `${page}: brak wspólnego modelu scen`,
     );
   }
   requireText(
     html,
-    "assets/service-interactions.js?v=20260801-7",
+    versionedAsset("assets/service-interactions.js"),
     `${page}: brak wspólnych interakcji`,
   );
 }

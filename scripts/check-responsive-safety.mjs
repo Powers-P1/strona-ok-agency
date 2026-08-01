@@ -197,9 +197,12 @@ for (const token of [
   "html.ok-scene-page :is(",
   ".annotation-lines,",
   ".annotation-callout,",
-  ".annotation\n  )",
 ]) {
   requireText(css, token, `mobile annotation cleanup: brak ${token}`);
+}
+
+if (!/html\.ok-scene-page\s+:is\([\s\S]*?\.annotation-lines,\s*[\s\S]*?\.annotation-callout,\s*[\s\S]*?\.annotation\s*\)\s*\{[\s\S]*?display:\s*none/.test(css)) {
+  failures.push("mobile annotation cleanup: wspólny selektor nie ukrywa pełnej warstwy anotacji");
 }
 
 if (/tablet-annotations|uses-annotation-summary|Punkty na ilustracji/.test(css)) {

@@ -46,7 +46,7 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-opening-v1.webp" type="image/webp">
-  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260729-2">
+  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-1">
   <link rel="stylesheet" href="assets/route-motion.css">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260729-2">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260730-4">
@@ -266,6 +266,37 @@
             <a class="result-cta result-primary" data-result-primary href="/strony-internetowe"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
             <a class="result-cta result-secondary" data-result-secondary href="/kontakt?context=website&amp;source=diagnosis"><span>Przejdź do kontaktu</span><i aria-hidden="true">→</i></a>
           </div>
+          <div class="result-lead" data-result-lead>
+            <p class="result-lead-intro">
+              Chcesz, żebyśmy rozpisali te kroki dla Twojej firmy?
+              Zostaw kontakt — odpiszemy z konkretem, bez oferty na siłę.
+            </p>
+            <form class="result-lead-form" data-result-lead-form novalidate>
+              <div class="result-lead-fields">
+                <label class="result-lead-field">
+                  <span>Imię</span>
+                  <input id="rl-name" name="name" type="text" autocomplete="given-name" required minlength="3" maxlength="100">
+                </label>
+                <label class="result-lead-field">
+                  <span>E-mail</span>
+                  <input id="rl-email" name="email" type="email" autocomplete="email" required maxlength="254">
+                </label>
+              </div>
+              <label class="result-lead-fax" aria-hidden="true">
+                Nie wypełniaj tego pola
+                <input id="rl-fax" name="fax" type="text" tabindex="-1" autocomplete="off">
+              </label>
+              <div class="cf-turnstile" id="diagnosis-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="contact"></div>
+              <button class="result-cta result-primary result-lead-submit" type="submit">
+                <span>Wyślij kontakt</span><i aria-hidden="true">→</i>
+              </button>
+              <p class="result-lead-status" data-result-lead-status role="status" aria-live="polite"></p>
+              <p class="result-lead-note">
+                Wysyłając formularz akceptujesz <a href="/polityka-prywatnosci">politykę prywatności</a>.
+                Do wiadomości dołączamy wynik Twojej diagnozy.
+              </p>
+            </form>
+          </div>
           <div class="result-controls">
             <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>
             <button type="button" data-restart>↺&nbsp;&nbsp;Zacznij od nowa</button>
@@ -278,7 +309,8 @@
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.v20260730-3.js"></script>
   <script src="assets/navigation.js?v=20260730-4"></script>
-  <script src="assets/services/diagnosis/script.js?v=20260730-2"></script>
+  <script src="assets/services/diagnosis/script.js?v=20260801-1"></script>
   <script src="assets/site-footer.js?v=20260730-3"></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onDiagnosisTurnstileLoad&amp;render=explicit" defer></script>
 </body>
 </html>

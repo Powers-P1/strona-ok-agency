@@ -1,11 +1,22 @@
 /*
  * One viewport contract for every illustrated, scene-based subpage.
- * The global navigation keeps its own document slot, so a scene receives only
- * the remaining viewport height. Route styles own composition, not geometry.
+ * Navigation overlays the scene and does not reduce its geometry. Scene pages
+ * collapse the shared navigation slot so every act fills one complete screen.
+ * Route styles own composition, not viewport height.
  */
 
 :root {
-  --ok-scene-viewport-height: calc(100svh - var(--ok-nav-slot-height, 80px));
+  --ok-scene-viewport-height: 100svh;
+}
+
+html.ok-scene-page {
+  scroll-padding-top: 0;
+}
+
+html.ok-scene-page .ok-nav-slot {
+  height: 0;
+  min-height: 0;
+  flex-basis: 0;
 }
 
 :is(

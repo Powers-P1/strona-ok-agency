@@ -84,8 +84,13 @@ for (const page of scenePages) {
   const html = await read(page);
   requireText(
     html,
-    "assets/scene-viewport.css?v=20260801-1",
+    "assets/scene-viewport.css?v=20260801-2",
     `${page}: brak globalnego kontraktu wysokości scen`,
+  );
+  requireText(
+    html,
+    '<html lang="pl" class="ok-scene-page">',
+    `${page}: strona sceniczna nie aktywuje globalnego trybu pełnego ekranu`,
   );
 }
 
@@ -106,7 +111,9 @@ for (const page of storyPages) {
 requireText(routeMotion, "--ok-motion-spring", "brak wspólnego easing ruchu");
 requireText(routeMotion, "--ok-motion-cue-duration", "brak wspólnego czasu scroll cue");
 requireText(storyCss, ".about-page .scene", "O nas nie korzysta ze wspólnego modelu scen");
-requireText(sceneViewport, "--ok-scene-viewport-height: calc(100svh - var(--ok-nav-slot-height, 80px))", "sceny podstron nie mieszczą się w dostępnym viewporcie");
+requireText(sceneViewport, "--ok-scene-viewport-height: 100svh", "sceny podstron nie wypełniają pełnego viewportu");
+requireText(sceneViewport, "html.ok-scene-page .ok-nav-slot", "slot nawigacji nadal skraca sceny podstron");
+requireText(sceneViewport, "scroll-padding-top: 0", "nawigacja nadal przesuwa sceny poza pełny kadr");
 requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "sceny podstron mogą przekroczyć wysokość viewportu");
 requireText(sceneViewport, ".diagnosis-story .story-stage", "Diagnoza nie korzysta z globalnego kontraktu wysokości scen");
 requireText(sceneViewport, "@media (min-width: 821px) and (max-height: 730px)", "wspólny model nie dopasowuje treści do niskiego ekranu");

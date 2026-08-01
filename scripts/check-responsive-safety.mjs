@@ -82,7 +82,8 @@ requireText(css, 'data-ok-safe-mobile-hero="portrait"] .sculpture', "CSS nie ma 
 requireText(css, "object-position: 56% bottom", "portretowe drzewko nie jest zakotwiczone do dołu kadru");
 requireText(css, "top: calc(100% - 36.43vw)", "animacja podstawy nie podąża za dolnym kadrowaniem");
 requireText(storyCss, ".about-page .scene", "wspólny model scen nie obejmuje O nas");
-requireText(sceneViewport, "--ok-scene-viewport-height: calc(100svh - var(--ok-nav-slot-height, 80px))", "wspólny model nie odejmuje slotu nawigacji od wysokości scen");
+requireText(sceneViewport, "--ok-scene-viewport-height: 100svh", "wspólny model nie wypełnia sceną całego viewportu");
+requireText(sceneViewport, "html.ok-scene-page .ok-nav-slot", "wspólny model nie usuwa slotu nawigacji z geometrii scen");
 requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "wspólny model pozwala scenom wyjść poza kadr");
 requireText(sceneViewport, ".diagnosis-story .story-stage", "wspólny model wysokości nie obejmuje Diagnozy");
 requireText(storyCss, "filter: none !important", "wspólny model nadal może rozmywać sceny O nas");

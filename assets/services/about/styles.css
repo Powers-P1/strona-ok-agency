@@ -234,7 +234,7 @@ body[data-theme="dark"] .wordmark img {
 .scene-inner {
   position: absolute;
   z-index: 3;
-  inset: 0;
+  inset: var(--header-h) 0 0;
   overflow: visible;
 }
 

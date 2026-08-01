@@ -35,8 +35,10 @@
 - Lokalne arkusze i skrypty mogą zawierać tylko kompozycję oraz zachowanie
   unikalne dla danej podstrony. Po przeniesieniu reguły globalnej usuń martwe
   selektory, duplikaty, nieużywaną logikę i nieaktualne testy.
-- Każda scena podstrony scenicznej musi mieścić się w dostępnym kadrze:
-  `100svh - var(--ok-nav-slot-height)`. Treść ma być przeorganizowana przez
+- Każda scena podstrony scenicznej musi zajmować pełny kadr: `100svh`.
+  Globalna nawigacja jest warstwą nakładaną i nie pomniejsza wysokości sceny;
+  jej slot w przepływie jest zerowany wspólnie dla wszystkich stron scenicznych.
+  Treść ma być przeorganizowana przez
   breakpointy; nie wolno wydłużać sceny, dodawać wewnętrznych scrollerów ani
   przywracać minimalnego progu wysokości większego od dostępnego kadru.
 - Każda zmiana wspólnego kontraktu UI wymaga testu regresji obejmującego

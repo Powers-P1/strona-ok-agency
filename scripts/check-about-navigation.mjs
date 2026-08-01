@@ -15,7 +15,7 @@ const makeClassList = initial => {
   };
 };
 
-const makeElement = ({ id = "", go, nav = false, theme = "light", top = 0 } = {}) => {
+const makeElement = ({ id = "", go, theme = "light", top = 0 } = {}) => {
   const listeners = new Map();
   const attributes = new Map();
   const element = {
@@ -24,7 +24,6 @@ const makeElement = ({ id = "", go, nav = false, theme = "light", top = 0 } = {}
     classList: makeClassList([]),
     listeners,
     attributes,
-    nav,
     scrolled: 0,
     getBoundingClientRect() { return { top, bottom: top + 1000 }; },
     addEventListener(type, listener) { listeners.set(type, listener); },
@@ -41,9 +40,8 @@ const scenes = [
   makeElement({ id: "about-model", theme: "dark", top: 2000 }),
   makeElement({ id: "about-credibility", theme: "light", top: 3000 }),
 ];
-const navButtons = [0, 1, 2, 3].map(go => makeElement({ go, nav: true }));
 const ctaButtons = [1, 2, 3].map(go => makeElement({ go }));
-const sceneButtons = [...ctaButtons, ...navButtons];
+const sceneButtons = [...ctaButtons];
 const themeColor = { content: "" };
 let currentHash = "";
 
@@ -53,7 +51,6 @@ const document = {
   querySelector: selector => selector === 'meta[name="theme-color"]' ? themeColor : null,
   querySelectorAll: selector => {
     if (selector === ".scene") return scenes;
-    if (selector === ".scene-nav [data-go]") return navButtons;
     if (selector === "[data-go]") return sceneButtons;
     return [];
   },
@@ -89,12 +86,6 @@ for (const button of sceneButtons) {
   if (currentHash !== `#${scenes[target].id}`) {
     throw new Error(`data-go="${target}" ustawił błędny hash ${currentHash}`);
   }
-  for (const navButton of navButtons) {
-    const shouldBeCurrent = Number(navButton.dataset.go) === target;
-    if (navButton.attributes.has("aria-current") !== shouldBeCurrent) {
-      throw new Error(`data-go="${target}" ustawił błędne aria-current`);
-    }
-  }
 }
 
-console.log(`OK: ${sceneButtons.length} przycisków data-go prowadzi do właściwych scen, hashy i stanu nawigacji.`);
+console.log(`OK: ${sceneButtons.length} przyciski data-go prowadzą do właściwych scen i hashy.`);

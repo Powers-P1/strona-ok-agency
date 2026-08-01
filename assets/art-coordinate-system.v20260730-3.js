@@ -270,7 +270,7 @@
       ...new Set([
         ...frame.querySelectorAll(protectedSelectors),
         ...document.querySelectorAll(
-          ".site-header, .motion-toggle, .scene-nav",
+          ".site-header, .motion-toggle",
         ),
       ]),
     ];

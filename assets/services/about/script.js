@@ -2,7 +2,6 @@
   "use strict";
 
   const scenes = [...document.querySelectorAll(".scene")];
-  const navButtons = [...document.querySelectorAll(".scene-nav [data-go]")];
   const sceneButtons = [...document.querySelectorAll("[data-go]")];
   const themeColor = document.querySelector('meta[name="theme-color"]');
   const hashes = scenes.map((scene) => `#${scene.id}`);
@@ -20,14 +19,6 @@
       scene.classList.toggle("is-active", sceneIndex === activeIndex);
       scene.setAttribute("aria-hidden", "false");
       scene.removeAttribute("inert");
-    });
-
-    navButtons.forEach((button) => {
-      if (Number(button.dataset.go) === activeIndex) {
-        button.setAttribute("aria-current", "true");
-      } else {
-        button.removeAttribute("aria-current");
-      }
     });
 
     const theme = scenes[activeIndex]?.dataset.theme || "light";

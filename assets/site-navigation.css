@@ -21,7 +21,7 @@
 }
 
 html {
-  scroll-padding-top: calc(var(--ok-nav-floating-height) + 36px);
+  scroll-padding-top: var(--ok-nav-slot-height);
   scrollbar-gutter: stable;
 }
 

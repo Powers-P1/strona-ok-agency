@@ -29,6 +29,18 @@
 - Aktualizuj mapę nawigacji i sitemapę, gdy dodajesz albo usuwasz stronę.
 - Po zmianie hostingu, domen, DNS, poczty, Workera, sekretów, workflowów albo
   zabezpieczeń aktualizuj `docs/PRODUCTION-OPERATIONS.md`.
+- Reguły dotyczące co najmniej dwóch tras (layout scen, nawigacja, ruch,
+  responsywność, typografia, stopka) implementuj wyłącznie we wspólnym zasobie
+  i wspólnym tokenie. Nie naprawiaj problemu systemowego wyjątkami per strona.
+- Lokalne arkusze i skrypty mogą zawierać tylko kompozycję oraz zachowanie
+  unikalne dla danej podstrony. Po przeniesieniu reguły globalnej usuń martwe
+  selektory, duplikaty, nieużywaną logikę i nieaktualne testy.
+- Każda scena podstrony scenicznej musi mieścić się w dostępnym kadrze:
+  `100svh - var(--ok-nav-slot-height)`. Treść ma być przeorganizowana przez
+  breakpointy; nie wolno wydłużać sceny, dodawać wewnętrznych scrollerów ani
+  przywracać minimalnego progu wysokości większego od dostępnego kadru.
+- Każda zmiana wspólnego kontraktu UI wymaga testu regresji obejmującego
+  wszystkie korzystające z niego trasy oraz aktualizacji wersji zasobu.
 
 ## Wymagane sprawdzenia
 

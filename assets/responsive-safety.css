@@ -110,19 +110,11 @@ body.home-page {
 }
 
 /*
-  Service and About scenes stay in the document flow. When text needs more
-  room, the whole scene grows so the browser keeps one continuous scrollbar.
+  Story scenes own an exact viewport-minus-navigation height in
+  scene-viewport.css. Responsive safety may rearrange content and protect the
+  artwork, but it must never grow an individual story scene or add a local
+  scrolling region.
 */
-:is(.campaign-frame, .social-frame, .process-frame)[data-ok-safe-scene] {
-  --ok-safe-stage-floor: 680px;
-  height: auto !important;
-  min-height: max(
-    100svh,
-    var(--ok-safe-required-height, 0px),
-    var(--ok-safe-stage-floor)
-  ) !important;
-}
-
 .uses-annotation-summary .tablet-annotations,
 .uses-annotation-summary .tablet-annotations ul {
   max-height: none !important;
@@ -131,16 +123,10 @@ body.home-page {
   scrollbar-gutter: auto;
 }
 
-@media (max-width: 820px) {
-  :is(.campaign-frame, .social-frame, .process-frame)[data-ok-safe-scene] {
-    --ok-safe-stage-floor: 720px;
-  }
-}
-
 /*
   The viewport profile is shared by every illustrated route. Tall portrait
-  scenes stay composited as one frame, while short windows gain document
-  height instead of splitting the artwork into a separate rectangle.
+  scenes stay composited as one frame without splitting the artwork into a
+  separate rectangle.
 */
 :root[data-ok-tall-portrait] [data-ok-safe-scene] {
   overflow-x: clip;

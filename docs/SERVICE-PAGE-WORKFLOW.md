@@ -131,6 +131,21 @@ Podstrona Procesu używa sześciu scen:
 
 Scroll pozostaje w pełni natywny. Sceny są kolejnymi sekcjami w zwykłym przepływie dokumentu — bez sticky stack, `scroll-snap`, `preventDefault`, przejmowania kółka lub swipe, ręcznego animowania `scrollY` i dociągania do punktów. Użytkownik może zatrzymać się w dowolnym miejscu, przewijać z dowolną prędkością oraz używać trackpada lub autoscrolla środkowym przyciskiem dokładnie tak, jak na standardowej stronie.
 
+### Globalny kontrakt wysokości sceny
+
+Każdy akt na podstronie scenicznej zajmuje dokładnie obszar dostępny pod
+globalną nawigacją: `100svh - var(--ok-nav-slot-height)`. Kontrakt jest
+zdefiniowany raz w `assets/scene-viewport.css` i obowiązuje wszystkie warianty
+usług oraz stronę „O nas”. Lokalne arkusze nie mogą nadpisywać `height`,
+`min-height` ani `max-height` sceny.
+
+Przy niskim lub wąskim ekranie kompozycja ma przejść na właściwy breakpoint,
+zmienić układ treści albo ograniczyć elementy dekoracyjne. Nie wolno ratować
+kadru przez wydłużenie sceny, stałe progi typu `680px`/`720px`, zagnieżdżony
+scroll ani wyjątek przypisany do jednej trasy. Jeżeli problem dotyczy więcej
+niż jednej podstrony, poprawka należy do wspólnego systemu i musi mieć test
+regresji dla całej grupy tras.
+
 ## 4. Rola copy
 
 Obrazy budują emocję, ale treść musi udowadniać kompetencję. Copy nie może składać się wyłącznie z ogólnych haseł.

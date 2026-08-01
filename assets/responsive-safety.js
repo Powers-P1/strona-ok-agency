@@ -197,6 +197,7 @@
     delete layout.scene.dataset.okSafeCompactFit;
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
     layout.scene.style.removeProperty("--ok-home-compact-art-scale");
+    layout.scene.style.removeProperty("--ok-safe-required-height");
     layout.art.style.removeProperty("--ok-safe-mask-image");
     layout.scene.querySelectorAll("[data-ok-safe-content]").forEach(content => {
       restoreScrollRegion(content);
@@ -320,14 +321,22 @@
     }
 
     if (!compact && !isHome) {
-      layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
+      if (layout.mode === "grow") {
+        layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
+      } else {
+        layout.scene.style.removeProperty("--ok-safe-required-height");
+      }
       layout.art.dataset.okSafeArt = "idle";
       delete layout.art.dataset.okSafeReveal;
       layout.art.style.removeProperty("--ok-safe-mask-image");
       return;
     }
 
-    layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
+    if (layout.mode === "grow") {
+      layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
+    } else {
+      layout.scene.style.removeProperty("--ok-safe-required-height");
+    }
 
     const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
     const spaces = {

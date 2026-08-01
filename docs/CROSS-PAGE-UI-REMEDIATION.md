@@ -1,7 +1,7 @@
 # Systemowy plan napraw UI między podstronami
 
 Data utworzenia: 2026-08-01
-Status: **Fazy 0–2 i 6 zakończone; Faza 3 w toku**
+Status: **Fazy 0–3 i 6 zakończone; Faza 4 w toku**
 Zakres tego dokumentu: system wspólny i desktop; mobile jest bramką regresji i osobnym zakresem koordynowanym z `MOBILE-QA-2026-08-01.md`.
 
 ## 1. Cel i reguły wykonania
@@ -201,15 +201,17 @@ Bramka: testy prawidłowo czerwienią się na znanych problemach i nie obejmują
 
 Bramka: tylko dwie zatwierdzone rodziny, brak znaczącego tekstu <14 px, brak `scale < 1` na przodku treści, wszystkie sceny mieszczą kadr.
 
-### Faza 3 — migracja systemu anotacji bez zmiany wyglądu
+### Faza 3 — migracja systemu anotacji bez zmiany wyglądu ✅
 
-- [ ] dodać `assets/annotation-system.css` jako jedyne źródło bazowego wyglądu;
-- [ ] załadować centralne tokeny i arkusz na sześciu trasach;
-- [ ] usunąć równoważne reguły bazowe z lokalnych arkuszy, pozostawiając kompozycję;
-- [ ] włączyć Diagnozę do `service-interactions.js` i usunąć duplikat obsługi;
-- [ ] ujednolicić start zamknięty, klik/touch/Enter/Space, Escape i klik poza;
-- [ ] wykonać no-op visual diff przed zmianą parametrów punktów;
-- [ ] zastąpić datowany moduł geometrii stabilną nazwą, a cache kontrolować query stringiem.
+- [x] dodać `assets/annotation-system.css` jako jedyne źródło bazowego wyglądu;
+- [x] załadować centralne tokeny i arkusz na sześciu trasach;
+- [x] usunąć równoważne reguły bazowe z lokalnych arkuszy, pozostawiając kompozycję;
+- [x] włączyć Diagnozę do `service-interactions.js` i usunąć duplikat obsługi;
+- [x] ujednolicić start zamknięty, klik/touch/Enter/Space, Escape i klik poza;
+- [x] wykonać no-op visual diff przed zmianą parametrów punktów;
+- [x] zastąpić datowany moduł geometrii stabilną nazwą, a cache kontrolować query stringiem.
+
+Status bramki: PASS w commicie `55ca7ac`. Automatyczny audyt otworzył wszystkie 53 callouty przy 1280×720; pozycje i rozmiary 53 punktów oraz computed styles komponentu są identyczne z baseline. Dwa najdłuższe teksty zajęły o jedną linię mniej po pełnym załadowaniu Archivo, bez zmiany computed CSS. Na sześciu trasach Enter/Space, Escape, klik poza i ARIA przeszły; przy 390×844 i 360×640 widocznych jest 0 punktów/linii/podsumowań i nie ma poziomego overflow.
 
 Bramka: computed styles i geometria nie zmieniły się w migracji; każda trasa ładuje jeden system; lokalne arkusze nie redefiniują komponentu.
 
@@ -217,14 +219,18 @@ Bramka: computed styles i geometria nie zmieniły się w migracji; każda trasa 
 
 - [ ] powiększyć systemowo rdzeń do ok. 22 px, pierścień do 42–44 px i podnieść minimalną opacity;
 - [ ] zachować hit target co najmniej 44×44 px i czytelny stan paused/reduced-motion;
+- [ ] opublikować z `responsive-safety.js` niemutowalny kontrakt `getArtBounds()` w przestrzeni `scene-css-px` oraz zdarzenie `okagency:art-safety-change`, bez zmiany istniejących gradientów maski;
+- [ ] zastąpić dwa lokalne przebiegi jednym solverem grupy i adapterami zapisu dla service/About;
+- [ ] wybierać profile deterministycznie (`short → compact → base`, `compact → base`, `base`) i rozwiązywać całą grupę przez backtracking, nie zachłannie punkt po punkcie;
 - [ ] traktować pozostałe punkty, treść, header, motion toggle i scroll cue jako przeszkody;
 - [ ] twardo odrzucać kandydatury kolizyjne;
 - [ ] aktywny dymek umieszczać nad elementami, a nieuniknione siblingi czasowo oznaczać `is-obscured`;
-- [ ] opublikować z `responsive-safety.js` granice full-visible/feather bez zmiany maski;
 - [ ] wymagać, aby cały rdzeń/pierścień mieścił się na widocznym artworkcie;
-- [ ] wdrożyć kotwice compact/short dla przypadków Web, Social, Kampanie i O nas z rejestru;
+- [ ] dodać overlay diagnostyczny pokazujący source 1672×941, `fullVisible`, ring oraz przeszkody; dopiero na tej podstawie zatwierdzić pełne pary kotwic compact/short dla przypadków Web, Social, Kampanie i O nas;
 - [ ] wymusić środek punktu ≥88 px od dołu sceny i ≥16 px od dolnego UI;
 - [ ] wdrożyć wspólne podsumowanie powyżej 640 px, gdy brak bezpiecznej kotwicy; do 640 px cały system pozostaje ukryty zgodnie z decyzją mobile.
+
+Ustalenie audytu przed implementacją: repo nie zawiera obecnie żadnej kotwicy `compact` ani `short`. Wartości wskazane w rejestrze są aktualnymi kotwicami `base` i nie wolno kopiować ich jako alternatyw bez pomiaru maski. Solver ma emitować `okagency:annotationchange`, przeliczać się po zmianie maski, fontów, viewportu i stanu calloutu oraz nigdy nie akceptować kolizji przez samą karę punktową.
 
 Bramka: 53/53 punktów na widocznym artworkcie; zero punktów w dymku/tekście/UI; zero osieroconych punktów; wszystkie działają myszą, dotykiem i klawiaturą.
 
@@ -363,3 +369,4 @@ Dla każdego kadru i właściwej trasy:
 | 2026-08-01 | Faza 6 — Diagnoza | `9f9b3dd` (mobile integration `a35edcc`) | PASS desktop + 360×640 + 390×844 | rozłączne result/contact, właściwe copy, fokus/inert, brak nested scrolla; pełny flow 4 pytań odebrany przez oba zadania |
 | 2026-08-01 | Bazowa bramka mobile | `ac876e6` | PASS | Home/WWW/Social/Diagnoza/FAQ 360/390, WWW 1440, menu, overflow, konsola, quality/build; końcową regresję powtarzamy po cleanupie systemowym |
 | 2026-08-01 | Faza 2 — typografia i pełny kadr | `ca56172` | PASS | tokeny Archivo/Barlow, body ≥14 px, labels ≥12 px, brak pomniejszającej skali; pełne sceny i disclosure PASS na desktop/tablet/390/360; opcjonalny kontakt Diagnozy przeprojektowany jako spójna karta i odebrany wizualnie |
+| 2026-08-01 | Faza 3 — centralny system anotacji | `55ca7ac` | PASS | jedno źródło bazowego CSS i interakcji; 53/53 baseline geometry/style; sześć tras keyboard/outside/ARIA PASS; mobile 390/360 nadal centralnie ukryty |

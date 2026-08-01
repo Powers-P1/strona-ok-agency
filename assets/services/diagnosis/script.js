@@ -74,8 +74,8 @@
         "Oddziel główną przyczynę od widocznych objawów.",
         "Wybierz kolejność działań i nazwij to, czego nie robić teraz."
       ],
-      primary: ["Umów rozmowę", "/kontakt?context=conversation&source=diagnosis"],
-      secondary: ["Zobacz proces", "/proces?from=diagnosis"]
+      primary: ["Zobacz proces", "/proces?from=diagnosis"],
+      secondary: ["Przejdź do kontaktu", "/kontakt?context=conversation&source=diagnosis"]
     },
     none: {
       title: "Na razie żadna usługa.",
@@ -128,7 +128,8 @@
   const resultWhy = tool.querySelector("[data-result-why]");
   const resultSteps = Array.from(tool.querySelectorAll("[data-result-step]"));
   const resultPrimary = tool.querySelector("[data-result-primary]");
-  const resultSecondary = tool.querySelector("[data-result-secondary]");
+  const outcomePanels = Array.from(tool.querySelectorAll("[data-outcome-panel]"));
+  const contactTitle = tool.querySelector("#contact-title");
   const themeColor = document.querySelector('meta[name="theme-color"]');
   const answers = {};
   let currentQuestion = 1;
@@ -193,6 +194,30 @@
   };
 
   let currentOutcome = null;
+  let currentOutcomePanel = "result";
+  let ensureLeadTurnstile = () => {};
+
+  const showOutcomePanel = (name, focus = true) => {
+    const next = outcomePanels.find(panel => panel.dataset.outcomePanel === name);
+    if (!next) return;
+
+    outcomePanels.forEach(panel => {
+      const active = panel === next;
+      panel.classList.toggle("is-active", active);
+      panel.setAttribute("aria-hidden", String(!active));
+      panel.inert = !active;
+    });
+
+    currentOutcomePanel = name;
+    if (name === "contact") ensureLeadTurnstile();
+    scrollTo({ top: tool.offsetTop, behavior: "auto" });
+    if (announcer) {
+      announcer.textContent = name === "contact"
+        ? "Opcjonalny formularz kontaktowy."
+        : `Wynik diagnozy: ${RESULTS[currentOutcome]?.title || ""}`;
+    }
+    if (focus) focusAfterPaint(name === "contact" ? contactTitle : resultTitle);
+  };
 
   const setResultLink = (anchor, data) => {
     anchor.setAttribute("href", data[1]);
@@ -206,7 +231,7 @@
     resultWhy.textContent = copy.why;
     resultSteps.forEach((item, index) => { item.textContent = copy.steps[index]; });
     setResultLink(resultPrimary, copy.primary);
-    setResultLink(resultSecondary, copy.secondary);
+    showOutcomePanel("result", false);
     if (announcer) announcer.textContent = `Wynik diagnozy: ${copy.title}`;
   };
 
@@ -242,6 +267,16 @@
     if (event.target.closest("[data-change-answers]")) {
       showAct("map", false);
       showQuestion(4);
+      return;
+    }
+
+    if (event.target.closest("[data-show-contact]")) {
+      showOutcomePanel("contact");
+      return;
+    }
+
+    if (event.target.closest("[data-show-result]")) {
+      showOutcomePanel("result");
       return;
     }
 
@@ -319,8 +354,14 @@
     let leadWidgetId = null;
     let leadSent = false;
 
+    ensureLeadTurnstile = () => {
+      if (window.turnstile && leadWidgetId === null) {
+        leadWidgetId = window.turnstile.render("#diagnosis-turnstile");
+      }
+    };
+
     window.onDiagnosisTurnstileLoad = () => {
-      leadWidgetId = window.turnstile.render("#diagnosis-turnstile");
+      if (currentOutcomePanel === "contact") ensureLeadTurnstile();
     };
 
     const resetLeadTurnstile = () => {

@@ -6,6 +6,8 @@ import vm from "node:vm";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const diagnosisPath = join(root, "assets", "services", "diagnosis", "script.js");
 const diagnosisSource = await readFile(diagnosisPath, "utf8");
+const diagnosisHtml = await readFile(join(root, "diagnoza.html"), "utf8");
+const diagnosisStyles = await readFile(join(root, "assets", "services", "diagnosis", "styles.css"), "utf8");
 const contactSource = await readFile(join(root, "assets", "page-contact.js"), "utf8");
 const contactHtml = await readFile(join(root, "kontakt.html"), "utf8");
 const sandbox = {
@@ -58,10 +60,49 @@ for (const [context, topic] of mappings) {
   if (!contactHtml.includes(`value="${topic}"`)) failures.push(`Kontakt: brak opcji „${topic}”`);
 }
 
+const requiredDiagnosisCopy = [
+  "Wynik dostajesz od razu — bez zapisu i podawania danych.",
+  "Jeśli chcesz omówić wynik, przejdź do opcjonalnego kontaktu.",
+  "Abyśmy mogli odpowiedzieć, podaj imię i e-mail.",
+  "E-mail do odpowiedzi",
+  "Poproś o kontakt",
+  "Wróć do wyniku",
+];
+for (const copy of requiredDiagnosisCopy) {
+  if (!diagnosisHtml.includes(copy)) failures.push(`Diagnoza: brak copy „${copy}”`);
+}
+
+const panelMatches = diagnosisHtml.match(/data-outcome-panel="(result|contact)"/g) || [];
+if (panelMatches.length !== 2) failures.push("Diagnoza: ostatni akt musi mieć dokładnie dwa panele result/contact");
+if (!/data-outcome-panel="result"[^>]*aria-hidden="false"/.test(diagnosisHtml)) {
+  failures.push("Diagnoza: panel result nie jest początkowo dostępny");
+}
+if (!/data-outcome-panel="contact"[^>]*aria-hidden="true"[^>]*inert/.test(diagnosisHtml)) {
+  failures.push("Diagnoza: panel contact nie jest początkowo ukryty przez aria-hidden i inert");
+}
+if (!diagnosisSource.includes('panel.setAttribute("aria-hidden", String(!active))') ||
+    !diagnosisSource.includes("panel.inert = !active") ||
+    !diagnosisSource.includes('showOutcomePanel("contact")') ||
+    !diagnosisSource.includes('showOutcomePanel("result")')) {
+  failures.push("Diagnoza: JS nie steruje rozłącznymi panelami, aria-hidden i inert");
+}
+if (!diagnosisHtml.includes('name="email" type="email"') || !diagnosisHtml.includes("required maxlength=\"254\"")) {
+  failures.push("Diagnoza: e-mail nie jest wymagany");
+}
+if (!diagnosisHtml.includes('id="diagnosis-turnstile"') || !diagnosisSource.includes('fetch("/api/contact"')) {
+  failures.push("Diagnoza: brak zachowanego Turnstile lub API /api/contact");
+}
+if (/\.diagnosis-frame\s*\{[^}]*overflow-y\s*:\s*auto/s.test(diagnosisStyles)) {
+  failures.push("Diagnoza: niedozwolony wewnętrzny scroller ramki");
+}
+if (/\.result-lead-field\s*\{[^}]*flex(?:-basis)?\s*:/s.test(diagnosisStyles)) {
+  failures.push("Diagnoza: pola kontaktu nie mogą opierać przepływu na flex-basis");
+}
+
 if (failures.length) {
   console.error(`Błędy Diagnozy (${failures.length}):`);
   failures.forEach(failure => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log("OK: pięć wyników Diagnozy i sześć mapowań kontaktu działa deterministycznie.");
+  console.log("OK: wyniki, mapowania i rozłączne stany result/contact Diagnozy spełniają kontrakt.");
 }

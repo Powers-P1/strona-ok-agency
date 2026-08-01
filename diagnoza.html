@@ -46,7 +46,7 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-opening-v1.webp" type="image/webp">
-  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-2">
+  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-3">
   <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
   <link rel="stylesheet" href="assets/scene-viewport.css?v=20260801-2">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260801-1">
@@ -135,7 +135,7 @@
             <span>Zacznij diagnozę · 4 pytania</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"></path></svg>
           </button>
-          <p class="opening-privacy">Bez zapisów · bez maila · tylko wynik trafia do kontaktu</p>
+          <p class="opening-privacy">Wynik bez zapisu i podawania danych · kontakt jest opcjonalny</p>
         </div>
       </section>
 
@@ -241,7 +241,7 @@
               <button class="quiz-back" type="button" data-back>←&nbsp;&nbsp;Wstecz</button>
             </section>
           </div>
-          <p class="quiz-privacy">Bez zapisów · bez maila · tylko wynik trafia do kontaktu</p>
+          <p class="quiz-privacy">Wynik bez zapisu i podawania danych · kontakt jest opcjonalny</p>
         </div>
       </section>
 
@@ -249,7 +249,7 @@
         class="diagnosis-frame campaign-proof"
         id="diagnosis-outcome"
         data-act="outcome"
-        aria-labelledby="result-title"
+        aria-label="Wynik diagnozy i opcjonalny kontakt"
         aria-hidden="true"
         inert
       >
@@ -257,22 +257,31 @@
         <span class="proof-bloom" aria-hidden="true"></span>
 
         <article class="result-content">
-          <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
-          <h2 id="result-title" tabindex="-1">Najpierw strona internetowa.</h2>
-          <p class="result-why" data-result-why></p>
-          <p class="steps-label">Pierwsze trzy kroki</p>
-          <ol class="result-steps"><li data-result-step="0"></li><li data-result-step="1"></li><li data-result-step="2"></li></ol>
-          <p class="result-disclaimer">To punkt startu, nie oferta ani wycena.</p>
-          <div class="result-actions">
-            <a class="result-cta result-primary" data-result-primary href="/strony-internetowe"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
-            <a class="result-cta result-secondary" data-result-secondary href="/kontakt?context=website&amp;source=diagnosis"><span>Przejdź do kontaktu</span><i aria-hidden="true">→</i></a>
-          </div>
-          <div class="result-lead" data-result-lead>
-            <p class="result-lead-intro">
-              <strong>Wynik masz powyżej — bez zapisów i bez maila, tak jak obiecaliśmy.</strong>
-              Jeśli chcesz, żebyśmy rozpisali te kroki dla Twojej firmy, zostaw kontakt.
-              Odpiszemy z konkretem, bez oferty na siłę.
-            </p>
+          <section class="outcome-panel result-panel is-active" data-outcome-panel="result" aria-labelledby="result-title" aria-hidden="false">
+            <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
+            <h2 id="result-title" tabindex="-1">Najpierw strona internetowa.</h2>
+            <p class="result-why" data-result-why></p>
+            <p class="steps-label">Pierwsze trzy kroki</p>
+            <ol class="result-steps"><li data-result-step="0"></li><li data-result-step="1"></li><li data-result-step="2"></li></ol>
+            <p class="result-disclaimer">To punkt startu, nie oferta ani wycena.</p>
+            <div class="result-availability">
+              <p>Wynik dostajesz od razu — bez zapisu i podawania danych.</p>
+              <p>Jeśli chcesz omówić wynik, przejdź do opcjonalnego kontaktu.</p>
+            </div>
+            <div class="result-actions">
+              <a class="result-cta result-primary" data-result-primary href="/strony-internetowe"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
+              <button class="result-cta result-secondary" type="button" data-show-contact><span>Poproś o kontakt</span><i aria-hidden="true">→</i></button>
+            </div>
+            <div class="result-controls">
+              <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>
+              <button type="button" data-restart>↺&nbsp;&nbsp;Zacznij od nowa</button>
+            </div>
+          </section>
+
+          <section class="outcome-panel contact-panel" data-outcome-panel="contact" aria-labelledby="contact-title" aria-hidden="true" inert>
+            <span class="section-kicker">Opcjonalny kontakt · Twój wynik zostaje zachowany.</span>
+            <h2 id="contact-title" tabindex="-1">Omówmy Twój wynik.</h2>
+            <p class="contact-intro">Abyśmy mogli odpowiedzieć, podaj imię i e-mail.</p>
             <form class="result-lead-form" data-result-lead-form novalidate>
               <div class="result-lead-fields">
                 <label class="result-lead-field">
@@ -280,7 +289,7 @@
                   <input id="rl-name" name="name" type="text" autocomplete="given-name" required minlength="3" maxlength="100">
                 </label>
                 <label class="result-lead-field">
-                  <span>E-mail</span>
+                  <span>E-mail do odpowiedzi</span>
                   <input id="rl-email" name="email" type="email" autocomplete="email" required maxlength="254">
                 </label>
               </div>
@@ -298,11 +307,8 @@
                 Do wiadomości dołączamy wynik Twojej diagnozy.
               </p>
             </form>
-          </div>
-          <div class="result-controls">
-            <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>
-            <button type="button" data-restart>↺&nbsp;&nbsp;Zacznij od nowa</button>
-          </div>
+            <button class="return-to-result" type="button" data-show-result>←&nbsp;&nbsp;Wróć do wyniku</button>
+          </section>
         </article>
       </section>
     </div>
@@ -311,7 +317,7 @@
   <div data-site-footer></div>
   <script src="assets/art-coordinate-system.v20260730-3.js"></script>
   <script src="assets/navigation.js?v=20260730-4"></script>
-  <script src="assets/services/diagnosis/script.js?v=20260801-1"></script>
+  <script src="assets/services/diagnosis/script.js?v=20260801-2"></script>
   <script src="assets/site-footer.js?v=20260801-1"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onDiagnosisTurnstileLoad&amp;render=explicit" defer></script>
 </body>

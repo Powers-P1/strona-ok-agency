@@ -34,6 +34,7 @@ const storyPages = [
   "social-media.html",
   "strony-internetowe.html",
 ];
+const scenePages = ["diagnoza.html", ...storyPages];
 const serviceStyleFiles = [
   "assets/services/about/styles.css",
   "assets/services/campaign/styles.css",
@@ -50,6 +51,7 @@ const [
   enhancementsCss,
   safetyCss,
   storyCss,
+  sceneViewport,
   interactions,
   routeMotion,
 ] = await Promise.all([
@@ -59,6 +61,7 @@ const [
   read("assets/site-enhancements.css"),
   read("assets/responsive-safety.css"),
   read("assets/story-standard.css"),
+  read("assets/scene-viewport.css"),
   read("assets/service-interactions.js"),
   read("assets/route-motion.css").catch(() => ""),
 ]);
@@ -77,11 +80,20 @@ for (const page of publicPages) {
   );
 }
 
+for (const page of scenePages) {
+  const html = await read(page);
+  requireText(
+    html,
+    "assets/scene-viewport.css?v=20260801-1",
+    `${page}: brak globalnego kontraktu wysokości scen`,
+  );
+}
+
 for (const page of storyPages) {
   const html = await read(page);
   requireText(
     html,
-    "assets/story-standard.css?v=20260801-2",
+    "assets/story-standard.css?v=20260801-3",
     `${page}: brak wspólnego modelu scen`,
   );
   requireText(
@@ -94,6 +106,11 @@ for (const page of storyPages) {
 requireText(routeMotion, "--ok-motion-spring", "brak wspólnego easing ruchu");
 requireText(routeMotion, "--ok-motion-cue-duration", "brak wspólnego czasu scroll cue");
 requireText(storyCss, ".about-page .scene", "O nas nie korzysta ze wspólnego modelu scen");
+requireText(sceneViewport, "--ok-scene-viewport-height: calc(100svh - var(--ok-nav-slot-height, 80px))", "sceny podstron nie mieszczą się w dostępnym viewporcie");
+requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "sceny podstron mogą przekroczyć wysokość viewportu");
+requireText(sceneViewport, ".diagnosis-story .story-stage", "Diagnoza nie korzysta z globalnego kontraktu wysokości scen");
+requireText(sceneViewport, "@media (min-width: 821px) and (max-height: 730px)", "wspólny model nie dopasowuje treści do niskiego ekranu");
+requireText(sceneViewport, "scale: .84", "wspólny model nie kompresuje treści na niskim ekranie");
 requireText(storyCss, "ok-story-cue", "scroll cue nie ma wspólnej animacji");
 requireText(interactions, '".annotation-callout, .annotation"', "callouty nie korzystają ze wspólnego skryptu");
 requireText(interactions, '".proof-item, .accordion-item"', "akordeony nie korzystają ze wspólnego skryptu");
@@ -104,8 +121,12 @@ reject(aboutCss, /overflow:\s*hidden;\s*overscroll-behavior:\s*none;/, "O nas na
 reject(aboutCss, /\.scene\s*\{[^}]*filter:\s*blur/s, "O nas nadal ma lokalny blur scen");
 reject(aboutCss, /\.scene\s*\{[^}]*opacity:\s*0/s, "O nas nadal ukrywa sceny lokalnym systemem");
 reject(aboutCss, /\.scene\.is-active\s*\{/, "O nas nadal ma lokalny crossfade aktywnej sceny");
+reject(aboutCss, /\.scene\s*\{[^}]*(?:min-|max-)?height\s*:/s, "O nas lokalnie nadpisuje globalną wysokość scen");
 reject(aboutScript, /syncCallout|syncAccordionItem|mobile-details/, "O nas duplikuje wspólne interakcje");
 reject(aboutHtml, /class="annotation[^\"]*\bis-open\b/, "O nas nadal otwiera callout przy starcie");
+reject(aboutHtml, /class="scene-nav"/, "O nas nadal renderuje boczną nawigację scen");
+reject(aboutCss, /\.scene-nav/, "O nas nadal zawiera style bocznej nawigacji scen");
+reject(aboutScript, /scene-nav|navButtons/, "O nas nadal zawiera logikę bocznej nawigacji scen");
 reject(aboutHtml, /class="annotation-dot"[^>]*aria-expanded="true"/, "O nas ma niespójny stan aria calloutu przy starcie");
 reject(aboutCss, /\.annotation:(?:hover|focus-within).*\.annotation-copy/, "O nas omija wspólny mechanizm otwierania calloutów");
 reject(enhancementsCss, /about-page/, "site-enhancements.css nadal zawiera wyjątki O nas");

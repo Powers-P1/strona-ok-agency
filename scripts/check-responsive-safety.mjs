@@ -25,6 +25,7 @@ const [css, script, ...htmlFiles] = await Promise.all([
   ...pages.map(read),
 ]);
 const storyCss = await read("assets/story-standard.css");
+const sceneViewport = await read("assets/scene-viewport.css");
 
 const failures = [];
 const requireText = (source, text, message) => {
@@ -33,8 +34,8 @@ const requireText = (source, text, message) => {
 
 pages.forEach((page, index) => {
   const html = htmlFiles[index];
-  requireText(html, "/assets/responsive-safety.css?v=20260801-2", `${page}: brak responsive-safety.css`);
-  requireText(html, "/assets/responsive-safety.js?v=20260801-1", `${page}: brak responsive-safety.js`);
+  requireText(html, "/assets/responsive-safety.css?v=20260801-3", `${page}: brak responsive-safety.css`);
+  requireText(html, "/assets/responsive-safety.js?v=20260801-2", `${page}: brak responsive-safety.js`);
 });
 
 for (const token of [
@@ -81,6 +82,9 @@ requireText(css, 'data-ok-safe-mobile-hero="portrait"] .sculpture', "CSS nie ma 
 requireText(css, "object-position: 56% bottom", "portretowe drzewko nie jest zakotwiczone do dołu kadru");
 requireText(css, "top: calc(100% - 36.43vw)", "animacja podstawy nie podąża za dolnym kadrowaniem");
 requireText(storyCss, ".about-page .scene", "wspólny model scen nie obejmuje O nas");
+requireText(sceneViewport, "--ok-scene-viewport-height: calc(100svh - var(--ok-nav-slot-height, 80px))", "wspólny model nie odejmuje slotu nawigacji od wysokości scen");
+requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "wspólny model pozwala scenom wyjść poza kadr");
+requireText(sceneViewport, ".diagnosis-story .story-stage", "wspólny model wysokości nie obejmuje Diagnozy");
 requireText(storyCss, "filter: none !important", "wspólny model nadal może rozmywać sceny O nas");
 requireText(css, ".tablet-annotations ul", "podsumowania ilustracji nadal mogą tworzyć lokalny scroller");
 requireText(css, '[data-ok-safe-cards="stacked"]', "CSS nie ma bezpiecznego układu kart");
@@ -105,6 +109,9 @@ if (/makeScrollRegion|dataset\.okSafeScroll\s*=/.test(script)) {
 }
 if (/\[data-ok-safe-content\]\[data-ok-safe-scroll/.test(css)) {
   failures.push("responsive safety nadal styluje zagnieżdżone scrollery treści");
+}
+if (/:is\(\.campaign-frame, \.social-frame, \.process-frame\)[^{]*\{[^}]*(?:min-|max-)?height\s*:/s.test(css)) {
+  failures.push("responsive safety nadal lokalnie nadpisuje globalną wysokość scen");
 }
 
 requireText(

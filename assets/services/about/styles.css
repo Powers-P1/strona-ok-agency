@@ -150,7 +150,6 @@ body[data-theme="dark"] .wordmark img {
 }
 
 .site-header a:focus-visible,
-.scene-nav button:focus-visible,
 .text-link:focus-visible,
 .primary-cta:focus-visible,
 .annotation-dot:focus-visible,
@@ -171,7 +170,6 @@ body[data-theme="dark"] .wordmark img {
   position: relative;
   z-index: 0;
   width: 100%;
-  min-height: max(100svh, var(--ok-safe-required-height, 100svh));
   overflow: hidden;
   opacity: 1;
   visibility: visible;
@@ -236,7 +234,7 @@ body[data-theme="dark"] .wordmark img {
 .scene-inner {
   position: absolute;
   z-index: 3;
-  inset: var(--header-h) 0 0;
+  inset: 0;
   overflow: visible;
 }
 
@@ -917,53 +915,6 @@ h2 {
   color: rgba(234, 217, 203, .7);
 }
 
-.scene-nav {
-  position: fixed;
-  z-index: 40;
-  top: 50%;
-  right: 24px;
-  display: grid;
-  gap: 10px;
-  transform: translateY(-50%);
-}
-
-.scene-nav button {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  color: rgba(6, 25, 43, .48);
-  background: transparent;
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 12px;
-  cursor: pointer;
-  transition: color .3s ease;
-}
-
-body[data-theme="dark"] .scene-nav button {
-  color: rgba(234, 217, 203, .52);
-}
-
-.scene-nav button::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  width: 8px;
-  height: 1px;
-  background: currentColor;
-  transition: width .3s var(--ease), background .3s ease;
-}
-
-.scene-nav button[aria-current="true"] {
-  color: var(--pink);
-}
-
-.scene-nav button[aria-current="true"]::after {
-  width: 18px;
-  background: var(--pink);
-}
-
 .scroll-cue {
   position: absolute;
   z-index: 13;
@@ -1245,9 +1196,6 @@ body[data-theme="dark"] .scene-nav button {
     padding-bottom: 8px;
   }
 
-  .scene-nav {
-    right: 8px;
-  }
 }
 
 @media (max-width: 900px) {
@@ -1600,28 +1548,6 @@ body[data-theme="dark"] .scene-nav button {
     line-height: 1.48;
   }
 
-  .scene-nav {
-    top: auto;
-    right: 14px;
-    bottom: 8px;
-    display: flex;
-    gap: 2px;
-    transform: none;
-  }
-
-  .scene-nav button {
-    width: 44px;
-    height: 44px;
-    color: rgba(234, 217, 203, .82);
-    background:
-      linear-gradient(rgba(6, 25, 43, .72), rgba(6, 25, 43, .72))
-      center / 24px 22px no-repeat;
-  }
-
-  .scene-nav button::after {
-    display: none;
-  }
-
   .scroll-cue {
     display: none;
   }
@@ -1891,10 +1817,6 @@ body[data-theme="dark"] .scene-nav button {
 }
 
 @media (max-width: 640px) {
-  .scene-nav {
-    bottom: 68px;
-  }
-
   .scene-02 .tablet-details {
     width: 100%;
   }

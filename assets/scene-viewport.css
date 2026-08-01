@@ -1,0 +1,61 @@
+/*
+ * One viewport contract for every illustrated, scene-based subpage.
+ * The global navigation keeps its own document slot, so a scene receives only
+ * the remaining viewport height. Route styles own composition, not geometry.
+ */
+
+:root {
+  --ok-scene-viewport-height: calc(100svh - var(--ok-nav-slot-height, 80px));
+}
+
+:is(
+  .campaign-frame,
+  .social-frame,
+  .process-frame,
+  .about-page .scene
+) {
+  height: var(--ok-scene-viewport-height) !important;
+  min-height: var(--ok-scene-viewport-height) !important;
+  max-height: var(--ok-scene-viewport-height) !important;
+}
+
+.diagnosis-story,
+.diagnosis-story .story-stage {
+  height: var(--ok-scene-viewport-height) !important;
+  min-height: var(--ok-scene-viewport-height) !important;
+  max-height: var(--ok-scene-viewport-height) !important;
+}
+
+/*
+ * Shared short-window compression for editorial content. Artwork keeps its
+ * crop; only the content group scales, from the same top-left anchor on every
+ * service route. Route styles must not add their own height workarounds.
+ */
+@media (min-width: 821px) and (max-height: 820px) {
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.opening-copy, .proof-content, .process-editorial-content) {
+    scale: .96;
+    transform-origin: top left;
+  }
+}
+
+@media (min-width: 821px) and (max-height: 780px) {
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.opening-copy, .proof-content, .process-editorial-content) {
+    scale: .9;
+  }
+}
+
+@media (min-width: 821px) and (max-height: 730px) {
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.opening-copy, .proof-content, .process-editorial-content) {
+    scale: .84;
+  }
+}
+
+@media (min-width: 821px) and (max-height: 700px) {
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.opening-copy, .proof-content, .process-editorial-content) {
+    scale: .76;
+  }
+}

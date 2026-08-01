@@ -34,7 +34,7 @@ for (const page of publicPages) {
 
   assert.match(
     html,
-    /assets\/site-navigation\.css\?v=20260801-1/,
+    /assets\/site-navigation\.css\?v=20260801-2/,
     `${page}: versioned global navigation CSS is missing.`,
   );
   assert.match(
@@ -81,6 +81,11 @@ for (const page of publicPages) {
 }
 
 const css = readFileSync(join(projectRoot, "assets", "site-navigation.css"), "utf8");
+assert.match(
+  css,
+  /scroll-padding-top:\s*var\(--ok-nav-slot-height\)/,
+  "Global anchor offset must use the navigation slot height.",
+);
 assert.match(css, /--ok-nav-docked-height:\s*80px/, "Docked rail must be 80px.");
 assert.match(css, /--ok-nav-floating-height:\s*64px/, "Detached rail must be 64px.");
 assert.match(css, /\[data-ok-nav-state="detached"\]/, "Detached state styles are required.");

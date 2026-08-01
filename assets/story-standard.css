@@ -46,8 +46,6 @@ html::-webkit-scrollbar {
   position: relative !important;
   inset: auto !important;
   width: 100% !important;
-  height: max(100svh, 680px) !important;
-  min-height: 680px !important;
   overflow: hidden !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -55,11 +53,6 @@ html::-webkit-scrollbar {
   transform: none !important;
   transition: none !important;
   will-change: auto !important;
-}
-
-.about-page .scene {
-  height: auto !important;
-  min-height: max(100svh, var(--ok-safe-required-height, 100svh)) !important;
 }
 
 .campaign-journey,

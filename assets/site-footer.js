@@ -77,8 +77,14 @@
       <div class="site-footer__bottom">
         <p>© 2026 OK Agency</p>
         <a href="/polityka-prywatnosci"${currentPath === "polityka-prywatnosci" ? ' aria-current="page"' : ""}>Prywatność / jasne zasady</a>
+        <button type="button" class="site-footer__consent" data-consent-settings>Ustawienia cookies</button>
       </div>`;
 
     mount.replaceChildren(footer);
+
+    // Wycofanie zgody musi być tak samo dostępne jak jej udzielenie.
+    footer.querySelector("[data-consent-settings]")?.addEventListener("click", () => {
+      window.okConsent?.open();
+    });
   });
 })();

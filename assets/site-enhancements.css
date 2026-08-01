@@ -4,6 +4,26 @@
   --ok-readable-muted: #4d5360;
 }
 
+/* Keep disclosure state changes inside their current full-viewport scene. */
+:is(.proof-list, .accordion, .mobile-details) {
+  overflow-anchor: none;
+}
+
+@media (max-width: 640px) and (max-height: 700px) {
+  :is(.proof-trigger, .accordion-trigger) {
+    min-height: 44px;
+    padding-block: 2px;
+  }
+
+  :is(.proof-detail, .accordion-detail) p {
+    line-height: 1.25;
+  }
+
+  :is(.proof-item.is-open .proof-detail, .accordion-item.is-open .accordion-detail) {
+    padding-bottom: 3px;
+  }
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -140,7 +160,7 @@ html[data-motion="paused"] *::after {
   background:
     linear-gradient(135deg, rgba(255,255,255,.28), transparent 42%),
     #f3e6d9;
-  font-family: "Archivo", "Aptos", "Segoe UI", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
 }
 
 .decision-guide__intro {
@@ -489,7 +509,7 @@ html[data-motion="paused"] *::after {
     bottom: 12px;
     min-height: 44px;
     padding: 9px 11px;
-    font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   }
 
   .decision-guide__grid {
@@ -531,31 +551,38 @@ html[data-motion="paused"] *::after {
     max-height: min(14svh, 88px);
   }
 
-  .proof-label small,
-  .proof-detail p,
-  .proof-output,
-  .journey-mobile-steps strong,
-  .journey-mobile-steps span,
-  .web-service .opening-scope,
-  .web-service .section-kicker,
-  .process-act,
-  .process-opening-copy p,
-  .process-editorial-lead,
-  .map-intro p,
-  .quiz-progress,
-  .quiz-question > p,
-  .quiz-privacy,
-  .result-why,
-  .result-steps li,
-  .contact-page .site-nav a,
-  .site-footer__diagnosis small,
-  .site-footer__work-mode,
-  .site-footer__bottom,
-  .legal-eyebrow,
-  .privacy-status__label,
-  .privacy-toc h2,
-  .legal-footer {
-    font-size: 12px !important;
+  html :is(
+    .proof-label small,
+    .proof-detail p,
+    .proof-output,
+    .journey-mobile-steps span,
+    .process-opening-copy p,
+    .process-editorial-lead,
+    .map-intro p,
+    .quiz-question > p,
+    .quiz-privacy,
+    .result-why,
+    .result-steps li,
+    .site-footer__diagnosis small
+  ) {
+    font-size: var(--ok-type-content-min, 14px);
+  }
+
+  html :is(
+    .journey-mobile-steps strong,
+    .web-service .opening-scope,
+    .web-service .section-kicker,
+    .process-act,
+    .quiz-progress,
+    .contact-page .site-nav a,
+    .site-footer__work-mode,
+    .site-footer__bottom,
+    .legal-eyebrow,
+    .privacy-status__label,
+    .privacy-toc h2,
+    .legal-footer
+  ) {
+    font-size: var(--ok-type-label-min, 12px);
   }
 }
 
@@ -618,7 +645,7 @@ html[data-motion="paused"] *::after {
 .ok-consent__title {
   margin: 0 0 6px;
   color: #071a2c;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: .04em;
@@ -628,7 +655,7 @@ html[data-motion="paused"] *::after {
 .ok-consent__body {
   margin: 0;
   color: rgba(7, 26, 44, .78);
-  font-size: 12.5px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.55;
 }
 

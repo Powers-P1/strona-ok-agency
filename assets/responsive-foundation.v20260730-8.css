@@ -404,7 +404,7 @@ canvas {
     padding-top: 12px;
     display: block;
     border-top: 1px solid color-mix(in srgb, currentColor 24%, transparent);
-    font-family: "Archivo", sans-serif;
+    font-family: var(--ok-font-body, "Archivo", sans-serif);
   }
 
   .uses-annotation-summary .tablet-annotations summary {
@@ -412,7 +412,7 @@ canvas {
     display: flex;
     align-items: center;
     color: var(--pink);
-    font-size: 11px;
+    font-size: var(--ok-type-label-min, 12px);
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -451,7 +451,7 @@ canvas {
   }
 
   .uses-annotation-summary .tablet-annotations strong {
-    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
     font-size: 17px;
     font-weight: 600;
     letter-spacing: .04em;
@@ -460,7 +460,7 @@ canvas {
 
   .uses-annotation-summary .tablet-annotations span {
     margin-top: 3px;
-    font-size: 11px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.42;
   }
 
@@ -606,7 +606,7 @@ canvas {
   .home-page .scene-label {
     gap: clamp(.6rem, 1.4vw, .85rem);
     margin-bottom: clamp(.35rem, .8svh, .6rem);
-    font-size: clamp(.66rem, 1.2vw, .76rem);
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .home-page .scene-label::before {
@@ -622,14 +622,14 @@ canvas {
   .home-page .descriptor {
     max-width: 30rem;
     margin-top: clamp(.4rem, .8svh, .65rem);
-    font-size: clamp(.8rem, 1.2vw, .9rem);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.45;
   }
 
   .home-page .value-lead {
     max-width: 34rem;
     margin-top: clamp(.2rem, .45svh, .35rem);
-    font-size: clamp(.8rem, 1.35vw, 1rem);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.45;
   }
 

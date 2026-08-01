@@ -84,7 +84,7 @@ for (const page of scenePages) {
   const html = await read(page);
   requireText(
     html,
-    "assets/scene-viewport.css?v=20260801-2",
+    "assets/scene-viewport.css?v=20260801-3",
     `${page}: brak globalnego kontraktu wysokości scen`,
   );
   requireText(
@@ -103,7 +103,7 @@ for (const page of storyPages) {
   );
   requireText(
     html,
-    "assets/service-interactions.js?v=20260801-3",
+    "assets/service-interactions.js?v=20260801-6",
     `${page}: brak wspólnych interakcji`,
   );
 }
@@ -117,7 +117,10 @@ requireText(sceneViewport, "scroll-padding-top: 0", "nawigacja nadal przesuwa sc
 requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "sceny podstron mogą przekroczyć wysokość viewportu");
 requireText(sceneViewport, ".diagnosis-story .story-stage", "Diagnoza nie korzysta z globalnego kontraktu wysokości scen");
 requireText(sceneViewport, "@media (min-width: 821px) and (max-height: 730px)", "wspólny model nie dopasowuje treści do niskiego ekranu");
-requireText(sceneViewport, "scale: .84", "wspólny model nie kompresuje treści na niskim ekranie");
+requireText(sceneViewport, "--ok-scene-opening-display", "wspólny model nie steruje display tokenem na niskim ekranie");
+requireText(sceneViewport, "--ok-scene-section-gap", "wspólny model nie steruje rytmem tokenem na niskim ekranie");
+reject(sceneViewport, /(?:^|[;{])\s*scale\s*:\s*(?:0?\.\d+|[1-9]\d*\.?\d*)/im, "wspólny model nie może skalować przodków treści właściwością scale");
+reject(sceneViewport, /(?:^|[;{])\s*transform\s*:\s*[^;}]*scale\s*\(/im, "wspólny model nie może skalować przodków treści przez transform");
 requireText(storyCss, "ok-story-cue", "scroll cue nie ma wspólnej animacji");
 requireText(interactions, '".annotation-callout, .annotation"', "callouty nie korzystają ze wspólnego skryptu");
 requireText(interactions, '".proof-item, .accordion-item"', "akordeony nie korzystają ze wspólnego skryptu");

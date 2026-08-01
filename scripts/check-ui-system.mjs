@@ -297,6 +297,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     "assets/scene-viewport.css",
     "assets/site-enhancements.css",
     "assets/story-standard.css",
+    "assets/visual-direction-scenes.v20260730-2.css",
     ...["about", "campaign", "diagnosis", "process", "social", "web"].map(route => `assets/services/${route}/styles.css`),
   ]);
   const labelSelector = /(?:^|[-_.#\s])(?:button|caption|chips?|cue|cta|eyebrow|index|kicker|label|meta|nav|number|small|tag)(?:\b|[-_])/i;
@@ -398,7 +399,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   }
 
   const stateMarker = state => new RegExp(
-    `(?:data-(?:diagnosis-)?(?:outcome-)?(?:state|view)=["']${state}["']|data-(?:diagnosis-)?${state}-(?:state|view)(?:=["'][^"']*["'])?)`,
+    `(?:data-outcome-panel=["']${state}["']|data-(?:diagnosis-)?(?:outcome-)?(?:state|view)=["']${state}["']|data-(?:diagnosis-)?${state}-(?:state|view)(?:=["'][^"']*["'])?)`,
     "i",
   );
   for (const state of ["result", "contact"]) {

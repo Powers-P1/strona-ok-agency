@@ -116,11 +116,35 @@
     syncDisclosure(item, item.classList.contains("is-open"), { initial: true });
 
     trigger.addEventListener("click", () => {
+      const scrollHost = document.scrollingElement;
+      const scrollPosition = scrollHost?.scrollTop;
       const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
       item.closest(".proof-list, .accordion")
         ?.querySelectorAll(disclosureSelector)
         .forEach(row => syncDisclosure(row, false));
       if (shouldOpen) syncDisclosure(item, true);
+
+      // Expanding a later row can make browser scroll anchoring move the whole
+      // full-viewport scene. Preserve the user's current frame while the
+      // disclosure state changes; focus remains on the activated trigger.
+      if (scrollHost && Number.isFinite(scrollPosition)) {
+        const restoreFrame = () => {
+          const drift = Math.abs(scrollHost.scrollTop - scrollPosition);
+          if (document.activeElement === trigger && drift < innerHeight / 2) {
+            const previousBehavior = scrollHost.style.scrollBehavior;
+            scrollHost.style.scrollBehavior = "auto";
+            scrollHost.scrollTop = scrollPosition;
+            scrollHost.style.scrollBehavior = previousBehavior;
+          }
+        };
+        requestAnimationFrame(() => {
+          restoreFrame();
+          requestAnimationFrame(() => {
+            restoreFrame();
+          });
+        });
+        setTimeout(restoreFrame, 420);
+      }
     });
   });
 

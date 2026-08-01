@@ -34,7 +34,7 @@ for (const page of publicPages) {
 
   assert.match(
     html,
-    /assets\/site-navigation\.css\?v=20260801-2/,
+    /assets\/site-navigation\.css\?v=20260801-3/,
     `${page}: versioned global navigation CSS is missing.`,
   );
   assert.match(

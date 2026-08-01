@@ -1,9 +1,9 @@
 :root {
-  --paper: #ead9cb;
-  --navy: #071a2c;
-  --cream: #f0dfcf;
-  --pink: #ee4d78;
-  --muted: #34424c;
+  --paper: var(--ok-color-paper, #ead9cb);
+  --navy: var(--ok-color-navy, #071a2c);
+  --cream: var(--ok-color-cream, #f0dfcf);
+  --pink: var(--ok-color-accent, #ee4d78);
+  --muted: var(--ok-color-text-muted-on-light, #34424c);
   --ease: var(--ok-motion-spring);
 }
 
@@ -24,8 +24,8 @@ body {
   margin: 0;
   overflow-x: hidden;
   background: var(--paper);
-  color: var(--navy);
-  font-family: "Archivo", "Aptos", "Segoe UI", sans-serif;
+  color: var(--ok-color-text-on-light, var(--navy));
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
 }
 
 a {
@@ -316,7 +316,7 @@ svg {
 
 .annotation-copy strong {
   display: block;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(17px, 1.14vw, 20px);
   font-weight: 600;
   letter-spacing: .04em;
@@ -327,8 +327,8 @@ svg {
   display: block;
   max-width: 28ch;
   margin-top: 7px;
-  color: rgba(7, 26, 44, .76);
-  font-size: clamp(11px, .74vw, 13px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -381,7 +381,7 @@ svg {
 
 .opening-copy h1 {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(64px, 5.15vw, 86px);
   font-weight: 500;
   letter-spacing: -.035em;
@@ -396,8 +396,8 @@ svg {
 
 .opening-copy p {
   margin: 20px 0 0;
-  color: #20313c;
-  font-size: clamp(12px, .82vw, 14px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 450;
   line-height: 1.55;
 }
@@ -406,8 +406,8 @@ svg {
   margin-top: 14px;
   display: flex;
   flex-wrap: wrap;
-  color: rgba(7, 26, 44, .72);
-  font-size: clamp(10px, .68vw, 12px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -516,7 +516,7 @@ svg {
 
 .journey-intro h2 {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(58px, 4.9vw, 82px);
   font-weight: 500;
   letter-spacing: .005em;
@@ -565,7 +565,7 @@ svg {
 
 .proof-content h2 {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(58px, 4.65vw, 78px);
   font-weight: 500;
   letter-spacing: -.025em;
@@ -580,8 +580,8 @@ svg {
 .proof-lead {
   max-width: 47ch;
   margin: 22px 0 0;
-  color: rgba(7, 26, 44, .8);
-  font-size: clamp(13px, .88vw, 15px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.55;
 }
 
@@ -636,7 +636,7 @@ svg {
 
 .proof-index {
   color: var(--pink);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 24px;
   line-height: 1;
 }
@@ -647,7 +647,7 @@ svg {
 }
 
 .proof-label strong {
-  font-size: 12px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .09em;
   text-transform: uppercase;
@@ -655,8 +655,8 @@ svg {
 }
 
 .proof-label small {
-  color: rgba(7, 26, 44, .72);
-  font-size: clamp(11px, .74vw, 13px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.42;
 }
 
@@ -684,8 +684,8 @@ svg {
 
 .proof-detail p {
   margin: 0;
-  color: rgba(7, 26, 44, .76);
-  font-size: clamp(10.5px, .72vw, 12.5px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -697,8 +697,8 @@ svg {
 .proof-output {
   max-width: 520px;
   margin: 15px 0 0;
-  color: rgba(7, 26, 44, .78);
-  font-size: clamp(10.5px, .72vw, 12.5px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.48;
 }
 
@@ -723,7 +723,7 @@ svg {
   color: var(--cream);
   background: var(--navy);
   border: 1px solid var(--navy);
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 550;
   transition:
     color .3s var(--ease),
@@ -756,7 +756,7 @@ svg {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 550;
 }
 
@@ -786,7 +786,7 @@ svg {
   display: flex;
   gap: 13px;
   align-items: baseline;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-weight: 500;
   text-transform: uppercase;
 }
@@ -807,7 +807,7 @@ svg {
 .journey-note p {
   margin: 8px 0 0;
   max-width: 25ch;
-  font-size: clamp(12px, .85vw, 15px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.55;
 }
 
@@ -815,8 +815,8 @@ svg {
   max-width: 28ch;
   margin-top: 7px;
   display: block;
-  color: rgba(240, 223, 207, .66);
-  font-size: clamp(10px, .68vw, 12px);
+  color: var(--ok-color-text-muted-on-dark, #d2c2b4);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -948,7 +948,7 @@ svg {
   }
 
   .site-header nav a {
-    font-size: 10px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .opening-copy {
@@ -1041,7 +1041,7 @@ svg {
   .journey-intro > p {
     max-width: 31ch;
     margin-top: 12px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .journey-intro > p br {
@@ -1067,7 +1067,7 @@ svg {
 
   .journey-mobile-steps b {
     color: var(--pink);
-    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
     font-size: 24px;
     font-weight: 400;
   }
@@ -1078,14 +1078,14 @@ svg {
   }
 
   .journey-mobile-steps strong {
-    font-size: 11px;
+    font-size: var(--ok-type-label-min, 12px);
     letter-spacing: .08em;
     text-transform: uppercase;
   }
 
   .journey-mobile-steps small {
-    color: rgba(240, 223, 207, .72);
-    font-size: 10.5px;
+    color: var(--ok-color-text-muted-on-dark, #d2c2b4);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.4;
   }
 
@@ -1115,7 +1115,7 @@ svg {
 
   .proof-lead {
     margin-top: 9px;
-    font-size: 10.8px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .proof-list {
@@ -1138,12 +1138,12 @@ svg {
   }
 
   .proof-label strong {
-    font-size: 10.5px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .proof-label small,
   .proof-detail p {
-    font-size: 10px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .proof-detail {
@@ -1156,7 +1156,7 @@ svg {
 
   .proof-output {
     margin-top: 9px;
-    font-size: 10px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .proof-actions {
@@ -1202,7 +1202,7 @@ svg {
   align-items: center;
   gap: 12px;
   color: var(--pink);
-  font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -1217,7 +1217,7 @@ svg {
 
 .process-editorial-content h2 {
   margin: 22px 0 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(58px, 4.7vw, 79px);
   font-weight: 500;
   letter-spacing: -.025em;
@@ -1232,8 +1232,8 @@ svg {
 .process-editorial-lead {
   max-width: 50ch;
   margin: 22px 0 0;
-  color: rgba(7, 26, 44, .8);
-  font-size: clamp(12px, .82vw, 14px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.58;
 }
 
@@ -1254,7 +1254,7 @@ svg {
 
 .process-evidence-list article > b {
   color: var(--pink);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 25px;
   font-weight: 400;
 }
@@ -1265,23 +1265,23 @@ svg {
 }
 
 .process-evidence-list strong {
-  font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .09em;
   text-transform: uppercase;
 }
 
 .process-evidence-list small {
-  color: rgba(7, 26, 44, .7);
-  font-size: clamp(10.5px, .72vw, 12.5px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.42;
 }
 
 .process-stage-output {
   max-width: 52ch;
   margin: 18px 0 0;
-  color: rgba(7, 26, 44, .76);
-  font-size: clamp(10.5px, .72vw, 12.5px);
+  color: var(--ok-color-text-muted-on-light, #34424c);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.5;
 }
 
@@ -1296,7 +1296,7 @@ svg {
 .process-editorial-dark .process-editorial-lead,
 .process-editorial-dark .process-evidence-list small,
 .process-editorial-dark .process-stage-output {
-  color: rgba(240, 223, 207, .74);
+  color: var(--ok-color-text-muted-on-dark, #d2c2b4);
 }
 
 .process-editorial-dark .process-evidence-list {
@@ -1436,12 +1436,11 @@ svg {
   .process-editorial-content {
     top: auto;
     right: 24px;
-    bottom: 78px;
+    bottom: 24px;
     left: 24px;
     width: auto;
-    max-height: calc(100svh - 188px);
     padding: 18px;
-    overflow: auto;
+    overflow: visible;
     background: rgba(234, 217, 203, .9);
     backdrop-filter: blur(10px);
   }
@@ -1451,7 +1450,7 @@ svg {
   }
 
   .process-act {
-    font-size: 9px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .process-act::before {
@@ -1465,7 +1464,7 @@ svg {
 
   .process-editorial-lead {
     margin-top: 10px;
-    font-size: 10.5px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .process-evidence-list {
@@ -1484,12 +1483,12 @@ svg {
   }
 
   .process-evidence-list strong {
-    font-size: 9.5px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .process-evidence-list small,
   .process-stage-output {
-    font-size: 9.5px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .process-stage-output {
@@ -1530,7 +1529,7 @@ svg {
 
 .process-opening-copy p {
   max-width: 51ch;
-  font-size: clamp(13px, .86vw, 15px);
+  font-size: var(--ok-type-content-min, 14px);
 }
 
 .process-opening > .scroll-cue {
@@ -1696,7 +1695,7 @@ svg {
   }
 
   .process-opening-copy p {
-    font-size: 11px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .process-method .campaign-art {
@@ -1728,7 +1727,7 @@ svg {
 
   .process-proof-content .proof-lead {
     margin-top: 8px;
-    font-size: 10.4px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .process-proof-content .proof-list {
@@ -1750,7 +1749,7 @@ svg {
 
   .process-proof-content .proof-output {
     margin-top: 7px;
-    font-size: 9.8px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .process-proof-content .proof-actions {

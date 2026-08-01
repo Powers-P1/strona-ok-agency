@@ -1,0 +1,34 @@
+/*
+ * Shared visual roles for every public route.
+ * Font files stay in fonts.css; this file owns how the families are used.
+ */
+
+:root {
+  --ok-font-body: "Archivo", sans-serif;
+  --ok-font-display: "Barlow Condensed", sans-serif;
+
+  --ok-type-content-min: 14px;
+  --ok-type-label-min: 12px;
+  --ok-leading-content: 1.5;
+  --ok-tracking-label: .08em;
+
+  --ok-color-paper: #ead9cb;
+  --ok-color-navy: #071a2c;
+  --ok-color-cream: #f0dfcf;
+  --ok-color-accent: #ee4d78;
+  --ok-color-text-on-light: #071a2c;
+  --ok-color-text-muted-on-light: #34424c;
+  --ok-color-text-on-dark: #f0dfcf;
+  --ok-color-text-muted-on-dark: #d2c2b4;
+
+  --ok-space-content-gap: clamp(14px, 2.4vh, 22px);
+  --ok-space-content-gap-compact: clamp(8px, 1.4vh, 14px);
+
+  --ok-scene-safe-inset: 24px;
+  --ok-annotation-target-size: 44px;
+  --ok-annotation-core-size: 22px;
+  --ok-annotation-ring-size: 44px;
+  --ok-annotation-copy-gap: 32px;
+  --ok-annotation-bottom-inset: 88px;
+  --ok-annotation-ui-clearance: 16px;
+}

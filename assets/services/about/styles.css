@@ -29,7 +29,7 @@ body {
   height: auto;
   color: var(--navy);
   background: var(--paper);
-  font-family: "Archivo", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -124,7 +124,7 @@ body[data-theme="dark"] .wordmark img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 600;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -259,7 +259,7 @@ body[data-theme="dark"] .wordmark img {
   gap: 12px;
   align-items: center;
   color: var(--pink);
-  font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -275,7 +275,7 @@ body[data-theme="dark"] .wordmark img {
 h1,
 h2 {
   margin: 0;
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-weight: 500;
   letter-spacing: -.035em;
   line-height: .9;
@@ -305,7 +305,7 @@ h2 {
   max-width: 60ch;
   margin: 20px 0 0;
   color: rgba(6, 25, 43, .78);
-  font-size: clamp(13px, .84vw, 15px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.55;
 }
 
@@ -325,7 +325,7 @@ h2 {
 .chips li {
   padding: 8px 11px 7px;
   border: 1px solid rgba(6, 25, 43, .28);
-  font-size: 10px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -397,7 +397,7 @@ h2 {
 .model-points strong {
   display: block;
   color: var(--pink);
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 19px;
   font-weight: 600;
   letter-spacing: .045em;
@@ -406,7 +406,7 @@ h2 {
 
 .row-index {
   color: var(--pink);
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 24px;
   font-weight: 400;
   line-height: 1;
@@ -422,7 +422,7 @@ h2 {
   margin-top: 4px;
   display: block;
   color: rgba(6, 25, 43, .72);
-  font-size: clamp(12.5px, .79vw, 14px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.5;
 }
 
@@ -437,7 +437,7 @@ h2 {
   padding-left: 14px;
   border-left: 2px solid var(--pink);
   color: rgba(6, 25, 43, .78);
-  font-size: 12px;
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 520;
   line-height: 1.5;
 }
@@ -563,7 +563,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   color: var(--paper);
-  font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -600,7 +600,7 @@ h2 {
   border-bottom: 1px solid rgba(238, 77, 120, .32);
   color: var(--paper-light);
   background: transparent;
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(18px, 1.3vw, 23px);
   line-height: 1.12;
 }
@@ -617,7 +617,7 @@ h2 {
 .scene-04 .lead {
   max-width: 73ch;
   margin-top: 13px;
-  font-size: clamp(13px, .84vw, 14.5px);
+  font-size: var(--ok-type-content-min, 14px);
 }
 
 .accordion {
@@ -645,7 +645,7 @@ h2 {
 
 .accordion-index {
   color: var(--pink);
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 24px;
   line-height: 1;
 }
@@ -664,7 +664,7 @@ h2 {
 
 .accordion-label small {
   color: rgba(234, 217, 203, .68);
-  font-size: 12.5px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.42;
 }
 
@@ -711,14 +711,14 @@ h2 {
 .accordion-detail p {
   margin: 0;
   color: rgba(234, 217, 203, .72);
-  font-size: 12.5px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.5;
 }
 
 .scene-04 .result {
   max-width: 72ch;
   margin-top: 12px;
-  font-size: 12.5px;
+  font-size: var(--ok-type-content-min, 14px);
 }
 
 .scene-04 .actions {
@@ -880,7 +880,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   color: var(--pink);
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 14px;
   font-weight: 600;
   letter-spacing: .03em;
@@ -896,7 +896,7 @@ h2 {
 .mobile-details summary::after {
   content: "+";
   color: var(--pink);
-  font-family: "Archivo", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
   font-weight: 400;
 }
 
@@ -907,7 +907,7 @@ h2 {
 .mobile-details p {
   margin: -1px 22px 9px 0;
   color: rgba(6, 25, 43, .7);
-  font-size: 12px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -924,7 +924,7 @@ h2 {
   gap: 10px;
   align-items: center;
   color: rgba(6, 25, 43, .72);
-  font-size: 10px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -982,6 +982,29 @@ h2 {
     top: 1.5%;
   }
 
+  .scene-04 .proof-statement {
+    margin-top: 10px;
+    padding-block: 8px;
+  }
+
+  .scene-04 .accordion {
+    margin-top: 8px;
+  }
+
+  .scene-04 .accordion-trigger {
+    min-height: 44px;
+    padding-block: 5px;
+  }
+
+  .scene-04 .accordion-item.is-open .accordion-detail {
+    padding-bottom: 4px;
+  }
+
+  .scene-04 .result,
+  .scene-04 .actions {
+    margin-top: 8px;
+  }
+
   h1 {
     font-size: clamp(58px, 5vw, 78px);
   }
@@ -1014,7 +1037,7 @@ h2 {
   .accordion-label small,
   .accordion-detail p,
   .scene-04 .result {
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .accordion-trigger {
@@ -1110,7 +1133,7 @@ h2 {
   .lead,
   .scene-04 .lead {
     margin-top: 12px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .facts,
@@ -1131,14 +1154,14 @@ h2 {
 
   .facts .row-content > span,
   .model-points .row-content > span {
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.42;
   }
 
   .result,
   .scene-04 .result {
     margin-top: 9px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .actions,
@@ -1188,7 +1211,7 @@ h2 {
 
   .accordion-label small,
   .accordion-detail p {
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .accordion-item.is-open .accordion-detail {
@@ -1305,7 +1328,7 @@ h2 {
   .lead,
   .scene-04 .lead {
     margin-top: 10px;
-    font-size: 13px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.48;
   }
 
@@ -1355,7 +1378,7 @@ h2 {
   .facts .row-content > span,
   .model-points .row-content > span {
     margin-top: 3px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.42;
   }
 
@@ -1363,7 +1386,7 @@ h2 {
   .scene-04 .result {
     margin-top: 9px;
     padding-left: 9px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.45;
   }
 
@@ -1418,7 +1441,7 @@ h2 {
     align-items: center;
     justify-content: space-between;
     color: var(--pink);
-    font-family: "Barlow Condensed", sans-serif;
+    font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: .03em;
@@ -1434,7 +1457,7 @@ h2 {
   .mobile-details summary::after {
     content: "+";
     color: var(--pink);
-    font-family: "Archivo", sans-serif;
+    font-family: var(--ok-font-body, "Archivo", sans-serif);
     font-weight: 400;
   }
 
@@ -1445,7 +1468,7 @@ h2 {
   .mobile-details p {
     margin: -1px 22px 9px 0;
     color: rgba(6, 25, 43, .7);
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.45;
   }
 
@@ -1499,9 +1522,9 @@ h2 {
   }
 
   .scene-04 .copy-panel {
-    top: 7px;
-    padding-top: 12px;
-    padding-bottom: 10px;
+    top: 4px;
+    padding-top: 8px;
+    padding-bottom: 6px;
   }
 
   .proof-statement {
@@ -1530,7 +1553,7 @@ h2 {
   }
 
   .accordion-label small {
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.4;
   }
 
@@ -1544,12 +1567,26 @@ h2 {
   }
 
   .accordion-detail p {
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.48;
   }
 
   .scroll-cue {
     display: none;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 700px) {
+  .scene-04 :is(.lead, .proof-statement, .result) {
+    display: none;
+  }
+
+  .scene-04 .accordion {
+    margin-top: 4px;
+  }
+
+  .scene-04 .actions {
+    margin-top: 5px;
   }
 }
 
@@ -1626,12 +1663,12 @@ h2 {
 
   .facts .row-content > span,
   .model-points .row-content > span {
-    font-size: 12.5px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .result,
   .scene-04 .result {
-    font-size: 12.5px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .mobile-details summary {
@@ -1640,7 +1677,7 @@ h2 {
   }
 
   .mobile-details p {
-    font-size: 12.5px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .portrait-frame {
@@ -1681,7 +1718,7 @@ h2 {
 
   .accordion-label small,
   .accordion-detail p {
-    font-size: 12.5px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .primary-cta {
@@ -1701,7 +1738,13 @@ h2 {
   }
 
   .scene-04 .proof-statement {
+    margin-top: 7px;
     padding-block: 6px;
+  }
+
+  .scene-04 .lead {
+    margin-top: 8px;
+    line-height: 1.42;
   }
 
   .scene-04 .accordion {
@@ -1718,7 +1761,7 @@ h2 {
 
   .scene-04 .result,
   .scene-04 .actions {
-    margin-top: 6px;
+    margin-top: 4px;
   }
 }
 
@@ -1755,7 +1798,7 @@ h2 {
   }
 
   .scene-02 .lead {
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.42;
   }
 

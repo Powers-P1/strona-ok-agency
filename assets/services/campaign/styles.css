@@ -25,7 +25,7 @@ body {
   overflow-x: hidden;
   background: var(--paper);
   color: var(--navy);
-  font-family: "Archivo", "Aptos", "Segoe UI", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
 }
 
 a {
@@ -381,7 +381,7 @@ svg {
 
 .opening-copy h1 {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(64px, 5.15vw, 86px);
   font-weight: 500;
   letter-spacing: -.035em;
@@ -397,7 +397,7 @@ svg {
 .opening-copy p {
   margin: 20px 0 0;
   color: #20313c;
-  font-size: clamp(12px, .82vw, 14px);
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 450;
   line-height: 1.55;
 }
@@ -407,7 +407,7 @@ svg {
   display: flex;
   flex-wrap: wrap;
   color: rgba(7, 26, 44, .72);
-  font-size: clamp(10px, .68vw, 12px);
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 650;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -516,7 +516,7 @@ svg {
 
 .journey-intro h2 {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(58px, 4.9vw, 82px);
   font-weight: 500;
   letter-spacing: .005em;
@@ -565,7 +565,7 @@ svg {
 
 .proof-content h2 {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(58px, 4.65vw, 78px);
   font-weight: 500;
   letter-spacing: -.025em;
@@ -581,7 +581,7 @@ svg {
   max-width: 47ch;
   margin: 22px 0 0;
   color: rgba(7, 26, 44, .8);
-  font-size: clamp(13px, .88vw, 15px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.55;
 }
 
@@ -636,7 +636,7 @@ svg {
 
 .proof-index {
   color: var(--pink);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 24px;
   line-height: 1;
 }
@@ -656,7 +656,7 @@ svg {
 
 .proof-label small {
   color: rgba(7, 26, 44, .72);
-  font-size: clamp(11px, .74vw, 13px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.42;
 }
 
@@ -685,7 +685,7 @@ svg {
 .proof-detail p {
   margin: 0;
   color: rgba(7, 26, 44, .76);
-  font-size: clamp(10.5px, .72vw, 12.5px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -698,7 +698,7 @@ svg {
   max-width: 520px;
   margin: 15px 0 0;
   color: rgba(7, 26, 44, .78);
-  font-size: clamp(10.5px, .72vw, 12.5px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.48;
 }
 
@@ -723,7 +723,7 @@ svg {
   color: var(--cream);
   background: var(--navy);
   border: 1px solid var(--navy);
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 550;
   transition:
     color .3s var(--ease),
@@ -786,7 +786,7 @@ svg {
   display: flex;
   gap: 13px;
   align-items: baseline;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-weight: 500;
   text-transform: uppercase;
 }
@@ -807,7 +807,7 @@ svg {
 .journey-note p {
   margin: 8px 0 0;
   max-width: 25ch;
-  font-size: clamp(12px, .85vw, 15px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.55;
 }
 
@@ -816,7 +816,7 @@ svg {
   margin-top: 7px;
   display: block;
   color: rgba(240, 223, 207, .66);
-  font-size: clamp(10px, .68vw, 12px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -948,7 +948,7 @@ svg {
   }
 
   .site-header nav a {
-    font-size: 10px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .opening-copy {
@@ -973,6 +973,12 @@ svg {
     gap: 14px;
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (min-width: 821px) and (max-height: 760px) {
+  .campaign-page .opening-copy {
+    top: 50%;
   }
 }
 
@@ -1041,7 +1047,7 @@ svg {
   .journey-intro > p {
     max-width: 31ch;
     margin-top: 12px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .journey-intro > p br {
@@ -1067,7 +1073,7 @@ svg {
 
   .journey-mobile-steps b {
     color: var(--pink);
-    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+    font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
     font-size: 24px;
     font-weight: 400;
   }
@@ -1078,14 +1084,14 @@ svg {
   }
 
   .journey-mobile-steps strong {
-    font-size: 11px;
+    font-size: var(--ok-type-label-min, 12px);
     letter-spacing: .08em;
     text-transform: uppercase;
   }
 
   .journey-mobile-steps small {
     color: rgba(240, 223, 207, .72);
-    font-size: 10.5px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.4;
   }
 
@@ -1100,7 +1106,7 @@ svg {
   }
 
   .proof-content {
-    top: clamp(154px, 27vh, 228px);
+    top: clamp(96px, 18vh, 154px);
     right: 24px;
     left: 24px;
     width: auto;
@@ -1115,7 +1121,7 @@ svg {
 
   .proof-lead {
     margin-top: 9px;
-    font-size: 10.8px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .proof-list {
@@ -1138,12 +1144,12 @@ svg {
   }
 
   .proof-label strong {
-    font-size: 10.5px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .proof-label small,
   .proof-detail p {
-    font-size: 10px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .proof-detail {
@@ -1156,7 +1162,7 @@ svg {
 
   .proof-output {
     margin-top: 9px;
-    font-size: 10px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .proof-actions {
@@ -1172,6 +1178,38 @@ svg {
 
   .proof-secondary {
     min-height: 40px;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 700px) {
+  .campaign-proof .proof-content {
+    top: calc(var(--ok-nav-docked-height, 68px) + 6px);
+    right: 12px;
+    left: 12px;
+    padding: 6px 10px 8px;
+  }
+
+  .campaign-proof .proof-content h2 {
+    font-size: 36px;
+  }
+
+  .campaign-proof .proof-lead {
+    margin-top: 4px;
+    line-height: 1.35;
+  }
+
+  .campaign-proof .proof-list {
+    margin-top: 4px;
+  }
+
+  .campaign-proof .proof-output,
+  .campaign-proof .proof-secondary {
+    display: none;
+  }
+
+  .campaign-proof .proof-actions {
+    margin-top: 4px;
+    flex-direction: row;
   }
 }
 

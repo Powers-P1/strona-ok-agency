@@ -28,7 +28,7 @@ body.faq-page {
     radial-gradient(circle at 8% 68%, rgba(166, 104, 77, .09), transparent 27%),
     linear-gradient(128deg, rgba(255, 255, 255, .16), transparent 48%),
     var(--faq-paper);
-  font-family: "Archivo", "Aptos", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
 }
 
 .faq-page::before {
@@ -83,7 +83,7 @@ body.faq-page {
 .faq-list__label {
   margin: 0;
   color: var(--faq-rose);
-  font-size: 11px;
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 720;
   letter-spacing: .18em;
   line-height: 1.4;
@@ -92,7 +92,7 @@ body.faq-page {
 
 .faq-intro h1 {
   margin: 22px 0 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(58px, 6.3vw, 108px);
   font-weight: 430;
   letter-spacing: -.045em;
@@ -101,7 +101,8 @@ body.faq-page {
 
 .faq-intro h1 em {
   color: var(--faq-rose);
-  font-family: "Cormorant Garamond", Georgia, serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
+  font-style: normal;
   font-weight: 500;
 }
 
@@ -162,7 +163,7 @@ body.faq-page {
   align-items: center;
   gap: 12px;
   color: var(--faq-navy);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(25px, 2.15vw, 38px);
   font-weight: 480;
   line-height: 1.05;
@@ -178,8 +179,8 @@ body.faq-page {
   align-self: start;
   padding-top: 5px;
   color: var(--faq-rose);
-  font-family: "Archivo", sans-serif;
-  font-size: 10px;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 720;
   letter-spacing: .16em;
 }
@@ -255,7 +256,7 @@ body.faq-page {
 
 .faq-cta p {
   margin: 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(28px, 3vw, 46px);
   line-height: .98;
 }
@@ -263,8 +264,8 @@ body.faq-page {
 .faq-cta p span {
   display: block;
   color: var(--faq-rose);
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-style: italic;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
+  font-style: normal;
 }
 
 .faq-cta a {

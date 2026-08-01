@@ -46,15 +46,16 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-opening-v1.webp" type="image/webp">
-  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-3">
+  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-4">
   <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260801-2">
+  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260801-3">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260801-1">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260801-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260801-3">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
-  <link rel="stylesheet" href="/assets/fonts.css">
+  <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
+  <link rel="stylesheet" href="/assets/design-tokens.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260801-2">
-  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260801-3">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260801-4">
   <script src="/assets/motion-control.js?v=20260729-4"></script>
   <script src="/assets/responsive-safety.js?v=20260801-2" defer></script>
   <script src="/assets/analytics.js?v=20260801-1" defer></script>
@@ -297,10 +298,12 @@
                 Nie wypełniaj tego pola
                 <input id="rl-fax" name="fax" type="text" tabindex="-1" autocomplete="off">
               </label>
-              <div class="cf-turnstile" id="diagnosis-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="contact"></div>
-              <button class="result-cta result-primary result-lead-submit" type="submit">
-                <span>Wyślij kontakt</span><i aria-hidden="true">→</i>
-              </button>
+              <div class="result-lead-actions">
+                <div class="cf-turnstile" id="diagnosis-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="contact"></div>
+                <button class="result-cta result-primary result-lead-submit" type="submit">
+                  <span>Wyślij kontakt</span><i aria-hidden="true">→</i>
+                </button>
+              </div>
               <p class="result-lead-status" data-result-lead-status role="status" aria-live="polite"></p>
               <p class="result-lead-note">
                 Wysyłając formularz akceptujesz <a href="/polityka-prywatnosci">politykę prywatności</a>.

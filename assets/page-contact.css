@@ -19,7 +19,7 @@ html, body { margin: 0; min-height: 100%; }
 body {
   min-height: 100svh;
   color: var(--navy);
-  font-family: "Archivo", "Aptos", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
   background: var(--dark);
   overflow-x: hidden;
 }
@@ -63,7 +63,7 @@ a { color: inherit; }
   padding: 12px 18px;
   background: var(--navy);
   color: #F6ECE2;
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   text-decoration: none;
   transform: translateY(-64px);
   transition: transform .3s var(--ease);
@@ -169,7 +169,7 @@ a { color: inherit; }
 
 .page-title {
   margin: clamp(14px, 2vh, 26px) 0 0;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(38px, 3.3vw, 58px);
   font-weight: 600;
   line-height: .98;
@@ -280,7 +280,7 @@ a { color: inherit; }
 .field .error {
   display: none;
   margin-top: 6px;
-  font-size: 12.5px;
+  font-size: var(--ok-type-content-min, 14px);
   color: var(--pink-ink);
 }
 .field.is-invalid input,
@@ -406,7 +406,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .form-status {
   margin: 0;
   max-width: 300px;
-  font-size: 13.5px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.5;
   color: var(--navy-ink);
   opacity: 0;
@@ -434,7 +434,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .context-note p {
   margin: 0;
   color: var(--navy-ink);
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 .direct-mail a {
@@ -442,7 +442,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   display: inline-flex;
   align-items: center;
   color: var(--navy);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 23px;
   font-weight: 600;
   text-decoration-color: var(--pink-brand);
@@ -451,7 +451,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .direct-mail small {
   display: block;
   color: var(--navy-ink);
-  font-size: 12px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.4;
 }
 .context-note {
@@ -494,7 +494,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   max-width: 300px;
   margin: 1px 0 0;
   color: var(--navy-ink);
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
 }
 
@@ -508,7 +508,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   border-left: 2px solid var(--pink-brand);
   color: var(--navy);
   background: rgba(245, 81, 122, .055);
-  font-size: 12.5px;
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 600;
 }
 .validation-summary[hidden] { display: none; }
@@ -547,7 +547,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   gap: 6px;
   align-items: center;
   color: var(--pink-ink);
-  font-size: 12px;
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 500;
 }
 .consent.is-invalid .consent-error { display: flex; }
@@ -563,7 +563,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .flow-state h2 {
   margin: 0;
   color: var(--navy);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(34px, 2.7vw, 46px);
   font-weight: 600;
   line-height: 1;
@@ -585,7 +585,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   display: inline-flex;
   align-items: center;
   color: var(--navy);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 27px;
   font-weight: 600;
   text-decoration-color: var(--pink-brand);
@@ -627,7 +627,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 .copy-feedback {
   margin: 0;
   color: var(--pink-ink);
-  font-size: 12px;
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 500;
 }
 
@@ -722,7 +722,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .site-header { padding: 18px var(--gutter) 16px; }
   .brand img { height: 22px; }
   .site-nav { gap: 16px; }
-  .site-nav a { font-size: 10.5px; letter-spacing: .12em; }
+  .site-nav a { font-size: var(--ok-type-label-min, 12px); letter-spacing: .12em; }
   .site-nav a:nth-child(2) { display: none; }
   .form { grid-template-columns: 1fr; }
   .proof { grid-template-columns: 1fr; gap: 12px; }
@@ -747,7 +747,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .form--contact .field textarea { min-height: 68px; }
   .form--contact .submit { width: 100%; min-height: 56px; }
   .form--contact .form-foot { gap: 8px; }
-  .mailto-helper { max-width: none; font-size: 12px; }
+  .mailto-helper { max-width: none; font-size: var(--ok-type-content-min, 14px); }
   .flow-state h2 { font-size: 39px; }
   .flow-state > p { font-size: 15px; }
   .state-email { font-size: 26px; }

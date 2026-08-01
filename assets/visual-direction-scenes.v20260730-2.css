@@ -99,7 +99,7 @@
   gap: .8rem;
   margin-bottom: clamp(1.5rem, 3vh, 2.5rem);
   color: var(--ok-pink-on-light, #b52454);
-  font-size: clamp(.6rem, .68vw, .72rem);
+  font-size: var(--ok-type-label-min, 12px);
   font-weight: 600;
   letter-spacing: .2em;
 }
@@ -112,7 +112,7 @@
 .home-intro h2,
 .decision-guide h2 {
   color: var(--direction-navy);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-weight: 500;
   font-stretch: condensed;
   line-height: .82;

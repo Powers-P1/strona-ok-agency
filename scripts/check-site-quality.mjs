@@ -105,7 +105,7 @@ for (const file of publicFiles) {
     }
   }
 
-  if (!/href=["']\/assets\/fonts\.css["']/i.test(source)) failures.push(`${file}: brak lokalnych fontów`);
+  if (!/href=["']\/assets\/fonts\.css(?:\?[^"']*)?["']/i.test(source)) failures.push(`${file}: brak lokalnych fontów`);
   if (!/href=["']\/assets\/site-enhancements\.css(?:\?[^"']*)?["']/i.test(source)) failures.push(`${file}: brak warstwy dostępności`);
   if (!/src=["']\/assets\/motion-control\.js\?v=[\d-]+["']/i.test(source)) failures.push(`${file}: motion-control.js bez wersjonowania cache`);
   if (!/rel=["']icon["']/i.test(source)) failures.push(`${file}: brak jawnej ikony strony`);

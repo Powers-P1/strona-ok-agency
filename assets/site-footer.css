@@ -304,6 +304,28 @@
   color: var(--footer-pink);
 }
 
+.site-footer__consent {
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: none;
+  color: rgba(240, 223, 207, .62);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .25s ease;
+}
+
+.site-footer__consent:hover,
+.site-footer__consent:focus-visible {
+  color: var(--footer-pink);
+}
+
 @media (max-width: 1024px) {
   .site-footer__top {
     grid-template-columns: minmax(240px, .75fr) minmax(400px, 1.25fr);

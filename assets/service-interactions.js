@@ -50,8 +50,10 @@
     const copy = callout.querySelector(".annotation-copy");
     if (!dot || !copy) return;
 
-    callout.dataset.pinned = String(callout.classList.contains("is-open"));
-    syncCallout(callout, callout.classList.contains("is-open"));
+    // Callouty są wskazówkami na żądanie. Każda podstrona zaczyna od
+    // identycznego, zamkniętego stanu niezależnie od klas w HTML.
+    callout.dataset.pinned = "false";
+    syncCallout(callout, false);
 
     let closeTimer = 0;
     const cancelClose = () => clearTimeout(closeTimer);

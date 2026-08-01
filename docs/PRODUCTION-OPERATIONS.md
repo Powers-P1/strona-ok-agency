@@ -257,7 +257,7 @@ Finalne nagłówki po buildzie obejmują:
 - COOP i Cross-Origin-Resource-Policy;
 - `upgrade-insecure-requests`.
 
-Fonty Archivo, Barlow Condensed i Manrope są publikowane lokalnie z
+Fonty Archivo i Barlow Condensed są publikowane lokalnie z
 `/assets/fonts/`, dlatego przeglądarka nie łączy się z Google Fonts. Zewnętrzne
 źródła w CSP są ograniczone do Cloudflare Turnstile i Cloudflare Web Analytics.
 
@@ -381,11 +381,18 @@ gh workflow run production-monitor.yml `
 
 ```powershell
 npm ci
+npm run sync:asset-versions
+npm run check:asset-versions
 npm run check:links
 npm run build
 npm run check:pages-functions
 npm run check:worker
 ```
+
+Wersje wspólnych CSS/JS są utrzymywane wyłącznie w
+[`scripts/asset-versions.mjs`](../scripts/asset-versions.mjs). Komenda
+`sync:asset-versions` aktualizuje wszystkie produkcyjne HTML-e, a
+`check:asset-versions` blokuje ręcznie rozjechane query stringi.
 
 Następnie:
 

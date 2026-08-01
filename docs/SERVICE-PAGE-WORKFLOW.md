@@ -219,7 +219,9 @@ Podstrony używają dwóch rodzin interakcji.
 - po hoverze, focusie lub kliknięciu rozwija się cienka linia,
 - pojawia się tytuł oraz 1–2 zdania konkretnego opisu,
 - linia i tekst są kodem, nie częścią renderu,
-- punkt musi być zmapowany do realnego miejsca na przewodzie albo węźle.
+- punkt musi być zmapowany do realnego miejsca na przewodzie albo węźle,
+- aktywny dymek nie może tracić hitboxa podczas ponownego solve geometrii;
+  automatyczny test utrzymuje prawdziwy hover i sprawdza stabilny stan.
 
 ### Akordeony konkretów
 
@@ -247,6 +249,23 @@ Projekt jest statyczny. Podstrona składa się z:
 - osobnych WebP dla każdej sceny,
 - wspólnego `assets/route-motion.css`,
 - wspólnego `assets/story-standard.css`, który utrzymuje sceny w normalnym przepływie dokumentu.
+
+Własność systemu jest jawna:
+
+- `assets/design-tokens.css` — fonty, skale i kolory,
+- `assets/scene-viewport.css` — pełny kadr `100svh`,
+- `assets/annotation-system.css` — wspólny wygląd punktów, linii i dymków,
+- `assets/art-coordinate-system.js` — pozycjonowanie w naturalnym układzie
+  1672 × 941, maski i solver kolizji,
+- `assets/service-interactions.js` — hover, focus, klik, Escape i ARIA,
+- `assets/responsive-safety.css` — centralna polityka mobile,
+- `assets/site-footer.js` i `assets/site-footer.css` — struktura i wygląd stopki.
+
+Kotwice anotacji zapisujemy w układzie źródłowej grafiki, nie w pikselach
+viewportu. Maska pozycjonowania ma ten sam naturalny rozmiar co artwork i
+klasyfikuje miejsca w kolejności: autorska linia energii, świetlisty metal,
+struktura obiektu. Tło jest niedozwolone. Profile `base`, `compact` i `short`
+mogą różnić się tylko wtedy, gdy zostały osobno zmierzone i przechodzą test.
 
 Używamy semantycznych:
 
@@ -282,7 +301,8 @@ Obowiązkowy test mobile:
 - brak poziomego overflow,
 - CTA widoczne bez przycięcia,
 - nagłówek nie nachodzi na nawigację,
-- na mobile rozbudowane anotacje przechodzą w czytelną listę,
+- przy szerokości do 640 px punkty, linie, dymki i podsumowanie „Punkty na
+  ilustracji” są centralnie ukryte; treść strony nie może od nich zależeć,
 - tekst otrzymuje półprzezroczystą, rozmytą powierzchnię tylko wtedy, gdy obraz uniemożliwia czytanie,
 - najważniejsza część renderu pozostaje widoczna dzięki kontrolowanemu `object-position`.
 
@@ -453,11 +473,15 @@ Rekomendowana struktura:
 3. **Agencja**
    - O nas,
    - Proces,
+   - FAQ,
    - Kontakt,
-   - Polityka prywatności.
 4. **Kontakt**
    - `hello@okagency.pl`,
    - `© 2026 OK Agency`.
+5. **Informacje prawne**
+   - Polityka prywatności,
+   - Standard serwisu,
+   - Ustawienia cookies.
 
 Stopka nie zawiera linku „Realizacje”, „Portfolio” ani „Case studies”. Może wyróżniać link „Zrób diagnozę — 4 pytania”.
 
@@ -472,13 +496,17 @@ Zasady implementacji:
 - między ostatnim aktem a stopką nie dodajemy pustej strefy przekazania, gradientu ani elementu pośredniego,
 - dodanie stopki nie może zwiększać liczby aktów merytorycznych podstrony usługowej.
 
-## 14. Zakres zmian
+## 14. Zakres zmian i koordynacja
 
-Przed rozpoczęciem pracy zawsze ustal, którą podstronę wolno zmieniać. W tym repozytorium nad różnymi elementami mogą pracować różni agenci.
+Przed rozpoczęciem pracy ustal właściciela problemu. Błąd dotyczący co najmniej
+dwóch tras naprawia się w zasobie wspólnym wraz z testem wszystkich konsumentów;
+wyjątek lokalny jest dopuszczalny wyłącznie dla unikalnej kompozycji trasy.
 
-Zasada:
+Przy pracy równoległej:
 
-- modyfikuj tylko wskazaną podstronę i jej katalog assetów,
-- nie synchronizuj z GitHubem bez polecenia,
-- nie poprawiaj przy okazji hero, menu ani innych usług,
-- zachowuj istniejące pliki użytkownika i cudze zmiany.
+- wpisz do wspólnego pliku koordynacyjnego worktree, branch i planowane pliki,
+- sprawdź go przed każdą większą edycją wspólnego CSS/JS i przed integracją,
+- nie nadpisuj niezacommitowanego zakresu innego agenta,
+- zachowuj istniejące pliki użytkownika i cudze zmiany,
+- wersje wspólnych assetów aktualizuj przez `scripts/asset-versions.mjs` oraz
+  `npm run sync:asset-versions`, nigdy ręcznie w pojedynczej stronie.

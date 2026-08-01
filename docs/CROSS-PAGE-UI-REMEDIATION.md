@@ -1,7 +1,7 @@
 # Systemowy plan napraw UI między podstronami
 
 Data utworzenia: 2026-08-01
-Status: **Fazy 0–3 i 6 zakończone; Faza 4 w toku**
+Status: **Fazy 0–9 zakończone; Faza 10 w toku**
 Zakres tego dokumentu: system wspólny i desktop; mobile jest bramką regresji i osobnym zakresem koordynowanym z `MOBILE-QA-2026-08-01.md`.
 
 ## 1. Cel i reguły wykonania
@@ -122,8 +122,16 @@ Kontrakt kotwic:
 - `data-art-x-compact/y-compact` — kadr zwężony lub mocniej maskowany;
 - `data-art-x-short/y-short` — niski desktop, wyłącznie gdy compact nie wystarcza;
 - algorytm wybiera tylko spośród zatwierdzonych kotwic; nie clampuje punktu losowo po tle;
-- jeśli żadna kotwica nie jest bezpieczna powyżej 640 px, cała grupa przechodzi na wspólne podsumowanie „Punkty na ilustracji”, zamiast zostawić osierocony punkt;
-- przy szerokości do 640 px punkty, linie i podsumowanie są wyłączone centralnie — mobile nie uruchamia tego systemu.
+- jeśli żadna kotwica nie jest bezpieczna, cała grupa jest cicho ukrywana; system nie generuje zastępczej listy ani osieroconych punktów;
+- przy szerokości do 640 px punkty i linie są wyłączone centralnie — mobile nie uruchamia tego systemu.
+
+Kontrakt maski po Fazie 4:
+
+- każda maska ma naturalny rozmiar grafiki źródłowej (1672×941; dwa historyczne źródła 1671×941) i pozostaje niezależna od CSS-owego `cover`;
+- `255` oznacza wyłącznie autorską, długą i smukłą smugę energii — białe refleksy metalu są odrzucane przez analizę komponentów;
+- `128` oznacza świetlisty detal, `64` strukturę konaru/gałęzi/korzenia/kwiatu, a `0` zakazane tło; niższe poziomy są celowo wyraźnie ciemniejsze od energii również w podglądzie diagnostycznym;
+- scena bez autorskiej smugi deklaruje `data-placement-energy="none"` i może korzystać wyłącznie z poziomu highlight/structure;
+- przyszły połysk może konsumować wyłącznie najwyższy poziom maski, ale maska animacji nie steruje współrzędnymi punktów ani solverem runtime.
 
 ## 5. Kontrakt współpracy z agentem mobile
 
@@ -136,7 +144,7 @@ Uzgodnienie z 2026-08-01 16:38:
 - Diagnoza HTML/CSS/JS należy wyłącznie do desktop/system i musi przejść odbiór 360/390 px;
 - Social CSS/HTML, FAQ CSS i test motion są sekwencyjne: najpierw mały commit mobile, potem jego integracja do desktop/system;
 - szczegółowy protokół i aktywne blokady są prowadzone poza repo w `G:\OK-Agency\.tmp\OKAGENCY_AGENT_COORDINATION.md`.
-- decyzja z 2026-08-01 17:08: przy `max-width: 640px` wszystkie hotspoty, linie i generowane „Punkty na ilustracji” są centralnie ukryte; pełny system anotacji dotyczy desktop/tablet powyżej tego progu.
+- decyzja z 2026-08-01 17:08: przy `max-width: 640px` wszystkie hotspoty i linie są centralnie ukryte; pełny system anotacji dotyczy desktop/tablet powyżej tego progu.
 
 | Obszar | Właściciel podstawowy | Zasada integracji |
 |---|---|---|
@@ -155,12 +163,12 @@ Twarda bramka przed implementacją:
 - [x] zidentyfikować branch/worktree oraz bazowy stan agenta mobile;
 - [x] zapisać listę planowanych plików wspólnych obu prac;
 - [x] dla każdego wspólnego pliku wskazać jednego edytora lub kolejność commit/integracja;
-- [ ] najpierw zintegrować gotową zmianę mobile, potem oprzeć shared system na jej aktualnym kształcie;
-- [ ] nie edytować równolegle tych samych zakresów selektorów;
+- [x] najpierw zintegrować gotową zmianę mobile, potem oprzeć shared system na jej aktualnym kształcie;
+- [x] nie edytować równolegle tych samych zakresów selektorów;
 - [x] uzgodnić osobne worktree i branche obu agentów;
-- [ ] nowy shared plik jest preferowany wobec dopisywania drugiej warstwy override;
-- [ ] po każdej zmianie shared uruchomić macierz desktop oraz 390×844 i 360×640 jako regresję;
-- [ ] nie stage'ować `design-proposals/` ani cudzego `docs/MOBILE-QA-2026-08-01.md`.
+- [x] nowy shared plik jest preferowany wobec dopisywania drugiej warstwy override;
+- [x] po każdej zmianie shared uruchomić macierz desktop oraz 390×844 i 360×640 jako regresję;
+- [x] nie stage'ować `design-proposals/` ani cudzego `docs/MOBILE-QA-2026-08-01.md`.
 
 ## 6. Plan wykonania — kolejność obowiązkowa
 
@@ -211,37 +219,46 @@ Bramka: tylko dwie zatwierdzone rodziny, brak znaczącego tekstu <14 px, brak `s
 - [x] wykonać no-op visual diff przed zmianą parametrów punktów;
 - [x] zastąpić datowany moduł geometrii stabilną nazwą, a cache kontrolować query stringiem.
 
-Status bramki: PASS w commicie `55ca7ac`. Automatyczny audyt otworzył wszystkie 53 callouty przy 1280×720; pozycje i rozmiary 53 punktów oraz computed styles komponentu są identyczne z baseline. Dwa najdłuższe teksty zajęły o jedną linię mniej po pełnym załadowaniu Archivo, bez zmiany computed CSS. Na sześciu trasach Enter/Space, Escape, klik poza i ARIA przeszły; przy 390×844 i 360×640 widocznych jest 0 punktów/linii/podsumowań i nie ma poziomego overflow.
+Status bramki: PASS w commicie `55ca7ac`, uzupełniony późniejszą korektą stabilności hover. Automatyczny audyt otworzył wszystkie 53 callouty przy 1280×720; pozycje i rozmiary 53 punktów oraz computed styles komponentu są identyczne z baseline. Dwa najdłuższe teksty zajęły o jedną linię mniej po pełnym załadowaniu Archivo, bez zmiany computed CSS. Na sześciu trasach hover utrzymany przez 420 ms, Enter/Space, Escape, klik poza i ARIA przeszły; aktywny punkt nie jest już chwilowo wyłączany przez guard solvera. Przy 390×844 i 360×640 widocznych jest 0 punktów/linii/podsumowań i nie ma poziomego overflow.
 
 Bramka: computed styles i geometria nie zmieniły się w migracji; każda trasa ładuje jeden system; lokalne arkusze nie redefiniują komponentu.
 
-### Faza 4 — geometria, maska i widoczność punktów
+### Faza 4 — geometria, maska i widoczność punktów ✅
 
-- [ ] powiększyć systemowo rdzeń do ok. 22 px, pierścień do 42–44 px i podnieść minimalną opacity;
-- [ ] zachować hit target co najmniej 44×44 px i czytelny stan paused/reduced-motion;
-- [ ] opublikować z `responsive-safety.js` niemutowalny kontrakt `getArtBounds()` w przestrzeni `scene-css-px` oraz zdarzenie `okagency:art-safety-change`, bez zmiany istniejących gradientów maski;
-- [ ] zastąpić dwa lokalne przebiegi jednym solverem grupy i adapterami zapisu dla service/About;
-- [ ] wybierać profile deterministycznie (`short → compact → base`, `compact → base`, `base`) i rozwiązywać całą grupę przez backtracking, nie zachłannie punkt po punkcie;
-- [ ] traktować pozostałe punkty, treść, header, motion toggle i scroll cue jako przeszkody;
-- [ ] twardo odrzucać kandydatury kolizyjne;
-- [ ] aktywny dymek umieszczać nad elementami, a nieuniknione siblingi czasowo oznaczać `is-obscured`;
-- [ ] wymagać, aby cały rdzeń/pierścień mieścił się na widocznym artworkcie;
-- [ ] dodać overlay diagnostyczny pokazujący source 1672×941, `fullVisible`, ring oraz przeszkody; dopiero na tej podstawie zatwierdzić pełne pary kotwic compact/short dla przypadków Web, Social, Kampanie i O nas;
-- [ ] wymusić środek punktu ≥88 px od dołu sceny i ≥16 px od dolnego UI;
-- [ ] wdrożyć wspólne podsumowanie powyżej 640 px, gdy brak bezpiecznej kotwicy; do 640 px cały system pozostaje ukryty zgodnie z decyzją mobile.
+- [x] powiększyć systemowo rdzeń do ok. 22 px, pierścień do 42–44 px i podnieść minimalną opacity;
+- [x] zachować hit target co najmniej 44×44 px i czytelny stan paused/reduced-motion;
+- [x] opublikować z `responsive-safety.js` niemutowalny kontrakt `getArtBounds()` w przestrzeni `scene-css-px` oraz zdarzenie `okagency:art-safety-change`, bez zmiany istniejących gradientów maski;
+- [x] zastąpić dwa lokalne przebiegi jednym solverem grupy i adapterami zapisu dla service/About;
+- [x] wybierać profile deterministycznie (`short → compact → base`, `compact → base`, `base`) i rozwiązywać całą grupę przez backtracking, nie zachłannie punkt po punkcie;
+- [x] traktować pozostałe punkty, treść, header, motion toggle i scroll cue jako przeszkody;
+- [x] twardo odrzucać kandydatury kolizyjne;
+- [x] aktywny dymek umieszczać nad elementami, a nieuniknione siblingi czasowo oznaczać `is-obscured`;
+- [x] wymagać, aby cały rdzeń/pierścień mieścił się na widocznym artworkcie;
+- [x] dodać overlay diagnostyczny pokazujący source 1672×941, `fullVisible`, ring oraz przeszkody; dopiero na tej podstawie zatwierdzić pełne pary kotwic compact/short dla przypadków Web, Social, Kampanie i O nas;
+- [x] wymusić środek punktu ≥88 px od dołu sceny i ≥16 px od dolnego UI;
+- [x] usunąć cały generator i CSS „Punkty na ilustracji”; brak bezpiecznego rozwiązania skutkuje cichym ukryciem grupy, nigdy zastępczą listą;
+- [x] usunąć systemowo starą warstwę SVG `energy-shimmer` z HTML, CSS i solvera, bez naruszania pulsu samego hotspotu;
+- [x] walidować hotspoty przez wielopoziomową maskę artworku: linia energii → świetlisty metaliczny detal → konar/gałąź/korzeń/kwiat; nigdy puste tło, tekst, maska ochronna ani krawędź kadru — poziom energii ponownie zawężony po przeglądzie użytkownika;
+- [x] utrzymać maskę w naturalnych wymiarach źródła jako jedno źródło geometrii; przyszły połysk może konsumować najwyższy poziom maski, ale nie może sterować współrzędnymi punktów;
+- [x] dodać audyt wszystkich jawnych profili `base` / `compact` / `short` przez `check:annotation-energy`;
+- [x] wykonać i ręcznie ocenić screenshot każdej sceny z hotspotami względem samej grafiki — powtórzone po zawężeniu poziomu energii;
+- [x] potwierdzić faktycznie wyrenderowane środki na energii oraz brak kolizji w pełnej macierzy sześciu tras i siedmiu viewportów — powtórzone po regeneracji masek.
 
-Ustalenie audytu przed implementacją: repo nie zawiera obecnie żadnej kotwicy `compact` ani `short`. Wartości wskazane w rejestrze są aktualnymi kotwicami `base` i nie wolno kopiować ich jako alternatyw bez pomiaru maski. Solver ma emitować `okagency:annotationchange`, przeliczać się po zmianie maski, fontów, viewportu i stanu calloutu oraz nigdy nie akceptować kolizji przez samą karę punktową.
+Status bramki: PASS po ponownym przeglądzie. Generator najpierw odrzuca krótkie refleksy metalu, a dopiero później rozszerza zaakceptowany rdzeń energii o jeden piksel; poziomy diagnostyczne mają wartości 255 / 128 / 64 / 0. Audyt potwierdza 83 profile na energii, 32 na highlight i 8 na strukturze. Ręczne screeny Kampanii i obu scen Social potwierdziły cienki rdzeń oraz czytelne rozmieszczenie, a macierz 1512×982, 1512×800, 1440×900, 1280×720, 1024×768, 390×844 i 360×640 ponownie przeszła dla sześciu tras. Test geometrii czeka na końcowy solve lazy-loaded artworku, zamiast odbierać przejściowy stan fallback.
 
 Bramka: 53/53 punktów na widocznym artworkcie; zero punktów w dymku/tekście/UI; zero osieroconych punktów; wszystkie działają myszą, dotykiem i klawiaturą.
 
-### Faza 5 — porządki lokalne O nas
+### Faza 5 — lokalne kontrasty i porządki O nas ✅
 
-- [ ] zastosować wspólny solidny token tekstu on-dark do „Ponad 6 lat…”;
-- [ ] jeśli kontrast nadal zależy od detalu grafiki, dodać jeden uzasadniony lokalny scrim kompozycyjny;
-- [ ] usunąć biały wyjątek tytułu „Prowadzenie”;
-- [ ] usunąć pseudo-element generujący zbędne `02`;
-- [ ] zatwierdzić ręcznie alternatywne kotwice scen O nas po testach maski;
-- [ ] sprawdzić wszystkie 12 punktów i oba motywy dymków.
+- [x] zastosować wspólny solidny token tekstu on-dark do „Ponad 6 lat…”;
+- [x] jeśli kontrast nadal zależy od detalu grafiki, dodać jeden uzasadniony lokalny scrim kompozycyjny;
+- [x] usunąć biały wyjątek tytułu „Prowadzenie”;
+- [x] usunąć pseudo-element generujący zbędne `02`;
+- [x] zatwierdzić ręcznie alternatywne kotwice scen O nas po testach maski;
+- [x] sprawdzić wszystkie 12 punktów i oba motywy dymków;
+- [x] poprawić kontrast tekstu mapy Diagnozy na jasnej części maski, bez zmiany geometrii i bez lokalnego zmniejszania fontu;
+
+Status bramki: PASS. „Ponad 6 lat…” korzysta z pełnego tokenu `--ok-color-text-on-dark`, prawa część sceny Oliwii ma jeden lokalny scrim zgodny z kompozycją, a pseudo-`02` i biały wyjątek `#callout-leading` zostały usunięte. O nas: 12/12 punktów i interakcje PASS przy 1280×720, kompletna geometria PASS w siedmiu viewportach, oba motywy dymków odebrane wizualnie. Diagnoza używa na desktopie kontraktu `on-light` na jasnej części mapy, a przy ≤820 px zachowuje istniejący motyw `on-dark`; logika result/contact pozostaje PASS.
 
 Bramka: kontrast ≥4.5:1, brak podwójnej numeracji, tytuły dymków zgodne z centralnym motywem, 12/12 punktów bez kolizji.
 
@@ -264,37 +281,43 @@ Status bramki: PASS. Desktop 1280×720: wynik 512 px wysokości w scenie 720 px,
 
 Bramka: wynik i kontakt osobno mieszczą `100svh`; brak clippingu i nested scrolla; przełączanie nie gubi wyniku/fokusu; obietnica bez danych nie sąsiaduje z wymaganym e-mailem.
 
-### Faza 7 — jedna, czytelna stopka
+### Faza 7 — jedna, czytelna stopka ✅
 
-- [ ] ograniczyć kolumnę Agencja do: O nas, Proces, FAQ, Kontakt;
-- [ ] pozostawić dokładnie jeden link „Polityka prywatności” w grupie legal;
-- [ ] zamienić widoczne „Dostępność” na „Standard serwisu”;
-- [ ] zachować href `/dostepnosc` i aria-label „Informacja o dostępności serwisu”;
-- [ ] w grupie legal pozostawić także „Ustawienia cookies”;
-- [ ] zaktualizować `site-footer.css` i dokumentację workflow bez lokalnych wariantów stopki.
+- [x] ograniczyć kolumnę Agencja do: O nas, Proces, FAQ, Kontakt;
+- [x] pozostawić dokładnie jeden link „Polityka prywatności” w grupie legal;
+- [x] zamienić widoczne „Dostępność” na „Standard serwisu”;
+- [x] zachować href `/dostepnosc` i aria-label „Informacja o dostępności serwisu”;
+- [x] w grupie legal pozostawić także „Ustawienia cookies”;
+- [x] zaktualizować `site-footer.css` i dokumentację workflow bez lokalnych wariantów stopki.
+
+Status bramki: PASS. Wspólny generator renderuje cztery linki Agencji i jedną grupę legal z trzema pozycjami. `check:ui-system` oraz `check:links` przechodzą; FAQ 1280×720 i 390×844 potwierdzają pełną widoczność, zero poziomego overflow i brak kolizji grupy legal z kontrolką ruchu. Na 390 px linki prawne składają się w czytelne dwa rzędy.
 
 Bramka: każdy link prawny występuje raz, prowadzi do istniejącej strony, `aria-current` działa, a stopka jest osiągalna po ostatniej scenie.
 
 ### Faza 8 — czyszczenie i dokumentacja
 
-- [ ] usunąć martwe selektory, stare keyframes, duplikaty interakcji i nieużywane warianty współrzędnych;
-- [ ] usunąć nieużywaną deklarację Manrope, jeśli audyt potwierdzi brak konsumentów;
-- [ ] zaktualizować `AGENTS.md`, `SERVICE-PAGE-WORKFLOW.md` i `PRODUCTION-OPERATIONS.md` o własność systemu;
-- [ ] zaktualizować cache versions wspólnych assetów jednym kontrolowanym mechanizmem;
-- [ ] uzupełnić ten dokument o wyniki każdej bramki i odhaczyć elementy dopiero po pomiarze.
+- [x] usunąć martwe selektory, stare keyframes, duplikaty interakcji i nieużywane warianty współrzędnych;
+- [x] usunąć nieużywaną deklarację Manrope, jeśli audyt potwierdzi brak konsumentów;
+- [x] zaktualizować `AGENTS.md`, `SERVICE-PAGE-WORKFLOW.md` i `PRODUCTION-OPERATIONS.md` o własność systemu;
+- [x] zaktualizować cache versions wspólnych assetów jednym kontrolowanym mechanizmem;
+- [x] uzupełnić ten dokument o wyniki każdej bramki i odhaczyć elementy dopiero po pomiarze.
+
+Status bramki: PASS. Lokalne definicje bazowego komponentu anotacji nie istnieją, cztery trasy korzystają ze wspólnych `ok-story-cue` i `ok-story-proof-bloom`, a martwy próg `min-height: 720px` został usunięty. Audyt potwierdził brak konsumentów Manrope, więc oba pliki binarne i nieaktualne wzmianki zostały usunięte. Pozostałe `--dot-*` / `--copy-*` są nadal odczytywane przez solver jako wejście preferowanej strony dymka; zachowano je świadomie, aby nie zmienić kompozycji 41 calloutów. `scripts/asset-versions.mjs` jest jednym rejestrem cache, 13/13 HTML przechodzi `check:asset-versions`, a `check:quality` przechodzi w całości.
 
 Bramka: `rg` nie znajduje starych źródeł systemu; repo nie zawiera przypadkowych plików, a diff obejmuje wyłącznie zatwierdzony zakres.
 
 ### Faza 9 — pełna regresja lokalna
 
-- [ ] uruchomić `npm run check:quality`;
-- [ ] uruchomić `npm run check:links`;
-- [ ] uruchomić `npm run build`;
-- [ ] uruchomić `npm run check:pages-functions`;
-- [ ] uruchomić `npm run check:worker`;
-- [ ] przejść pełną macierz viewportów, tras, hotspotów i stanów z sekcji 7;
-- [ ] wykonać kontrolowany diff z pracą mobile i ponownie przejść 390×844 oraz 360×640;
-- [ ] wykonać ręczny smoke test Safari na Macu albo oznaczyć go jako jawnie oczekujący na urządzenie.
+- [x] uruchomić `npm run check:quality`;
+- [x] uruchomić `npm run check:links`;
+- [x] uruchomić `npm run build`;
+- [x] uruchomić `npm run check:pages-functions`;
+- [x] uruchomić `npm run check:worker`;
+- [x] przejść pełną macierz viewportów, tras, hotspotów i stanów z sekcji 7;
+- [x] wykonać kontrolowany diff z pracą mobile i ponownie przejść 390×844 oraz 360×640;
+- [x] wykonać ręczny smoke test Safari na Macu albo oznaczyć go jako jawnie oczekujący na urządzenie.
+
+Status bramki: PASS lokalnie. `check:quality`, `check:links`, build, Pages Functions i Worker dry-run są zielone. Audyt masek potwierdza 83 profile energy, 32 highlight i 8 structure. Audyt przeglądarkowy otworzył wszystkie anotacje na sześciu trasach przy 1512×982, 1512×800, 1440×900, 1280×720 i 1024×768 oraz potwierdził 0 elementów warstwy anotacji na 390×844 i 360×640. Prawdziwy hover jest utrzymywany przez 420 ms w automacie i 1,2 s w ręcznym odbiorze. Screenshoty WWW 1280, O nas 1280 oraz WWW 390 oceniono wizualnie: pełny kadr, brak kolejnej sceny, brak punktów na tle/tekście i brak warstwy anotacji na mobile. Konsola bez błędów i ostrzeżeń. Fizyczny Safari/Mac pozostaje jawnie do końcowego odbioru na urządzeniu; oba zgłoszone kadry Mac-like przechodzą automat.
 
 Bramka: wszystkie komendy i automatyczne audyty zielone, brak błędów konsoli, brak niezatwierdzonych wizualnych regresji.
 
@@ -345,17 +368,17 @@ Dla każdego kadru i właściwej trasy:
 
 ## 8. Niezmienne kryteria akceptacji
 
-- [ ] żadnego nowego `!important` użytego do łatania zgłoszeń;
-- [ ] wspólne zachowanie nie ma równoległej implementacji lokalnej;
-- [ ] każda scena jest pełnym kadrem `100svh`, bez nested scrolla;
-- [ ] 53/53 punkty są zauważalne, dostępne i geometrycznie bezpieczne;
-- [ ] otwarty dymek nigdy nie jest przecinany przez sibling point;
-- [ ] maska i solver korzystają z jednego kontraktu bezpiecznego artworku;
-- [ ] body/treść ≥14 px, labels ≥12 px, bez skali przodka;
-- [ ] wyłącznie Archivo i Barlow Condensed pełnią role wizualne systemu;
-- [ ] Diagnoza ma zgodne copy i dwa rozłączne, mieszczące się stany;
-- [ ] stopka ma jeden link polityki i widoczny label „Standard serwisu”;
-- [ ] zakres mobile nie został nadpisany i przechodzi jego własny plan QA;
+- [x] żadnego nowego `!important` użytego do łatania zgłoszeń;
+- [x] wspólne zachowanie nie ma równoległej implementacji lokalnej;
+- [x] każda scena jest pełnym kadrem `100svh`, bez nested scrolla;
+- [x] 53/53 punkty są zauważalne, dostępne i geometrycznie bezpieczne;
+- [x] otwarty dymek nigdy nie jest przecinany przez sibling point;
+- [x] maska i solver korzystają z jednego kontraktu bezpiecznego artworku;
+- [x] body/treść ≥14 px, labels ≥12 px, bez skali przodka;
+- [x] wyłącznie Archivo i Barlow Condensed pełnią role wizualne systemu;
+- [x] Diagnoza ma zgodne copy i dwa rozłączne, mieszczące się stany;
+- [x] stopka ma jeden link polityki i widoczny label „Standard serwisu”;
+- [x] zakres mobile nie został nadpisany i przechodzi jego własny plan QA;
 - [ ] produkcja jest zweryfikowana po publikacji, nie tylko lokalnie.
 
 ## 9. Dziennik realizacji
@@ -370,3 +393,8 @@ Dla każdego kadru i właściwej trasy:
 | 2026-08-01 | Bazowa bramka mobile | `ac876e6` | PASS | Home/WWW/Social/Diagnoza/FAQ 360/390, WWW 1440, menu, overflow, konsola, quality/build; końcową regresję powtarzamy po cleanupie systemowym |
 | 2026-08-01 | Faza 2 — typografia i pełny kadr | `ca56172` | PASS | tokeny Archivo/Barlow, body ≥14 px, labels ≥12 px, brak pomniejszającej skali; pełne sceny i disclosure PASS na desktop/tablet/390/360; opcjonalny kontakt Diagnozy przeprojektowany jako spójna karta i odebrany wizualnie |
 | 2026-08-01 | Faza 3 — centralny system anotacji | `55ca7ac` | PASS | jedno źródło bazowego CSS i interakcji; 53/53 baseline geometry/style; sześć tras keyboard/outside/ARIA PASS; mobile 390/360 nadal centralnie ukryty |
+| 2026-08-01 | Faza 4 — maski i solver geometrii | working tree | PASS po korekcie wizualnej | 14 masek w naturalnych wymiarach; filtr energii przed dylatacją; 83 energy / 32 highlight / 8 structure; 6 tras × 7 viewportów PASS; mobile 0 punktów/linii/summary |
+| 2026-08-01 | Faza 5 — kontrast i porządki O nas/Diagnozy | working tree | PASS | solidny on-dark i jeden scrim O nas; bez pseudo-02 i białego wyjątku; mapa Diagnozy on-light na desktopie; hover calloutów stabilny i objęty automatycznym testem |
+| 2026-08-01 | Faza 7 — wspólna stopka | working tree | PASS | Agencja 4 linki; jedna polityka; Standard serwisu z aria-label; cookies w legal; desktop 1280 i mobile 390 bez overflow i bez kolizji z kontrolką ruchu |
+| 2026-08-01 | Faza 8 — cleanup i własność systemu | working tree | PASS | martwe lokalne keyframes i Manrope usunięte; właściciele UI udokumentowani; jeden manifest wersji assetów; 13/13 HTML i pełne `check:quality` PASS |
+| 2026-08-01 | Faza 9 — pełna regresja lokalna | working tree | PASS | build + Pages/Worker dry-run; 6 tras × 7 viewportów; 53/53 stabilny hover/keyboard; desktop i mobile odebrane wizualnie; konsola czysta; fizyczny Safari/Mac jawnie oczekuje na urządzenie |

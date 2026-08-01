@@ -291,12 +291,17 @@ body.faq-page {
 @media (max-width: 980px) {
   .faq-main {
     padding-top: clamp(48px, 8vw, 80px);
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 56px;
   }
 
   .faq-intro {
     position: static;
+    min-width: 0;
+  }
+
+  .faq-list {
+    min-width: 0;
   }
 
   .faq-intro h1 {
@@ -371,10 +376,15 @@ body.faq-page {
   .faq-cta {
     grid-template-columns: 1fr;
     align-items: start;
+    min-width: 0;
   }
 
   .faq-cta a {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     justify-content: space-between;
+    overflow-wrap: anywhere;
   }
 }
 

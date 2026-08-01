@@ -26,6 +26,8 @@ const [css, script, ...htmlFiles] = await Promise.all([
 ]);
 const storyCss = await read("assets/story-standard.css");
 const sceneViewport = await read("assets/scene-viewport.css");
+const socialCss = await read("assets/services/social/styles.css");
+const faqCss = await read("assets/page-faq.css");
 
 const failures = [];
 const requireText = (source, text, message) => {
@@ -90,6 +92,12 @@ requireText(storyCss, "filter: none !important", "wspólny model nadal może roz
 requireText(css, ".tablet-annotations ul", "podsumowania ilustracji nadal mogą tworzyć lokalny scroller");
 requireText(css, '[data-ok-safe-cards="stacked"]', "CSS nie ma bezpiecznego układu kart");
 requireText(css, "@media (max-height: 720px)", "CSS nie ma obsługi niskiego okna");
+requireText(css, '[data-ok-safe-compact-fit="first-view"]', "mobile hero nie ma stabilnej wysokości 100svh");
+requireText(css, ".social-frame, .process-frame) > .scroll-cue", "mobile nadal pokazuje zasłaniające podpowiedzi przewijania");
+requireText(socialCss, ".proof-item.is-open .proof-detail", "Social nie ma mobilnego kontraktu rozwiniętych sygnałów");
+requireText(socialCss, "max-height: none", "rozwinięty sygnał nadal może być przycięty stałą wysokością");
+requireText(faqCss, "grid-template-columns: minmax(0, 1fr)", "FAQ nie zeruje minimalnej szerokości mobilnej kolumny");
+requireText(faqCss, "overflow-wrap: anywhere", "CTA FAQ nie chroni długiej etykiety przed przycięciem");
 
 requireText(script, "allowedSides", "JS nie wybiera najbezpieczniejszej strony grafiki");
 requireText(script, "--ok-safe-mask-image", "JS nie generuje liniowego featheru grafiki");
@@ -142,6 +150,17 @@ for (const deadToken of [
 }
 if (/transform\s*:\s*scale\([^1]/.test(css)) {
   failures.push("responsive-safety.css nie może skalować treści w dół");
+}
+
+for (const token of [
+  "html.ok-scene-page :is(",
+  ".annotation-lines,",
+  ".annotation-callout,",
+  ".annotation,",
+  ".tablet-annotations",
+  "html.ok-scene-page .uses-annotation-summary .tablet-annotations",
+]) {
+  requireText(css, token, `mobile annotation cleanup: brak ${token}`);
 }
 
 if (failures.length) {

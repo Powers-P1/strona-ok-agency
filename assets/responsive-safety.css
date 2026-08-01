@@ -217,6 +217,32 @@ body.home-page {
 }
 
 @media (max-width: 640px) {
+  /* Keep the optional illustration exploration layer desktop-only. */
+  html.ok-scene-page :is(
+    .annotation-lines,
+    .annotation-callout,
+    .annotation,
+    .tablet-annotations
+  ),
+  html.ok-scene-page .uses-annotation-summary .tablet-annotations {
+    display: none;
+  }
+
+  .home-page .hero[data-ok-safe-scene][data-ok-safe-compact-fit="first-view"] {
+    height: 100svh;
+    min-height: 100svh;
+    overflow-y: clip;
+  }
+
+  .home-page .hero[data-ok-safe-scene][data-ok-safe-compact-fit="first-view"] :is(.art-stage, .hero-backdrop) {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  html.ok-scene-page :is(.campaign-frame, .social-frame, .process-frame) > .scroll-cue {
+    display: none;
+  }
+
   [data-ok-safe-content] {
     max-width: calc(100% - (2 * var(--ok-safety-gap)));
   }

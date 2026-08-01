@@ -12,6 +12,9 @@
   --ok-nav-slot-height: var(--ok-nav-docked-height);
   --ok-nav-canvas: #f0dfcf;
   --ok-nav-canvas-solid: #efe0d2;
+  --ok-nav-floating-canvas: rgba(239, 224, 210, .96);
+  --ok-nav-floating-canvas-filtered: rgba(239, 224, 210, .85);
+  --ok-nav-floating-filter: blur(20px) saturate(.96);
   --ok-nav-navy: #142030;
   --ok-nav-rose: #b52454;
   --ok-nav-rose-strong: #8f173f;
@@ -112,7 +115,7 @@ body header[data-ok-global-nav][data-ok-nav-state="detached"] {
   min-height: var(--ok-nav-floating-height) !important;
   padding-inline: clamp(18px, 3vw, 42px) !important;
   border-radius: 16px;
-  background-color: rgba(239, 224, 210, .96) !important;
+  background-color: var(--ok-nav-floating-canvas);
   box-shadow:
     inset 0 1px rgba(255, 255, 255, .54),
     inset 0 -1px rgba(20, 32, 48, .18),
@@ -121,9 +124,9 @@ body header[data-ok-global-nav][data-ok-nav-state="detached"] {
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   body header[data-ok-global-nav][data-ok-nav-state="detached"] {
-    background-color: rgba(239, 224, 210, .85) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(.96);
-    backdrop-filter: blur(20px) saturate(.96);
+    background-color: var(--ok-nav-floating-canvas-filtered);
+    -webkit-backdrop-filter: var(--ok-nav-floating-filter);
+    backdrop-filter: var(--ok-nav-floating-filter);
   }
 }
 
@@ -700,6 +703,12 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-curr
 }
 
 @media (max-width: 420px) {
+  :root {
+    --ok-nav-floating-canvas: var(--ok-nav-canvas-solid);
+    --ok-nav-floating-canvas-filtered: var(--ok-nav-canvas-solid);
+    --ok-nav-floating-filter: none;
+  }
+
   .ok-global-menu__nav {
     align-content: start;
     padding-top: 18px;

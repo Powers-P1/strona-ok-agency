@@ -1325,7 +1325,12 @@ h1 {
   }
 
   .home-service {
-    padding-inline: 0;
+    padding: clamp(26px, 8vw, 34px) clamp(16px, 5vw, 22px);
+    overflow-wrap: anywhere;
+  }
+
+  .home-service p {
+    max-width: 32ch;
   }
 
   .home-service + .home-service {

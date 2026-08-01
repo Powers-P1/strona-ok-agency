@@ -90,7 +90,17 @@ assert.match(css, /--ok-nav-docked-height:\s*80px/, "Docked rail must be 80px.")
 assert.match(css, /--ok-nav-floating-height:\s*64px/, "Detached rail must be 64px.");
 assert.match(css, /\[data-ok-nav-state="detached"\]/, "Detached state styles are required.");
 assert.match(css, /border-radius:\s*16px/, "Detached rail must use a restrained radius.");
-assert.match(css, /backdrop-filter:\s*blur\(20px\)/, "Detached material blur is required.");
+assert.match(css, /--ok-nav-floating-filter:\s*blur\(20px\)/, "Detached material blur is required.");
+assert.match(
+  css,
+  /@media \(max-width: 420px\)[\s\S]*--ok-nav-floating-canvas-filtered:\s*var\(--ok-nav-canvas-solid\)/,
+  "Mobile detached rail must use an opaque canvas token.",
+);
+assert.match(
+  css,
+  /@media \(max-width: 420px\)[\s\S]*--ok-nav-floating-filter:\s*none/,
+  "Mobile detached rail must not reveal page copy through backdrop blur.",
+);
 assert.match(css, /\.ok-nav-trigger[\s\S]*?min-height:\s*44px/, "MENU target must be at least 44px.");
 assert.match(css, /:focus-visible/, "Visible keyboard focus styles are required.");
 assert.match(css, /scroll-padding-top/, "Fixed header anchor offset is required.");

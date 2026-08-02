@@ -14,6 +14,8 @@ const DEFAULT_VIEWPORTS = [
   { width: 1024, height: 600 },
   { width: 900, height: 620 },
   { width: 821, height: 620 },
+  { width: 840, height: 700 },
+  { width: 840, height: 640 },
   { width: 390, height: 844 },
   { width: 360, height: 640 },
 ];

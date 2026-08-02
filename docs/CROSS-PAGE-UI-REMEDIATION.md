@@ -418,6 +418,7 @@ Zakres tej fazy wynika z kolejnych screenshotów produkcyjnych. Poprawka ma pozo
 - [x] rozszerzyć solver/test o zakaz przecięcia karty z własnym ringiem oraz ciągłość dot → leader/wire → krawędź karty;
 - [x] sprawdzić wszystkie 53 callouty na 1512×982, 1512×800, 1440×900, 1280×720 i 1024×768;
 - [x] powtórzyć guard mobile 390×844 i 360×640 bez zmiany polityki `<=640px`;
+- [x] objąć końcowym profilem krótkiego tabletu pas 821–849 px × 621–700 px i dodać graniczne 840×640 / 840×700 do obowiązkowej bramki disclosure;
 - [ ] odebrać wizualnie przed/po, uruchomić pełne build/quality/Pages/Worker, opublikować i sprawdzić domenę.
 
 Status lokalnej bramki: PASS. Wspólny profil scen obejmuje 1440×900, 1440×640, 1440×600, 1024×640, 1024×600, 390×844 i 360×640; po każdym rozwinięciu scena zachowuje `100svh`, brak nested scrolla i dryfu, a CTA ma bezpieczny dolny margines. Wszystkie 53 callouty przeszły pełną geometrię w 7 viewportach: otwarta karta nie przecina własnego/sąsiedniego ringu, a widoczny SVG lub leader zaczyna się w centrum punktu i kończy na rzeczywistej krawędzi karty. Mobile 390/360 zachowuje 0 anotacji; krótki profil 360 mieści również CTA po otwarciu disclosure. Wizualny odbiór szerokiego 1440×600 i mobile 360×640 PASS. `check:annotation-energy`, pełny `build`, Pages Functions, Worker dry-run, middleware i `git diff --check` PASS. Publikacja i produkcyjny smoke test pozostają ostatnią bramką tej fazy.

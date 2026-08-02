@@ -150,10 +150,6 @@ const waitForSceneMode = async (page, index, mobile) => {
       return true;
     };
 
-    // Lazy artwork can briefly leave an inactive desktop scene in fallback
-    // while its image decodes. Treat that as transient and wait for the
-    // post-decode solve instead of auditing the intermediate hidden state.
-    if (scene.classList.contains("annotations-unavailable")) return innerWidth < 1280;
     return callouts.every(callout => visible(callout.querySelector(".annotation-dot")));
   }, { selector: SCENE_SELECTOR, sceneIndex: index, isMobile: mobile }, { timeout: TIMEOUT });
 };
@@ -280,13 +276,8 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     }))
     .filter(item => visible(item.dot));
   const lines = [...scene.querySelectorAll(".annotation-lines")].filter(visible);
-  const unavailable = scene.classList.contains("annotations-unavailable");
-
-  if (unavailable) {
-    if (visibleDots.length) issue("mode", `hidden mode exposes ${visibleDots.length} visible dots`);
-    if (lines.length) issue("mode", `hidden mode exposes ${lines.length} visible line layers`);
-    if (innerWidth >= 1280) issue("mode", "desktop scene hides annotations instead of solving their geometry");
-    return { id: sceneId, issues, pointIndexes: [] };
+  if (scene.classList.contains("annotations-unavailable")) {
+    issue("mode", "scene uses the removed annotations-unavailable hidden mode");
   }
 
   if (visibleDots.length !== callouts.length) {
@@ -296,7 +287,16 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
   const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
   const api = window.OKAgencyResponsiveSafety;
   const bounds = api?.getArtBounds?.(scene) || (art && api?.getArtBounds?.(art));
-  const artVisible = bounds?.fullVisible;
+  const fullVisible = bounds?.fullVisible;
+  const feather = bounds?.feather;
+  const artVisible = fullVisible && feather
+    ? {
+      left: Math.min(fullVisible.left, feather.left),
+      top: Math.min(fullVisible.top, feather.top),
+      right: Math.max(fullVisible.right, feather.right),
+      bottom: Math.max(fullVisible.bottom, feather.bottom),
+    }
+    : fullVisible;
   if (!artVisible) issue("art-bounds", "OKAgencyResponsiveSafety.getArtBounds() has no fullVisible rect");
 
   const sceneSafe = {
@@ -321,7 +321,7 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
       issue(key, `target is ${dotRect.width.toFixed(1)}x${dotRect.height.toFixed(1)}px, expected at least 44x44`);
     }
     if (!inside(sceneSafe, dotRect)) issue(key, "full 44px target leaves the scene 24px safe inset");
-    if (artSafe && !inside(artSafe, dotRect)) issue(key, "full 44px target leaves getArtBounds().fullVisible");
+    if (artSafe && !inside(artSafe, dotRect)) issue(key, "full 44px target leaves the visible art and feather region");
     if (sceneRect.height - centerY + TOLERANCE < BOTTOM_CLEARANCE) {
       issue(key, `target center has ${(sceneRect.height - centerY).toFixed(1)}px bottom clearance, expected at least 88px`);
     }
@@ -476,20 +476,18 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
 
     callouts.forEach((sibling, siblingIndex) => {
       const siblingDot = sibling.querySelector(".annotation-dot");
-      const expectedObscured = sibling !== callout && intersects(copyRect, rect(siblingDot));
-      const actualObscured = sibling.classList.contains("is-obscured");
       const siblingKey = sibling.dataset.annotation || `callout-${siblingIndex + 1}`;
-      if (actualObscured !== expectedObscured) {
-        issue(
-          `${siblingKey} ${actualObscured ? "is" : "is not"} obscured; `
-          + `${expectedObscured ? "its target intersects" : "its target does not intersect"} the open copy`,
-        );
+      if (sibling.classList.contains("is-obscured")) {
+        issue(`${siblingKey} uses the removed is-obscured hidden state`);
+      }
+      if (sibling !== callout && intersects(copyRect, rect(siblingDot))) {
+        issue(`copy intersects sibling target ${siblingKey}`);
       }
       const wire = sibling.dataset.annotation
         ? scene.querySelector(`[data-line="${sibling.dataset.annotation}"]`)
         : null;
-      if (wire && wire.classList.contains("is-obscured") !== expectedObscured) {
-        issue(`${siblingKey} wire occlusion does not match its target`);
+      if (wire?.classList.contains("is-obscured")) {
+        issue(`${siblingKey} wire uses the removed is-obscured hidden state`);
       }
     });
     [...document.querySelectorAll(
@@ -544,6 +542,50 @@ const closedState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
 const recordInteractionIssues = (route, viewport, scene, state, prefix) => {
   state.issues.forEach(message => addFailure(route, viewport, scene, state.key, `${prefix}: ${message}`));
 };
+
+const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
+  selector,
+  sceneNumber,
+}) => {
+  window.OKAgencyAnnotations?.closeAll?.();
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const callouts = [...scene.querySelectorAll(".annotation-callout, .annotation")];
+  const originalY = scrollY;
+  const sceneTop = originalY + scene.getBoundingClientRect().top;
+  const offsets = [0, 24, 56, 92, 128, 160];
+  const issues = [];
+  const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+
+  for (const offset of offsets) {
+    scrollTo(0, sceneTop + offset);
+    window.dispatchEvent(new CustomEvent("okagency:art-safety-change", {
+      detail: { source: "annotation-scroll-visibility-audit" },
+    }));
+    await nextFrame();
+
+    if (scene.classList.contains("annotations-unavailable")) {
+      issues.push(`scroll offset ${offset}px activates the removed hidden mode`);
+    }
+
+    const hidden = callouts.filter(callout => {
+      const dot = callout.querySelector(".annotation-dot");
+      const style = getComputedStyle(dot);
+      return callout.classList.contains("is-obscured")
+        || style.display === "none"
+        || style.visibility === "hidden"
+        || Number.parseFloat(style.opacity || "1") <= .01;
+    });
+    if (hidden.length) {
+      issues.push(`scroll offset ${offset}px hides ${hidden.length}/${callouts.length} points during solve`);
+    }
+    await nextFrame();
+  }
+
+  scrollTo(0, originalY);
+  await nextFrame();
+  await nextFrame();
+  return issues;
+}, { selector: SCENE_SELECTOR, sceneNumber: sceneIndex });
 
 const exercisePoint = async (
   page,
@@ -725,6 +767,32 @@ const auditRoute = async (context, baseUrl, route, viewport) => {
   }
 };
 
+const auditRouteScrollVisibility = async (context, baseUrl, route, viewport) => {
+  const page = await context.newPage();
+  try {
+    await page.goto(new URL(route.path, baseUrl).href, {
+      waitUntil: "domcontentloaded",
+      timeout: TIMEOUT,
+    });
+    await waitForDocumentReady(page);
+    const sceneCount = await page.locator(SCENE_SELECTOR).count();
+    for (let sceneIndex = 0; sceneIndex < sceneCount; sceneIndex += 1) {
+      await activateScene(page, route.path, sceneIndex);
+      await waitForSceneMode(page, sceneIndex, false);
+      const sceneId = await page.locator(SCENE_SELECTOR).nth(sceneIndex)
+        .getAttribute("id") || `scene-${sceneIndex + 1}`;
+      const scrollIssues = await auditScrollVisibility(page, sceneIndex);
+      scrollIssues.forEach(message => {
+        addFailure(route.path, viewport, sceneId, "scroll-visibility", message);
+      });
+    }
+  } catch (error) {
+    addFailure(route.path, viewport, "document", "scroll-visibility-runner", error.message);
+  } finally {
+    await page.close().catch(() => {});
+  }
+};
+
 const auditMotionMode = async (browser, baseUrl, mode) => {
   const viewport = { width: 1280, height: 720 };
   const context = await browser.newContext({
@@ -830,6 +898,12 @@ try {
     try {
       for (const route of selectedRoutes) {
         await auditRoute(context, baseUrl, route, viewport);
+        if (
+          (viewport.width === 1280 && viewport.height === 720)
+          || (viewport.width === 1512 && viewport.height === 800)
+        ) {
+          await auditRouteScrollVisibility(context, baseUrl, route, viewport);
+        }
       }
     } finally {
       await context.close().catch(() => {});

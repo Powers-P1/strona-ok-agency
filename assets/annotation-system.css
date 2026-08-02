@@ -288,14 +288,6 @@
   transform: none;
 }
 
-/* Ukryj wyłącznie punkt i przewód, które znalazłyby się pod otwartą kartą. */
-.annotation-callout.is-obscured .annotation-dot,
-.annotation.is-obscured .annotation-dot,
-.annotation-wire.is-obscured {
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* Preserve the diagnosis route's original transition contract during no-op migration. */
 .diagnosis-service .annotation-lines,
 .diagnosis-service .annotation-callout {
@@ -312,10 +304,6 @@
   transition:
     opacity .26s ease .2s,
     transform .38s var(--ease) .16s;
-}
-
-.annotations-unavailable :is(.annotation-lines, .annotation-callout, .annotation) {
-  display: none;
 }
 
 @keyframes ok-energy-core {

@@ -128,7 +128,6 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
       [/\.annotation-copy\b/, ".annotation-copy"],
       [/\.annotation-wire\b/, ".annotation-wire"],
       [/\.is-open\b/, "stanu .is-open"],
-      [/\.is-obscured\b/, "stanu .is-obscured"],
       [/var\(--ok-annotation-core-size\b/, "tokenu rozmiaru rdzenia"],
       [/var\(--ok-annotation-ring-size\b/, "tokenu rozmiaru pierścienia"],
       [/html\[data-motion=["']paused["']\]/, "statycznego stanu paused"],
@@ -136,6 +135,9 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     ];
     for (const [pattern, label] of requiredPatterns) {
       if (!pattern.test(source)) failures.push(`${annotationsPath}: brak ${label}`);
+    }
+    if (/\.is-obscured\b|\.annotations-unavailable\b/.test(source)) {
+      failures.push(`${annotationsPath}: komponent nie może zawierać stanów ukrywających punkty`);
     }
   }
 
@@ -192,10 +194,10 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/okagency:annotationchange/, "reakcji na zmianę anotacji"],
     [/const search = index =>/, "deterministycznego przeszukiwania grupy"],
     [/\["short", "compact", "base"\]/, "kolejności profili short → compact → base"],
-    [/contains\(artBounds\.fullVisible, ring\)/, "twardego odrzucenia poza widocznym artworkiem"],
+    [/contains\(artBounds\.interactiveVisible, ring\)/, "twardego odrzucenia poza widocznym artworkiem i feather"],
     [/obstacles\.content\.some\(obstacle => intersects\(ring, obstacle\)\)/, "twardego odrzucenia kolizji punktu z treścią"],
     [/visibleCopies\.some\(sibling => intersects\(copyRect, sibling\)\)/, "odrzucenia kolizji otwartych dymków"],
-    [/annotations-unavailable/, "cichego ukrycia niewykonalnej grupy"],
+    [/lastSolutions/, "ostatniego poprawnego układu bez ukrywania grupy"],
     [/innerWidth <= 640/, "zachowania centralnego kontraktu mobile"],
     [/annotation-debug-overlay/, "debug overlay dla audytu kotwic"],
   ]) {
@@ -213,7 +215,10 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   if (/tablet-annotations|uses-annotation-summary|Punkty na ilustracji/.test(source)) {
     failures.push(`${path}: usunięte podsumowanie ilustracji nie może wrócić`);
   }
-  addCheck("deterministyczny solver geometrii i ciche ukrycie", failures);
+  if (/annotations-unavailable|hideAnnotations|is-obscured/.test(source)) {
+    failures.push(`${path}: solver nie może ukrywać punktów po solve ani otwarciu dymka`);
+  }
+  addCheck("deterministyczny solver geometrii i ciągła widoczność", failures);
 }
 
 // Source anchors and rendered points follow energy → highlight → object hierarchy.

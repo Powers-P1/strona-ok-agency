@@ -39,9 +39,9 @@
   const runtimeAttributes = new Map();
   const debugOverlays = new Map();
   const debugSnapshots = new Map();
+  const lastSolutions = new Map();
   const cleanupCallbacks = [];
   let solveFrame = 0;
-  let transitionFrame = 0;
   let resizeObserver = null;
   let destroyed = false;
 
@@ -133,11 +133,27 @@
     first.top < second.bottom &&
     first.bottom > second.top;
 
+  const intersectionArea = (first, second) => {
+    const width = Math.max(0, Math.min(first.right, second.right) - Math.max(first.left, second.left));
+    const height = Math.max(0, Math.min(first.bottom, second.bottom) - Math.max(first.top, second.top));
+    return width * height;
+  };
+
   const contains = (outer, inner) =>
     inner.left >= outer.left &&
     inner.right <= outer.right &&
     inner.top >= outer.top &&
     inner.bottom <= outer.bottom;
+
+  const unionRect = (first, second) => {
+    if (!first) return second;
+    if (!second) return first;
+    const left = Math.min(first.left, second.left);
+    const top = Math.min(first.top, second.top);
+    const right = Math.max(first.right, second.right);
+    const bottom = Math.max(first.bottom, second.bottom);
+    return rect(left, top, right - left, bottom - top);
+  };
 
   const isBox = element => {
     if (!element || element.hidden) return false;
@@ -200,9 +216,7 @@
     runtimeAttributes.clear();
 
     adapters.forEach(adapter => {
-      adapter.scene.classList.remove("annotations-unavailable");
       adapter.annotations.forEach(annotation => {
-        annotation.callout.classList.remove("is-obscured");
         annotation.callout.classList.toggle("flip", annotation.originalFlip);
       });
     });
@@ -330,9 +344,12 @@
       }
     }
     if (safety) {
+      const fullVisible = normalizeRect(safety.fullVisible);
+      const feather = normalizeRect(safety.feather);
       return {
         masked: Boolean(safety.masked),
-        fullVisible: normalizeRect(safety.fullVisible),
+        fullVisible,
+        interactiveVisible: unionRect(fullVisible, feather),
       };
     }
     const left = Math.max(0, geometry.left);
@@ -342,6 +359,9 @@
     return {
       masked: art.dataset.okSafeArt === "active",
       fullVisible: right >= left && bottom >= top
+        ? rect(left, top, right - left, bottom - top)
+        : null,
+      interactiveVisible: right >= left && bottom >= top
         ? rect(left, top, right - left, bottom - top)
         : null,
     };
@@ -374,7 +394,7 @@
       adapter.scene.clientWidth - SAFE_INSET * 2,
       adapter.scene.clientHeight - SAFE_INSET * 2,
     );
-    if (!artBounds.fullVisible || !contains(artBounds.fullVisible, ring)) return false;
+    if (!artBounds.interactiveVisible || !contains(artBounds.interactiveVisible, ring)) return false;
     if (!contains(sceneSafe, ring)) return false;
     if (adapter.scene.clientHeight - point.y < BOTTOM_CLEARANCE) return false;
     if (obstacles.content.some(obstacle => intersects(ring, obstacle))) return false;
@@ -390,7 +410,7 @@
       adapter.scene.clientWidth - SAFE_INSET * 2,
       adapter.scene.clientHeight - SAFE_INSET * 2,
     );
-    if (!artBounds.fullVisible || !contains(artBounds.fullVisible, ring)) reasons.push("visible-art");
+    if (!artBounds.interactiveVisible || !contains(artBounds.interactiveVisible, ring)) reasons.push("visible-art");
     if (!contains(sceneSafe, ring)) reasons.push("scene-inset");
     if (adapter.scene.clientHeight - point.y < BOTTOM_CLEARANCE) reasons.push("bottom-clearance");
     if (obstacles.content.some(obstacle => intersects(ring, obstacle))) reasons.push("content");
@@ -436,6 +456,42 @@
     return { left: point.x - width / 2, top: point.y + COPY_CLEARANCE };
   };
 
+  const copyPositionCandidates = (annotation, point, width, height) => {
+    const maximumLeft = annotation.adapter.scene.clientWidth - width - SAFE_INSET;
+    const maximumTop = annotation.adapter.scene.clientHeight - height - SAFE_INSET;
+    if (maximumLeft < SAFE_INSET || maximumTop < SAFE_INSET) return [];
+
+    const tangentOffsets = [0, -24, 24, -48, 48, -72, 72, -96, 96, -120, 120, -144, 144];
+    const outwardOffsets = [0, 24, 48, 72];
+    const seen = new Set();
+    const candidates = [];
+
+    candidateOrder(annotation.preferredSide).forEach((side, order) => {
+      const ideal = idealCopyPosition(side, point, width, height);
+      outwardOffsets.forEach(outward => {
+        tangentOffsets.forEach(tangent => {
+          const horizontal = side === "left" || side === "right";
+          const direction = side === "left" || side === "above" ? -1 : 1;
+          const rawLeft = ideal.left + (horizontal ? outward * direction : tangent);
+          const rawTop = ideal.top + (horizontal ? tangent : outward * direction);
+          const left = clamp(rawLeft, SAFE_INSET, maximumLeft);
+          const top = clamp(rawTop, SAFE_INSET, maximumTop);
+          const key = `${left.toFixed(2)}:${top.toFixed(2)}`;
+          if (seen.has(key)) return;
+          seen.add(key);
+          candidates.push({
+            left,
+            top,
+            side,
+            rect: rect(left, top, width, height),
+            displacementRank: order * 576 + tangent * tangent + outward * outward,
+          });
+        });
+      });
+    });
+    return candidates.sort((first, second) => first.displacementRank - second.displacementRank);
+  };
+
   const isOpen = annotation =>
     annotation.callout.classList.contains("is-open") ||
     annotation.dot.getAttribute("aria-expanded") === "true";
@@ -449,25 +505,54 @@
     rings,
     visibleCopies,
   ) => {
-    const maximumLeft = annotation.adapter.scene.clientWidth - width - SAFE_INSET;
-    const maximumTop = annotation.adapter.scene.clientHeight - height - SAFE_INSET;
-    if (maximumLeft < SAFE_INSET || maximumTop < SAFE_INSET) return null;
-
-    for (const side of candidateOrder(annotation.preferredSide)) {
-      const ideal = idealCopyPosition(side, point, width, height);
-      const left = clamp(ideal.left, SAFE_INSET, maximumLeft);
-      const top = clamp(ideal.top, SAFE_INSET, maximumTop);
-      const copyRect = rect(left, top, width, height);
+    for (const candidate of copyPositionCandidates(annotation, point, width, height)) {
+      const copyRect = candidate.rect;
       if (obstacles.content.some(obstacle => intersects(copyRect, obstacle))) continue;
       if (obstacles.fixed.some(obstacle => intersects(copyRect, obstacle))) continue;
       if (rings.some(ring => intersects(copyRect, ring))) continue;
       if (visibleCopies.some(sibling => intersects(copyRect, sibling))) continue;
-      return { left, top, side, rect: copyRect };
+      return candidate;
     }
     return null;
   };
 
-  const placeCopies = (adapter, points, rings, obstacles) => {
+  const chooseOverlayCopyPosition = (
+    annotation,
+    point,
+    width,
+    height,
+    obstacles,
+    rings,
+    visibleCopies,
+  ) => {
+    let best = null;
+    copyPositionCandidates(annotation, point, width, height).forEach(candidate => {
+      const copyRect = candidate.rect;
+      if (obstacles.fixed.some(obstacle => intersects(copyRect, obstacle))) return;
+      if (rings.some(ring => intersects(copyRect, ring))) return;
+      if (visibleCopies.some(sibling => intersects(copyRect, sibling))) return;
+      const contentOverlap = obstacles.content.reduce(
+        (total, obstacle) => total + intersectionArea(copyRect, obstacle),
+        0,
+      );
+      if (
+        !best
+        || contentOverlap < best.contentOverlap
+        || (
+          contentOverlap === best.contentOverlap
+          && candidate.displacementRank < best.displacementRank
+        )
+      ) {
+        best = {
+          ...candidate,
+          contentOverlap,
+        };
+      }
+    });
+    return best;
+  };
+
+  const placeCopies = (adapter, points, rings, obstacles, artBounds) => {
     const copies = new Array(adapter.annotations.length);
     const openIndexes = [];
     const closedIndexes = [];
@@ -483,15 +568,26 @@
       const height = annotation.copy.offsetHeight;
       if (!width || !height) return null;
       const open = isOpen(annotation);
+      const ringsToAvoid = open ? rings : [rings[index]];
       const position = chooseCopyPosition(
         annotation,
         points[index],
         width,
         height,
         obstacles,
-        [rings[index]],
+        ringsToAvoid,
         open ? visibleCopies : [],
-      );
+      ) || (artBounds.masked
+        ? chooseOverlayCopyPosition(
+          annotation,
+          points[index],
+          width,
+          height,
+          obstacles,
+          ringsToAvoid,
+          open ? visibleCopies : [],
+        )
+        : null);
       if (!position) return null;
       copies[index] = position;
       if (open) visibleCopies.push(position.rect);
@@ -519,7 +615,7 @@
       if (solution) return;
       if (index === adapter.annotations.length) {
         ringConfigurations += 1;
-        const copies = placeCopies(adapter, points, rings, obstacles);
+        const copies = placeCopies(adapter, points, rings, obstacles, artBounds);
         if (copies) {
           solution = {
             geometry,
@@ -660,26 +756,6 @@
     });
   };
 
-  const requestCalloutClose = adapter => {
-    const owner = window.OKAgencyAnnotations;
-    if (typeof owner?.closeWithin === "function") {
-      owner.closeWithin(adapter.scene);
-      return;
-    }
-    if (typeof owner?.closeAll === "function") {
-      owner.closeAll();
-      return;
-    }
-    window.dispatchEvent(new CustomEvent("okagency:annotationrequest", {
-      detail: { action: "closeAll", source: "art-coordinate-system" },
-    }));
-  };
-
-  const hideAnnotations = adapter => {
-    requestCalloutClose(adapter);
-    adapter.scene.classList.add("annotations-unavailable");
-  };
-
   const appendDebugBox = (overlay, bounds, kind) => {
     if (!bounds) return;
     const box = document.createElement("span");
@@ -710,56 +786,10 @@
 
     const label = document.createElement("span");
     label.className = "annotation-debug-label";
-    label.textContent = solution ? "HOTSPOTS: SOLVED" : "HOTSPOTS: HIDDEN";
+    label.textContent = solution ? "HOTSPOTS: SOLVED" : "HOTSPOTS: AUTHORED FALLBACK";
     overlay.append(label);
     adapter.scene.append(overlay);
     debugOverlays.set(adapter.scene, overlay);
-  };
-
-  const syncOpenCopyOcclusion = (adapter, solution) => {
-    if (!solution) return;
-    const openIndex = adapter.annotations.findIndex(isOpen);
-    if (openIndex < 0) return;
-    const openCopy = solution.copies[openIndex]?.rect;
-    if (!openCopy) return;
-
-    adapter.annotations.forEach((annotation, index) => {
-      if (index === openIndex || !intersects(openCopy, solution.rings[index])) return;
-      annotation.callout.classList.add("is-obscured");
-      const key = annotation.callout.dataset.annotation;
-      if (key) adapter.scene.querySelector(`[data-line="${key}"]`)?.classList.add("is-obscured");
-    });
-  };
-
-  const guardTransitions = solutions => {
-    adapters.forEach(adapter => {
-      const openLineKeys = new Set();
-      adapter.annotations.forEach(annotation => {
-        if (isOpen(annotation)) {
-          const key = annotation.callout.dataset.annotation;
-          if (key) openLineKeys.add(key);
-          return;
-        }
-        annotation.callout.classList.add("is-obscured");
-      });
-      adapter.scene.querySelectorAll(".annotation-wire").forEach(wire => {
-        if (openLineKeys.has(wire.dataset.line)) return;
-        wire.classList.add("is-obscured");
-      });
-    });
-    if (transitionFrame) cancelAnimationFrame(transitionFrame);
-    transitionFrame = requestAnimationFrame(() => {
-      transitionFrame = 0;
-      adapters.forEach(adapter => {
-        adapter.annotations.forEach(annotation => {
-          annotation.callout.classList.remove("is-obscured");
-        });
-        adapter.scene.querySelectorAll(".annotation-wire").forEach(wire => {
-          wire.classList.remove("is-obscured");
-        });
-      });
-      adapters.forEach((adapter, index) => syncOpenCopyOcclusion(adapter, solutions[index]));
-    });
   };
 
   const solveAll = () => {
@@ -772,12 +802,19 @@
       return;
     }
 
-    const solutions = adapters.map(adapter => solveAdapter(adapter));
-    guardTransitions(solutions);
+    const solutions = adapters.map(adapter => {
+      const layoutKey = `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`;
+      const solution = solveAdapter(adapter);
+      if (solution) {
+        lastSolutions.set(adapter, { layoutKey, solution });
+        return solution;
+      }
+      const previous = lastSolutions.get(adapter);
+      return previous?.layoutKey === layoutKey ? previous.solution : null;
+    });
     adapters.forEach((adapter, index) => {
       const solution = solutions[index];
       if (!solution) {
-        hideAnnotations(adapter);
         renderDebugOverlay(adapter, null);
         return;
       }
@@ -822,8 +859,8 @@
   const destroy = () => {
     destroyed = true;
     if (solveFrame) cancelAnimationFrame(solveFrame);
-    if (transitionFrame) cancelAnimationFrame(transitionFrame);
     resizeObserver?.disconnect();
+    lastSolutions.clear();
     cleanupCallbacks.splice(0).forEach(cleanup => cleanup());
     clearRuntime();
     clearDebugOverlays();

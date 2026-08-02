@@ -31,6 +31,9 @@ jobs:
       - name: Validate scene disclosures
         run: npm run check:scene-disclosures
 
+      - name: Validate annotation geometry
+        run: npm run check:annotation-geometry
+
       - name: Check local links
         run: npm run check:links
 

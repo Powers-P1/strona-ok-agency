@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const STYLE_HASHES_PLACEHOLDER = "{{STYLE_ATTRIBUTE_HASHES}}";
+const CLOUDFLARE_HEADERS_LINE_LIMIT = 2_000;
 
 function sha256(value) {
   return createHash("sha256").update(value, "utf8").digest("base64");
@@ -43,8 +44,18 @@ export async function renderHeaders(root, htmlFiles) {
     throw new Error(`_headers: brak ${STYLE_HASHES_PLACEHOLDER}.`);
   }
 
+  const headers = template.replace(STYLE_HASHES_PLACEHOLDER, styleHashes);
+  const oversizedLine = headers
+    .split(/\r?\n/)
+    .find(line => line.length > CLOUDFLARE_HEADERS_LINE_LIMIT);
+  if (oversizedLine) {
+    throw new Error(
+      `_headers: linia ma ${oversizedLine.length} znaków; limit Cloudflare Pages to ${CLOUDFLARE_HEADERS_LINE_LIMIT}.`,
+    );
+  }
+
   return {
-    headers: template.replace(STYLE_HASHES_PLACEHOLDER, styleHashes),
+    headers,
     styleHashCount: styleValues.size,
   };
 }

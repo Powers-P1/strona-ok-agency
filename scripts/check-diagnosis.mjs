@@ -99,6 +99,19 @@ if (/\.result-lead-field\s*\{[^}]*flex(?:-basis)?\s*:/s.test(diagnosisStyles)) {
   failures.push("Diagnoza: pola kontaktu nie mogą opierać przepływu na flex-basis");
 }
 
+for (const token of [
+  "--diagnosis-map-text: var(--ok-color-text-on-dark, var(--cream))",
+  "--diagnosis-map-muted: var(--ok-color-text-muted-on-dark, #d2c2b4)",
+]) {
+  if (!diagnosisStyles.includes(token)) {
+    failures.push(`Diagnoza: ciemna mapa nie korzysta z kontraktu ${token}`);
+  }
+}
+if (/\.map-interface\s*\{[^}]*text-on-light/s.test(diagnosisStyles) ||
+    /@media\s*\([^)]*min-width[^)]*\)[\s\S]*?\.map-interface\s*\{[^}]*text-on-light/s.test(diagnosisStyles)) {
+  failures.push("Diagnoza: mapa na ciemnym tle nie moze uzywac tokenow text-on-light");
+}
+
 if (failures.length) {
   console.error(`Błędy Diagnozy (${failures.length}):`);
   failures.forEach(failure => console.error(`- ${failure}`));

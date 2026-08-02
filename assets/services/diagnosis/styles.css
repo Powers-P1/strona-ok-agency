@@ -264,12 +264,18 @@ svg { display: block; }
 
 /* Stały akt mapy z jednym modułem quizu */
 .map-interface {
+  --diagnosis-map-text: var(--ok-color-text-on-dark, var(--cream));
+  --diagnosis-map-muted: var(--ok-color-text-muted-on-dark, #d2c2b4);
+  --diagnosis-map-line: rgba(240, 223, 207, .28);
+  --diagnosis-map-line-soft: rgba(240, 223, 207, .18);
+  --diagnosis-map-surface: rgba(240, 223, 207, .035);
+  --diagnosis-map-surface-active: rgba(240, 223, 207, .1);
   position: absolute;
   z-index: 8;
   top: clamp(128px, 14.5vh, 146px);
   left: clamp(56px, 5vw, 84px);
   width: min(700px, 43vw);
-  color: var(--cream);
+  color: var(--diagnosis-map-text);
 }
 .map-intro h2 {
   max-width: 18ch;
@@ -285,7 +291,7 @@ svg { display: block; }
 .map-intro p {
   max-width: 62ch;
   margin: 8px 0 0;
-  color: rgba(240,223,207,.68);
+  color: var(--diagnosis-map-muted);
   font-size: var(--ok-type-content-min);
   line-height: 1.42;
 }
@@ -327,7 +333,7 @@ svg { display: block; }
   grid-template-columns: repeat(4,1fr);
   gap: 6px;
 }
-.progress-track i { height:1px; background:rgba(240,223,207,.24); }
+.progress-track i { height:1px; background:var(--diagnosis-map-line-soft); }
 .progress-track i.is-done { height:2px; background:var(--pink); }
 .quiz-question h3 {
   max-width: 20ch;
@@ -340,7 +346,7 @@ svg { display: block; }
 .quiz-question > p {
   max-width: 64ch;
   margin: 8px 0 0;
-  color: rgba(240,223,207,.7);
+  color: var(--diagnosis-map-muted);
   font-size: var(--ok-type-content-min);
   line-height: 1.42;
 }
@@ -359,10 +365,10 @@ svg { display: block; }
   grid-template-columns: 44px minmax(0,1fr) 20px;
   gap: 11px;
   align-items: center;
-  border: 1px solid rgba(240,223,207,.28);
+  border: 1px solid var(--diagnosis-map-line);
   border-radius: 0;
-  background: rgba(240,223,207,.015);
-  color: var(--cream);
+  background: var(--diagnosis-map-surface);
+  color: var(--diagnosis-map-text);
   text-align: left;
   cursor: pointer;
   transition: border-color .24s ease, background .24s ease;
@@ -371,7 +377,7 @@ svg { display: block; }
   align-self: stretch;
   display: grid;
   place-items: center;
-  border-right: 1px solid rgba(240,223,207,.18);
+  border-right: 1px solid var(--diagnosis-map-line-soft);
   color: #d6926e;
   font-family: var(--ok-font-display);
   font-size: 15px;
@@ -387,7 +393,7 @@ svg { display: block; }
 .answers button:hover,
 .answers button[aria-pressed="true"] {
   border-color: var(--pink);
-  background: rgba(240,223,207,.08);
+  background: var(--diagnosis-map-surface-active);
 }
 .answers button:hover i,
 .answers button[aria-pressed="true"] i { transform: translateX(4px); }
@@ -406,7 +412,7 @@ svg { display: block; }
   padding: 0;
   border: 0;
   background: transparent;
-  color: rgba(240,223,207,.72);
+  color: var(--diagnosis-map-muted);
   font-size: var(--ok-type-label-min);
   font-weight: 600;
   cursor: pointer;
@@ -414,49 +420,11 @@ svg { display: block; }
 .quiz-back:hover { color:var(--pink); }
 .quiz-privacy {
   margin: 0;
-  color: rgba(240,223,207,.5);
+  color: var(--diagnosis-map-muted);
   font-family: var(--ok-font-display);
   font-size: var(--ok-type-content-min);
   letter-spacing: .06em;
   text-transform: uppercase;
-}
-
-@media (min-width:821px) {
-  .map-interface {
-    color: var(--ok-color-text-on-light, var(--navy));
-  }
-
-  .map-intro p,
-  .quiz-question > p {
-    color: var(--ok-color-text-muted-on-light, #34424c);
-  }
-
-  .progress-track i {
-    background: rgba(7, 26, 44, .24);
-  }
-
-  .answers button {
-    border-color: rgba(7, 26, 44, .26);
-    background: rgba(255, 248, 239, .12);
-    color: var(--ok-color-text-on-light, var(--navy));
-  }
-
-  .answers button b {
-    border-color: rgba(7, 26, 44, .18);
-  }
-
-  .answers button:hover,
-  .answers button[aria-pressed="true"] {
-    background: rgba(255, 248, 239, .42);
-  }
-
-  .quiz-back {
-    color: rgba(7, 26, 44, .74);
-  }
-
-  .quiz-privacy {
-    color: var(--ok-color-text-muted-on-light, #34424c);
-  }
 }
 
 /* Oryginalny jasny finał z dynamiczną rekomendacją */

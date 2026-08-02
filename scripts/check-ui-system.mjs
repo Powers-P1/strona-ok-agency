@@ -183,7 +183,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("stabilny, wersjonowany moduł geometrii anotacji", failures);
 }
 
-// One deterministic group solver owns safety, collision rejection and silent hiding.
+// One deterministic group solver owns fixed artwork anchors and copy safety.
 {
   const failures = [];
   const path = "assets/art-coordinate-system.js";
@@ -192,7 +192,8 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/getArtBounds/, "publicznego kontraktu bezpiecznego obszaru"],
     [/okagency:art-safety-change/, "reakcji na zmianę maski"],
     [/okagency:annotationchange/, "reakcji na zmianę anotacji"],
-    [/const search = index =>/, "deterministycznego przeszukiwania grupy"],
+    [/const select = index =>/, "deterministycznego wyboru autorskich kotwic"],
+    [/fixedAnchorLayouts/, "cache stałych kotwic niezależnego od interakcji"],
     [/\["short", "compact", "base"\]/, "kolejności profili short → compact → base"],
     [/contains\(artBounds\.interactiveVisible, ring\)/, "twardego odrzucenia poza widocznym artworkiem i feather"],
     [/obstacles\.content\.some\(obstacle => intersects\(ring, obstacle\)\)/, "twardego odrzucenia kolizji punktu z treścią"],
@@ -267,6 +268,9 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/okagency:annotationchange/, "zdarzenia okagency:annotationchange"],
     [/detail:\s*\{\s*callout,\s*open\s*\}/, "payloadu { callout, open }"],
     [/closeWithin/, "metody closeWithin"],
+    [/content\.classList\.add\("has-proof-context-disclosure"\)/, "klasy enhancement ustawianej po wstawieniu disclosure"],
+    [/createElementNS\("http:\/\/www\.w3\.org\/2000\/svg",\s*"svg"\)/, "wspólnej ikony SVG dla generowanego disclosure"],
+    [/iconPath\.setAttribute\("d",\s*"M4 10h12M10 4v12"\)/, "geometrii plus/minus zgodnej z pozostałymi triggerami"],
   ]) {
     if (!pattern.test(source)) failures.push(`${path}: brak ${label}`);
   }

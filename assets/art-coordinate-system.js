@@ -47,6 +47,7 @@
   const runtimeAttributes = new Map();
   const debugOverlays = new Map();
   const debugSnapshots = new Map();
+  const fixedAnchorLayouts = new Map();
   const lastSolutions = new Map();
   const cleanupCallbacks = [];
   let solveFrame = 0;
@@ -142,9 +143,9 @@
     first.bottom > second.top;
 
   const intersectionArea = (first, second) => {
-    const width = Math.max(0, Math.min(first.right, second.right) - Math.max(first.left, second.left));
-    const height = Math.max(0, Math.min(first.bottom, second.bottom) - Math.max(first.top, second.top));
-    return width * height;
+    const width = Math.min(first.right, second.right) - Math.max(first.left, second.left);
+    const height = Math.min(first.bottom, second.bottom) - Math.max(first.top, second.top);
+    return width > 0 && height > 0 ? width * height : 0;
   };
 
   const contains = (outer, inner) =>
@@ -206,14 +207,35 @@
     element.setAttribute(attribute, value);
   };
 
-  const clearRuntime = () => {
+  const exitingAnnotations = () => new Set(adapters.flatMap(adapter => (
+    adapter.annotations.filter(annotation => {
+      if (isOpen(annotation)) return false;
+      const opacity = Number.parseFloat(getComputedStyle(annotation.copy).opacity || "0");
+      return opacity > 0.01;
+    })
+  )));
+
+  const clearRuntime = (preservedAnnotations = new Set()) => {
+    const preservedElements = new Set();
+    preservedAnnotations.forEach(annotation => {
+      preservedElements.add(annotation.callout);
+      preservedElements.add(annotation.copy);
+    });
+    const retainedStyles = new Map();
     runtimeStyles.forEach((properties, element) => {
+      if (preservedElements.has(element)) {
+        retainedStyles.set(element, properties);
+        return;
+      }
       properties.forEach(({ value, priority }, property) => {
         if (value) element.style.setProperty(property, value, priority);
         else element.style.removeProperty(property);
       });
     });
     runtimeStyles.clear();
+    retainedStyles.forEach((properties, element) => {
+      runtimeStyles.set(element, properties);
+    });
 
     runtimeAttributes.forEach((attributes, element) => {
       attributes.forEach((value, attribute) => {
@@ -225,6 +247,7 @@
 
     adapters.forEach(adapter => {
       adapter.annotations.forEach(annotation => {
+        if (preservedAnnotations.has(annotation)) return;
         annotation.callout.classList.toggle("flip", annotation.originalFlip);
       });
     });
@@ -388,6 +411,25 @@
     return { content, fixed };
   };
 
+  const fixedAnchorObstaclesFor = (adapter, sceneRect) => {
+    const obstacles = obstaclesFor(adapter, sceneRect);
+    const local = [...adapter.scene.querySelectorAll(".scroll-cue")]
+      .filter(isBox)
+      .map(element => viewportRectWithin(element, sceneRect, FIXED_UI_EXPANSION));
+    const global = [...document.querySelectorAll(".site-header, .motion-toggle")]
+      .filter(isBox)
+      .map(element => {
+        const bounds = element.getBoundingClientRect();
+        return rect(
+          bounds.left - FIXED_UI_EXPANSION,
+          bounds.top - FIXED_UI_EXPANSION,
+          bounds.width + FIXED_UI_EXPANSION * 2,
+          bounds.height + FIXED_UI_EXPANSION * 2,
+        );
+      });
+    return { content: obstacles.content, fixed: [...local, ...global] };
+  };
+
   const ringFor = point => rect(
     point.x - RING_RADIUS,
     point.y - RING_RADIUS,
@@ -522,7 +564,7 @@
     return null;
   };
 
-  const chooseOverlayCopyPosition = (
+  const chooseLeastObstructedCopyPosition = (
     annotation,
     point,
     width,
@@ -530,35 +572,24 @@
     obstacles,
     rings,
     visibleCopies,
-  ) => {
-    let best = null;
-    copyPositionCandidates(annotation, point, width, height).forEach(candidate => {
-      const copyRect = candidate.rect;
-      if (obstacles.fixed.some(obstacle => intersects(copyRect, obstacle))) return;
-      if (rings.some(ring => intersects(copyRect, ring))) return;
-      if (visibleCopies.some(sibling => intersects(copyRect, sibling))) return;
-      const contentOverlap = obstacles.content.reduce(
-        (total, obstacle) => total + intersectionArea(copyRect, obstacle),
-        0,
-      );
-      if (
-        !best
-        || contentOverlap < best.contentOverlap
-        || (
-          contentOverlap === best.contentOverlap
-          && candidate.displacementRank < best.displacementRank
-        )
-      ) {
-        best = {
-          ...candidate,
-          contentOverlap,
-        };
-      }
-    });
-    return best;
-  };
+  ) => copyPositionCandidates(annotation, point, width, height)
+    .filter(candidate => (
+      !obstacles.fixed.some(obstacle => intersects(candidate.rect, obstacle))
+      && !rings.some(ring => intersects(candidate.rect, ring))
+      && !visibleCopies.some(copy => intersects(candidate.rect, copy))
+    ))
+    .map(candidate => ({
+      candidate,
+      penalty: obstacles.content.reduce((total, obstacle) => (
+        total + intersectionArea(candidate.rect, obstacle)
+      ), 0),
+    }))
+    .sort((first, second) => (
+      first.penalty - second.penalty
+      || first.candidate.displacementRank - second.candidate.displacementRank
+    ))[0]?.candidate || null;
 
-  const placeCopies = (adapter, points, rings, obstacles, artBounds) => {
+  const placeCopies = (adapter, points, rings, obstacles) => {
     const copies = new Array(adapter.annotations.length);
     const openIndexes = [];
     const closedIndexes = [];
@@ -575,25 +606,25 @@
       if (!width || !height) return null;
       const open = isOpen(annotation);
       const ringsToAvoid = rings;
-      const position = chooseCopyPosition(
-        annotation,
-        points[index],
-        width,
-        height,
-        obstacles,
-        ringsToAvoid,
-        open ? visibleCopies : [],
-      ) || (artBounds.masked
-        ? chooseOverlayCopyPosition(
+      const position = open
+        ? chooseCopyPosition(
           annotation,
           points[index],
           width,
           height,
           obstacles,
           ringsToAvoid,
-          open ? visibleCopies : [],
+          visibleCopies,
+        ) || chooseLeastObstructedCopyPosition(
+          annotation,
+          points[index],
+          width,
+          height,
+          obstacles,
+          ringsToAvoid,
+          visibleCopies,
         )
-        : null);
+        : measuredAnnotationGeometry(adapter, annotation).copy;
       if (!position) return null;
       copies[index] = position;
       if (open) visibleCopies.push(position.rect);
@@ -607,60 +638,81 @@
     const profiles = activeProfiles(artBounds);
     const sceneRect = adapter.scene.getBoundingClientRect();
     const obstacles = obstaclesFor(adapter, sceneRect);
+    const fixedAnchorObstacles = fixedAnchorObstaclesFor(adapter, sceneRect);
     const candidates = adapter.annotations.map(annotation =>
       annotationCandidates(annotation, profiles, geometry));
     if (candidates.some(list => !list.length)) return null;
 
-    const points = new Array(adapter.annotations.length);
-    const rings = new Array(adapter.annotations.length);
-    let solution = null;
-    let ringConfigurations = 0;
-    let copyFailures = 0;
-
-    const search = index => {
-      if (solution) return;
-      if (index === adapter.annotations.length) {
-        ringConfigurations += 1;
-        const copies = placeCopies(adapter, points, rings, obstacles, artBounds);
-        if (copies) {
-          solution = {
-            geometry,
+    /* Hotspots are authored in the artwork coordinate system, just like the
+     * signals on the hero tree. Interaction may reflow a copy and its connector,
+     * but it must never select another point anchor. A responsive profile is
+     * selected once per artwork geometry and then reused across interactions. */
+    const anchorLayoutKey = [
+      `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`,
+      [geometry.left, geometry.top, geometry.width, geometry.height]
+        .map(value => Math.round(value * 10) / 10)
+        .join(","),
+      profiles.join(","),
+      artBounds.interactiveVisible
+        ? [
+          artBounds.interactiveVisible.left,
+          artBounds.interactiveVisible.top,
+          artBounds.interactiveVisible.width,
+          artBounds.interactiveVisible.height,
+        ].map(value => Math.round(value)).join(",")
+        : "no-art-bounds",
+      fixedAnchorObstacles.content
+        .map(bounds => [bounds.left, bounds.top, bounds.width, bounds.height]
+          .map(value => Math.round(value))
+          .join(","))
+        .join(";"),
+    ].join(":");
+    let anchorLayout = fixedAnchorLayouts.get(adapter);
+    if (anchorLayout?.key !== anchorLayoutKey) {
+      const points = new Array(adapter.annotations.length);
+      const rings = new Array(adapter.annotations.length);
+      let selected = null;
+      const select = index => {
+        if (selected) return;
+        if (index === adapter.annotations.length) {
+          selected = {
             points: points.map(point => ({ ...point })),
-            rings: rings.map(item => ({ ...item })),
-            copies,
+            rings: rings.map(ring => ({ ...ring })),
           };
-        } else {
-          copyFailures += 1;
+          return;
         }
-        return;
-      }
-
-      for (const point of candidates[index]) {
-        const ring = ringFor(point);
-        if (!ringFits(
-          ring,
-          point,
-          adapter,
-          artBounds,
-          obstacles,
-          rings.slice(0, index),
-        )) continue;
-        points[index] = point;
-        rings[index] = ring;
-        search(index + 1);
-        if (solution) return;
-      }
-    };
-
-    search(0);
+        for (const point of candidates[index]) {
+          const ring = ringFor(point);
+          if (!ringFits(
+            ring,
+            point,
+            adapter,
+            artBounds,
+            fixedAnchorObstacles,
+            rings.slice(0, index),
+          )) continue;
+          points[index] = point;
+          rings[index] = ring;
+          select(index + 1);
+          if (selected) return;
+        }
+      };
+      select(0);
+      if (!selected) return null;
+      anchorLayout = { key: anchorLayoutKey, ...selected };
+      fixedAnchorLayouts.set(adapter, anchorLayout);
+    }
+    const { points, rings } = anchorLayout;
+    const copies = placeCopies(adapter, points, rings, obstacles);
+    const solution = copies ? { geometry, points, rings, copies } : null;
     if (DEBUG_GEOMETRY) {
       debugSnapshots.set(adapter.scene, {
         scene: adapter.scene.id || null,
         status: solution ? "solved" : "fallback",
         masked: artBounds.masked,
         profiles: [...profiles],
-        ringConfigurations,
-        copyFailures,
+        ringConfigurations: 1,
+        copyFailures: copies ? 0 : 1,
         candidates: candidates.map((list, index) => list.map(point => ({
           profile: point.profile,
           x: Math.round(point.x * 10) / 10,
@@ -703,23 +755,112 @@
     );
   };
 
-  const applyServiceSolution = (adapter, solution) => {
+  const serviceConnectorGeometry = (adapter, geometry) => {
     adapter.scene
       .querySelectorAll(".annotation-lines")
       .forEach(layer => {
         setRuntimeStyle(layer, "inset", "auto");
-        setRuntimeStyle(layer, "left", `${solution.geometry.left}px`);
-        setRuntimeStyle(layer, "top", `${solution.geometry.top}px`);
-        setRuntimeStyle(layer, "width", `${solution.geometry.width}px`);
-        setRuntimeStyle(layer, "height", `${solution.geometry.height}px`);
+        setRuntimeStyle(layer, "left", `${geometry.left}px`);
+        setRuntimeStyle(layer, "top", `${geometry.top}px`);
+        setRuntimeStyle(layer, "width", `${geometry.width}px`);
+        setRuntimeStyle(layer, "height", `${geometry.height}px`);
+        setRuntimeAttribute(
+          layer,
+          "viewBox",
+          `0 0 ${geometry.coordinateWidth} ${geometry.coordinateHeight}`,
+        );
       });
-    adapter.scene.querySelectorAll(".annotation-lines").forEach(layer => {
-      setRuntimeAttribute(
-        layer,
-        "viewBox",
-        `0 0 ${solution.geometry.coordinateWidth} ${solution.geometry.coordinateHeight}`,
-      );
+  };
+
+  const measuredAnnotationGeometry = (adapter, annotation) => {
+    const sceneRect = adapter.scene.getBoundingClientRect();
+    const dotRect = annotation.dot.getBoundingClientRect();
+    const copyRect = annotation.copy.getBoundingClientRect();
+    const copy = rect(
+      copyRect.left - sceneRect.left,
+      copyRect.top - sceneRect.top,
+      copyRect.width,
+      copyRect.height,
+    );
+    return {
+      point: {
+        x: dotRect.left - sceneRect.left + dotRect.width / 2,
+        y: dotRect.top - sceneRect.top + dotRect.height / 2,
+      },
+      copy: {
+        left: copy.left,
+        top: copy.top,
+        rect: copy,
+      },
+    };
+  };
+
+  const updateAboutLeader = (annotation, point, copy) => {
+    const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
+    const targetX = copyIsRight ? copy.left : copy.rect.right;
+    const targetY = clamp(point.y, copy.top + 14, copy.rect.bottom - 14);
+    const lineX = targetX - point.x;
+    const lineY = targetY - point.y;
+    annotation.callout.classList.toggle("flip", !copyIsRight);
+    setRuntimeStyle(annotation.callout, "--leader-length", `${Math.hypot(lineX, lineY)}px`);
+    setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
+  };
+
+  const applyMeasuredConnectorGeometry = adapter => {
+    if (adapter.kind === "service") {
+      const geometry = coverGeometry(adapter.scene, adapter.art);
+      serviceConnectorGeometry(adapter, geometry);
+      adapter.annotations.forEach(annotation => {
+        const measured = measuredAnnotationGeometry(adapter, annotation);
+        updateServiceWire(adapter, annotation, measured.point, measured.copy, geometry);
+      });
+      return;
+    }
+
+    adapter.annotations.forEach(annotation => {
+      const measured = measuredAnnotationGeometry(adapter, annotation);
+      updateAboutLeader(annotation, measured.point, measured.copy);
     });
+  };
+
+  const applyAuthoredCopySafety = adapter => {
+    const geometry = coverGeometry(adapter.scene, adapter.art);
+    const artBounds = artBoundsFor(adapter.scene, adapter.art, geometry);
+    const sceneRect = adapter.scene.getBoundingClientRect();
+    const obstacles = obstaclesFor(adapter, sceneRect);
+    const points = adapter.annotations.map(annotation => (
+      measuredAnnotationGeometry(adapter, annotation).point
+    ));
+    const rings = points.map(ringFor);
+    const copies = placeCopies(adapter, points, rings, obstacles);
+    if (!copies) return false;
+
+    if (adapter.kind === "service") {
+      serviceConnectorGeometry(adapter, geometry);
+      adapter.annotations.forEach((annotation, index) => {
+        const copy = copies[index];
+        setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
+        setRuntimeStyle(annotation.callout, "--copy-right", "auto");
+        setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
+        updateServiceWire(adapter, annotation, points[index], copy, geometry);
+      });
+      return true;
+    }
+
+    adapter.annotations.forEach((annotation, index) => {
+      const point = points[index];
+      const copy = copies[index];
+      setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
+      setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
+      setRuntimeStyle(annotation.copy, "right", "auto");
+      setRuntimeStyle(annotation.copy, "--copy-shift-y", "0px");
+      updateAboutLeader(annotation, point, copy);
+    });
+    return true;
+  };
+
+  const applyServiceSolution = (adapter, solution) => {
+    serviceConnectorGeometry(adapter, solution.geometry);
 
     adapter.annotations.forEach((annotation, index) => {
       const point = solution.points[index];
@@ -751,14 +892,7 @@
       setRuntimeStyle(annotation.copy, "right", "auto");
       setRuntimeStyle(annotation.copy, "--copy-shift-y", "0px");
 
-      const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
-      const targetX = copyIsRight ? copy.left : copy.rect.right;
-      const targetY = clamp(point.y, copy.top + 14, copy.rect.bottom - 14);
-      const lineX = targetX - point.x;
-      const lineY = targetY - point.y;
-      annotation.callout.classList.toggle("flip", !copyIsRight);
-      setRuntimeStyle(annotation.callout, "--leader-length", `${Math.hypot(lineX, lineY)}px`);
-      setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
+      updateAboutLeader(annotation, point, copy);
     });
   };
 
@@ -801,7 +935,12 @@
   const solveAll = () => {
     solveFrame = 0;
     if (destroyed) return;
-    clearRuntime();
+    /* Opening B closes A synchronously, but A remains visible during its exit
+     * transition. Preserve A's complete runtime layout through this solve so
+     * the new card can be positioned without snapping the old card back to its
+     * authored coordinates for a single frame. The next solve may clear A once
+     * its opacity reaches zero. */
+    clearRuntime(exitingAnnotations());
     clearDebugOverlays();
     debugSnapshots.clear();
     if (innerWidth <= 640) {
@@ -809,7 +948,23 @@
     }
 
     const solutions = adapters.map(adapter => {
-      const layoutKey = `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`;
+      const sceneRect = adapter.scene.getBoundingClientRect();
+      const obstacles = obstaclesFor(adapter, sceneRect);
+      const obstacleKey = [...obstacles.content, ...obstacles.fixed]
+        .map(bounds => [bounds.left, bounds.top, bounds.width, bounds.height]
+          .map(value => Math.round(value))
+          .join(","))
+        .join(";");
+      const openKey = adapter.annotations
+        .map((annotation, index) => isOpen(annotation) ? index : null)
+        .filter(index => index !== null)
+        .join(",");
+      const layoutKey = [
+        `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`,
+        `${Math.round(sceneRect.left)},${Math.round(sceneRect.top)}`,
+        openKey,
+        obstacleKey,
+      ].join(":");
       const solution = solveAdapter(adapter);
       if (solution) {
         lastSolutions.set(adapter, { layoutKey, solution });
@@ -821,6 +976,7 @@
     adapters.forEach((adapter, index) => {
       const solution = solutions[index];
       if (!solution) {
+        if (!applyAuthoredCopySafety(adapter)) applyMeasuredConnectorGeometry(adapter);
         renderDebugOverlay(adapter, null);
         return;
       }
@@ -845,7 +1001,11 @@
   listen(window, "orientationchange", schedule, { passive: true });
   listen(window.visualViewport, "resize", schedule, { passive: true });
   listen(window, "okagency:art-safety-change", schedule);
-  listen(window, "okagency:annotationchange", schedule);
+  listen(window, "okagency:annotationchange", event => {
+    /* Keep the last open copy coordinates while it fades out. Re-solving the
+     * closed state here made the card visibly jump during its exit transition. */
+    if (event.detail?.open) schedule();
+  });
   listen(window, "okagency:motionchange", schedule);
   listen(window, "scroll", () => {
     if (document.querySelector(".annotation-callout.is-open, .annotation.is-open")) schedule();
@@ -858,7 +1018,6 @@
     adapters.forEach(adapter => {
       resizeObserver.observe(adapter.scene);
       resizeObserver.observe(adapter.art);
-      adapter.annotations.forEach(annotation => resizeObserver.observe(annotation.copy));
     });
   }
 
@@ -867,6 +1026,7 @@
     if (solveFrame) cancelAnimationFrame(solveFrame);
     resizeObserver?.disconnect();
     lastSolutions.clear();
+    fixedAnchorLayouts.clear();
     cleanupCallbacks.splice(0).forEach(cleanup => cleanup());
     clearRuntime();
     clearDebugOverlays();

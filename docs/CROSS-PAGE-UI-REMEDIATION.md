@@ -1,7 +1,7 @@
 # Systemowy plan napraw UI między podstronami
 
 Data utworzenia: 2026-08-01
-Status: **Fazy 0–10 zakończone i opublikowane**
+Status: **Fazy 0–10 opublikowane; stabilizacja kotwic w ponownym odbiorze**
 Zakres tego dokumentu: system wspólny i desktop; mobile jest bramką regresji i osobnym zakresem koordynowanym z `MOBILE-QA-2026-08-01.md`.
 
 ## 1. Cel i reguły wykonania
@@ -406,3 +406,35 @@ Dla każdego kadru i właściwej trasy:
 | 2026-08-01 | Reopen Fazy 5 — trwałe znikanie punktów | working tree | PASS po odtworzeniu zgłoszonej sekwencji | usunięto `annotations-unavailable`, zachowywany jest ostatni poprawny układ; brak grupowego ukrywania przy scroll/resize; kompaktowe kotwice i strefa feather przechodzą 6 tras × 7 viewportów |
 | 2026-08-01 | Faza 10 — publikacja i produkcyjny odbiór | PR #71, `93771ef`, Pages `a32ace6d-6af5-4633-acb9-376a8bf779ee` | PASS | CI, Worker i monitor `30725556830` zielone; produkcja odtwarza sekwencję użytkownika z 4/4 punktami; Mac-like oraz mobile regression PASS; CSP consent-mode objęte follow-upem i testem statycznym |
 | 2026-08-02 | Audyt końcowy po publikacji | branch `agent/final-cross-page-audit` | PASS lokalny, gotowy do PR | 16/16 zgłoszeń ponownie odebranych. Przy 1024×768 poprawiono graniczny ring `journey-outcome`, wspólny solver omija wszystkimi kartami wszystkie ringi, a kompaktowe karty O nas mieszczą się poza panelem treści. PASS: 6 tras × 7 viewportów, pełna Diagnoza + opcjonalny kontakt, FAQ/stopka, build, Pages/Worker i niezależny mobile NO-CHANGE QA 13/13 tras. |
+
+## 10. Reopen: disclosure, CTA i ciągłość łączników
+
+Zakres tej fazy wynika z kolejnych screenshotów produkcyjnych. Poprawka ma pozostać systemowa: wspólny disclosure nie może wypychać CTA poza pełny kadr, a wspólny solver musi traktować punkt, leader/wire i kartę jako jedną spójną geometrię.
+
+- [x] odtworzyć przycięcie CTA po rozwinięciu disclosure na usługach i O nas przy niskich viewportach desktopowych;
+- [x] zmierzyć dostępny budżet wysokości panelu: header, intro, disclosure, rezultat i CTA względem granicy sceny;
+- [x] wskazać jednego właściciela układu disclosure/CTA zamiast korekt per trasa;
+- [x] odtworzyć `Objaw`, `Kontekst` oraz przykłady O nas z niedochodzącym albo odwróconym leaderem;
+- [x] rozszerzyć solver/test o zakaz przecięcia karty z własnym ringiem oraz ciągłość dot → leader/wire → krawędź karty;
+- [x] sprawdzić wszystkie 53 callouty na 1512×982, 1512×800, 1440×900, 1280×720 i 1024×768;
+- [x] powtórzyć guard mobile 390×844 i 360×640 bez zmiany polityki `<=640px`;
+- [x] objąć końcowym profilem krótkiego tabletu pas 821–849 px × 621–700 px i dodać graniczne 840×640 / 840×700 do obowiązkowej bramki disclosure;
+- [x] ukrywać krótki-mobile `proof-lead` dopiero po potwierdzonym wstawieniu zamiennego disclosure `Kontekst` i dodać browserowy guard bez JavaScriptu;
+- [ ] odebrać wizualnie przed/po, uruchomić pełne build/quality/Pages/Worker, opublikować i sprawdzić domenę.
+
+Status lokalnej bramki: PASS. Wspólny profil scen obejmuje 1440×900, 1440×640, 1440×600, 1024×640, 1024×600, 390×844 i 360×640; po każdym rozwinięciu scena zachowuje `100svh`, brak nested scrolla i dryfu, a CTA ma bezpieczny dolny margines. Wszystkie 53 callouty przeszły pełną geometrię w 7 viewportach: otwarta karta nie przecina własnego/sąsiedniego ringu, a widoczny SVG lub leader zaczyna się w centrum punktu i kończy na rzeczywistej krawędzi karty. Mobile 390/360 zachowuje 0 anotacji; krótki profil 360 mieści również CTA po otwarciu disclosure. Wizualny odbiór szerokiego 1440×600 i mobile 360×640 PASS. `check:annotation-energy`, pełny `build`, Pages Functions, Worker dry-run, middleware i `git diff --check` PASS. Publikacja i produkcyjny smoke test pozostają ostatnią bramką tej fazy.
+
+### Reopen: stałe kotwice obrazu i stabilne zamknięcie dymka
+
+- [x] odtworzyć zmianę pozycji dymka już po zdjęciu stanu `is-open`, ale jeszcze podczas widocznego zanikania;
+- [x] rozdzielić wybór punktu od układania dymka: karta nie może wymusić innej kotwicy;
+- [x] wybierać wyłącznie spośród autorskich współrzędnych `base` / `compact` / `short` i zapamiętać wynik dla geometrii artworku;
+- [x] wykluczyć hover, kliknięcie, stan otwarcia i scroll z klucza stałych kotwic;
+- [x] przy zamknięciu zachować ostatnią pozycję layoutową karty aż do końca jej animacji wyjścia;
+- [x] rozszerzyć test o współrzędne wszystkich punktów przed/po interakcji, stabilność podczas scrollu oraz każdą widoczną klatkę zamykania;
+- [x] odtworzyć sekwencję `A otwarty → B otwierany, gdy A jeszcze zanika`: karta A zachowuje ostatnią pozycję w każdej widocznej klatce, karta B układa się niezależnie, a wszystkie punkty pozostają nieruchome;
+- [x] rozszerzyć automat o przełączenie A→B bez oczekiwania na koniec animacji A i sprawdzić równocześnie pozycję obu kart oraz wszystkich kotwic;
+- [x] przejść pełną macierz 6 tras × 7 viewportów i wykonać końcowe screenshoty bez overlayu diagnostycznego;
+- [ ] scalić PR, opublikować i odebrać domenę produkcyjną.
+
+Status lokalnej bramki A→B: PASS. Solver zachowuje kompletny runtime layout wychodzącej anotacji aż do opacity ≤ 0,01, więc otwarcie B nie może wyczyścić współrzędnych nadal widocznej karty A. Automat próbuje każdą klatkę przez 520 ms i równocześnie mierzy kartę A, widoczność B oraz wszystkie kotwice obrazu. PASS: 6 tras przy 1280×720, reprezentatywne WWW/Diagnoza/O nas przy 1024×768, centralny mobile guard 6 tras przy 390×844, 5 tras × 10 niskich viewportów disclosure/CTA, pełny build/quality, maski energii 84/31/9, Pages Functions, Worker dry-run i `git diff --check`. Ręczny odbiór użytkownika oraz screenshot przejściowy 1280×720 potwierdzają brak skoku. Pełna macierz 6×7 pozostaje wymaganą bramką CI przed publikacją.

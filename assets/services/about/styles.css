@@ -784,6 +784,10 @@ h2 {
   line-height: 1.45;
 }
 
+.mobile-details .mobile-context {
+  display: none;
+}
+
 .scene-dark .mobile-details p {
   color: rgba(234, 217, 203, .7);
 }
@@ -1437,6 +1441,94 @@ h2 {
   }
 }
 
+/* Route composition for short desktop viewports. The shared scene owner only
+ * supplies the viewport/content budget; About owns its unique four-scene rail. */
+@media (min-width: 821px) and (max-height: 700px) {
+  .about-page .accordion-detail {
+    transition: opacity .2s ease;
+  }
+
+  .about-page :is(.scene-02, .scene-03) .copy-panel {
+    top: 1%;
+  }
+
+  .about-page .scene-01 .copy-panel {
+    top: 0;
+    width: min(680px, 64vw);
+  }
+
+  .about-page .scene-04 .copy-panel {
+    top: 0;
+    width: min(820px, 76vw);
+  }
+
+  .about-page .scene-01 h1 {
+    font-size: clamp(42px, 4.4vw, 46px);
+  }
+
+  .about-page :is(.scene-02, .scene-03, .scene-04) h2 {
+    font-size: clamp(43px, 4.7vw, 49px);
+  }
+
+  .about-page :is(.lead, .scene-04 .lead) {
+    margin-top: 7px;
+    max-width: none;
+  }
+
+  .about-page .chips {
+    margin-top: 8px;
+  }
+
+  .about-page .scene-04 .proof-statement {
+    margin-top: 6px;
+    padding-block: 5px;
+  }
+
+  .about-page .scene-04 :is(.lead, .proof-statement, .result) {
+    max-width: none;
+  }
+
+  .about-page :is(.result, .scene-04 .result, .actions, .scene-04 .actions) {
+    margin-top: 3px;
+  }
+
+  .about-page .scene-03 .model-points li {
+    min-height: 64px;
+    padding-block: 4px;
+  }
+}
+
+@media (min-width: 821px) and (max-height: 620px) {
+  .about-page :is(.scene-02, .scene-03, .scene-04) h2 {
+    font-size: clamp(39px, 4.1vw, 43px);
+  }
+
+  .about-page .chips {
+    gap: 4px;
+  }
+
+  .about-page .chips li {
+    padding: 6px 7px;
+    letter-spacing: .06em;
+  }
+
+  .about-page .mobile-details {
+    margin-top: 6px;
+  }
+
+  .about-page .primary-cta {
+    min-height: 46px;
+  }
+
+  .about-page .scene-04 .accordion-trigger {
+    min-height: 44px;
+  }
+
+  .about-page .scene-03 .model-points li {
+    min-height: 56px;
+  }
+}
+
 @media (max-width: 640px) and (max-height: 700px) {
   .scene-04 :is(.lead, .proof-statement, .result) {
     display: none;
@@ -1712,11 +1804,64 @@ h2 {
   }
 
   .scene-02 .copy-panel {
-    top: 218px;
+    top: 9px;
+    padding-right: 100px;
   }
 
-  .portrait-frame {
-    height: 184px;
+  .scene-02 .portrait-frame {
+    width: 84px;
+    height: 150px;
+  }
+
+  .copy-panel,
+  .scene-02 .copy-panel,
+  .scene-03 .copy-panel {
+    padding-block: 12px 10px;
+  }
+
+  .scene-01 .chips,
+  .scene-02 .lead,
+  .scene-02 .result,
+  .scene-03 .result {
+    display: none;
+  }
+
+  .scene-02 .kicker,
+  :is(.scene-02, .scene-03) .mobile-details details:first-child > p:not(.mobile-context) {
+    display: none;
+  }
+
+  :is(.scene-02, .scene-03) .mobile-details .mobile-context {
+    display: block;
+  }
+
+  .scene-01 h1,
+  .scene-03 h2 {
+    font-size: clamp(38px, 11.5vw, 44px);
+  }
+
+  .scene-02 h2 {
+    font-size: 31px;
+  }
+
+  .scene-01 .lead,
+  .scene-03 .lead {
+    margin-top: 7px;
+    line-height: 1.35;
+  }
+
+  .mobile-details,
+  .actions {
+    margin-top: 6px;
+  }
+
+  .mobile-details summary {
+    min-height: 44px;
+  }
+
+  .mobile-details p {
+    margin-bottom: 5px;
+    line-height: 1.35;
   }
 }
 
@@ -1740,6 +1885,68 @@ h2 {
 
   body.about-page .site-header nav a {
     white-space: nowrap;
+  }
+
+  .scene-04 .accordion-trigger {
+    min-height: 44px;
+  }
+
+  .scene-04 .actions {
+    margin-top: 0;
+  }
+}
+
+/* Between the desktop and phone compositions, short tablet/laptop windows use
+ * one compact About rail. Keeping this after the width-only tablet rules makes
+ * the height budget authoritative without duplicating it per scene element. */
+@media (min-width: 821px) and (max-width: 900px) and (max-height: 700px) {
+  .about-page :is(
+    .copy-panel,
+    .scene-01 .copy-panel,
+    .scene-03 .copy-panel,
+    .scene-04 .copy-panel
+  ) {
+    top: 6px;
+    right: 18px;
+    left: 18px;
+    width: auto;
+    padding: 10px 14px 8px;
+  }
+
+  .about-page .scene-02 .copy-panel {
+    top: 6px;
+    right: 18px;
+    left: auto;
+    width: 64vw;
+    padding: 10px 14px 8px;
+  }
+
+  .about-page .scene-02 .portrait-frame {
+    top: 5%;
+    right: auto;
+    left: 18px;
+    width: 26vw;
+    height: 76vh;
+  }
+
+  .about-page .scene-01 h1 {
+    font-size: 46px;
+  }
+
+  .about-page :is(.scene-02, .scene-03, .scene-04) h2 {
+    font-size: 39px;
+  }
+
+  .about-page :is(.mobile-details, .accordion) {
+    margin-top: 4px;
+  }
+
+  .about-page :is(.mobile-details summary, .accordion-trigger) {
+    min-height: 42px;
+  }
+
+  .about-page :is(.lead, .proof-statement, .result, .actions) {
+    margin-top: 4px;
   }
 }
 

@@ -384,6 +384,9 @@ npm ci
 npm run sync:asset-versions
 npm run check:asset-versions
 npm run check:links
+npx playwright install --with-deps chromium
+npm run check:scene-disclosures
+npm run check:annotation-geometry
 npm run build
 npm run check:pages-functions
 npm run check:worker
@@ -393,6 +396,16 @@ Wersje wspólnych CSS/JS są utrzymywane wyłącznie w
 [`scripts/asset-versions.mjs`](../scripts/asset-versions.mjs). Komenda
 `sync:asset-versions` aktualizuje wszystkie produkcyjne HTML-e, a
 `check:asset-versions` blokuje ręcznie rozjechane query stringi.
+
+Workflow `CI / validate` instaluje Chromium wraz z zależnościami systemowymi i
+uruchamia `check:scene-disclosures` oraz `check:annotation-geometry` przed
+budowaniem artefaktu. Pierwsza bramka sprawdza pełnokadrową geometrię scen,
+brak wewnętrznych scrollerów, pełną widoczność rozwiniętych treści i położenie
+akcji. Druga otwiera punkty na sześciu trasach i kontroluje położenie dymków,
+końce łączników, bezpieczne strefy treści oraz widoczność po scrollowaniu.
+Jeżeli instalacja przeglądarki lub którykolwiek test kontraktu zawiedzie, nie
+należy omijać bramki: najpierw odtwórz ją lokalnie powyższymi komendami i
+popraw wspólny kontrakt albo sam test razem z dokumentacją.
 
 Następnie:
 

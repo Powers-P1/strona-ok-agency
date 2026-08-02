@@ -1,7 +1,10 @@
 import process from "node:process";
+import { spawn } from "node:child_process";
+import { createServer } from "node:net";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
-const DEFAULT_BASE_URL = "http://127.0.0.1:7133";
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SCENE_SELECTOR = [
   ".campaign-frame",
   ".social-frame",
@@ -238,6 +241,19 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     );
   }
 
+  [...scene.querySelectorAll(".proof-actions, .actions, .outline-cta")]
+    .filter(visible)
+    .forEach((actionGroup, actionIndex) => {
+      const actionRect = actionGroup.getBoundingClientRect();
+      const clearance = sceneRect.bottom - actionRect.bottom;
+      if (clearance < 12 - TOLERANCE) {
+        issue(
+          `scene-action-${actionIndex + 1}`,
+          `scene action has ${clearance.toFixed(1)}px bottom clearance, expected at least 12px`,
+        );
+      }
+    });
+
   [...scene.querySelectorAll("*")].forEach((element, nestedIndex) => {
     const style = getComputedStyle(element);
     const scrollsX = /(auto|scroll)/.test(style.overflowX) && element.scrollWidth > element.clientWidth + 1;
@@ -403,6 +419,181 @@ const waitForNoObscured = async page => {
   ), null, { timeout: 4_000 });
 };
 
+const anchorCenters = async (page, sceneIndex) => page.evaluate(({
+  selector,
+  sceneNumber,
+}) => {
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const sceneRect = scene.getBoundingClientRect();
+  return [...scene.querySelectorAll(".annotation-callout, .annotation")].map(callout => {
+    const dot = callout.querySelector(".annotation-dot");
+    const bounds = dot.getBoundingClientRect();
+    return {
+      key: callout.dataset.annotation || dot.getAttribute("aria-controls"),
+      x: bounds.left - sceneRect.left + bounds.width / 2,
+      y: bounds.top - sceneRect.top + bounds.height / 2,
+    };
+  });
+}, { selector: SCENE_SELECTOR, sceneNumber: sceneIndex });
+
+const anchorMovementIssues = (baseline, current, state) => {
+  const issues = [];
+  baseline.forEach((anchor, index) => {
+    const next = current[index];
+    if (!next || next.key !== anchor.key) {
+      issues.push(`${state}: anchor order changed for ${anchor.key || `callout-${index + 1}`}`);
+      return;
+    }
+    const distance = Math.hypot(next.x - anchor.x, next.y - anchor.y);
+    if (distance > .5) {
+      issues.push(`${state}: ${anchor.key} moved ${distance.toFixed(2)}px after interaction`);
+    }
+  });
+  return issues;
+};
+
+const closingCopyLayoutIssues = async (page, sceneIndex, calloutIndex) => page.evaluate(async ({
+  selector,
+  sceneNumber,
+  calloutNumber,
+}) => {
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const callout = scene.querySelectorAll(".annotation-callout, .annotation")[calloutNumber];
+  const dot = callout.querySelector(".annotation-dot");
+  const copy = callout.querySelector(".annotation-copy");
+  const initial = { left: copy.offsetLeft, top: copy.offsetTop };
+  const samples = [];
+  const started = performance.now();
+  dot.dispatchEvent(new PointerEvent("pointerleave", {
+    bubbles: false,
+    pointerType: "mouse",
+  }));
+
+  while (performance.now() - started < 520) {
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    const opacity = Number.parseFloat(getComputedStyle(copy).opacity || "0");
+    if (opacity > .01) {
+      samples.push({
+        left: copy.offsetLeft,
+        top: copy.offsetTop,
+        opacity,
+      });
+    }
+  }
+
+  return samples.flatMap(sample => {
+    const movement = Math.hypot(sample.left - initial.left, sample.top - initial.top);
+    return movement > .5
+      ? [`closing copy layout moved ${movement.toFixed(2)}px while still visible`]
+      : [];
+  });
+}, {
+  selector: SCENE_SELECTOR,
+  sceneNumber: sceneIndex,
+  calloutNumber: calloutIndex,
+});
+
+const switchingCopyLayoutIssues = async (
+  page,
+  sceneIndex,
+  firstCalloutIndex,
+  secondCalloutIndex,
+) => page.evaluate(async ({
+  selector,
+  sceneNumber,
+  firstNumber,
+  secondNumber,
+}) => {
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const callouts = [...scene.querySelectorAll(".annotation-callout, .annotation")];
+  const first = callouts[firstNumber];
+  const second = callouts[secondNumber];
+  const firstCopy = first?.querySelector(".annotation-copy");
+  const secondCopy = second?.querySelector(".annotation-copy");
+  const api = window.OKAgencyAnnotations;
+  if (!first || !second || !firstCopy || !secondCopy || !api) {
+    return ["A→B transition setup is unavailable"];
+  }
+
+  const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+  const anchorCenters = () => {
+    const sceneRect = scene.getBoundingClientRect();
+    return callouts.map(callout => {
+      const dot = callout.querySelector(".annotation-dot");
+      const bounds = dot.getBoundingClientRect();
+      return {
+        x: bounds.left - sceneRect.left + bounds.width / 2,
+        y: bounds.top - sceneRect.top + bounds.height / 2,
+      };
+    });
+  };
+
+  api.closeAll();
+  await nextFrame();
+  api.open(first);
+  await nextFrame();
+  await nextFrame();
+  await nextFrame();
+
+  const initialCopy = { left: firstCopy.offsetLeft, top: firstCopy.offsetTop };
+  const initialAnchors = anchorCenters();
+  let maximumCopyMovement = 0;
+  let maximumAnchorMovement = 0;
+  let secondBecameVisible = false;
+  const started = performance.now();
+
+  api.open(second);
+  while (performance.now() - started < 520) {
+    await nextFrame();
+    const firstOpacity = Number.parseFloat(getComputedStyle(firstCopy).opacity || "0");
+    if (firstOpacity > .01) {
+      maximumCopyMovement = Math.max(
+        maximumCopyMovement,
+        Math.hypot(
+          firstCopy.offsetLeft - initialCopy.left,
+          firstCopy.offsetTop - initialCopy.top,
+        ),
+      );
+    }
+    secondBecameVisible ||= (
+      second.classList.contains("is-open")
+      && Number.parseFloat(getComputedStyle(secondCopy).opacity || "0") > .01
+    );
+    anchorCenters().forEach((anchor, index) => {
+      maximumAnchorMovement = Math.max(
+        maximumAnchorMovement,
+        Math.hypot(
+          anchor.x - initialAnchors[index].x,
+          anchor.y - initialAnchors[index].y,
+        ),
+      );
+    });
+  }
+
+  api.closeAll();
+  const closingStarted = performance.now();
+  while (performance.now() - closingStarted < 520) await nextFrame();
+
+  const issues = [];
+  if (maximumCopyMovement > .5) {
+    issues.push(
+      `A→B transition moved the exiting A copy ${maximumCopyMovement.toFixed(2)}px while visible`,
+    );
+  }
+  if (maximumAnchorMovement > .5) {
+    issues.push(
+      `A→B transition moved an artwork anchor ${maximumAnchorMovement.toFixed(2)}px`,
+    );
+  }
+  if (!secondBecameVisible) issues.push("A→B transition did not reveal the B copy");
+  return issues;
+}, {
+  selector: SCENE_SELECTOR,
+  sceneNumber: sceneIndex,
+  firstNumber: firstCalloutIndex,
+  secondNumber: secondCalloutIndex,
+});
+
 const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
   selector,
   sceneNumber,
@@ -460,6 +651,7 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
   }
   if (visible(copy)) {
     const copyRect = rect(copy);
+    const dotRect = rect(dot);
     const sceneRect = rect(scene);
     const safeScene = {
       left: sceneRect.left + 24,
@@ -473,6 +665,10 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
       || copyRect.right > safeScene.right + 1
       || copyRect.bottom > safeScene.bottom + 1
     ) issue("copy leaves the scene 24px safe inset");
+
+    if (intersects(copyRect, dotRect)) {
+      issue("copy intersects its own target");
+    }
 
     callouts.forEach((sibling, siblingIndex) => {
       const siblingDot = sibling.querySelector(".annotation-dot");
@@ -509,6 +705,157 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
       .forEach(siblingCopy => {
         if (intersects(copyRect, rect(siblingCopy))) issue("copy intersects an open sibling copy");
       });
+
+    const dotCenter = {
+      x: (dotRect.left + dotRect.right) / 2,
+      y: (dotRect.top + dotRect.bottom) / 2,
+    };
+    const distanceToSegment = (point, start, end) => {
+      const lengthSquared = (end.x - start.x) ** 2 + (end.y - start.y) ** 2;
+      const ratio = lengthSquared
+        ? Math.max(0, Math.min(1, (
+          ((point.x - start.x) * (end.x - start.x))
+          + ((point.y - start.y) * (end.y - start.y))
+        ) / lengthSquared))
+        : 0;
+      return Math.hypot(
+        point.x - (start.x + ratio * (end.x - start.x)),
+        point.y - (start.y + ratio * (end.y - start.y)),
+      );
+    };
+    const distanceToCopyEdge = point => Math.min(
+      distanceToSegment(
+        point,
+        { x: copyRect.left, y: copyRect.top },
+        { x: copyRect.right, y: copyRect.top },
+      ),
+      distanceToSegment(
+        point,
+        { x: copyRect.right, y: copyRect.top },
+        { x: copyRect.right, y: copyRect.bottom },
+      ),
+      distanceToSegment(
+        point,
+        { x: copyRect.right, y: copyRect.bottom },
+        { x: copyRect.left, y: copyRect.bottom },
+      ),
+      distanceToSegment(
+        point,
+        { x: copyRect.left, y: copyRect.bottom },
+        { x: copyRect.left, y: copyRect.top },
+      ),
+    );
+
+    if (callout.classList.contains("annotation-callout")) {
+      const wire = callout.dataset.annotation
+        ? scene.querySelector(`.annotation-wire[data-line="${callout.dataset.annotation}"]`)
+        : null;
+      const path = wire?.querySelector("path");
+      const svg = path?.closest("svg");
+      const pathStyle = path && getComputedStyle(path);
+      const effectivelyVisible = element => {
+        let opacity = 1;
+        for (let current = element; current && current !== document; current = current.parentElement) {
+          const currentStyle = getComputedStyle(current);
+          if (
+            currentStyle.display === "none"
+            || currentStyle.visibility === "hidden"
+            || currentStyle.visibility === "collapse"
+          ) return false;
+          opacity *= Number.parseFloat(currentStyle.opacity || "1");
+        }
+        return opacity > .99;
+      };
+      const values = path?.getAttribute("d")?.match(/-?\d+(?:\.\d+)?/g)?.map(Number) || [];
+      const viewBox = svg?.getAttribute("viewBox")?.trim().split(/\s+/).map(Number) || [];
+      const width = Number.parseFloat(svg?.style.width || "");
+      const height = Number.parseFloat(svg?.style.height || "");
+      const left = Number.parseFloat(svg?.style.left || "0");
+      const top = Number.parseFloat(svg?.style.top || "0");
+      if (!wire?.classList.contains("is-open") || !path || values.length < 4 || viewBox.length !== 4) {
+        issue("open service callout has no active connector path");
+      } else if (
+        !effectivelyVisible(path)
+        || pathStyle.stroke === "none"
+      ) {
+        issue("open service connector path is not visibly rendered");
+      } else if (![width, height, left, top].every(Number.isFinite)) {
+        issue("service connector has incomplete runtime geometry");
+      } else {
+        const mapPoint = (x, y) => ({
+          x: sceneRect.left + left + ((x - viewBox[0]) / viewBox[2]) * width,
+          y: sceneRect.top + top + ((y - viewBox[1]) / viewBox[3]) * height,
+        });
+        const start = mapPoint(values[0], values[1]);
+        const end = mapPoint(values.at(-2), values.at(-1));
+        if (Math.hypot(start.x - dotCenter.x, start.y - dotCenter.y) > 1.5) {
+          issue("connector does not start at its target center");
+        }
+        if (distanceToCopyEdge(end) > 1.5) {
+          issue("connector does not terminate at the callout edge");
+        }
+      }
+    } else {
+      const style = getComputedStyle(callout);
+      const leaderStyle = getComputedStyle(callout, "::before");
+      const length = Number.parseFloat(style.getPropertyValue("--leader-length"));
+      const angle = Number.parseFloat(style.getPropertyValue("--leader-angle"));
+      const leaderWidth = Number.parseFloat(leaderStyle.width);
+      const leaderLeft = Number.parseFloat(leaderStyle.left);
+      const leaderTop = Number.parseFloat(leaderStyle.top);
+      const leaderHeight = Number.parseFloat(leaderStyle.height);
+      const matrixValues = leaderStyle.transform.match(/^matrix\(([^)]+)\)$/)?.[1]
+        ?.split(",")
+        .map(Number);
+      const originParts = leaderStyle.transformOrigin.split(/\s+/);
+      const originValue = (value, size) => value?.endsWith("%")
+        ? Number.parseFloat(value) * size / 100
+        : Number.parseFloat(value);
+      const originX = originValue(originParts[0], leaderWidth);
+      const originY = originValue(originParts[1], leaderHeight);
+      if (
+        leaderStyle.display === "none"
+        || leaderStyle.visibility === "hidden"
+        || Number.parseFloat(leaderStyle.opacity || "0") <= .99
+        || leaderStyle.backgroundColor === "rgba(0, 0, 0, 0)"
+      ) {
+        issue("open about connector is not visibly rendered");
+      } else if (
+        !Number.isFinite(length)
+        || !Number.isFinite(angle)
+        || !Number.isFinite(leaderWidth)
+        || !Number.isFinite(leaderLeft)
+        || !Number.isFinite(leaderTop)
+        || !Number.isFinite(leaderHeight)
+        || !Number.isFinite(originX)
+        || !Number.isFinite(originY)
+        || !matrixValues
+        || matrixValues.length !== 6
+        || length <= 0
+      ) {
+        issue("about connector has incomplete runtime geometry");
+      } else {
+        const calloutRect = callout.getBoundingClientRect();
+        const transformPoint = (x, y) => ({
+          x: calloutRect.left + leaderLeft + originX
+            + matrixValues[0] * (x - originX)
+            + matrixValues[2] * (y - originY)
+            + matrixValues[4],
+          y: calloutRect.top + leaderTop + originY
+            + matrixValues[1] * (x - originX)
+            + matrixValues[3] * (y - originY)
+            + matrixValues[5],
+        });
+        const start = transformPoint(0, leaderHeight / 2);
+        const end = transformPoint(leaderWidth, leaderHeight / 2);
+        if (Math.hypot(start.x - dotCenter.x, start.y - dotCenter.y) > 1.5) {
+          issue("about connector does not start at its target center");
+        }
+        if (distanceToCopyEdge(end) > 1.5) {
+          issue("about connector does not terminate at the callout edge");
+        }
+      }
+    }
   }
 
   return { key, issues };
@@ -555,6 +902,21 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
   const offsets = [0, 24, 56, 92, 128, 160];
   const issues = [];
   const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+  const centers = () => {
+    const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const artRect = art?.getBoundingClientRect();
+    const reference = artRect?.width > 0 && artRect?.height > 0
+      ? artRect
+      : scene.getBoundingClientRect();
+    return callouts.map(callout => {
+      const dotRect = callout.querySelector(".annotation-dot").getBoundingClientRect();
+      return {
+        x: (dotRect.left - reference.left + dotRect.width / 2) / reference.width,
+        y: (dotRect.top - reference.top + dotRect.height / 2) / reference.height,
+      };
+    });
+  };
+  const stableCenters = centers();
 
   for (const offset of offsets) {
     scrollTo(0, sceneTop + offset);
@@ -562,6 +924,17 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
       detail: { source: "annotation-scroll-visibility-audit" },
     }));
     await nextFrame();
+
+    centers().forEach((point, index) => {
+      const baseline = stableCenters[index];
+      const movement = Math.hypot(
+        (point.x - baseline.x) * scene.clientWidth,
+        (point.y - baseline.y) * scene.clientHeight,
+      );
+      if (movement > .5) {
+        issues.push(`scroll offset ${offset}px moves point ${index + 1} by ${movement.toFixed(2)}px relative to artwork`);
+      }
+    });
 
     if (scene.classList.contains("annotations-unavailable")) {
       issues.push(`scroll offset ${offset}px activates the removed hidden mode`);
@@ -601,9 +974,19 @@ const exercisePoint = async (
 
   try {
     await page.keyboard.press("Escape");
+    await dot.scrollIntoViewIfNeeded();
+    await settleLayout(page);
+    const stableAnchors = await anchorCenters(page, sceneIndex);
     await dot.hover();
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);
+    anchorMovementIssues(
+      stableAnchors,
+      await anchorCenters(page, sceneIndex),
+      "hover/open",
+    ).forEach(message => (
+      addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
+    ));
     recordInteractionIssues(
       route,
       viewport,
@@ -611,9 +994,42 @@ const exercisePoint = async (
       await openState(page, sceneIndex, calloutIndex),
       "hover/stable",
     );
-    await page.mouse.move(2, 2);
+    const closingIssues = await closingCopyLayoutIssues(page, sceneIndex, calloutIndex);
+    closingIssues.forEach(message => (
+      addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
+    ));
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
+    anchorMovementIssues(
+      stableAnchors,
+      await anchorCenters(page, sceneIndex),
+      "hover/close",
+    ).forEach(message => (
+      addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
+    ));
+
+    if (allCloseMethods) {
+      const calloutCount = await page.locator(SCENE_SELECTOR).nth(sceneIndex)
+        .locator(CALLOUT_SELECTOR).count();
+      if (calloutCount > 1) {
+        const secondCalloutIndex = calloutIndex === 0 ? 1 : 0;
+        const switchingIssues = await switchingCopyLayoutIssues(
+          page,
+          sceneIndex,
+          calloutIndex,
+          secondCalloutIndex,
+        );
+        switchingIssues.forEach(message => (
+          addFailure(
+            route,
+            viewport,
+            sceneId,
+            `callout-${calloutIndex + 1}→${secondCalloutIndex + 1}`,
+            message,
+          )
+        ));
+      }
+    }
 
     await dot.focus();
     await page.keyboard.press("Enter");
@@ -873,15 +1289,46 @@ const auditMotionMode = async (browser, baseUrl, mode) => {
 
 const parseBaseUrl = value => {
   try {
-    return new URL(value || DEFAULT_BASE_URL);
+    return new URL(value);
   } catch {
     throw new Error(`Invalid base URL: ${value}`);
   }
 };
 
+let managedServer = null;
+const availablePort = () => new Promise((resolve, reject) => {
+  const server = createServer();
+  server.once("error", reject);
+  server.listen(0, "127.0.0.1", () => {
+    const address = server.address();
+    server.close(() => resolve(address.port));
+  });
+});
+
+const resolveBaseUrl = async value => {
+  if (value) return parseBaseUrl(value);
+  const port = await availablePort();
+  const baseUrl = new URL(`http://127.0.0.1:${port}`);
+  managedServer = spawn(
+    process.execPath,
+    ["server.mjs", "--host", "127.0.0.1", "--port", String(port)],
+    { cwd: ROOT, stdio: "ignore" },
+  );
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    try {
+      const response = await fetch(baseUrl);
+      if (response.ok) return baseUrl;
+    } catch {
+      // The isolated repository server may still be starting.
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error(`Local annotation server did not start at ${baseUrl}`);
+};
+
 let browser;
 try {
-  const baseUrl = parseBaseUrl(process.argv[2]);
+  const baseUrl = await resolveBaseUrl(process.argv[2]);
   const selectedRoutes = requestedRoute
     ? ROUTES.filter(route => route.path === requestedRoute)
     : ROUTES;
@@ -919,6 +1366,7 @@ try {
   addFailure("runner", "n/a", "runner", "fatal", error.message);
 } finally {
   await browser?.close().catch(() => {});
+  managedServer?.kill();
 }
 
 if (failures.length) {

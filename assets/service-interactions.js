@@ -116,7 +116,54 @@
     panel: item.querySelector(".proof-detail, .accordion-detail"),
   });
 
-  const syncDisclosure = (item, open, { initial = false } = {}) => {
+  /* Short phones cannot keep the approved introduction permanently expanded
+   * beside four proof rows. Build one extra disclosure from the existing lead
+   * node so the copy remains available without creating a second content source. */
+  document.querySelectorAll(".proof-content").forEach((content, index) => {
+    const lead = content.querySelector(":scope > .proof-lead");
+    const list = content.querySelector(":scope > .proof-list");
+    if (!lead || !list || list.querySelector(":scope > .proof-context-item")) return;
+
+    const item = document.createElement("article");
+    const trigger = document.createElement("button");
+    const indexSlot = document.createElement("span");
+    const label = document.createElement("span");
+    const title = document.createElement("strong");
+    const hint = document.createElement("small");
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    const panel = document.createElement("div");
+    const paragraph = document.createElement("p");
+    const panelId = `proof-context-${location.pathname.replace(/\W+/g, "-")}-${index + 1}`;
+
+    item.className = "proof-item proof-context-item";
+    trigger.className = "proof-trigger";
+    trigger.type = "button";
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-controls", panelId);
+    indexSlot.className = "proof-index";
+    indexSlot.setAttribute("aria-hidden", "true");
+    label.className = "proof-label";
+    title.textContent = "Kontekst";
+    hint.textContent = "Założenia sekcji";
+    icon.setAttribute("viewBox", "0 0 20 20");
+    icon.setAttribute("aria-hidden", "true");
+    iconPath.setAttribute("d", "M4 10h12M10 4v12");
+    icon.append(iconPath);
+    panel.className = "proof-detail";
+    panel.id = panelId;
+    panel.hidden = true;
+    paragraph.textContent = lead.textContent.trim();
+
+    label.append(title, hint);
+    trigger.append(indexSlot, label, icon);
+    panel.append(paragraph);
+    item.append(trigger, panel);
+    list.prepend(item);
+    content.classList.add("has-proof-context-disclosure");
+  });
+
+  const syncDisclosure = (item, open, { initial = false, immediate = false } = {}) => {
     const { trigger, panel } = disclosureParts(item);
     item.classList.toggle("is-open", open);
     trigger?.setAttribute("aria-expanded", String(open));
@@ -132,7 +179,7 @@
     const hide = () => {
       if (!item.classList.contains("is-open")) panel.hidden = true;
     };
-    if (initial || motionPaused()) hide();
+    if (initial || immediate || motionPaused()) hide();
     else setTimeout(hide, 380);
   };
 
@@ -145,9 +192,10 @@
       const scrollHost = document.scrollingElement;
       const scrollPosition = scrollHost?.scrollTop;
       const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
+      const compactViewport = matchMedia("(min-width: 821px) and (max-height: 730px)").matches;
       item.closest(".proof-list, .accordion")
         ?.querySelectorAll(disclosureSelector)
-        .forEach(row => syncDisclosure(row, false));
+        .forEach(row => syncDisclosure(row, false, { immediate: compactViewport }));
       if (shouldOpen) syncDisclosure(item, true);
 
       // Expanding a later row can make browser scroll anchoring move the whole
@@ -175,11 +223,17 @@
   });
 
   document.querySelectorAll(".mobile-details").forEach(group => {
-    group.querySelectorAll("details").forEach(detail => {
-      detail.addEventListener("toggle", () => {
-        if (!detail.open) return;
-        group.querySelectorAll("details").forEach(sibling => {
-          if (sibling !== detail) sibling.open = false;
+    const detailsRows = [...group.querySelectorAll(":scope > details")];
+    detailsRows.forEach(row => {
+      row.querySelector(":scope > summary")?.addEventListener("click", () => {
+        detailsRows.forEach(sibling => {
+          if (sibling !== row) sibling.open = false;
+        });
+      });
+      row.addEventListener("toggle", () => {
+        if (!row.open) return;
+        detailsRows.forEach(sibling => {
+          if (sibling !== row) sibling.open = false;
         });
       });
     });

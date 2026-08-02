@@ -47,6 +47,7 @@
   const runtimeAttributes = new Map();
   const debugOverlays = new Map();
   const debugSnapshots = new Map();
+  const fixedAnchorLayouts = new Map();
   const lastSolutions = new Map();
   const cleanupCallbacks = [];
   let solveFrame = 0;
@@ -140,6 +141,12 @@
     first.right > second.left &&
     first.top < second.bottom &&
     first.bottom > second.top;
+
+  const intersectionArea = (first, second) => {
+    const width = Math.min(first.right, second.right) - Math.max(first.left, second.left);
+    const height = Math.min(first.bottom, second.bottom) - Math.max(first.top, second.top);
+    return width > 0 && height > 0 ? width * height : 0;
+  };
 
   const contains = (outer, inner) =>
     inner.left >= outer.left &&
@@ -382,6 +389,25 @@
     return { content, fixed };
   };
 
+  const fixedAnchorObstaclesFor = (adapter, sceneRect) => {
+    const obstacles = obstaclesFor(adapter, sceneRect);
+    const local = [...adapter.scene.querySelectorAll(".scroll-cue")]
+      .filter(isBox)
+      .map(element => viewportRectWithin(element, sceneRect, FIXED_UI_EXPANSION));
+    const global = [...document.querySelectorAll(".site-header, .motion-toggle")]
+      .filter(isBox)
+      .map(element => {
+        const bounds = element.getBoundingClientRect();
+        return rect(
+          bounds.left - FIXED_UI_EXPANSION,
+          bounds.top - FIXED_UI_EXPANSION,
+          bounds.width + FIXED_UI_EXPANSION * 2,
+          bounds.height + FIXED_UI_EXPANSION * 2,
+        );
+      });
+    return { content: obstacles.content, fixed: [...local, ...global] };
+  };
+
   const ringFor = point => rect(
     point.x - RING_RADIUS,
     point.y - RING_RADIUS,
@@ -516,6 +542,36 @@
     return null;
   };
 
+  const chooseLeastObstructedCopyPosition = (
+    annotation,
+    point,
+    width,
+    height,
+    obstacles,
+    rings,
+    visibleCopies,
+  ) => copyPositionCandidates(annotation, point, width, height)
+    .map(candidate => ({
+      candidate,
+      penalty:
+        obstacles.content.reduce((total, obstacle) => (
+          total + intersectionArea(candidate.rect, obstacle) * 4
+        ), 0)
+        + obstacles.fixed.reduce((total, obstacle) => (
+          total + intersectionArea(candidate.rect, obstacle) * 8
+        ), 0)
+        + rings.reduce((total, ring) => (
+          total + intersectionArea(candidate.rect, ring) * 16
+        ), 0)
+        + visibleCopies.reduce((total, copy) => (
+          total + intersectionArea(candidate.rect, copy) * 12
+        ), 0),
+    }))
+    .sort((first, second) => (
+      first.penalty - second.penalty
+      || first.candidate.displacementRank - second.candidate.displacementRank
+    ))[0]?.candidate || null;
+
   const placeCopies = (adapter, points, rings, obstacles) => {
     const copies = new Array(adapter.annotations.length);
     const openIndexes = [];
@@ -542,6 +598,14 @@
           obstacles,
           ringsToAvoid,
           visibleCopies,
+        ) || chooseLeastObstructedCopyPosition(
+          annotation,
+          points[index],
+          width,
+          height,
+          obstacles,
+          ringsToAvoid,
+          visibleCopies,
         )
         : measuredAnnotationGeometry(adapter, annotation).copy;
       if (!position) return null;
@@ -557,60 +621,81 @@
     const profiles = activeProfiles(artBounds);
     const sceneRect = adapter.scene.getBoundingClientRect();
     const obstacles = obstaclesFor(adapter, sceneRect);
+    const fixedAnchorObstacles = fixedAnchorObstaclesFor(adapter, sceneRect);
     const candidates = adapter.annotations.map(annotation =>
       annotationCandidates(annotation, profiles, geometry));
     if (candidates.some(list => !list.length)) return null;
 
-    const points = new Array(adapter.annotations.length);
-    const rings = new Array(adapter.annotations.length);
-    let solution = null;
-    let ringConfigurations = 0;
-    let copyFailures = 0;
-
-    const search = index => {
-      if (solution) return;
-      if (index === adapter.annotations.length) {
-        ringConfigurations += 1;
-        const copies = placeCopies(adapter, points, rings, obstacles);
-        if (copies) {
-          solution = {
-            geometry,
+    /* Hotspots are authored in the artwork coordinate system, just like the
+     * signals on the hero tree. Interaction may reflow a copy and its connector,
+     * but it must never select another point anchor. A responsive profile is
+     * selected once per artwork geometry and then reused across interactions. */
+    const anchorLayoutKey = [
+      `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`,
+      [geometry.left, geometry.top, geometry.width, geometry.height]
+        .map(value => Math.round(value * 10) / 10)
+        .join(","),
+      profiles.join(","),
+      artBounds.interactiveVisible
+        ? [
+          artBounds.interactiveVisible.left,
+          artBounds.interactiveVisible.top,
+          artBounds.interactiveVisible.width,
+          artBounds.interactiveVisible.height,
+        ].map(value => Math.round(value)).join(",")
+        : "no-art-bounds",
+      fixedAnchorObstacles.content
+        .map(bounds => [bounds.left, bounds.top, bounds.width, bounds.height]
+          .map(value => Math.round(value))
+          .join(","))
+        .join(";"),
+    ].join(":");
+    let anchorLayout = fixedAnchorLayouts.get(adapter);
+    if (anchorLayout?.key !== anchorLayoutKey) {
+      const points = new Array(adapter.annotations.length);
+      const rings = new Array(adapter.annotations.length);
+      let selected = null;
+      const select = index => {
+        if (selected) return;
+        if (index === adapter.annotations.length) {
+          selected = {
             points: points.map(point => ({ ...point })),
-            rings: rings.map(item => ({ ...item })),
-            copies,
+            rings: rings.map(ring => ({ ...ring })),
           };
-        } else {
-          copyFailures += 1;
+          return;
         }
-        return;
-      }
-
-      for (const point of candidates[index]) {
-        const ring = ringFor(point);
-        if (!ringFits(
-          ring,
-          point,
-          adapter,
-          artBounds,
-          obstacles,
-          rings.slice(0, index),
-        )) continue;
-        points[index] = point;
-        rings[index] = ring;
-        search(index + 1);
-        if (solution) return;
-      }
-    };
-
-    search(0);
+        for (const point of candidates[index]) {
+          const ring = ringFor(point);
+          if (!ringFits(
+            ring,
+            point,
+            adapter,
+            artBounds,
+            fixedAnchorObstacles,
+            rings.slice(0, index),
+          )) continue;
+          points[index] = point;
+          rings[index] = ring;
+          select(index + 1);
+          if (selected) return;
+        }
+      };
+      select(0);
+      if (!selected) return null;
+      anchorLayout = { key: anchorLayoutKey, ...selected };
+      fixedAnchorLayouts.set(adapter, anchorLayout);
+    }
+    const { points, rings } = anchorLayout;
+    const copies = placeCopies(adapter, points, rings, obstacles);
+    const solution = copies ? { geometry, points, rings, copies } : null;
     if (DEBUG_GEOMETRY) {
       debugSnapshots.set(adapter.scene, {
         scene: adapter.scene.id || null,
         status: solution ? "solved" : "fallback",
         masked: artBounds.masked,
         profiles: [...profiles],
-        ringConfigurations,
-        copyFailures,
+        ringConfigurations: 1,
+        copyFailures: copies ? 0 : 1,
         candidates: candidates.map((list, index) => list.map(point => ({
           profile: point.profile,
           x: Math.round(point.x * 10) / 10,
@@ -894,7 +979,11 @@
   listen(window, "orientationchange", schedule, { passive: true });
   listen(window.visualViewport, "resize", schedule, { passive: true });
   listen(window, "okagency:art-safety-change", schedule);
-  listen(window, "okagency:annotationchange", schedule);
+  listen(window, "okagency:annotationchange", event => {
+    /* Keep the last open copy coordinates while it fades out. Re-solving the
+     * closed state here made the card visibly jump during its exit transition. */
+    if (event.detail?.open) schedule();
+  });
   listen(window, "okagency:motionchange", schedule);
   listen(window, "scroll", () => {
     if (document.querySelector(".annotation-callout.is-open, .annotation.is-open")) schedule();
@@ -907,7 +996,6 @@
     adapters.forEach(adapter => {
       resizeObserver.observe(adapter.scene);
       resizeObserver.observe(adapter.art);
-      adapter.annotations.forEach(annotation => resizeObserver.observe(annotation.copy));
     });
   }
 
@@ -916,6 +1004,7 @@
     if (solveFrame) cancelAnimationFrame(solveFrame);
     resizeObserver?.disconnect();
     lastSolutions.clear();
+    fixedAnchorLayouts.clear();
     cleanupCallbacks.splice(0).forEach(cleanup => cleanup());
     clearRuntime();
     clearDebugOverlays();

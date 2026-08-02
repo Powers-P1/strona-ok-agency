@@ -419,6 +419,80 @@ const waitForNoObscured = async page => {
   ), null, { timeout: 4_000 });
 };
 
+const anchorCenters = async (page, sceneIndex) => page.evaluate(({
+  selector,
+  sceneNumber,
+}) => {
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const sceneRect = scene.getBoundingClientRect();
+  return [...scene.querySelectorAll(".annotation-callout, .annotation")].map(callout => {
+    const dot = callout.querySelector(".annotation-dot");
+    const bounds = dot.getBoundingClientRect();
+    return {
+      key: callout.dataset.annotation || dot.getAttribute("aria-controls"),
+      x: bounds.left - sceneRect.left + bounds.width / 2,
+      y: bounds.top - sceneRect.top + bounds.height / 2,
+    };
+  });
+}, { selector: SCENE_SELECTOR, sceneNumber: sceneIndex });
+
+const anchorMovementIssues = (baseline, current, state) => {
+  const issues = [];
+  baseline.forEach((anchor, index) => {
+    const next = current[index];
+    if (!next || next.key !== anchor.key) {
+      issues.push(`${state}: anchor order changed for ${anchor.key || `callout-${index + 1}`}`);
+      return;
+    }
+    const distance = Math.hypot(next.x - anchor.x, next.y - anchor.y);
+    if (distance > .5) {
+      issues.push(`${state}: ${anchor.key} moved ${distance.toFixed(2)}px after interaction`);
+    }
+  });
+  return issues;
+};
+
+const closingCopyLayoutIssues = async (page, sceneIndex, calloutIndex) => page.evaluate(async ({
+  selector,
+  sceneNumber,
+  calloutNumber,
+}) => {
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const callout = scene.querySelectorAll(".annotation-callout, .annotation")[calloutNumber];
+  const dot = callout.querySelector(".annotation-dot");
+  const copy = callout.querySelector(".annotation-copy");
+  const initial = { left: copy.offsetLeft, top: copy.offsetTop };
+  const samples = [];
+  const started = performance.now();
+  dot.dispatchEvent(new PointerEvent("pointerleave", {
+    bubbles: false,
+    pointerType: "mouse",
+  }));
+
+  while (performance.now() - started < 520) {
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    const opacity = Number.parseFloat(getComputedStyle(copy).opacity || "0");
+    if (opacity > .01) {
+      samples.push({
+        left: copy.offsetLeft,
+        top: copy.offsetTop,
+        opacity,
+      });
+    }
+  }
+
+  return samples.flatMap(sample => {
+    const movement = Math.hypot(sample.left - initial.left, sample.top - initial.top);
+    return movement > .5
+      ? [`closing copy layout moved ${movement.toFixed(2)}px while still visible`]
+      : [];
+  });
+}, {
+  selector: SCENE_SELECTOR,
+  sceneNumber: sceneIndex,
+  calloutNumber: calloutIndex,
+});
+
 const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
   selector,
   sceneNumber,
@@ -727,6 +801,21 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
   const offsets = [0, 24, 56, 92, 128, 160];
   const issues = [];
   const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+  const centers = () => {
+    const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const artRect = art?.getBoundingClientRect();
+    const reference = artRect?.width > 0 && artRect?.height > 0
+      ? artRect
+      : scene.getBoundingClientRect();
+    return callouts.map(callout => {
+      const dotRect = callout.querySelector(".annotation-dot").getBoundingClientRect();
+      return {
+        x: (dotRect.left - reference.left + dotRect.width / 2) / reference.width,
+        y: (dotRect.top - reference.top + dotRect.height / 2) / reference.height,
+      };
+    });
+  };
+  const stableCenters = centers();
 
   for (const offset of offsets) {
     scrollTo(0, sceneTop + offset);
@@ -734,6 +823,17 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
       detail: { source: "annotation-scroll-visibility-audit" },
     }));
     await nextFrame();
+
+    centers().forEach((point, index) => {
+      const baseline = stableCenters[index];
+      const movement = Math.hypot(
+        (point.x - baseline.x) * scene.clientWidth,
+        (point.y - baseline.y) * scene.clientHeight,
+      );
+      if (movement > .5) {
+        issues.push(`scroll offset ${offset}px moves point ${index + 1} by ${movement.toFixed(2)}px relative to artwork`);
+      }
+    });
 
     if (scene.classList.contains("annotations-unavailable")) {
       issues.push(`scroll offset ${offset}px activates the removed hidden mode`);
@@ -773,9 +873,19 @@ const exercisePoint = async (
 
   try {
     await page.keyboard.press("Escape");
+    await dot.scrollIntoViewIfNeeded();
+    await settleLayout(page);
+    const stableAnchors = await anchorCenters(page, sceneIndex);
     await dot.hover();
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);
+    anchorMovementIssues(
+      stableAnchors,
+      await anchorCenters(page, sceneIndex),
+      "hover/open",
+    ).forEach(message => (
+      addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
+    ));
     recordInteractionIssues(
       route,
       viewport,
@@ -783,9 +893,19 @@ const exercisePoint = async (
       await openState(page, sceneIndex, calloutIndex),
       "hover/stable",
     );
-    await page.mouse.move(2, 2);
+    const closingIssues = await closingCopyLayoutIssues(page, sceneIndex, calloutIndex);
+    closingIssues.forEach(message => (
+      addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
+    ));
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
+    anchorMovementIssues(
+      stableAnchors,
+      await anchorCenters(page, sceneIndex),
+      "hover/close",
+    ).forEach(message => (
+      addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
+    ));
 
     await dot.focus();
     await page.keyboard.press("Enter");

@@ -1,7 +1,7 @@
 # Systemowy plan napraw UI między podstronami
 
 Data utworzenia: 2026-08-01
-Status: **Fazy 0–10 zakończone i opublikowane**
+Status: **Fazy 0–10 opublikowane; stabilizacja kotwic w ponownym odbiorze**
 Zakres tego dokumentu: system wspólny i desktop; mobile jest bramką regresji i osobnym zakresem koordynowanym z `MOBILE-QA-2026-08-01.md`.
 
 ## 1. Cel i reguły wykonania
@@ -421,3 +421,16 @@ Zakres tej fazy wynika z kolejnych screenshotów produkcyjnych. Poprawka ma pozo
 - [ ] odebrać wizualnie przed/po, uruchomić pełne build/quality/Pages/Worker, opublikować i sprawdzić domenę.
 
 Status lokalnej bramki: PASS. Wspólny profil scen obejmuje 1440×900, 1440×640, 1440×600, 1024×640, 1024×600, 390×844 i 360×640; po każdym rozwinięciu scena zachowuje `100svh`, brak nested scrolla i dryfu, a CTA ma bezpieczny dolny margines. Wszystkie 53 callouty przeszły pełną geometrię w 7 viewportach: otwarta karta nie przecina własnego/sąsiedniego ringu, a widoczny SVG lub leader zaczyna się w centrum punktu i kończy na rzeczywistej krawędzi karty. Mobile 390/360 zachowuje 0 anotacji; krótki profil 360 mieści również CTA po otwarciu disclosure. Wizualny odbiór szerokiego 1440×600 i mobile 360×640 PASS. `check:annotation-energy`, pełny `build`, Pages Functions, Worker dry-run, middleware i `git diff --check` PASS. Publikacja i produkcyjny smoke test pozostają ostatnią bramką tej fazy.
+
+### Reopen: stałe kotwice obrazu i stabilne zamknięcie dymka
+
+- [x] odtworzyć zmianę pozycji dymka już po zdjęciu stanu `is-open`, ale jeszcze podczas widocznego zanikania;
+- [x] rozdzielić wybór punktu od układania dymka: karta nie może wymusić innej kotwicy;
+- [x] wybierać wyłącznie spośród autorskich współrzędnych `base` / `compact` / `short` i zapamiętać wynik dla geometrii artworku;
+- [x] wykluczyć hover, kliknięcie, stan otwarcia i scroll z klucza stałych kotwic;
+- [x] przy zamknięciu zachować ostatnią pozycję layoutową karty aż do końca jej animacji wyjścia;
+- [x] rozszerzyć test o współrzędne wszystkich punktów przed/po interakcji, stabilność podczas scrollu oraz każdą widoczną klatkę zamykania;
+- [x] przejść pełną macierz 6 tras × 7 viewportów i wykonać końcowe screenshoty bez overlayu diagnostycznego;
+- [ ] scalić PR, opublikować i odebrać domenę produkcyjną.
+
+Status: pełna macierz 6 tras × 7 viewportów przechodzi nową bramkę. Punkt nie zmienia współrzędnych po hover/open/close ani kontrolowanym scrollu względem artworku; layout otwartej karty pozostaje identyczny w każdej próbce jej zanikania. Screenshot `/strony-internetowe` 1280×720 bez overlayu potwierdza poprawne osadzenie punktów na energii oraz ciągłość punkt–łącznik–karta. `check:scene-disclosures`, `check:quality`, `check:links`, `build`, Pages Functions, Worker dry-run i `git diff --check` są zielone. Publikacja pozostaje w toku.

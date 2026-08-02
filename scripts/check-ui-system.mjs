@@ -183,7 +183,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("stabilny, wersjonowany moduł geometrii anotacji", failures);
 }
 
-// One deterministic group solver owns safety, collision rejection and silent hiding.
+// One deterministic group solver owns fixed artwork anchors and copy safety.
 {
   const failures = [];
   const path = "assets/art-coordinate-system.js";
@@ -192,7 +192,8 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/getArtBounds/, "publicznego kontraktu bezpiecznego obszaru"],
     [/okagency:art-safety-change/, "reakcji na zmianę maski"],
     [/okagency:annotationchange/, "reakcji na zmianę anotacji"],
-    [/const search = index =>/, "deterministycznego przeszukiwania grupy"],
+    [/const select = index =>/, "deterministycznego wyboru autorskich kotwic"],
+    [/fixedAnchorLayouts/, "cache stałych kotwic niezależnego od interakcji"],
     [/\["short", "compact", "base"\]/, "kolejności profili short → compact → base"],
     [/contains\(artBounds\.interactiveVisible, ring\)/, "twardego odrzucenia poza widocznym artworkiem i feather"],
     [/obstacles\.content\.some\(obstacle => intersects\(ring, obstacle\)\)/, "twardego odrzucenia kolizji punktu z treścią"],

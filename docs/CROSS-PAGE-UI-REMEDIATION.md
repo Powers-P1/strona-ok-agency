@@ -1,7 +1,7 @@
 # Systemowy plan napraw UI między podstronami
 
 Data utworzenia: 2026-08-01
-Status: **Fazy 0–9 zakończone; Faza 10 w toku**
+Status: **Fazy 0–10 zakończone i opublikowane**
 Zakres tego dokumentu: system wspólny i desktop; mobile jest bramką regresji i osobnym zakresem koordynowanym z `MOBILE-QA-2026-08-01.md`.
 
 ## 1. Cel i reguły wykonania
@@ -326,13 +326,15 @@ Bramka: wszystkie komendy i automatyczne audyty zielone, brak błędów konsoli,
 
 ### Faza 10 — integracja, publikacja i produkcyjny odbiór
 
-- [ ] przejrzeć końcowy diff względem aktualnego `origin/main`, w tym cudzą pracę mobile;
-- [ ] przygotować logiczne commity bez `design-proposals/` i bez cudzych plików planu;
-- [ ] otworzyć PR, przejść CI i scalić bez nadpisywania równoległych zmian;
-- [ ] opublikować na produkcję natychmiast po zielonej bramce integracyjnej;
-- [ ] potwierdzić domenę, deployment URL, commit SHA i status monitora;
-- [ ] powtórzyć na domenie produkcyjnej krytyczne pomiary 1280×720, Mac-like i mobile regression;
-- [ ] wpisać wyniki, linki oraz końcowy status do tego dokumentu.
+- [x] przejrzeć końcowy diff względem aktualnego `origin/main`, w tym cudzą pracę mobile;
+- [x] przygotować logiczne commity bez `design-proposals/` i bez cudzych plików planu;
+- [x] otworzyć PR, przejść CI i scalić bez nadpisywania równoległych zmian;
+- [x] opublikować na produkcję natychmiast po zielonej bramce integracyjnej;
+- [x] potwierdzić domenę, deployment URL, commit SHA i status monitora;
+- [x] powtórzyć na domenie produkcyjnej krytyczne pomiary 1280×720, Mac-like i mobile regression;
+- [x] wpisać wyniki, linki oraz końcowy status do tego dokumentu.
+
+Status bramki: PASS. PR [#71](https://github.com/Powers-P1/strona-ok-agency/pull/71) został scalony do `main` jako `93771ef0574da6acd5b7b82aa4124d2e3fa210ae`; Cloudflare Pages opublikował deployment `a32ace6d-6af5-4633-acb9-376a8bf779ee`, a ręcznie uruchomiony monitor produkcji `30725556830` zakończył się sukcesem. Na `https://okagency.pl` działa `art-coordinate-system.js?v=20260801-6` bez `annotations-unavailable`, `hideAnnotations` i `is-obscured`. Sekwencja zgłoszona przez użytkownika utrzymuje 4/4 widoczne punkty przy każdym scrollu, kliknięciu w innej scenie i powrocie. Mac-like 1512×800 ma sceny dokładnie po 800 px i 0 overflow; mobile 390×844 zachowuje centralny kontrakt 0 widocznych anotacji. Końcowy follow-up rozszerza CSP o rzeczywiście wywoływany endpoint Google Ads consent-mode oraz obejmuje go testem jakości, bez zmian UI i geometrii.
 
 Bramka końcowa: produkcja odpowiada commitowi z PR, 16 zgłoszeń ma dowód odbioru, a mobile i desktop korzystają ze wspólnych fundamentów bez wzajemnego nadpisania.
 
@@ -382,7 +384,7 @@ Dla każdego kadru i właściwej trasy:
 - [x] Diagnoza ma zgodne copy i dwa rozłączne, mieszczące się stany;
 - [x] stopka ma jeden link polityki i widoczny label „Standard serwisu”;
 - [x] zakres mobile nie został nadpisany i przechodzi jego własny plan QA;
-- [ ] produkcja jest zweryfikowana po publikacji, nie tylko lokalnie.
+- [x] produkcja jest zweryfikowana po publikacji, nie tylko lokalnie.
 
 ## 9. Dziennik realizacji
 
@@ -402,3 +404,4 @@ Dla każdego kadru i właściwej trasy:
 | 2026-08-01 | Faza 8 — cleanup i własność systemu | working tree | PASS | martwe lokalne keyframes i Manrope usunięte; właściciele UI udokumentowani; jeden manifest wersji assetów; 13/13 HTML i pełne `check:quality` PASS |
 | 2026-08-01 | Faza 9 — pełna regresja lokalna | working tree | PASS | build + Pages/Worker dry-run; 6 tras × 7 viewportów; 53/53 stabilny hover/keyboard; desktop i mobile odebrane wizualnie; konsola czysta; fizyczny Safari/Mac jawnie oczekuje na urządzenie |
 | 2026-08-01 | Reopen Fazy 5 — trwałe znikanie punktów | working tree | PASS po odtworzeniu zgłoszonej sekwencji | usunięto `annotations-unavailable`, zachowywany jest ostatni poprawny układ; brak grupowego ukrywania przy scroll/resize; kompaktowe kotwice i strefa feather przechodzą 6 tras × 7 viewportów |
+| 2026-08-01 | Faza 10 — publikacja i produkcyjny odbiór | PR #71, `93771ef`, Pages `a32ace6d-6af5-4633-acb9-376a8bf779ee` | PASS | CI, Worker i monitor `30725556830` zielone; produkcja odtwarza sekwencję użytkownika z 4/4 punktami; Mac-like oraz mobile regression PASS; CSP consent-mode objęte follow-upem i testem statycznym |

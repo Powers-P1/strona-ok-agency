@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "check:quality": "npm run check:asset-versions && node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs && node scripts/check-about-navigation.mjs && node scripts/check-home-hero.mjs && node scripts/check-responsive-safety.mjs && node scripts/check-global-navigation.mjs && node scripts/check-motion-system.mjs && npm run check:ui-system && npm run check:scene-disclosures",
+    "check:quality": "npm run check:asset-versions && node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs && node scripts/check-about-navigation.mjs && node scripts/check-home-hero.mjs && node scripts/check-responsive-safety.mjs && node scripts/check-global-navigation.mjs && node scripts/check-motion-system.mjs && npm run check:ui-system",
     "check:asset-versions": "node scripts/sync-asset-versions.mjs --check",
     "sync:asset-versions": "node scripts/sync-asset-versions.mjs",
     "check:ui-system": "node scripts/check-ui-system.mjs",

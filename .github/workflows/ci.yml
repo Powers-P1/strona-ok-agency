@@ -25,6 +25,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Chromium for UI contract tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Validate scene disclosures
+        run: npm run check:scene-disclosures
+
       - name: Check local links
         run: npm run check:links
 

@@ -420,9 +420,9 @@ Zakres tej fazy wynika z kolejnych screenshotów produkcyjnych. Poprawka ma pozo
 - [x] powtórzyć guard mobile 390×844 i 360×640 bez zmiany polityki `<=640px`;
 - [x] objąć końcowym profilem krótkiego tabletu pas 821–849 px × 621–700 px i dodać graniczne 840×640 / 840×700 do obowiązkowej bramki disclosure;
 - [x] ukrywać krótki-mobile `proof-lead` dopiero po potwierdzonym wstawieniu zamiennego disclosure `Kontekst` i dodać browserowy guard bez JavaScriptu;
-- [ ] odebrać wizualnie przed/po, uruchomić pełne build/quality/Pages/Worker, opublikować i sprawdzić domenę.
+- [x] odebrać wizualnie przed/po, uruchomić pełne build/quality/Pages/Worker, opublikować i sprawdzić domenę.
 
-Status lokalnej bramki: PASS. Wspólny profil scen obejmuje 1440×900, 1440×640, 1440×600, 1024×640, 1024×600, 390×844 i 360×640; po każdym rozwinięciu scena zachowuje `100svh`, brak nested scrolla i dryfu, a CTA ma bezpieczny dolny margines. Wszystkie 53 callouty przeszły pełną geometrię w 7 viewportach: otwarta karta nie przecina własnego/sąsiedniego ringu, a widoczny SVG lub leader zaczyna się w centrum punktu i kończy na rzeczywistej krawędzi karty. Mobile 390/360 zachowuje 0 anotacji; krótki profil 360 mieści również CTA po otwarciu disclosure. Wizualny odbiór szerokiego 1440×600 i mobile 360×640 PASS. `check:annotation-energy`, pełny `build`, Pages Functions, Worker dry-run, middleware i `git diff --check` PASS. Publikacja i produkcyjny smoke test pozostają ostatnią bramką tej fazy.
+Status produkcyjny: PASS. PR #76 został scalony do `main` jako `81ac723a728ffa24e86596a7961c3b71790c529f`; Cloudflare Pages opublikował deployment `19e84675-d2ef-420c-b0a2-ca5509e416fd`. CI `30753377536` i Contact Worker `30753377538` zakończyły się sukcesem. Produkcyjne O nas 840×640 ma scenę dokładnie 640 px, 102,7 px luzu pod CTA oraz 0 overflow. Niezależny mobile smoke 6 tras × 360/390 potwierdził 0 anotacji, overflow i nested scrolla, poprawne disclosure/CTA, pełną Diagnozę i widoczny `proof-lead` bez JavaScriptu; rezultat NO-CHANGE.
 
 ### Reopen: stałe kotwice obrazu i stabilne zamknięcie dymka
 
@@ -435,6 +435,6 @@ Status lokalnej bramki: PASS. Wspólny profil scen obejmuje 1440×900, 1440×640
 - [x] odtworzyć sekwencję `A otwarty → B otwierany, gdy A jeszcze zanika`: karta A zachowuje ostatnią pozycję w każdej widocznej klatce, karta B układa się niezależnie, a wszystkie punkty pozostają nieruchome;
 - [x] rozszerzyć automat o przełączenie A→B bez oczekiwania na koniec animacji A i sprawdzić równocześnie pozycję obu kart oraz wszystkich kotwic;
 - [x] przejść pełną macierz 6 tras × 7 viewportów i wykonać końcowe screenshoty bez overlayu diagnostycznego;
-- [ ] scalić PR, opublikować i odebrać domenę produkcyjną.
+- [x] scalić PR, opublikować i odebrać domenę produkcyjną.
 
-Status lokalnej bramki A→B: PASS. Solver zachowuje kompletny runtime layout wychodzącej anotacji aż do opacity ≤ 0,01, więc otwarcie B nie może wyczyścić współrzędnych nadal widocznej karty A. Automat próbuje każdą klatkę przez 520 ms i równocześnie mierzy kartę A, widoczność B oraz wszystkie kotwice obrazu. PASS: 6 tras przy 1280×720, reprezentatywne WWW/Diagnoza/O nas przy 1024×768, centralny mobile guard 6 tras przy 390×844, 5 tras × 10 niskich viewportów disclosure/CTA, pełny build/quality, maski energii 84/31/9, Pages Functions, Worker dry-run i `git diff --check`. Ręczny odbiór użytkownika oraz screenshot przejściowy 1280×720 potwierdzają brak skoku. Pełna macierz 6×7 pozostaje wymaganą bramką CI przed publikacją.
+Status produkcyjny A→B: PASS. Solver zachowuje kompletny runtime layout wychodzącej anotacji aż do opacity ≤ 0,01, a automat próbkuje kartę A, widoczność B i wszystkie kotwice przez 520 ms. Pełne CI PR i `main` przeszło geometrię 6 tras × 7 viewportów oraz disclosure 5 tras × 12 niskich viewportów. Na `https://okagency.pl` karta A i wszystkie punkty mają maksymalny ruch `0 px`, B staje się widoczna, a screenshot 1280×720 jest wizualnie czysty. Produkcja ładuje `art-coordinate-system.js?v=20260802-6`, `service-interactions.js?v=20260802-6`, `scene-viewport.css?v=20260802-10` i About `styles.css?v=20260802-4`.

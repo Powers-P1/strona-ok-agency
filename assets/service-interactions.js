@@ -235,17 +235,6 @@
     });
   });
 
-  document.querySelectorAll(".mobile-details").forEach(group => {
-    group.querySelectorAll("details").forEach(detail => {
-      detail.addEventListener("toggle", () => {
-        if (!detail.open) return;
-        group.querySelectorAll("details").forEach(sibling => {
-          if (sibling !== detail) sibling.open = false;
-        });
-      });
-    });
-  });
-
   addEventListener("pointerdown", event => {
     if (!event.target.closest(calloutSelector)) closeAllCallouts();
   });

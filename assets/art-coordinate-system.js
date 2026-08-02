@@ -859,7 +859,7 @@
     return true;
   };
 
-  const applyServiceSolution = (adapter, solution) => {
+  const applyServiceSolution = (adapter, solution, preservedCopies = new Set()) => {
     serviceConnectorGeometry(adapter, solution.geometry);
 
     adapter.annotations.forEach((annotation, index) => {
@@ -868,6 +868,7 @@
       setRuntimeStyle(annotation.callout, "--dot-x", `${point.x}px`);
       setRuntimeStyle(annotation.callout, "--dot-y", `${point.y}px`);
       setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
+      if (preservedCopies.has(annotation)) return;
       setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
       setRuntimeStyle(annotation.callout, "--copy-right", "auto");
       setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
@@ -875,7 +876,7 @@
     });
   };
 
-  const applyAboutSolution = (adapter, solution) => {
+  const applyAboutSolution = (adapter, solution, preservedCopies = new Set()) => {
     const sceneRect = adapter.scene.getBoundingClientRect();
     const innerRect = adapter.inner.getBoundingClientRect();
     const innerLeft = innerRect.left - sceneRect.left;
@@ -887,6 +888,7 @@
       setRuntimeStyle(annotation.callout, "--x", `${point.x - innerLeft}px`);
       setRuntimeStyle(annotation.callout, "--y", `${point.y - innerTop}px`);
       setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
+      if (preservedCopies.has(annotation)) return;
       setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
       setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
       setRuntimeStyle(annotation.copy, "right", "auto");
@@ -940,7 +942,8 @@
      * the new card can be positioned without snapping the old card back to its
      * authored coordinates for a single frame. The next solve may clear A once
      * its opacity reaches zero. */
-    clearRuntime(exitingAnnotations());
+    const preservedCopies = exitingAnnotations();
+    clearRuntime(preservedCopies);
     clearDebugOverlays();
     debugSnapshots.clear();
     if (innerWidth <= 640) {
@@ -980,8 +983,8 @@
         renderDebugOverlay(adapter, null);
         return;
       }
-      if (adapter.kind === "service") applyServiceSolution(adapter, solution);
-      else applyAboutSolution(adapter, solution);
+      if (adapter.kind === "service") applyServiceSolution(adapter, solution, preservedCopies);
+      else applyAboutSolution(adapter, solution, preservedCopies);
       renderDebugOverlay(adapter, solution);
     });
   };

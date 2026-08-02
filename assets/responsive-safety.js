@@ -421,7 +421,11 @@
       return;
     }
 
-    if (!compact && !isHome) {
+    const artMaskMode = layout.scene.dataset.okSafeMask || "auto";
+    const forceArtMask = artMaskMode === "always";
+    const suppressArtMask = artMaskMode === "never";
+
+    if (suppressArtMask || (!compact && !forceArtMask && !isHome)) {
       if (layout.mode === "grow") {
         layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
       } else {

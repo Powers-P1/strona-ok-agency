@@ -91,7 +91,22 @@ assert.match(css, /--ok-nav-docked-height:\s*80px/, "Docked rail must be 80px.")
 assert.match(css, /--ok-nav-floating-height:\s*64px/, "Detached rail must be 64px.");
 assert.match(css, /\[data-ok-nav-state="detached"\]/, "Detached state styles are required.");
 assert.match(css, /border-radius:\s*16px/, "Detached rail must use a restrained radius.");
-assert.match(css, /--ok-nav-floating-filter:\s*blur\(20px\)/, "Detached material blur is required.");
+assert.match(
+  css,
+  /--ok-nav-floating-canvas:\s*var\(--ok-nav-canvas-solid\)/,
+  "Detached rail must use the opaque shared canvas.",
+);
+assert.match(css, /--ok-nav-floating-filter:\s*none/, "Detached rail must not reveal page copy.");
+assert.match(
+  css,
+  /\.ok-nav-offer__popover\s*\{[\s\S]*?justify-items:\s*stretch[\s\S]*?text-align:\s*left/,
+  "Oferta popover must own its alignment independently of route styles.",
+);
+assert.match(
+  css,
+  /\.ok-nav-offer__popover a\s*\{[\s\S]*?justify-items:\s*start[\s\S]*?text-align:\s*left/,
+  "Oferta links must use one left-aligned layout contract.",
+);
 assert.match(
   css,
   /@media \(max-width: 420px\)[\s\S]*--ok-nav-floating-canvas-filtered:\s*var\(--ok-nav-canvas-solid\)/,

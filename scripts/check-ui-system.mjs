@@ -199,6 +199,9 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/obstacles\.content\.some\(obstacle => intersects\(ring, obstacle\)\)/, "twardego odrzucenia kolizji punktu z treścią"],
     [/visibleCopies\.some\(sibling => intersects\(copyRect, sibling\)\)/, "odrzucenia kolizji otwartych dymków"],
     [/lastSolutions/, "ostatniego poprawnego układu bez ukrywania grupy"],
+    [/const preservedCopies = exitingAnnotations\(\)/, "migawki zamykanych dymków"],
+    [/applyServiceSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka w scenach usług"],
+    [/applyAboutSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka na O nas"],
     [/innerWidth <= 640/, "zachowania centralnego kontraktu mobile"],
     [/annotation-debug-overlay/, "debug overlay dla audytu kotwic"],
   ]) {
@@ -575,6 +578,45 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     }
   }
   addCheck("kickers: labels without decorative section numbers", failures);
+}
+
+// Illustrated scenes have one semantic artwork layer. Duplicate CSS
+// backgrounds would remain visible below the shared mask and create a ghost.
+{
+  const failures = [];
+  const aboutPath = "assets/services/about/styles.css";
+  const enhancementPath = "assets/site-enhancements.css";
+  const aboutSource = cssSources.get(aboutPath);
+  const enhancementSource = cssSources.get(enhancementPath);
+  for (const selector of [
+    "#about-responsibility",
+    "#about-oliwia",
+    "#about-model",
+    "#about-credibility",
+  ]) {
+    const escaped = escapeRegExp(selector);
+    if (new RegExp(`${escaped}\\s*\\{[^}]*background-image`, "s").test(aboutSource)) {
+      failures.push(`${aboutPath}: ${selector} duplicates its semantic scene image as a background`);
+    }
+  }
+  if (/\.process-discovery-scene\s*\{[^}]*background-image/s.test(enhancementSource)) {
+    failures.push(`${enhancementPath}: Process discovery duplicates its semantic artwork as a background`);
+  }
+  if (/\.campaign-opening\s*>\s*\.campaign-art\s*\{[^}]*(?:-webkit-)?mask-image\s*:\s*none/s.test(enhancementSource)) {
+    failures.push(`${enhancementPath}: Campaign opening disables the shared artwork mask`);
+  }
+  addCheck("sceny ilustracyjne: jedna warstwa artworku i wspólna maska", failures);
+}
+
+// FAQ begins with the first useful question, not a redundant count label.
+{
+  const failures = [];
+  const path = "faq.html";
+  const source = htmlSources.get(path);
+  if (/faq-list__label/.test(source) || /06\s+odpowiedzi\s*\/\s*bez\s+drobnego\s+druku/i.test(source)) {
+    failures.push(`${path}: redundant answer-count label returned`);
+  }
+  addCheck("FAQ: bez redundantnej etykiety liczby odpowiedzi", failures);
 }
 
 // Contact uses a seamless paper field; the old bitmap contained a horizontal

@@ -209,26 +209,9 @@ body[data-theme="dark"] .wordmark img {
     linear-gradient(0deg, rgba(3, 15, 27, .33), transparent 31%);
 }
 
-#about-responsibility {
-  background-image: url("about-art-responsibility-v1.webp");
-}
-
-#about-oliwia {
-  background-image: url("about-art-oliwia-v1.webp");
-}
-
-#about-model {
-  background-image: url("about-art-model-v1.webp");
-}
-
-#about-credibility {
-  background-image: url("about-art-credibility-v1.webp");
-}
-
-.scene {
-  background-position: center;
-  background-size: cover;
-}
+/* The semantic scene image is the only artwork layer. A duplicate background
+ * would remain visible underneath the shared safety mask and create a ghosted
+ * tree edge at compact desktop widths. */
 
 .scene-inner {
   position: absolute;
@@ -285,6 +268,10 @@ h1 {
   font-size: clamp(62px, 5.6vw, 94px);
 }
 
+.scene-01 h1 {
+  line-height: var(--about-hero-heading-leading, .9);
+}
+
 h2 {
   font-size: clamp(56px, 4.65vw, 78px);
 }
@@ -312,6 +299,10 @@ h2 {
   color: var(--ok-color-text-on-dark, var(--paper));
 }
 
+.scene-01 .lead {
+  margin-top: var(--about-hero-lead-gap, 20px);
+}
+
 .chips {
   margin: 18px 0 0;
   padding: 0;
@@ -319,6 +310,18 @@ h2 {
   flex-wrap: wrap;
   gap: 7px;
   list-style: none;
+}
+
+.scene-01 .chips {
+  margin-top: var(--about-hero-chip-gap, 18px);
+}
+
+@media (min-width: 1101px) {
+  .scene-01 {
+    --about-hero-heading-leading: .94;
+    --about-hero-lead-gap: 24px;
+    --about-hero-chip-gap: 20px;
+  }
 }
 
 .chips li {

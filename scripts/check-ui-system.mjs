@@ -560,6 +560,23 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("O nas: brak białego #callout-leading", failures);
 }
 
+// Decorative kickers name a section; numeric progress belongs only to
+// functional controls such as the diagnosis progress and process steps.
+{
+  const failures = [];
+  for (const [path, source] of htmlSources) {
+    for (const match of source.matchAll(/<p\b[^>]*>[\s\S]*?<\/p>/gi)) {
+      const tag = match[0].slice(0, match[0].indexOf(">") + 1);
+      if (!hasClass(tag, "kicker") && !hasClass(tag, "detail-kicker")) continue;
+      const text = compactText(match[0]);
+      if (/\b\d{2}\s*$/.test(text)) {
+        failures.push(`${location(path, source, match.index)}: decorative kicker contains numeric index "${text}"`);
+      }
+    }
+  }
+  addCheck("kickers: labels without decorative section numbers", failures);
+}
+
 // Contact uses a seamless paper field; the old bitmap contained a horizontal
 // pink horizon that moved across form controls with the viewport.
 {

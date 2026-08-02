@@ -259,6 +259,32 @@ try {
       await context.close();
     }
   }
+
+  const noScriptRoutes = ROUTES.filter(route => route !== "/o-nas");
+  if (noScriptRoutes.length) {
+    const noScriptContext = await browser.newContext({
+      viewport: { width: 360, height: 640 },
+      javaScriptEnabled: false,
+    });
+    try {
+      for (const route of noScriptRoutes) {
+        const page = await noScriptContext.newPage();
+        try {
+          await page.goto(new URL(route, BASE_URL).href, { waitUntil: "domcontentloaded" });
+          const lead = page.locator(".proof-lead").first();
+          if (!await lead.isVisible()) {
+            failures.push(`${route} 360x640 no-js: approved proof lead is hidden before enhancement`);
+          }
+        } catch (error) {
+          failures.push(`${route} 360x640 no-js: ${error.message}`);
+        } finally {
+          await page.close();
+        }
+      }
+    } finally {
+      await noScriptContext.close();
+    }
+  }
 } catch (error) {
   failures.push(`runner: ${error.message}`);
 } finally {

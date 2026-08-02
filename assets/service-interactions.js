@@ -160,6 +160,7 @@
     panel.append(paragraph);
     item.append(trigger, panel);
     list.prepend(item);
+    content.classList.add("has-proof-context-disclosure");
   });
 
   const syncDisclosure = (item, open, { initial = false, immediate = false } = {}) => {

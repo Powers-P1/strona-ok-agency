@@ -569,7 +569,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
       const tag = match[0].slice(0, match[0].indexOf(">") + 1);
       if (!hasClass(tag, "kicker") && !hasClass(tag, "detail-kicker")) continue;
       const text = compactText(match[0]);
-      if (/\/\s*\d{2}\b/.test(text)) {
+      if (/\b\d{2}\s*$/.test(text)) {
         failures.push(`${location(path, source, match.index)}: decorative kicker contains numeric index "${text}"`);
       }
     }

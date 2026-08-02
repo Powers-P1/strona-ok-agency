@@ -245,6 +245,54 @@ html.ok-scene-page .ok-nav-slot {
   }
 }
 
+/* Tall phones keep the approved lead copy, but use the same single-row action
+ * contract as compact phones. Natural disclosure height plus 44px controls
+ * leaves a renderer-independent buffer for Linux/macOS font metrics. */
+@media (max-width: 640px) and (min-height: 701px) {
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-content h2 {
+    font-size: clamp(40px, 10.8vw, 43px);
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-lead {
+    margin-top: 5px;
+    line-height: 1.35;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-list {
+    margin-top: 6px;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-trigger {
+    min-height: 44px;
+    padding-block: 3px;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-item.is-open .proof-detail {
+    max-height: none;
+    padding-bottom: 4px;
+    overflow: visible;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-actions {
+    margin-top: 5px;
+    flex-flow: row nowrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-primary {
+    width: auto;
+    min-width: 0;
+    min-height: 44px;
+    flex: 1 1 60%;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-secondary {
+    min-height: 44px;
+    flex: 1 1 auto;
+  }
+}
+
 @media (max-width: 640px) and (max-height: 700px) {
   :is(.campaign-frame, .social-frame, .process-frame) .proof-content {
     top: max(78px, 12%);

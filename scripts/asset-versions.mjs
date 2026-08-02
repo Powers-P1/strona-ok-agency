@@ -8,7 +8,7 @@ export const ASSET_VERSIONS = Object.freeze({
   "assets/responsive-safety.css": "20260801-5",
   "assets/responsive-safety.js": "20260801-3",
   "assets/route-motion.css": "20260801-2",
-  "assets/scene-viewport.css": "20260802-6",
+  "assets/scene-viewport.css": "20260802-7",
   "assets/service-interactions.js": "20260802-1",
   "assets/services/about/styles.css": "20260802-2",
   "assets/services/campaign/styles.css": "20260801-4",

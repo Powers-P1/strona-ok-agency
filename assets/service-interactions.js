@@ -116,6 +116,49 @@
     panel: item.querySelector(".proof-detail, .accordion-detail"),
   });
 
+  /* Short phones cannot keep the approved introduction permanently expanded
+   * beside four proof rows. Build one extra disclosure from the existing lead
+   * node so the copy remains available without creating a second content source. */
+  document.querySelectorAll(".proof-content").forEach((content, index) => {
+    const lead = content.querySelector(":scope > .proof-lead");
+    const list = content.querySelector(":scope > .proof-list");
+    if (!lead || !list || list.querySelector(":scope > .proof-context-item")) return;
+
+    const item = document.createElement("article");
+    const trigger = document.createElement("button");
+    const indexSlot = document.createElement("span");
+    const label = document.createElement("span");
+    const title = document.createElement("strong");
+    const hint = document.createElement("small");
+    const icon = document.createElement("span");
+    const panel = document.createElement("div");
+    const paragraph = document.createElement("p");
+    const panelId = `proof-context-${location.pathname.replace(/\W+/g, "-")}-${index + 1}`;
+
+    item.className = "proof-item proof-context-item";
+    trigger.className = "proof-trigger";
+    trigger.type = "button";
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-controls", panelId);
+    indexSlot.className = "proof-index";
+    indexSlot.setAttribute("aria-hidden", "true");
+    label.className = "proof-label";
+    title.textContent = "Kontekst";
+    hint.textContent = "Założenia sekcji";
+    icon.className = "proof-icon";
+    icon.setAttribute("aria-hidden", "true");
+    panel.className = "proof-detail";
+    panel.id = panelId;
+    panel.hidden = true;
+    paragraph.textContent = lead.textContent.trim();
+
+    label.append(title, hint);
+    trigger.append(indexSlot, label, icon);
+    panel.append(paragraph);
+    item.append(trigger, panel);
+    list.prepend(item);
+  });
+
   const syncDisclosure = (item, open, { initial = false, immediate = false } = {}) => {
     const { trigger, panel } = disclosureParts(item);
     item.classList.toggle("is-open", open);

@@ -1827,11 +1827,11 @@ h2 {
   }
 
   .scene-02 .kicker,
-  .scene-02 .mobile-details details:first-child > p:not(.mobile-context) {
+  :is(.scene-02, .scene-03) .mobile-details details:first-child > p:not(.mobile-context) {
     display: none;
   }
 
-  .scene-02 .mobile-details .mobile-context {
+  :is(.scene-02, .scene-03) .mobile-details .mobile-context {
     display: block;
   }
 

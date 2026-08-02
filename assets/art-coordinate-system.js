@@ -9,6 +9,14 @@
   const BOTTOM_CLEARANCE = 88;
   const COPY_CLEARANCE = 30;
   const FIXED_UI_EXPANSION = 16;
+  const COPY_TANGENT_OFFSETS = [
+    0,
+    ...Array.from({ length: 12 }, (_value, index) => {
+      const offset = (index + 1) * 24;
+      return [-offset, offset];
+    }).flat(),
+  ];
+  const COPY_OUTWARD_OFFSETS = [0, 24, 48, 72];
   const DEBUG_GEOMETRY = /(?:^|\b)hotspots(?:\b|$)/i.test(
     new URLSearchParams(location.search).get("audit") || "",
   );
@@ -461,15 +469,13 @@
     const maximumTop = annotation.adapter.scene.clientHeight - height - SAFE_INSET;
     if (maximumLeft < SAFE_INSET || maximumTop < SAFE_INSET) return [];
 
-    const tangentOffsets = [0, -24, 24, -48, 48, -72, 72, -96, 96, -120, 120, -144, 144];
-    const outwardOffsets = [0, 24, 48, 72];
     const seen = new Set();
     const candidates = [];
 
     candidateOrder(annotation.preferredSide).forEach((side, order) => {
       const ideal = idealCopyPosition(side, point, width, height);
-      outwardOffsets.forEach(outward => {
-        tangentOffsets.forEach(tangent => {
+      COPY_OUTWARD_OFFSETS.forEach(outward => {
+        COPY_TANGENT_OFFSETS.forEach(tangent => {
           const horizontal = side === "left" || side === "right";
           const direction = side === "left" || side === "above" ? -1 : 1;
           const rawLeft = ideal.left + (horizontal ? outward * direction : tangent);
@@ -568,7 +574,7 @@
       const height = annotation.copy.offsetHeight;
       if (!width || !height) return null;
       const open = isOpen(annotation);
-      const ringsToAvoid = open ? rings : [rings[index]];
+      const ringsToAvoid = rings;
       const position = chooseCopyPosition(
         annotation,
         points[index],

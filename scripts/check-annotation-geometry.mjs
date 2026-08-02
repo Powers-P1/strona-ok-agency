@@ -1,7 +1,10 @@
 import process from "node:process";
+import { spawn } from "node:child_process";
+import { createServer } from "node:net";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
-const DEFAULT_BASE_URL = "http://127.0.0.1:7133";
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SCENE_SELECTOR = [
   ".campaign-frame",
   ".social-frame",
@@ -1042,15 +1045,46 @@ const auditMotionMode = async (browser, baseUrl, mode) => {
 
 const parseBaseUrl = value => {
   try {
-    return new URL(value || DEFAULT_BASE_URL);
+    return new URL(value);
   } catch {
     throw new Error(`Invalid base URL: ${value}`);
   }
 };
 
+let managedServer = null;
+const availablePort = () => new Promise((resolve, reject) => {
+  const server = createServer();
+  server.once("error", reject);
+  server.listen(0, "127.0.0.1", () => {
+    const address = server.address();
+    server.close(() => resolve(address.port));
+  });
+});
+
+const resolveBaseUrl = async value => {
+  if (value) return parseBaseUrl(value);
+  const port = await availablePort();
+  const baseUrl = new URL(`http://127.0.0.1:${port}`);
+  managedServer = spawn(
+    process.execPath,
+    ["server.mjs", "--host", "127.0.0.1", "--port", String(port)],
+    { cwd: ROOT, stdio: "ignore" },
+  );
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    try {
+      const response = await fetch(baseUrl);
+      if (response.ok) return baseUrl;
+    } catch {
+      // The isolated repository server may still be starting.
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error(`Local annotation server did not start at ${baseUrl}`);
+};
+
 let browser;
 try {
-  const baseUrl = parseBaseUrl(process.argv[2]);
+  const baseUrl = await resolveBaseUrl(process.argv[2]);
   const selectedRoutes = requestedRoute
     ? ROUTES.filter(route => route.path === requestedRoute)
     : ROUTES;
@@ -1088,6 +1122,7 @@ try {
   addFailure("runner", "n/a", "runner", "fatal", error.message);
 } finally {
   await browser?.close().catch(() => {});
+  managedServer?.kill();
 }
 
 if (failures.length) {

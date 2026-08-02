@@ -5,22 +5,34 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
-const VIEWPORTS = [
+const DEFAULT_VIEWPORTS = [
   { width: 1440, height: 900 },
   { width: 1440, height: 640 },
   { width: 1440, height: 600 },
   { width: 1024, height: 640 },
   { width: 1024, height: 600 },
+  { width: 900, height: 620 },
+  { width: 821, height: 620 },
   { width: 390, height: 844 },
   { width: 360, height: 640 },
 ];
-const ROUTES = [
+const DEFAULT_ROUTES = [
   "/strony-internetowe",
   "/kampanie",
   "/social-media",
   "/proces",
   "/o-nas",
 ];
+const VIEWPORTS = process.env.SCENE_AUDIT_VIEWPORTS
+  ? process.env.SCENE_AUDIT_VIEWPORTS.split(",").map(value => {
+    const [width, height] = value.split("x").map(Number);
+    if (!width || !height) throw new Error(`Invalid SCENE_AUDIT_VIEWPORTS entry: ${value}`);
+    return { width, height };
+  })
+  : DEFAULT_VIEWPORTS;
+const ROUTES = process.env.SCENE_AUDIT_ROUTES
+  ? process.env.SCENE_AUDIT_ROUTES.split(",").map(route => route.trim()).filter(Boolean)
+  : DEFAULT_ROUTES;
 const SCENE_SELECTOR = [
   ".campaign-frame",
   ".social-frame",

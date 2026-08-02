@@ -741,8 +741,9 @@ const auditRoute = async (context, baseUrl, route, viewport) => {
 
       if (!mobile) {
         const canonical = viewport.width === 1280 && viewport.height === 720;
+        const compactRepresentative = viewport.width === 1024 && viewport.height === 768;
         const wideRepresentative = viewport.width === 1512 && viewport.height === 982;
-        const interactionIndexes = canonical
+        const interactionIndexes = canonical || compactRepresentative
           ? result.pointIndexes
           : wideRepresentative
             ? result.pointIndexes.slice(0, 1)

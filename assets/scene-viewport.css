@@ -127,7 +127,7 @@ html.ok-scene-page .ok-nav-slot {
   }
 }
 
-@media (min-width: 821px) and (max-height: 700px) {
+@media (min-width: 821px) and (max-height: 730px) {
   html.ok-scene-page {
     --ok-scene-opening-display: clamp(54px, 4.2vw, 70px);
     --ok-scene-section-display: clamp(46px, 3.55vw, 60px);

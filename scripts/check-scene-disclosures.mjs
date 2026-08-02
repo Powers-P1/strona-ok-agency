@@ -9,6 +9,7 @@ const DEFAULT_VIEWPORTS = [
   { width: 1440, height: 900 },
   { width: 1440, height: 640 },
   { width: 1440, height: 600 },
+  { width: 1280, height: 720 },
   { width: 1024, height: 640 },
   { width: 1024, height: 600 },
   { width: 900, height: 620 },
@@ -159,7 +160,7 @@ const auditScene = async (page, scene, label) => {
     await page.waitForTimeout(420);
   }
   const sceneScrollTop = await page.evaluate(() => document.scrollingElement.scrollTop);
-  const compactViewport = page.viewportSize().width >= 821 && page.viewportSize().height <= 700;
+  const compactViewport = page.viewportSize().width >= 821 && page.viewportSize().height <= 730;
 
   (await layoutIssues(scene, sceneScrollTop)).forEach(message => failures.push(`${label}: ${message}`));
 
@@ -180,7 +181,7 @@ const auditScene = async (page, scene, label) => {
         return previous?.getAttribute("aria-controls") || null;
       });
       await trigger.evaluate(element => element.click());
-      if (previousPanel && !(page.viewportSize().width >= 821 && page.viewportSize().height <= 700)) {
+      if (previousPanel && !(page.viewportSize().width >= 821 && page.viewportSize().height <= 730)) {
         const hiddenImmediately = await page.locator(`#${previousPanel}`).evaluate(panel => panel.hidden);
         if (hiddenImmediately) failures.push(`${label}, disclosure ${index + 1}: previous panel skipped its closing transition`);
       }

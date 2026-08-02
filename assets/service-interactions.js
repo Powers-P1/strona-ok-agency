@@ -188,7 +188,7 @@
       const scrollHost = document.scrollingElement;
       const scrollPosition = scrollHost?.scrollTop;
       const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
-      const compactViewport = matchMedia("(min-width: 821px) and (max-height: 700px)").matches;
+      const compactViewport = matchMedia("(min-width: 821px) and (max-height: 730px)").matches;
       item.closest(".proof-list, .accordion")
         ?.querySelectorAll(disclosureSelector)
         .forEach(row => syncDisclosure(row, false, { immediate: compactViewport }));

@@ -228,6 +228,16 @@ html.ok-scene-page .ok-nav-slot {
   }
 }
 
+@media (max-width: 640px) {
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-lead {
+    display: none;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-item.is-open .proof-detail {
+    max-height: 160px;
+  }
+}
+
 @media (max-width: 640px) and (max-height: 700px) {
   :is(.campaign-frame, .social-frame, .process-frame) .proof-content {
     top: max(78px, 12%);
@@ -239,10 +249,6 @@ html.ok-scene-page .ok-nav-slot {
 
   :is(.campaign-frame, .social-frame, .process-frame) .proof-content h2 {
     font-size: clamp(38px, 11vw, 44px);
-  }
-
-  :is(.campaign-frame, .social-frame, .process-frame) .proof-lead {
-    display: none;
   }
 
   :is(.campaign-frame, .social-frame, .process-frame) .proof-list {

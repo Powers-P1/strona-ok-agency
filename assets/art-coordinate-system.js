@@ -551,21 +551,16 @@
     rings,
     visibleCopies,
   ) => copyPositionCandidates(annotation, point, width, height)
+    .filter(candidate => (
+      !obstacles.fixed.some(obstacle => intersects(candidate.rect, obstacle))
+      && !rings.some(ring => intersects(candidate.rect, ring))
+      && !visibleCopies.some(copy => intersects(candidate.rect, copy))
+    ))
     .map(candidate => ({
       candidate,
-      penalty:
-        obstacles.content.reduce((total, obstacle) => (
-          total + intersectionArea(candidate.rect, obstacle) * 4
-        ), 0)
-        + obstacles.fixed.reduce((total, obstacle) => (
-          total + intersectionArea(candidate.rect, obstacle) * 8
-        ), 0)
-        + rings.reduce((total, ring) => (
-          total + intersectionArea(candidate.rect, ring) * 16
-        ), 0)
-        + visibleCopies.reduce((total, copy) => (
-          total + intersectionArea(candidate.rect, copy) * 12
-        ), 0),
+      penalty: obstacles.content.reduce((total, obstacle) => (
+        total + intersectionArea(candidate.rect, obstacle)
+      ), 0),
     }))
     .sort((first, second) => (
       first.penalty - second.penalty

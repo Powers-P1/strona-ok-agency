@@ -20,7 +20,7 @@ body {
   display: flex;
   flex-direction: column;
   color: var(--navy);
-  font-family: "Archivo", "Aptos", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
   background: #edddce;
   overflow-x: hidden;
 }
@@ -106,7 +106,7 @@ a { color: inherit; }
   padding: 12px 18px;
   background: var(--navy);
   color: #F6ECE2;
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   text-decoration: none;
   transform: translateY(-64px);
   transition: transform .3s var(--ease);
@@ -192,7 +192,7 @@ main {
 
 .page-title {
   margin: clamp(34px, 7vh, 66px) var(--gutter) clamp(20px, 3.4vh, 32px);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(72px, 8vw, 112px);
   font-weight: 500;
   font-stretch: condensed;
@@ -258,7 +258,7 @@ main {
 .card-num {
   position: relative;
   padding-bottom: 12px;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(22px, 1.6vw, 28px);
   font-weight: 500;
   letter-spacing: .01em;
@@ -278,7 +278,7 @@ main {
 .card-title {
   margin-top: 12px;
   min-height: 2.14em;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(28px, 2vw, 34px);
   font-weight: 500;
   line-height: .94;
@@ -288,7 +288,7 @@ main {
 .card-quote {
   margin-top: 10px;
   min-height: 2.9em;
-  font-size: clamp(12.5px, .88vw, 14px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.45;
   color: var(--ink-sub);
 }
@@ -304,7 +304,7 @@ main {
 
 .card-effect-desc {
   margin-top: 5px;
-  font-size: clamp(13.5px, .95vw, 15px);
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.5;
   color: var(--ink-sub);
 }
@@ -510,18 +510,18 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .menu-page .menu-stage .card-quote {
     min-height: 2.5em;
     margin-top: 8px;
-    font-size: clamp(12.5px, 1.2svh, 14px);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.4;
   }
 
   .menu-page .menu-stage .card-effect {
     margin-top: 8px;
-    font-size: clamp(11px, 1.1svh, 12.5px);
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .menu-page .menu-stage .card-effect-desc {
     margin-top: 4px;
-    font-size: clamp(12px, 1.2svh, 14px);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.4;
   }
 
@@ -536,7 +536,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .brand { min-width: 128px; }
   .brand img { width: 128px; }
   .header-nav { gap: 18px; }
-  .header-nav a { font-size: 10px; letter-spacing: .08em; }
+  .header-nav a { font-size: var(--ok-type-label-min, 12px); letter-spacing: .08em; }
   .header-nav a:nth-child(2) { display: none; }
   main {
     min-height: calc(100svh - var(--header-height));
@@ -581,22 +581,22 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .menu-page .menu-stage .card-quote {
     min-height: 2.65em;
     margin-top: 6px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.35;
   }
   .menu-page .menu-stage .card-effect {
     margin-top: 6px;
-    font-size: 11px;
+    font-size: var(--ok-type-label-min, 12px);
   }
   .menu-page .menu-stage .card-effect-desc {
     margin-top: 4px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.35;
   }
   .card-arrow { padding-top: 5px; }
   .cards-note {
     padding-block: 8px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 }
 
@@ -625,7 +625,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 
   .menu-page .offer-intro p {
     max-width: 920px;
-    font-size: 12px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.35;
   }
 
@@ -650,18 +650,18 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   .menu-page .menu-stage .card-quote {
     min-height: 2.55em;
     margin-top: 4px;
-    font-size: 11px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.28;
   }
 
   .menu-page .menu-stage .card-effect {
     margin-top: 4px;
-    font-size: 10px;
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .menu-page .menu-stage .card-effect-desc {
     margin-top: 3px;
-    font-size: 11px;
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.28;
   }
 
@@ -672,7 +672,7 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
 
   .cards-note {
     padding-block: 5px;
-    font-size: 11px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 }
 

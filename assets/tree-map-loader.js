@@ -6,13 +6,19 @@
   const coarsePointer = window.matchMedia("(pointer: coarse)");
   const smallViewport = window.matchMedia("(max-width: 720px)");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const saveData = Boolean(navigator.connection?.saveData);
-  const automaticEffectsDisabled = () => (
-    saveData
-    || coarsePointer.matches
-    || smallViewport.matches
-    || reducedMotion.matches
-  );
+  const connection = navigator.connection;
+  const effectProfile = () => {
+    if (reducedMotion.matches || connection?.saveData) return "disabled";
+    if (smallViewport.matches) return "mobile-lite";
+    if (coarsePointer.matches) return "disabled";
+    return "desktop-full";
+  };
+  const syncEffectProfile = () => {
+    const profile = effectProfile();
+    document.documentElement.dataset.heroEffectsProfile = profile;
+    return profile;
+  };
+  const automaticEffectsDisabled = () => effectProfile() === "disabled";
   let started = false;
   let ready = false;
   let pendingActivation = false;
@@ -22,6 +28,7 @@
   let loadGeneration = 0;
   const scriptPromises = new Map();
 
+  syncEffectProfile();
   if (automaticEffectsDisabled() || window.OKAgencyMotion?.isPaused()) {
     document.documentElement.dataset.heroEffects = "disabled";
   }
@@ -109,7 +116,7 @@
         return;
       }
 
-      await loadScript("/assets/tree-energy.js?v=20260801-1");
+      await loadScript("/assets/tree-energy.js?v=20260801-2");
       if (!isCurrent()) {
         abandon();
         return;
@@ -199,7 +206,14 @@
   });
 
   const syncEligibility = () => {
-    if (ready) return;
+    const profile = syncEffectProfile();
+    if (ready) {
+      document.documentElement.dataset.heroEffects = profile === "disabled" ? "disabled" : "ready";
+      window.dispatchEvent(new CustomEvent("okagency:heroeffectsprofilechange", {
+        detail: { profile },
+      }));
+      return;
+    }
     if (!effectsEligible()) {
       cancelAmbientStart();
       loadGeneration += 1;
@@ -214,6 +228,7 @@
   coarsePointer.addEventListener("change", syncEligibility);
   smallViewport.addEventListener("change", syncEligibility);
   reducedMotion.addEventListener("change", syncEligibility);
+  connection?.addEventListener?.("change", syncEligibility);
 
   if (document.readyState === "complete") scheduleAmbientStart();
   else window.addEventListener("load", scheduleAmbientStart, { once: true });

@@ -2,7 +2,7 @@
 
 ## Zakres
 
-- Właściwym katalogiem projektu jest `G:\OK-Agency\05-website\hero_kimi`.
+- Właściwym katalogiem projektu jest `G:\OK-Agency`.
 - Produkcyjne strony HTML znajdują się w katalogu głównym, a ich zasoby w
   `assets/`.
 - `05-editorial-atelier/`, `mockups/` i `_src/` są lokalnymi materiałami
@@ -43,11 +43,21 @@
   przywracać minimalnego progu wysokości większego od dostępnego kadru.
 - Każda zmiana wspólnego kontraktu UI wymaga testu regresji obejmującego
   wszystkie korzystające z niego trasy oraz aktualizacji wersji zasobu.
+- Właściciele wspólnego UI: `assets/design-tokens.css` (typografia i tokeny),
+  `assets/scene-viewport.css` (pełny kadr), `assets/annotation-system.css`
+  (wygląd anotacji), `assets/art-coordinate-system.js` (geometria i maski),
+  `assets/service-interactions.js` (interakcje), `assets/responsive-safety.css`
+  (kontrakt mobile) oraz `assets/site-footer.js` i `assets/site-footer.css`
+  (stopka). Nie duplikuj ich odpowiedzialności w arkuszach tras.
+- Wersje wspólnych assetów są własnością `scripts/asset-versions.mjs`.
+  Po ich zmianie uruchom `npm run sync:asset-versions`, a przed commitem
+  `npm run check:asset-versions`; nie poprawiaj query stringów ręcznie per HTML.
 
 ## Wymagane sprawdzenia
 
 ```powershell
 npm run check:links
+npm run check:quality
 npm run build
 ```
 

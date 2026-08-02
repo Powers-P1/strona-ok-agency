@@ -67,7 +67,9 @@
   const body = document.body;
   const observed = new Set();
   const layouts = [];
+  const artBounds = new WeakMap();
   let frame = 0;
+  let artBoundsChanged = false;
 
   const selectors = {
     serviceScene: [
@@ -156,6 +158,106 @@
     return current === scene ? bottom : null;
   };
 
+  const deepFreeze = value => {
+    if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+    Object.values(value).forEach(deepFreeze);
+    return Object.freeze(value);
+  };
+
+  const rectFromEdges = (left, top, right, bottom) => ({
+    left,
+    top,
+    right,
+    bottom,
+    width: Math.max(0, right - left),
+    height: Math.max(0, bottom - top),
+  });
+
+  const intersectRect = (rect, clip) => {
+    const left = Math.min(clip.right, Math.max(clip.left, rect.left));
+    const top = Math.min(clip.bottom, Math.max(clip.top, rect.top));
+    const right = Math.max(left, Math.min(clip.right, rect.right));
+    const bottom = Math.max(top, Math.min(clip.bottom, rect.bottom));
+    return rectFromEdges(left, top, right, bottom);
+  };
+
+  const sameArtBounds = (first, second) => JSON.stringify(first) === JSON.stringify(second);
+
+  const publishArtBounds = (layout, sceneRect, artRect, mask = null) => {
+    const art = rectFromEdges(
+      artRect.left - sceneRect.left,
+      artRect.top - sceneRect.top,
+      artRect.right - sceneRect.left,
+      artRect.bottom - sceneRect.top,
+    );
+    const scene = rectFromEdges(0, 0, sceneRect.width, sceneRect.height);
+    let fullVisible = intersectRect(art, scene);
+    let feather = null;
+
+    if (mask) {
+      const horizontal = mask.axis === "x";
+      const featherStart = Math.min(mask.cut, mask.reveal);
+      const featherEnd = Math.max(mask.cut, mask.reveal);
+      const featherBounds = horizontal
+        ? rectFromEdges(
+            art.left + featherStart,
+            art.top,
+            art.left + featherEnd,
+            art.bottom,
+          )
+        : rectFromEdges(
+            art.left,
+            art.top + featherStart,
+            art.right,
+            art.top + featherEnd,
+          );
+      const visibleBounds = mask.revealSide === "right"
+        ? rectFromEdges(art.left + mask.reveal, art.top, art.right, art.bottom)
+        : mask.revealSide === "left"
+          ? rectFromEdges(art.left, art.top, art.left + mask.reveal, art.bottom)
+          : mask.revealSide === "bottom"
+            ? rectFromEdges(art.left, art.top + mask.reveal, art.right, art.bottom)
+            : rectFromEdges(art.left, art.top, art.right, art.top + mask.reveal);
+      const visibleInScene = intersectRect(visibleBounds, scene);
+      const featherInScene = intersectRect(featherBounds, scene);
+
+      fullVisible = visibleInScene;
+      feather = {
+        axis: mask.axis,
+        start: horizontal ? featherInScene.left : featherInScene.top,
+        end: horizontal ? featherInScene.right : featherInScene.bottom,
+        ...featherInScene,
+      };
+    }
+
+    const record = deepFreeze({
+      version: 1,
+      coordinateSpace: "scene-css-px",
+      masked: Boolean(mask),
+      revealSide: mask?.revealSide ?? null,
+      art,
+      fullVisible,
+      feather,
+    });
+    const previous = artBounds.get(layout.scene) || artBounds.get(layout.art);
+    if (previous && sameArtBounds(previous, record)) {
+      artBounds.set(layout.scene, previous);
+      artBounds.set(layout.art, previous);
+      return;
+    }
+
+    artBounds.set(layout.scene, record);
+    artBounds.set(layout.art, record);
+    artBoundsChanged = true;
+  };
+
+  const clearArtMask = (layout, sceneRect, artRect) => {
+    layout.art.dataset.okSafeArt = "idle";
+    delete layout.art.dataset.okSafeReveal;
+    layout.art.style.removeProperty("--ok-safe-mask-image");
+    publishArtBounds(layout, sceneRect, artRect);
+  };
+
   const discover = () => {
     const home = document.querySelector(".home-page .hero");
     if (home) addLayout(home, ":scope > .copy, :scope > .detail", ":scope > .art-stage", "grow");
@@ -190,19 +292,21 @@
   };
 
   const clearLayout = layout => {
-    layout.art.dataset.okSafeArt = "idle";
-    delete layout.art.dataset.okSafeReveal;
     delete layout.scene.dataset.okSafeCurtain;
     delete layout.scene.dataset.okSafeMobileHero;
     delete layout.scene.dataset.okSafeCompactFit;
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
     layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     layout.scene.style.removeProperty("--ok-safe-required-height");
-    layout.art.style.removeProperty("--ok-safe-mask-image");
     layout.scene.querySelectorAll("[data-ok-safe-content]").forEach(content => {
       restoreScrollRegion(content);
       delete content.dataset.okSafeContent;
     });
+    clearArtMask(
+      layout,
+      layout.scene.getBoundingClientRect(),
+      layout.art.getBoundingClientRect(),
+    );
   };
 
   const measureLayout = layout => {
@@ -233,7 +337,10 @@
       width: contentBounds.right - contentBounds.left,
       height: contentBounds.bottom - contentBounds.top,
     };
-    if (!sceneRect.width || !sceneRect.height || !artRect.width || !artRect.height) return;
+    if (!sceneRect.width || !sceneRect.height || !artRect.width || !artRect.height) {
+      clearArtMask(layout, sceneRect, artRect);
+      return;
+    }
 
     const viewport = window.visualViewport;
     const viewportWidth = viewport?.width || window.innerWidth;
@@ -290,9 +397,7 @@
       layout.scene.dataset.okSafeCompactFit = homeLayout.copyFitsFirstView
         ? "first-view"
         : "accessible-overflow";
-      layout.art.dataset.okSafeArt = "idle";
-      delete layout.art.dataset.okSafeReveal;
-      layout.art.style.removeProperty("--ok-safe-mask-image");
+      clearArtMask(layout, sceneRect, artRect);
       return;
     }
 
@@ -304,9 +409,7 @@
     if (isHome && !layout.scene.classList.contains("is-focused")) {
       requiredHeight = Math.max(viewportHeight, requiredHeight);
       layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
-      layout.art.dataset.okSafeArt = "idle";
-      delete layout.art.dataset.okSafeReveal;
-      layout.art.style.removeProperty("--ok-safe-mask-image");
+      clearArtMask(layout, sceneRect, artRect);
       return;
     }
 
@@ -314,9 +417,7 @@
       delete layout.scene.dataset.okSafeCurtain;
       layout.scene.style.removeProperty("--ok-safe-curtain-mask");
       layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
-      layout.art.dataset.okSafeArt = "idle";
-      delete layout.art.dataset.okSafeReveal;
-      layout.art.style.removeProperty("--ok-safe-mask-image");
+      clearArtMask(layout, sceneRect, artRect);
       return;
     }
 
@@ -326,9 +427,7 @@
       } else {
         layout.scene.style.removeProperty("--ok-safe-required-height");
       }
-      layout.art.dataset.okSafeArt = "idle";
-      delete layout.art.dataset.okSafeReveal;
-      layout.art.style.removeProperty("--ok-safe-mask-image");
+      clearArtMask(layout, sceneRect, artRect);
       return;
     }
 
@@ -353,28 +452,39 @@
     const horizontalFeather = Math.max(96, Math.min(240, artRect.width * .18));
     const verticalFeather = Math.max(96, Math.min(240, artRect.height * .18));
     let maskImage = "";
+    let cut = 0;
+    let reveal = 0;
+    let axis = "x";
 
     if (revealSide === "right") {
-      const cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
-      const reveal = clamp(cut + horizontalFeather, artRect.width);
+      cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
+      reveal = clamp(cut + horizontalFeather, artRect.width);
       maskImage = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
     } else if (revealSide === "left") {
-      const cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
-      const reveal = clamp(cut - horizontalFeather, artRect.width);
+      cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
+      reveal = clamp(cut - horizontalFeather, artRect.width);
       maskImage = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
     } else if (revealSide === "bottom") {
-      const cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
-      const reveal = clamp(cut + verticalFeather, artRect.height);
+      axis = "y";
+      cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
+      reveal = clamp(cut + verticalFeather, artRect.height);
       maskImage = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
     } else {
-      const cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
-      const reveal = clamp(cut - verticalFeather, artRect.height);
+      axis = "y";
+      cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
+      reveal = clamp(cut - verticalFeather, artRect.height);
       maskImage = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
     }
 
     layout.art.style.setProperty("--ok-safe-mask-image", maskImage);
     layout.art.dataset.okSafeReveal = revealSide;
     layout.art.dataset.okSafeArt = "active";
+    publishArtBounds(layout, sceneRect, artRect, {
+      axis,
+      cut,
+      reveal,
+      revealSide,
+    });
   };
 
   const measureCards = () => {
@@ -429,6 +539,7 @@
 
   const measure = () => {
     frame = 0;
+    artBoundsChanged = false;
     const viewport = window.visualViewport;
     const viewportWidth = viewport?.width || window.innerWidth;
     const viewportHeight = viewport?.height || window.innerHeight;
@@ -437,6 +548,11 @@
     root.toggleAttribute("data-ok-tall-portrait", tallPortrait);
     layouts.forEach(measureLayout);
     measureCards();
+    if (artBoundsChanged) {
+      window.dispatchEvent(new CustomEvent("okagency:art-safety-change", {
+        detail: { version: 1 },
+      }));
+    }
   };
 
   const schedule = () => {
@@ -469,6 +585,7 @@
 
   window.OKAgencyResponsiveSafety = Object.freeze({
     getHomeHeroLayout,
+    getArtBounds: sceneOrArt => artBounds.get(sceneOrArt) || null,
     refresh: schedule,
     snapshot: () => ({
       tallPortrait: root.hasAttribute("data-ok-tall-portrait"),

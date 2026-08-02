@@ -17,12 +17,12 @@
   isolation: isolate;
   width: 100%;
   overflow: hidden;
-  padding: clamp(38px, 3.35vw, 54px) clamp(24px, 4.8vw, 80px) 20px;
+  padding: clamp(38px, 3.35vw, 54px) clamp(24px, 4.8vw, 80px) max(74px, calc(20px + env(safe-area-inset-bottom)));
   color: var(--footer-cream);
   background:
     radial-gradient(circle at 79% 0%, rgba(238, 77, 120, .055), transparent 28%),
     var(--footer-navy);
-  font-family: "Archivo", "Aptos", "Segoe UI", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
   text-align: left;
 }
 
@@ -67,7 +67,7 @@
 .site-footer__description {
   margin: 17px 0 0;
   max-width: 430px;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(24px, 1.9vw, 31px);
   font-weight: 400;
   letter-spacing: -.018em;
@@ -78,8 +78,8 @@
   display: block;
   margin-top: 8px;
   color: var(--footer-muted);
-  font-family: "Archivo", "Aptos", "Segoe UI", sans-serif;
-  font-size: 13px;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
+  font-size: var(--ok-type-content-min, 14px);
   font-weight: 450;
   letter-spacing: .02em;
   line-height: 1.5;
@@ -103,7 +103,7 @@
 
 .site-footer__diagnosis strong {
   grid-area: label;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(31px, 2.75vw, 46px);
   font-weight: 500;
   letter-spacing: -.025em;
@@ -114,7 +114,7 @@
   grid-area: note;
   padding-top: 7px;
   color: var(--footer-muted);
-  font-size: 13px;
+  font-size: var(--ok-type-content-min, 14px);
   line-height: 1.4;
 }
 
@@ -185,7 +185,7 @@
 .site-footer__heading {
   margin: 0 0 10px;
   color: rgba(240, 223, 207, .51);
-  font-family: "Archivo", "Aptos", "Segoe UI", sans-serif;
+  font-family: var(--ok-font-body, "Archivo", sans-serif);
   font-size: 13px;
   font-weight: 650;
   letter-spacing: .19em;
@@ -207,7 +207,7 @@
   min-height: 44px;
   display: inline-flex;
   align-items: center;
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: 19px;
   font-weight: 400;
   line-height: 1;
@@ -248,7 +248,7 @@
   display: inline-flex;
   align-items: center;
   border-bottom: 1px solid rgba(238, 77, 120, .52);
-  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-size: clamp(22px, 1.8vw, 29px);
   text-decoration: none;
   transition: color .25s ease, border-color .25s ease;
@@ -275,6 +275,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  gap: 24px;
   border-top: 1px solid var(--footer-line);
 }
 
@@ -286,7 +287,14 @@
   letter-spacing: .08em;
 }
 
-.site-footer__bottom a {
+.site-footer__legal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(18px, 2.6vw, 38px);
+}
+
+.site-footer__legal a {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -299,8 +307,9 @@
   transition: color .25s ease;
 }
 
-.site-footer__bottom a:hover,
-.site-footer__bottom a:focus-visible {
+.site-footer__legal a:hover,
+.site-footer__legal a:focus-visible,
+.site-footer__legal a[aria-current="page"] {
   color: var(--footer-pink);
 }
 
@@ -359,7 +368,7 @@
 
 @media (max-width: 700px) {
   .site-footer {
-    padding: 26px 22px max(16px, env(safe-area-inset-bottom));
+    padding: 26px 22px max(72px, calc(16px + env(safe-area-inset-bottom)));
   }
 
   .site-footer__top {
@@ -378,7 +387,7 @@
 
   .site-footer__description span {
     margin-top: 7px;
-    font-size: 11px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .site-footer__diagnosis {
@@ -394,7 +403,7 @@
 
   .site-footer__diagnosis small {
     max-width: 270px;
-    font-size: 10px;
+    font-size: var(--ok-type-content-min, 14px);
   }
 
   .site-footer__signal {
@@ -430,12 +439,20 @@
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
-    gap: 0;
+    gap: 4px;
   }
 
-  .site-footer__bottom a {
-    order: -1;
-    min-height: 32px;
+  .site-footer__legal {
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0 18px;
+  }
+
+  .site-footer__legal a,
+  .site-footer__legal .site-footer__consent {
+    min-height: 40px;
   }
 }
 

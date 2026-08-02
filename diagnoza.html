@@ -46,17 +46,19 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/diagnosis/diagnosis-art-opening-v1.webp" type="image/webp">
-  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-2">
+  <link rel="stylesheet" href="assets/services/diagnosis/styles.css?v=20260801-6">
   <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/site-footer.css?v=20260801-1">
-  <link rel="stylesheet" href="assets/site-navigation.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css">
-  <link rel="stylesheet" href="/assets/fonts.css">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260801-2">
-  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260801-3">
+  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260801-3">
+  <link rel="stylesheet" href="assets/site-footer.css?v=20260801-2">
+  <link rel="stylesheet" href="assets/site-navigation.css?v=20260801-3">
+  <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260801-2">
+  <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
+  <link rel="stylesheet" href="/assets/design-tokens.css?v=20260801-1">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260801-4">
+  <link rel="stylesheet" href="/assets/annotation-system.css?v=20260801-4">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260801-5">
   <script src="/assets/motion-control.js?v=20260729-4"></script>
-  <script src="/assets/responsive-safety.js?v=20260801-2" defer></script>
+  <script src="/assets/responsive-safety.js?v=20260801-3" defer></script>
   <script src="/assets/analytics.js?v=20260801-1" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
@@ -97,13 +99,7 @@
         aria-labelledby="opening-title"
         aria-hidden="false"
       >
-        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-opening-v1.webp" width="1672" height="941" alt="" fetchpriority="high">
-
-        <svg class="energy-shimmer" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
-          <defs><filter id="opening-glint" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation=".65"></feGaussianBlur></filter></defs>
-          <path class="glint glint-a" filter="url(#opening-glint)" pathLength="1" d="M 1536 768 C 1408 701 1349 642 1303 570 C 1258 501 1173 501 1092 490 C 1028 481 980 449 965 406"></path>
-          <path class="glint glint-b" filter="url(#opening-glint)" pathLength="1" d="M 1303 570 C 1274 492 1240 429 1217 365"></path>
-        </svg>
+        <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-opening-v1.webp" data-placement-mask="assets/services/diagnosis/diagnosis-art-opening-v1-placement-mask-v1.png" width="1672" height="941" alt="" fetchpriority="high">
 
         <svg class="annotation-lines" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="opening-symptom"><path pathLength="1" d="M 995 419 L 925 355 H 824"></path></g>
@@ -111,15 +107,15 @@
           <g class="annotation-wire" data-line="opening-source"><path pathLength="1" d="M 1398 607 L 1338 675 H 1242"></path></g>
         </svg>
 
-        <article class="annotation-callout callout-symptom" data-annotation="opening-symptom" data-art-x="1001" data-art-y="432">
+        <article class="annotation-callout callout-symptom" data-annotation="opening-symptom" data-art-x="1265" data-art-y="552" data-art-x-compact="1265" data-art-y-compact="552" data-art-x-short="1265" data-art-y-short="552">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-opening-symptom" aria-label="Pokaż opis: Objaw"></button>
           <div class="annotation-copy" id="copy-opening-symptom"><strong>Objaw</strong><span>To, co widać: słabe zapytania, nieregularna komunikacja albo kampania bez jasnych wniosków.</span></div>
         </article>
-        <article class="annotation-callout callout-context" data-annotation="opening-context" data-art-x="1243" data-art-y="540">
+        <article class="annotation-callout callout-context" data-annotation="opening-context" data-art-x="1252" data-art-y="744">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-opening-context" aria-label="Pokaż opis: Kontekst"></button>
           <div class="annotation-copy" id="copy-opening-context"><strong>Kontekst</strong><span>Sprawdzamy cel, ofertę, odbiorców, dane i ograniczenia, zanim nazwiemy rozwiązanie.</span></div>
         </article>
-        <article class="annotation-callout callout-source" data-annotation="opening-source" data-art-x="1541" data-art-y="655">
+        <article class="annotation-callout callout-source" data-annotation="opening-source" data-art-x="1313" data-art-y="672" data-art-x-compact="1313" data-art-y-compact="672" data-art-x-short="1313" data-art-y-short="672">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-opening-source" aria-label="Pokaż opis: Przyczyna"></button>
           <div class="annotation-copy" id="copy-opening-source"><strong>Przyczyna</strong><span>Szukamy zależności, która uruchamia pozostałe problemy, a nie najgłośniejszego symptomu.</span></div>
         </article>
@@ -135,7 +131,7 @@
             <span>Zacznij diagnozę · 4 pytania</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"></path></svg>
           </button>
-          <p class="opening-privacy">Bez zapisów · bez maila · tylko wynik trafia do kontaktu</p>
+          <p class="opening-privacy">Wynik bez zapisu i podawania danych · kontakt jest opcjonalny</p>
         </div>
       </section>
 
@@ -147,14 +143,7 @@
         aria-hidden="true"
         inert
       >
-      <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-map-v1.webp" width="1672" height="941" alt="" loading="lazy" decoding="async">
-
-        <svg class="energy-shimmer" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
-          <defs><filter id="map-glint" x="-15%" y="-15%" width="130%" height="130%"><feGaussianBlur stdDeviation=".6"></feGaussianBlur></filter></defs>
-          <path class="glint glint-a" filter="url(#map-glint)" pathLength="1" d="M 1256 643 C 1197 580 1182 513 1112 475 C 1035 433 968 471 897 421 C 841 381 846 315 881 277"></path>
-          <path class="glint glint-b" filter="url(#map-glint)" pathLength="1" d="M 1112 475 C 1189 425 1239 362 1276 315"></path>
-          <path class="glint glint-c" filter="url(#map-glint)" pathLength="1" d="M 897 421 C 823 405 779 432 760 486"></path>
-        </svg>
+      <img class="campaign-art" src="assets/services/diagnosis/diagnosis-art-map-v1.webp" data-placement-mask="assets/services/diagnosis/diagnosis-art-map-v1-placement-mask-v1.png" width="1672" height="941" alt="" loading="lazy" decoding="async">
 
         <svg class="annotation-lines map-annotation-lines" viewBox="0 0 1536 864" preserveAspectRatio="none" aria-hidden="true">
           <g class="annotation-wire" data-line="map-facts"><path pathLength="1" d="M 758 486 L 695 555 H 622"></path></g>
@@ -162,19 +151,19 @@
           <g class="annotation-wire" data-line="map-dependencies"><path pathLength="1" d="M 1112 475 L 1047 415 H 961"></path></g>
           <g class="annotation-wire" data-line="map-priority"><path pathLength="1" d="M 1256 643 L 1194 707 H 1098"></path></g>
         </svg>
-        <article class="annotation-callout note-facts" data-annotation="map-facts" data-art-x="907" data-art-y="498">
+        <article class="annotation-callout note-facts" data-annotation="map-facts" data-art-x="1039" data-art-y="413" data-art-x-compact="1158" data-art-y-compact="485" data-art-x-short="1158" data-art-y-short="485">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-facts" aria-label="Pokaż opis: Fakty"></button>
           <div class="annotation-copy journey-note" id="copy-map-facts"><strong>Fakty</strong><span>Materiały, działania i dostępne dane — bez dopowiadania braków.</span></div>
         </article>
-        <article class="annotation-callout note-context" data-annotation="map-context" data-art-x="948" data-art-y="312">
+        <article class="annotation-callout note-context" data-annotation="map-context" data-art-x="973" data-art-y="349" data-art-x-compact="1226" data-art-y-compact="499" data-art-x-short="1226" data-art-y-short="499">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-context" aria-label="Pokaż opis: Kontekst"></button>
           <div class="annotation-copy journey-note" id="copy-map-context"><strong>Kontekst</strong><span>Cel, oferta, odbiorcy, kanały i realne ograniczenia zespołu.</span></div>
         </article>
-        <article class="annotation-callout note-dependencies" data-annotation="map-dependencies" data-art-x="1260" data-art-y="522">
+        <article class="annotation-callout note-dependencies" data-annotation="map-dependencies" data-art-x="1278" data-art-y="535" data-art-x-compact="1302" data-art-y-compact="575" data-art-x-short="1302" data-art-y-short="575">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-dependencies" aria-label="Pokaż opis: Zależności"></button>
           <div class="annotation-copy journey-note" id="copy-map-dependencies"><strong>Zależności</strong><span>Oddzielamy źródło problemu od konsekwencji widocznych w innych miejscach.</span></div>
         </article>
-        <article class="annotation-callout note-priority" data-annotation="map-priority" data-art-x="1365" data-art-y="711">
+        <article class="annotation-callout note-priority" data-annotation="map-priority" data-art-x="1320" data-art-y="624" data-art-x-compact="1342" data-art-y-compact="640" data-art-x-short="1342" data-art-y-short="640">
           <button class="annotation-dot" type="button" aria-expanded="false" aria-controls="copy-map-priority" aria-label="Pokaż opis: Priorytet"></button>
           <div class="annotation-copy journey-note" id="copy-map-priority"><strong>Priorytet</strong><span>Wybieramy ruch, który usuwa najważniejszą blokadę i otwiera kolejne decyzje.</span></div>
         </article>
@@ -241,7 +230,7 @@
               <button class="quiz-back" type="button" data-back>←&nbsp;&nbsp;Wstecz</button>
             </section>
           </div>
-          <p class="quiz-privacy">Bez zapisów · bez maila · tylko wynik trafia do kontaktu</p>
+          <p class="quiz-privacy">Wynik bez zapisu i podawania danych · kontakt jest opcjonalny</p>
         </div>
       </section>
 
@@ -249,7 +238,7 @@
         class="diagnosis-frame campaign-proof"
         id="diagnosis-outcome"
         data-act="outcome"
-        aria-labelledby="result-title"
+        aria-label="Wynik diagnozy i opcjonalny kontakt"
         aria-hidden="true"
         inert
       >
@@ -257,22 +246,31 @@
         <span class="proof-bloom" aria-hidden="true"></span>
 
         <article class="result-content">
-          <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
-          <h2 id="result-title" tabindex="-1">Najpierw strona internetowa.</h2>
-          <p class="result-why" data-result-why></p>
-          <p class="steps-label">Pierwsze trzy kroki</p>
-          <ol class="result-steps"><li data-result-step="0"></li><li data-result-step="1"></li><li data-result-step="2"></li></ol>
-          <p class="result-disclaimer">To punkt startu, nie oferta ani wycena.</p>
-          <div class="result-actions">
-            <a class="result-cta result-primary" data-result-primary href="/strony-internetowe"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
-            <a class="result-cta result-secondary" data-result-secondary href="/kontakt?context=website&amp;source=diagnosis"><span>Przejdź do kontaktu</span><i aria-hidden="true">→</i></a>
-          </div>
-          <div class="result-lead" data-result-lead>
-            <p class="result-lead-intro">
-              <strong>Wynik masz powyżej — bez zapisów i bez maila, tak jak obiecaliśmy.</strong>
-              Jeśli chcesz, żebyśmy rozpisali te kroki dla Twojej firmy, zostaw kontakt.
-              Odpiszemy z konkretem, bez oferty na siłę.
-            </p>
+          <section class="outcome-panel result-panel is-active" data-outcome-panel="result" aria-labelledby="result-title" aria-hidden="false">
+            <span class="section-kicker">Po diagnozie · Jeden problem. Jasna kolejność.</span>
+            <h2 id="result-title" tabindex="-1">Najpierw strona internetowa.</h2>
+            <p class="result-why" data-result-why></p>
+            <p class="steps-label">Pierwsze trzy kroki</p>
+            <ol class="result-steps"><li data-result-step="0"></li><li data-result-step="1"></li><li data-result-step="2"></li></ol>
+            <p class="result-disclaimer">To punkt startu, nie oferta ani wycena.</p>
+            <div class="result-availability">
+              <p>Wynik dostajesz od razu — bez zapisu i podawania danych.</p>
+              <p>Jeśli chcesz omówić wynik, przejdź do opcjonalnego kontaktu.</p>
+            </div>
+            <div class="result-actions">
+              <a class="result-cta result-primary" data-result-primary href="/strony-internetowe"><span>Zobacz strony internetowe</span><i aria-hidden="true">→</i></a>
+              <button class="result-cta result-secondary" type="button" data-show-contact><span>Poproś o kontakt</span><i aria-hidden="true">→</i></button>
+            </div>
+            <div class="result-controls">
+              <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>
+              <button type="button" data-restart>↺&nbsp;&nbsp;Zacznij od nowa</button>
+            </div>
+          </section>
+
+          <section class="outcome-panel contact-panel" data-outcome-panel="contact" aria-labelledby="contact-title" aria-hidden="true" inert>
+            <span class="section-kicker">Opcjonalny kontakt · Twój wynik zostaje zachowany.</span>
+            <h2 id="contact-title" tabindex="-1">Omówmy Twój wynik.</h2>
+            <p class="contact-intro">Abyśmy mogli odpowiedzieć, podaj imię i e-mail.</p>
             <form class="result-lead-form" data-result-lead-form novalidate>
               <div class="result-lead-fields">
                 <label class="result-lead-field">
@@ -280,7 +278,7 @@
                   <input id="rl-name" name="name" type="text" autocomplete="given-name" required minlength="3" maxlength="100">
                 </label>
                 <label class="result-lead-field">
-                  <span>E-mail</span>
+                  <span>E-mail do odpowiedzi</span>
                   <input id="rl-email" name="email" type="email" autocomplete="email" required maxlength="254">
                 </label>
               </div>
@@ -288,31 +286,31 @@
                 Nie wypełniaj tego pola
                 <input id="rl-fax" name="fax" type="text" tabindex="-1" autocomplete="off">
               </label>
-              <div class="cf-turnstile" id="diagnosis-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="contact"></div>
-              <button class="result-cta result-primary result-lead-submit" type="submit">
-                <span>Wyślij kontakt</span><i aria-hidden="true">→</i>
-              </button>
+              <div class="result-lead-actions">
+                <div class="cf-turnstile" id="diagnosis-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="contact"></div>
+                <button class="result-cta result-primary result-lead-submit" type="submit">
+                  <span>Wyślij kontakt</span><i aria-hidden="true">→</i>
+                </button>
+              </div>
               <p class="result-lead-status" data-result-lead-status role="status" aria-live="polite"></p>
               <p class="result-lead-note">
                 Wysyłając formularz akceptujesz <a href="/polityka-prywatnosci">politykę prywatności</a>.
                 Do wiadomości dołączamy wynik Twojej diagnozy.
               </p>
             </form>
-          </div>
-          <div class="result-controls">
-            <button type="button" data-change-answers>←&nbsp;&nbsp;Zmień odpowiedzi</button>
-            <button type="button" data-restart>↺&nbsp;&nbsp;Zacznij od nowa</button>
-          </div>
+            <button class="return-to-result" type="button" data-show-result>←&nbsp;&nbsp;Wróć do wyniku</button>
+          </section>
         </article>
       </section>
     </div>
   </main>
 
   <div data-site-footer></div>
-  <script src="assets/art-coordinate-system.v20260730-3.js"></script>
+  <script src="assets/art-coordinate-system.js?v=20260801-6"></script>
+  <script src="assets/service-interactions.js?v=20260801-8"></script>
   <script src="assets/navigation.js?v=20260730-4"></script>
-  <script src="assets/services/diagnosis/script.js?v=20260801-1"></script>
-  <script src="assets/site-footer.js?v=20260801-1"></script>
+  <script src="assets/services/diagnosis/script.js?v=20260801-2"></script>
+  <script src="assets/site-footer.js?v=20260801-2"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onDiagnosisTurnstileLoad&amp;render=explicit" defer></script>
 </body>
 </html>

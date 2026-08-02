@@ -380,107 +380,6 @@ canvas {
   }
 }
 
-.tablet-annotations {
-  display: none;
-}
-
-/* Cropped art uses a readable summary instead of detached or hidden pins. */
-  .campaign-page .uses-annotation-summary .annotation-lines,
-  .social-page .uses-annotation-summary .annotation-lines,
-  .web-service .uses-annotation-summary .annotation-lines,
-  .process-page .uses-annotation-summary .annotation-lines,
-  .diagnosis-service .uses-annotation-summary .annotation-lines,
-  .campaign-page .uses-annotation-summary .annotation-callout,
-  .social-page .uses-annotation-summary .annotation-callout,
-  .web-service .uses-annotation-summary .annotation-callout,
-  .process-page .uses-annotation-summary .annotation-callout,
-  .diagnosis-service .uses-annotation-summary .annotation-callout {
-    display: none !important;
-  }
-
-  .uses-annotation-summary .tablet-annotations {
-    width: min(100%, 560px);
-    margin-top: 16px;
-    padding-top: 12px;
-    display: block;
-    border-top: 1px solid color-mix(in srgb, currentColor 24%, transparent);
-    font-family: "Archivo", sans-serif;
-  }
-
-  .uses-annotation-summary .tablet-annotations summary {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    color: var(--pink);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-
-  .uses-annotation-summary .tablet-annotations summary::after {
-    content: "+";
-    margin-left: auto;
-    font-size: 18px;
-    font-weight: 400;
-  }
-
-  .uses-annotation-summary .tablet-annotations[open] summary::after {
-    content: "−";
-  }
-
-  .uses-annotation-summary .tablet-annotations ul {
-    max-height: min(22svh, 120px);
-    margin: 8px 0 0;
-    padding: 0 4px 0 0;
-    display: grid;
-    gap: 12px 18px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    overflow: auto;
-    list-style: none;
-  }
-
-  .uses-annotation-summary .tablet-annotations li {
-    min-width: 0;
-  }
-
-  .uses-annotation-summary .tablet-annotations strong,
-  .uses-annotation-summary .tablet-annotations span {
-    display: block;
-  }
-
-  .uses-annotation-summary .tablet-annotations strong {
-    font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-  }
-
-  .uses-annotation-summary .tablet-annotations span {
-    margin-top: 3px;
-    font-size: 11px;
-    line-height: 1.42;
-  }
-
-  .uses-annotation-summary .tablet-annotations.is-overlay {
-    position: absolute;
-    z-index: 18;
-    right: var(--ok-canvas-inset);
-    bottom: 76px;
-    width: min(440px, 36vw);
-    max-height: calc(100% - 152px);
-    margin: 0;
-    padding: 12px 16px 14px;
-    overflow: auto;
-    color: var(--navy);
-    border: 1px solid color-mix(in srgb, var(--navy) 18%, transparent);
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    box-shadow: 0 18px 54px rgba(6, 25, 43, .14);
-    backdrop-filter: blur(12px);
-  }
-
 /* ---------- Mobile ---------- */
 
 @media (max-width: 640px) {
@@ -494,15 +393,6 @@ canvas {
     width: 100%;
   }
 
-  .uses-annotation-summary .tablet-annotations {
-    margin-top: 10px;
-    padding-top: 8px;
-  }
-
-  .uses-annotation-summary .tablet-annotations ul {
-    max-height: 64px;
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 360px) {
@@ -606,7 +496,7 @@ canvas {
   .home-page .scene-label {
     gap: clamp(.6rem, 1.4vw, .85rem);
     margin-bottom: clamp(.35rem, .8svh, .6rem);
-    font-size: clamp(.66rem, 1.2vw, .76rem);
+    font-size: var(--ok-type-label-min, 12px);
   }
 
   .home-page .scene-label::before {
@@ -622,14 +512,14 @@ canvas {
   .home-page .descriptor {
     max-width: 30rem;
     margin-top: clamp(.4rem, .8svh, .65rem);
-    font-size: clamp(.8rem, 1.2vw, .9rem);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.45;
   }
 
   .home-page .value-lead {
     max-width: 34rem;
     margin-top: clamp(.2rem, .45svh, .35rem);
-    font-size: clamp(.8rem, 1.35vw, 1rem);
+    font-size: var(--ok-type-content-min, 14px);
     line-height: 1.45;
   }
 

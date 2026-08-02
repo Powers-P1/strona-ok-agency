@@ -54,6 +54,7 @@
   const motionPaused = () => (
     reducedMotion.matches
     || document.documentElement.dataset.motion === "paused"
+    || document.documentElement.dataset.heroEffectsProfile === "disabled"
   );
   const originalCtaLabel = explore.textContent.trim();
   const edgeById = new Map(map.edges.map((edge) => [edge.id, edge]));
@@ -133,7 +134,6 @@
   let activationRunning = false;
   let activationStarted = 0;
   let activationOpenAt = 0;
-  let activationScroll = 0;
   let reducedPending = false;
   let reducedTimer = 0;
   let detailOpen = false;
@@ -2070,14 +2070,6 @@
     else element.removeAttribute("aria-hidden");
   }
 
-  function holdScroll(target) {
-    window.scrollTo({ top: target, left: 0, behavior: "auto" });
-    requestAnimationFrame(() => {
-      window.scrollTo(0, target);
-      requestAnimationFrame(() => window.scrollTo(0, target));
-    });
-  }
-
   function resetCta() {
     explore.classList.remove("is-charging");
     explore.removeAttribute("aria-busy");
@@ -2091,7 +2083,7 @@
     activationLinks.forEach((link) => link.setAttribute("aria-expanded", String(value)));
   }
 
-  function openDetail(scrollTarget = window.scrollY) {
+  function openDetail() {
     detailOpen = true;
     activationRunning = false;
     activationOpenAt = 0;
@@ -2101,7 +2093,6 @@
     detail.setAttribute("aria-hidden", "false");
     setInert(intro, true);
     setInert(detail, false);
-    holdScroll(scrollTarget);
     requestAnimationFrame(() => {
       back.focus({ preventScroll: true });
       requestAnimationFrame(() => {
@@ -2111,7 +2102,6 @@
   }
 
   function closeDetail() {
-    const target = window.scrollY;
     detailOpen = false;
     pulses = [];
     blossoms = [];
@@ -2132,7 +2122,6 @@
     nextStoneAt = motionPaused()
       ? Number.POSITIVE_INFINITY
       : performance.now() + 420;
-    holdScroll(target);
     requestAnimationFrame(() => {
       activationTrigger.focus({ preventScroll: true });
       requestAnimationFrame(() => {
@@ -2163,7 +2152,6 @@
       ? Number.POSITIVE_INFINITY
       : performance.now() + 460;
     drawFrame(performance.now());
-    holdScroll(activationScroll);
     if (restoreFocus) requestAnimationFrame(() => activationTrigger.focus({ preventScroll: true }));
   }
 
@@ -2171,7 +2159,7 @@
     if (!activationRunning) return;
     reducedPending = false;
     window.clearTimeout(reducedTimer);
-    openDetail(activationScroll);
+    openDetail();
   }
 
   function activate(trigger = explore) {
@@ -2185,7 +2173,6 @@
       delete document.documentElement.dataset.treeFps;
       delete document.documentElement.dataset.treeFrameP95;
     }
-    activationScroll = window.scrollY;
     activationOpenAt = 0;
     pulses = [];
     blossoms = [];
@@ -2322,6 +2309,7 @@
 
   reducedMotion.addEventListener("change", syncMotionPreference);
   window.addEventListener("okagency:motionchange", syncMotionPreference);
+  window.addEventListener("okagency:heroeffectsprofilechange", syncMotionPreference);
   coarsePointer.addEventListener("change", resizeCanvas);
   sculpture.addEventListener("load", resizeCanvas);
   new ResizeObserver(resizeCanvas).observe(rig);

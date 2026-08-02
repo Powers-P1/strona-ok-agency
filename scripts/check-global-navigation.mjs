@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { versionedAsset } from "./asset-versions.mjs";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const publicPages = readdirSync(projectRoot)
@@ -34,7 +35,7 @@ for (const page of publicPages) {
 
   assert.match(
     html,
-    /assets\/site-navigation\.css\?v=20260801-2/,
+    new RegExp(versionedAsset("assets/site-navigation.css").replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
     `${page}: versioned global navigation CSS is missing.`,
   );
   assert.match(
@@ -90,7 +91,17 @@ assert.match(css, /--ok-nav-docked-height:\s*80px/, "Docked rail must be 80px.")
 assert.match(css, /--ok-nav-floating-height:\s*64px/, "Detached rail must be 64px.");
 assert.match(css, /\[data-ok-nav-state="detached"\]/, "Detached state styles are required.");
 assert.match(css, /border-radius:\s*16px/, "Detached rail must use a restrained radius.");
-assert.match(css, /backdrop-filter:\s*blur\(20px\)/, "Detached material blur is required.");
+assert.match(css, /--ok-nav-floating-filter:\s*blur\(20px\)/, "Detached material blur is required.");
+assert.match(
+  css,
+  /@media \(max-width: 420px\)[\s\S]*--ok-nav-floating-canvas-filtered:\s*var\(--ok-nav-canvas-solid\)/,
+  "Mobile detached rail must use an opaque canvas token.",
+);
+assert.match(
+  css,
+  /@media \(max-width: 420px\)[\s\S]*--ok-nav-floating-filter:\s*none/,
+  "Mobile detached rail must not reveal page copy through backdrop blur.",
+);
 assert.match(css, /\.ok-nav-trigger[\s\S]*?min-height:\s*44px/, "MENU target must be at least 44px.");
 assert.match(css, /:focus-visible/, "Visible keyboard focus styles are required.");
 assert.match(css, /scroll-padding-top/, "Fixed header anchor offset is required.");

@@ -6,7 +6,13 @@
   "scripts": {
     "dev": "node server.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "check:quality": "node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs && node scripts/check-about-navigation.mjs && node scripts/check-home-hero.mjs && node scripts/check-responsive-safety.mjs && node scripts/check-global-navigation.mjs && node scripts/check-motion-system.mjs",
+    "check:quality": "npm run check:asset-versions && node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs && node scripts/check-about-navigation.mjs && node scripts/check-home-hero.mjs && node scripts/check-responsive-safety.mjs && node scripts/check-global-navigation.mjs && node scripts/check-motion-system.mjs && npm run check:ui-system",
+    "check:asset-versions": "node scripts/sync-asset-versions.mjs --check",
+    "sync:asset-versions": "node scripts/sync-asset-versions.mjs",
+    "check:ui-system": "node scripts/check-ui-system.mjs",
+    "build:annotation-masks": "node scripts/build-annotation-placement-masks.mjs",
+    "check:annotation-energy": "node scripts/check-annotation-energy.mjs",
+    "check:annotation-geometry": "node scripts/check-annotation-geometry.mjs",
     "check:pages-functions": "wrangler pages functions build functions --outfile dist/pages-worker.js",
     "check:worker": "wrangler deploy --config wrangler.contact.jsonc --dry-run --outdir dist/worker-dry-run",
     "prebuild": "npm run check:links && npm run check:quality",
@@ -17,6 +23,7 @@
   },
   "devDependencies": {
     "axe-core": "^4.12.1",
+    "playwright": "^1.60.0",
     "wrangler": "^4.115.0"
   }
 }

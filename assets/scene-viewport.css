@@ -28,6 +28,7 @@ html.ok-scene-page .ok-nav-slot {
   height: var(--ok-scene-viewport-height) !important;
   min-height: var(--ok-scene-viewport-height) !important;
   max-height: var(--ok-scene-viewport-height) !important;
+  overflow-anchor: none;
 }
 
 .diagnosis-story,
@@ -38,35 +39,86 @@ html.ok-scene-page .ok-nav-slot {
 }
 
 /*
- * Shared short-window compression for editorial content. Artwork keeps its
- * crop; only the content group scales, from the same top-left anchor on every
- * service route. Route styles must not add their own height workarounds.
+ * Short windows use tighter rhythm and smaller display roles. Content keeps
+ * its real text size and geometry; no ancestor is scaled to fit the frame.
  */
 @media (min-width: 821px) and (max-height: 820px) {
+  html.ok-scene-page {
+    --ok-scene-opening-display: clamp(60px, 5vw, 84px);
+    --ok-scene-section-display: clamp(52px, 4.35vw, 72px);
+    --ok-scene-copy-gap: 16px;
+    --ok-scene-section-gap: 16px;
+    --ok-scene-row-block: 8px;
+    --ok-scene-proof-top: 13.5%;
+    --ok-scene-editorial-top: 17%;
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .opening-copy h1 {
+    font-size: var(--ok-scene-opening-display);
+  }
+
   :is(.campaign-frame, .social-frame, .process-frame)
-    :is(.opening-copy, .proof-content, .process-editorial-content) {
-    scale: .96;
-    transform-origin: top left;
+    :is(.proof-content, .process-editorial-content) h2 {
+    font-size: var(--ok-scene-section-display);
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .opening-copy p,
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.proof-lead, .process-editorial-lead) {
+    margin-top: var(--ok-scene-copy-gap);
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.proof-list, .process-evidence-list) {
+    margin-top: var(--ok-scene-section-gap);
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame)
+    :is(.proof-trigger, .process-evidence-list article) {
+    padding-block: var(--ok-scene-row-block);
+  }
+
+  :is(.campaign-frame, .social-frame, .process-frame) .proof-content {
+    top: var(--ok-scene-proof-top);
+  }
+
+  .process-frame .process-editorial-content {
+    top: var(--ok-scene-editorial-top);
   }
 }
 
 @media (min-width: 821px) and (max-height: 780px) {
-  :is(.campaign-frame, .social-frame, .process-frame)
-    :is(.opening-copy, .proof-content, .process-editorial-content) {
-    scale: .9;
+  html.ok-scene-page {
+    --ok-scene-opening-display: clamp(58px, 4.7vw, 78px);
+    --ok-scene-section-display: clamp(50px, 4.05vw, 68px);
+    --ok-scene-copy-gap: 14px;
+    --ok-scene-section-gap: 14px;
+    --ok-scene-row-block: 7px;
+    --ok-scene-proof-top: 11%;
+    --ok-scene-editorial-top: 15%;
   }
 }
 
 @media (min-width: 821px) and (max-height: 730px) {
-  :is(.campaign-frame, .social-frame, .process-frame)
-    :is(.opening-copy, .proof-content, .process-editorial-content) {
-    scale: .84;
+  html.ok-scene-page {
+    --ok-scene-opening-display: clamp(56px, 4.45vw, 74px);
+    --ok-scene-section-display: clamp(48px, 3.8vw, 64px);
+    --ok-scene-copy-gap: 12px;
+    --ok-scene-section-gap: 12px;
+    --ok-scene-row-block: 6px;
+    --ok-scene-proof-top: 11.5%;
+    --ok-scene-editorial-top: 13%;
   }
 }
 
 @media (min-width: 821px) and (max-height: 700px) {
-  :is(.campaign-frame, .social-frame, .process-frame)
-    :is(.opening-copy, .proof-content, .process-editorial-content) {
-    scale: .76;
+  html.ok-scene-page {
+    --ok-scene-opening-display: clamp(54px, 4.2vw, 70px);
+    --ok-scene-section-display: clamp(46px, 3.55vw, 60px);
+    --ok-scene-copy-gap: 10px;
+    --ok-scene-section-gap: 10px;
+    --ok-scene-row-block: 5px;
+    --ok-scene-proof-top: 10.5%;
+    --ok-scene-editorial-top: 11%;
   }
 }

@@ -77,7 +77,7 @@ requireText(html, 'width="1672"', "obraz hero nie ma bazowej szerokości 1672");
 requireText(html, 'height="941"', "obraz hero nie ma bazowej wysokości 941");
 requireText(html, 'class="hero-backdrop"', "hero nie ma pełnoekranowej płyty tła");
 requireText(html, "editorial-atelier-backdrop-v2-3840.avif 3840w", "tło hero nie ma wariantu 3840 AVIF");
-requireText(loader, "/assets/tree-energy.js?v=20260801-1", "loader nie unieważnia cache poprawionej animacji");
+requireText(loader, "/assets/tree-energy.js?v=20260801-2", "loader nie unieważnia cache poprawionej animacji");
 requireText(energy, "Number.isFinite(flash.duration)", "animacja nie chroni gradientu przed wartością NaN");
 requireText(homeCss, ".hero-backdrop img", "płyta tła hero nie ma pełnoekranowego układu");
 requireText(
@@ -171,6 +171,9 @@ if (enhancementsCss.includes("animation-play-state: paused !important")) {
 }
 
 requireText(loader, "pendingIntent", "loader nie pamięta intencji użytkownika");
+requireText(loader, 'return "mobile-lite"', "loader nie uruchamia lekkiego profilu animacji na telefonie");
+requireText(loader, "heroEffectsProfile", "loader nie publikuje centralnego profilu efektów hero");
+requireText(loader, 'connection?.addEventListener?.("change", syncEligibility)', "loader nie reaguje na zmianę save-data");
 requireText(loader, "scheduleAmbientStart", "loader nie ma lekkiego startu po load/idle");
 requireText(loader, "cancelAmbientStart", "loader nie anuluje oczekującego startu po zmianie preferencji");
 requireText(loader, "cancelIdleCallback", "loader nie anuluje requestIdleCallback");
@@ -180,6 +183,10 @@ if (/addEventListener\("(?:pointerenter|focus)"[\s\S]{0,120}\{\s*once:\s*true/.t
   failures.push("loader nadal zużywa pointerenter/focus jednorazowo");
 }
 requireText(energy, "pixelBudgetDpr", "canvas nie ma adaptacyjnego budżetu pikseli");
+requireText(energy, 'dataset.heroEffectsProfile === "disabled"', "renderer nie respektuje centralnej polityki efektów");
+if (energy.includes("window.scrollTo(")) {
+  failures.push("animacja hero nie może wymuszać pozycji scrolla");
+}
 
 requireText(energy, "responsiveArtMaps", "canvas impulsow nie ma map responsywnych kompozycji");
 requireText(energy, 'sourceMatch: "editorial-atelier-scene-compact-v2"', "canvas impulsow nie obsluguje kompozycji 4:3");
@@ -187,6 +194,11 @@ requireText(energy, 'sourceMatch: "editorial-atelier-scene-mobile-v1"', "canvas 
 requireText(energy, "syncArtTransform();", "canvas impulsow nie synchronizuje transformacji po resize");
 requireText(energy, 'sculpture.addEventListener("load", resizeCanvas)', "canvas impulsow nie reaguje na podmiane obrazu");
 const responsiveSafetyCss = await read("assets/responsive-safety.css");
+requireText(
+  responsiveSafetyCss,
+  '[data-ok-safe-compact-fit="first-view"]',
+  "mobilne hero nie ma stabilnego kontraktu pierwszego viewportu",
+);
 if (
   /data-ok-safe-mobile-hero[^}]*light-canvas[^}]*display:\s*none/s.test(
     responsiveSafetyCss,

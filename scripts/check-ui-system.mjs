@@ -268,6 +268,8 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/okagency:annotationchange/, "zdarzenia okagency:annotationchange"],
     [/detail:\s*\{\s*callout,\s*open\s*\}/, "payloadu { callout, open }"],
     [/closeWithin/, "metody closeWithin"],
+    [/createElementNS\("http:\/\/www\.w3\.org\/2000\/svg",\s*"svg"\)/, "wspólnej ikony SVG dla generowanego disclosure"],
+    [/iconPath\.setAttribute\("d",\s*"M4 10h12M10 4v12"\)/, "geometrii plus/minus zgodnej z pozostałymi triggerami"],
   ]) {
     if (!pattern.test(source)) failures.push(`${path}: brak ${label}`);
   }

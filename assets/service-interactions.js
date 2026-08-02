@@ -130,7 +130,8 @@
     const label = document.createElement("span");
     const title = document.createElement("strong");
     const hint = document.createElement("small");
-    const icon = document.createElement("span");
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
     const panel = document.createElement("div");
     const paragraph = document.createElement("p");
     const panelId = `proof-context-${location.pathname.replace(/\W+/g, "-")}-${index + 1}`;
@@ -145,8 +146,10 @@
     label.className = "proof-label";
     title.textContent = "Kontekst";
     hint.textContent = "Założenia sekcji";
-    icon.className = "proof-icon";
+    icon.setAttribute("viewBox", "0 0 20 20");
     icon.setAttribute("aria-hidden", "true");
+    iconPath.setAttribute("d", "M4 10h12M10 4v12");
+    icon.append(iconPath);
     panel.className = "proof-detail";
     panel.id = panelId;
     panel.hidden = true;

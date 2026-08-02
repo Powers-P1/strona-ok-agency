@@ -51,7 +51,7 @@ const cspDirectives = new Map(contentSecurityPolicy
   .map(([name, ...values]) => [name, new Set(values)]));
 
 for (const directive of ["img-src", "connect-src"]) {
-  if (!cspDirectives.get(directive)?.has("https://pagead2.googlesyndication.com")) {
+  if (!cspDirectives.get(directive)?.has("pagead2.googlesyndication.com")) {
     failures.push(`_headers: ${directive} blokuje endpoint Google Ads consent-mode`);
   }
 }

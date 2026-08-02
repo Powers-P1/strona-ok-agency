@@ -207,14 +207,35 @@
     element.setAttribute(attribute, value);
   };
 
-  const clearRuntime = () => {
+  const exitingAnnotations = () => new Set(adapters.flatMap(adapter => (
+    adapter.annotations.filter(annotation => {
+      if (isOpen(annotation)) return false;
+      const opacity = Number.parseFloat(getComputedStyle(annotation.copy).opacity || "0");
+      return opacity > 0.01;
+    })
+  )));
+
+  const clearRuntime = (preservedAnnotations = new Set()) => {
+    const preservedElements = new Set();
+    preservedAnnotations.forEach(annotation => {
+      preservedElements.add(annotation.callout);
+      preservedElements.add(annotation.copy);
+    });
+    const retainedStyles = new Map();
     runtimeStyles.forEach((properties, element) => {
+      if (preservedElements.has(element)) {
+        retainedStyles.set(element, properties);
+        return;
+      }
       properties.forEach(({ value, priority }, property) => {
         if (value) element.style.setProperty(property, value, priority);
         else element.style.removeProperty(property);
       });
     });
     runtimeStyles.clear();
+    retainedStyles.forEach((properties, element) => {
+      runtimeStyles.set(element, properties);
+    });
 
     runtimeAttributes.forEach((attributes, element) => {
       attributes.forEach((value, attribute) => {
@@ -226,6 +247,7 @@
 
     adapters.forEach(adapter => {
       adapter.annotations.forEach(annotation => {
+        if (preservedAnnotations.has(annotation)) return;
         annotation.callout.classList.toggle("flip", annotation.originalFlip);
       });
     });
@@ -913,7 +935,12 @@
   const solveAll = () => {
     solveFrame = 0;
     if (destroyed) return;
-    clearRuntime();
+    /* Opening B closes A synchronously, but A remains visible during its exit
+     * transition. Preserve A's complete runtime layout through this solve so
+     * the new card can be positioned without snapping the old card back to its
+     * authored coordinates for a single frame. The next solve may clear A once
+     * its opacity reaches zero. */
+    clearRuntime(exitingAnnotations());
     clearDebugOverlays();
     debugSnapshots.clear();
     if (innerWidth <= 640) {

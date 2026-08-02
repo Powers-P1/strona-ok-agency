@@ -493,6 +493,107 @@ const closingCopyLayoutIssues = async (page, sceneIndex, calloutIndex) => page.e
   calloutNumber: calloutIndex,
 });
 
+const switchingCopyLayoutIssues = async (
+  page,
+  sceneIndex,
+  firstCalloutIndex,
+  secondCalloutIndex,
+) => page.evaluate(async ({
+  selector,
+  sceneNumber,
+  firstNumber,
+  secondNumber,
+}) => {
+  const scene = document.querySelectorAll(selector)[sceneNumber];
+  const callouts = [...scene.querySelectorAll(".annotation-callout, .annotation")];
+  const first = callouts[firstNumber];
+  const second = callouts[secondNumber];
+  const firstCopy = first?.querySelector(".annotation-copy");
+  const secondCopy = second?.querySelector(".annotation-copy");
+  const api = window.OKAgencyAnnotations;
+  if (!first || !second || !firstCopy || !secondCopy || !api) {
+    return ["A→B transition setup is unavailable"];
+  }
+
+  const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+  const anchorCenters = () => {
+    const sceneRect = scene.getBoundingClientRect();
+    return callouts.map(callout => {
+      const dot = callout.querySelector(".annotation-dot");
+      const bounds = dot.getBoundingClientRect();
+      return {
+        x: bounds.left - sceneRect.left + bounds.width / 2,
+        y: bounds.top - sceneRect.top + bounds.height / 2,
+      };
+    });
+  };
+
+  api.closeAll();
+  await nextFrame();
+  api.open(first);
+  await nextFrame();
+  await nextFrame();
+  await nextFrame();
+
+  const initialCopy = { left: firstCopy.offsetLeft, top: firstCopy.offsetTop };
+  const initialAnchors = anchorCenters();
+  let maximumCopyMovement = 0;
+  let maximumAnchorMovement = 0;
+  let secondBecameVisible = false;
+  const started = performance.now();
+
+  api.open(second);
+  while (performance.now() - started < 520) {
+    await nextFrame();
+    const firstOpacity = Number.parseFloat(getComputedStyle(firstCopy).opacity || "0");
+    if (firstOpacity > .01) {
+      maximumCopyMovement = Math.max(
+        maximumCopyMovement,
+        Math.hypot(
+          firstCopy.offsetLeft - initialCopy.left,
+          firstCopy.offsetTop - initialCopy.top,
+        ),
+      );
+    }
+    secondBecameVisible ||= (
+      second.classList.contains("is-open")
+      && Number.parseFloat(getComputedStyle(secondCopy).opacity || "0") > .01
+    );
+    anchorCenters().forEach((anchor, index) => {
+      maximumAnchorMovement = Math.max(
+        maximumAnchorMovement,
+        Math.hypot(
+          anchor.x - initialAnchors[index].x,
+          anchor.y - initialAnchors[index].y,
+        ),
+      );
+    });
+  }
+
+  api.closeAll();
+  const closingStarted = performance.now();
+  while (performance.now() - closingStarted < 520) await nextFrame();
+
+  const issues = [];
+  if (maximumCopyMovement > .5) {
+    issues.push(
+      `A→B transition moved the exiting A copy ${maximumCopyMovement.toFixed(2)}px while visible`,
+    );
+  }
+  if (maximumAnchorMovement > .5) {
+    issues.push(
+      `A→B transition moved an artwork anchor ${maximumAnchorMovement.toFixed(2)}px`,
+    );
+  }
+  if (!secondBecameVisible) issues.push("A→B transition did not reveal the B copy");
+  return issues;
+}, {
+  selector: SCENE_SELECTOR,
+  sceneNumber: sceneIndex,
+  firstNumber: firstCalloutIndex,
+  secondNumber: secondCalloutIndex,
+});
+
 const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
   selector,
   sceneNumber,
@@ -906,6 +1007,29 @@ const exercisePoint = async (
     ).forEach(message => (
       addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
     ));
+
+    if (allCloseMethods) {
+      const calloutCount = await page.locator(SCENE_SELECTOR).nth(sceneIndex)
+        .locator(CALLOUT_SELECTOR).count();
+      if (calloutCount > 1) {
+        const secondCalloutIndex = calloutIndex === 0 ? 1 : 0;
+        const switchingIssues = await switchingCopyLayoutIssues(
+          page,
+          sceneIndex,
+          calloutIndex,
+          secondCalloutIndex,
+        );
+        switchingIssues.forEach(message => (
+          addFailure(
+            route,
+            viewport,
+            sceneId,
+            `callout-${calloutIndex + 1}→${secondCalloutIndex + 1}`,
+            message,
+          )
+        ));
+      }
+    }
 
     await dot.focus();
     await page.keyboard.press("Enter");

@@ -292,15 +292,21 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     }))
     .filter(item => visible(item.dot));
   const lines = [...scene.querySelectorAll(".annotation-lines")].filter(visible);
+  const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
   if (scene.classList.contains("annotations-unavailable")) {
     issue("mode", "scene uses the removed annotations-unavailable hidden mode");
+  }
+  const authoredAboutFallback = art?.matches(".scene-art[data-placement-mask]") && callouts.some(callout => (
+    callout.matches(".annotation") && /%/.test(getComputedStyle(callout).getPropertyValue("--x"))
+  ));
+  if (authoredAboutFallback) {
+    issue("mode", "masked About scene fell back to percentage anchors instead of artwork coordinates");
   }
 
   if (visibleDots.length !== callouts.length) {
     issue("mode", `points mode exposes ${visibleDots.length}/${callouts.length} dots`);
   }
 
-  const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
   const api = window.OKAgencyResponsiveSafety;
   const bounds = api?.getArtBounds?.(scene) || (art && api?.getArtBounds?.(art));
   const fullVisible = bounds?.fullVisible;

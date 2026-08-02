@@ -560,6 +560,21 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("O nas: brak białego #callout-leading", failures);
 }
 
+// Contact uses a seamless paper field; the old bitmap contained a horizontal
+// pink horizon that moved across form controls with the viewport.
+{
+  const failures = [];
+  const path = "assets/page-contact.css";
+  const source = cssSources.get(path);
+  if (!source.includes("--contact-paper-background:")) {
+    failures.push(`${path}: missing the shared seamless form background token`);
+  }
+  if (/paper-plate\.webp/i.test(source)) {
+    failures.push(`${path}: the form reuses the bitmap with a moving pink horizon`);
+  }
+  addCheck("Kontakt: seamless form background without a moving horizon", failures);
+}
+
 // Footer has one legal privacy link and one explicit accessibility label.
 {
   const failures = [];

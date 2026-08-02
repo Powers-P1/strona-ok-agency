@@ -141,12 +141,6 @@
     first.top < second.bottom &&
     first.bottom > second.top;
 
-  const intersectionArea = (first, second) => {
-    const width = Math.max(0, Math.min(first.right, second.right) - Math.max(first.left, second.left));
-    const height = Math.max(0, Math.min(first.bottom, second.bottom) - Math.max(first.top, second.top));
-    return width * height;
-  };
-
   const contains = (outer, inner) =>
     inner.left >= outer.left &&
     inner.right <= outer.right &&
@@ -522,43 +516,7 @@
     return null;
   };
 
-  const chooseOverlayCopyPosition = (
-    annotation,
-    point,
-    width,
-    height,
-    obstacles,
-    rings,
-    visibleCopies,
-  ) => {
-    let best = null;
-    copyPositionCandidates(annotation, point, width, height).forEach(candidate => {
-      const copyRect = candidate.rect;
-      if (obstacles.fixed.some(obstacle => intersects(copyRect, obstacle))) return;
-      if (rings.some(ring => intersects(copyRect, ring))) return;
-      if (visibleCopies.some(sibling => intersects(copyRect, sibling))) return;
-      const contentOverlap = obstacles.content.reduce(
-        (total, obstacle) => total + intersectionArea(copyRect, obstacle),
-        0,
-      );
-      if (
-        !best
-        || contentOverlap < best.contentOverlap
-        || (
-          contentOverlap === best.contentOverlap
-          && candidate.displacementRank < best.displacementRank
-        )
-      ) {
-        best = {
-          ...candidate,
-          contentOverlap,
-        };
-      }
-    });
-    return best;
-  };
-
-  const placeCopies = (adapter, points, rings, obstacles, artBounds) => {
+  const placeCopies = (adapter, points, rings, obstacles) => {
     const copies = new Array(adapter.annotations.length);
     const openIndexes = [];
     const closedIndexes = [];
@@ -575,25 +533,17 @@
       if (!width || !height) return null;
       const open = isOpen(annotation);
       const ringsToAvoid = rings;
-      const position = chooseCopyPosition(
-        annotation,
-        points[index],
-        width,
-        height,
-        obstacles,
-        ringsToAvoid,
-        open ? visibleCopies : [],
-      ) || (artBounds.masked
-        ? chooseOverlayCopyPosition(
+      const position = open
+        ? chooseCopyPosition(
           annotation,
           points[index],
           width,
           height,
           obstacles,
           ringsToAvoid,
-          open ? visibleCopies : [],
+          visibleCopies,
         )
-        : null);
+        : measuredAnnotationGeometry(adapter, annotation).copy;
       if (!position) return null;
       copies[index] = position;
       if (open) visibleCopies.push(position.rect);
@@ -621,7 +571,7 @@
       if (solution) return;
       if (index === adapter.annotations.length) {
         ringConfigurations += 1;
-        const copies = placeCopies(adapter, points, rings, obstacles, artBounds);
+        const copies = placeCopies(adapter, points, rings, obstacles);
         if (copies) {
           solution = {
             geometry,
@@ -703,23 +653,112 @@
     );
   };
 
-  const applyServiceSolution = (adapter, solution) => {
+  const serviceConnectorGeometry = (adapter, geometry) => {
     adapter.scene
       .querySelectorAll(".annotation-lines")
       .forEach(layer => {
         setRuntimeStyle(layer, "inset", "auto");
-        setRuntimeStyle(layer, "left", `${solution.geometry.left}px`);
-        setRuntimeStyle(layer, "top", `${solution.geometry.top}px`);
-        setRuntimeStyle(layer, "width", `${solution.geometry.width}px`);
-        setRuntimeStyle(layer, "height", `${solution.geometry.height}px`);
+        setRuntimeStyle(layer, "left", `${geometry.left}px`);
+        setRuntimeStyle(layer, "top", `${geometry.top}px`);
+        setRuntimeStyle(layer, "width", `${geometry.width}px`);
+        setRuntimeStyle(layer, "height", `${geometry.height}px`);
+        setRuntimeAttribute(
+          layer,
+          "viewBox",
+          `0 0 ${geometry.coordinateWidth} ${geometry.coordinateHeight}`,
+        );
       });
-    adapter.scene.querySelectorAll(".annotation-lines").forEach(layer => {
-      setRuntimeAttribute(
-        layer,
-        "viewBox",
-        `0 0 ${solution.geometry.coordinateWidth} ${solution.geometry.coordinateHeight}`,
-      );
+  };
+
+  const measuredAnnotationGeometry = (adapter, annotation) => {
+    const sceneRect = adapter.scene.getBoundingClientRect();
+    const dotRect = annotation.dot.getBoundingClientRect();
+    const copyRect = annotation.copy.getBoundingClientRect();
+    const copy = rect(
+      copyRect.left - sceneRect.left,
+      copyRect.top - sceneRect.top,
+      copyRect.width,
+      copyRect.height,
+    );
+    return {
+      point: {
+        x: dotRect.left - sceneRect.left + dotRect.width / 2,
+        y: dotRect.top - sceneRect.top + dotRect.height / 2,
+      },
+      copy: {
+        left: copy.left,
+        top: copy.top,
+        rect: copy,
+      },
+    };
+  };
+
+  const updateAboutLeader = (annotation, point, copy) => {
+    const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
+    const targetX = copyIsRight ? copy.left : copy.rect.right;
+    const targetY = clamp(point.y, copy.top + 14, copy.rect.bottom - 14);
+    const lineX = targetX - point.x;
+    const lineY = targetY - point.y;
+    annotation.callout.classList.toggle("flip", !copyIsRight);
+    setRuntimeStyle(annotation.callout, "--leader-length", `${Math.hypot(lineX, lineY)}px`);
+    setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
+  };
+
+  const applyMeasuredConnectorGeometry = adapter => {
+    if (adapter.kind === "service") {
+      const geometry = coverGeometry(adapter.scene, adapter.art);
+      serviceConnectorGeometry(adapter, geometry);
+      adapter.annotations.forEach(annotation => {
+        const measured = measuredAnnotationGeometry(adapter, annotation);
+        updateServiceWire(adapter, annotation, measured.point, measured.copy, geometry);
+      });
+      return;
+    }
+
+    adapter.annotations.forEach(annotation => {
+      const measured = measuredAnnotationGeometry(adapter, annotation);
+      updateAboutLeader(annotation, measured.point, measured.copy);
     });
+  };
+
+  const applyAuthoredCopySafety = adapter => {
+    const geometry = coverGeometry(adapter.scene, adapter.art);
+    const artBounds = artBoundsFor(adapter.scene, adapter.art, geometry);
+    const sceneRect = adapter.scene.getBoundingClientRect();
+    const obstacles = obstaclesFor(adapter, sceneRect);
+    const points = adapter.annotations.map(annotation => (
+      measuredAnnotationGeometry(adapter, annotation).point
+    ));
+    const rings = points.map(ringFor);
+    const copies = placeCopies(adapter, points, rings, obstacles);
+    if (!copies) return false;
+
+    if (adapter.kind === "service") {
+      serviceConnectorGeometry(adapter, geometry);
+      adapter.annotations.forEach((annotation, index) => {
+        const copy = copies[index];
+        setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
+        setRuntimeStyle(annotation.callout, "--copy-right", "auto");
+        setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
+        updateServiceWire(adapter, annotation, points[index], copy, geometry);
+      });
+      return true;
+    }
+
+    adapter.annotations.forEach((annotation, index) => {
+      const point = points[index];
+      const copy = copies[index];
+      setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
+      setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
+      setRuntimeStyle(annotation.copy, "right", "auto");
+      setRuntimeStyle(annotation.copy, "--copy-shift-y", "0px");
+      updateAboutLeader(annotation, point, copy);
+    });
+    return true;
+  };
+
+  const applyServiceSolution = (adapter, solution) => {
+    serviceConnectorGeometry(adapter, solution.geometry);
 
     adapter.annotations.forEach((annotation, index) => {
       const point = solution.points[index];
@@ -751,14 +790,7 @@
       setRuntimeStyle(annotation.copy, "right", "auto");
       setRuntimeStyle(annotation.copy, "--copy-shift-y", "0px");
 
-      const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
-      const targetX = copyIsRight ? copy.left : copy.rect.right;
-      const targetY = clamp(point.y, copy.top + 14, copy.rect.bottom - 14);
-      const lineX = targetX - point.x;
-      const lineY = targetY - point.y;
-      annotation.callout.classList.toggle("flip", !copyIsRight);
-      setRuntimeStyle(annotation.callout, "--leader-length", `${Math.hypot(lineX, lineY)}px`);
-      setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
+      updateAboutLeader(annotation, point, copy);
     });
   };
 
@@ -809,7 +841,23 @@
     }
 
     const solutions = adapters.map(adapter => {
-      const layoutKey = `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`;
+      const sceneRect = adapter.scene.getBoundingClientRect();
+      const obstacles = obstaclesFor(adapter, sceneRect);
+      const obstacleKey = [...obstacles.content, ...obstacles.fixed]
+        .map(bounds => [bounds.left, bounds.top, bounds.width, bounds.height]
+          .map(value => Math.round(value))
+          .join(","))
+        .join(";");
+      const openKey = adapter.annotations
+        .map((annotation, index) => isOpen(annotation) ? index : null)
+        .filter(index => index !== null)
+        .join(",");
+      const layoutKey = [
+        `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`,
+        `${Math.round(sceneRect.left)},${Math.round(sceneRect.top)}`,
+        openKey,
+        obstacleKey,
+      ].join(":");
       const solution = solveAdapter(adapter);
       if (solution) {
         lastSolutions.set(adapter, { layoutKey, solution });
@@ -821,6 +869,7 @@
     adapters.forEach((adapter, index) => {
       const solution = solutions[index];
       if (!solution) {
+        if (!applyAuthoredCopySafety(adapter)) applyMeasuredConnectorGeometry(adapter);
         renderDebugOverlay(adapter, null);
         return;
       }

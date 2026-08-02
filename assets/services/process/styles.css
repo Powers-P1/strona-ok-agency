@@ -1532,3 +1532,9 @@ svg {
     gap: 2px;
   }
 }
+
+@media (max-width: 640px) {
+  .process-proof-content {
+    top: clamp(86px, 12vh, 112px);
+  }
+}

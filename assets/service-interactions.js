@@ -116,7 +116,7 @@
     panel: item.querySelector(".proof-detail, .accordion-detail"),
   });
 
-  const syncDisclosure = (item, open, { initial = false } = {}) => {
+  const syncDisclosure = (item, open, { initial = false, immediate = false } = {}) => {
     const { trigger, panel } = disclosureParts(item);
     item.classList.toggle("is-open", open);
     trigger?.setAttribute("aria-expanded", String(open));
@@ -132,7 +132,7 @@
     const hide = () => {
       if (!item.classList.contains("is-open")) panel.hidden = true;
     };
-    if (initial || motionPaused()) hide();
+    if (initial || immediate || motionPaused()) hide();
     else setTimeout(hide, 380);
   };
 
@@ -145,9 +145,10 @@
       const scrollHost = document.scrollingElement;
       const scrollPosition = scrollHost?.scrollTop;
       const shouldOpen = trigger.getAttribute("aria-expanded") !== "true";
+      const compactViewport = matchMedia("(min-width: 821px) and (max-height: 700px)").matches;
       item.closest(".proof-list, .accordion")
         ?.querySelectorAll(disclosureSelector)
-        .forEach(row => syncDisclosure(row, false));
+        .forEach(row => syncDisclosure(row, false, { immediate: compactViewport }));
       if (shouldOpen) syncDisclosure(item, true);
 
       // Expanding a later row can make browser scroll anchoring move the whole
@@ -171,6 +172,23 @@
         });
         setTimeout(restoreFrame, 420);
       }
+    });
+  });
+
+  document.querySelectorAll(".mobile-details").forEach(group => {
+    const detailsRows = [...group.querySelectorAll(":scope > details")];
+    detailsRows.forEach(row => {
+      row.querySelector(":scope > summary")?.addEventListener("click", () => {
+        detailsRows.forEach(sibling => {
+          if (sibling !== row) sibling.open = false;
+        });
+      });
+      row.addEventListener("toggle", () => {
+        if (!row.open) return;
+        detailsRows.forEach(sibling => {
+          if (sibling !== row) sibling.open = false;
+        });
+      });
     });
   });
 

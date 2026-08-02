@@ -1230,6 +1230,12 @@ svg {
   }
 }
 
+@media (max-width: 640px) {
+  .web-service .proof-content {
+    top: 120px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

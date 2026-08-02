@@ -238,6 +238,19 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     );
   }
 
+  [...scene.querySelectorAll(".proof-actions, .actions, .outline-cta")]
+    .filter(visible)
+    .forEach((actionGroup, actionIndex) => {
+      const actionRect = actionGroup.getBoundingClientRect();
+      const clearance = sceneRect.bottom - actionRect.bottom;
+      if (clearance < 12 - TOLERANCE) {
+        issue(
+          `scene-action-${actionIndex + 1}`,
+          `scene action has ${clearance.toFixed(1)}px bottom clearance, expected at least 12px`,
+        );
+      }
+    });
+
   [...scene.querySelectorAll("*")].forEach((element, nestedIndex) => {
     const style = getComputedStyle(element);
     const scrollsX = /(auto|scroll)/.test(style.overflowX) && element.scrollWidth > element.clientWidth + 1;
@@ -460,6 +473,7 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
   }
   if (visible(copy)) {
     const copyRect = rect(copy);
+    const dotRect = rect(dot);
     const sceneRect = rect(scene);
     const safeScene = {
       left: sceneRect.left + 24,
@@ -473,6 +487,10 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
       || copyRect.right > safeScene.right + 1
       || copyRect.bottom > safeScene.bottom + 1
     ) issue("copy leaves the scene 24px safe inset");
+
+    if (intersects(copyRect, dotRect)) {
+      issue("copy intersects its own target");
+    }
 
     callouts.forEach((sibling, siblingIndex) => {
       const siblingDot = sibling.querySelector(".annotation-dot");
@@ -509,6 +527,157 @@ const openState = async (page, sceneIndex, calloutIndex) => page.evaluate(({
       .forEach(siblingCopy => {
         if (intersects(copyRect, rect(siblingCopy))) issue("copy intersects an open sibling copy");
       });
+
+    const dotCenter = {
+      x: (dotRect.left + dotRect.right) / 2,
+      y: (dotRect.top + dotRect.bottom) / 2,
+    };
+    const distanceToSegment = (point, start, end) => {
+      const lengthSquared = (end.x - start.x) ** 2 + (end.y - start.y) ** 2;
+      const ratio = lengthSquared
+        ? Math.max(0, Math.min(1, (
+          ((point.x - start.x) * (end.x - start.x))
+          + ((point.y - start.y) * (end.y - start.y))
+        ) / lengthSquared))
+        : 0;
+      return Math.hypot(
+        point.x - (start.x + ratio * (end.x - start.x)),
+        point.y - (start.y + ratio * (end.y - start.y)),
+      );
+    };
+    const distanceToCopyEdge = point => Math.min(
+      distanceToSegment(
+        point,
+        { x: copyRect.left, y: copyRect.top },
+        { x: copyRect.right, y: copyRect.top },
+      ),
+      distanceToSegment(
+        point,
+        { x: copyRect.right, y: copyRect.top },
+        { x: copyRect.right, y: copyRect.bottom },
+      ),
+      distanceToSegment(
+        point,
+        { x: copyRect.right, y: copyRect.bottom },
+        { x: copyRect.left, y: copyRect.bottom },
+      ),
+      distanceToSegment(
+        point,
+        { x: copyRect.left, y: copyRect.bottom },
+        { x: copyRect.left, y: copyRect.top },
+      ),
+    );
+
+    if (callout.classList.contains("annotation-callout")) {
+      const wire = callout.dataset.annotation
+        ? scene.querySelector(`.annotation-wire[data-line="${callout.dataset.annotation}"]`)
+        : null;
+      const path = wire?.querySelector("path");
+      const svg = path?.closest("svg");
+      const pathStyle = path && getComputedStyle(path);
+      const effectivelyVisible = element => {
+        let opacity = 1;
+        for (let current = element; current && current !== document; current = current.parentElement) {
+          const currentStyle = getComputedStyle(current);
+          if (
+            currentStyle.display === "none"
+            || currentStyle.visibility === "hidden"
+            || currentStyle.visibility === "collapse"
+          ) return false;
+          opacity *= Number.parseFloat(currentStyle.opacity || "1");
+        }
+        return opacity > .99;
+      };
+      const values = path?.getAttribute("d")?.match(/-?\d+(?:\.\d+)?/g)?.map(Number) || [];
+      const viewBox = svg?.getAttribute("viewBox")?.trim().split(/\s+/).map(Number) || [];
+      const width = Number.parseFloat(svg?.style.width || "");
+      const height = Number.parseFloat(svg?.style.height || "");
+      const left = Number.parseFloat(svg?.style.left || "0");
+      const top = Number.parseFloat(svg?.style.top || "0");
+      if (!wire?.classList.contains("is-open") || !path || values.length < 4 || viewBox.length !== 4) {
+        issue("open service callout has no active connector path");
+      } else if (
+        !effectivelyVisible(path)
+        || pathStyle.stroke === "none"
+      ) {
+        issue("open service connector path is not visibly rendered");
+      } else if (![width, height, left, top].every(Number.isFinite)) {
+        issue("service connector has incomplete runtime geometry");
+      } else {
+        const mapPoint = (x, y) => ({
+          x: sceneRect.left + left + ((x - viewBox[0]) / viewBox[2]) * width,
+          y: sceneRect.top + top + ((y - viewBox[1]) / viewBox[3]) * height,
+        });
+        const start = mapPoint(values[0], values[1]);
+        const end = mapPoint(values.at(-2), values.at(-1));
+        if (Math.hypot(start.x - dotCenter.x, start.y - dotCenter.y) > 1.5) {
+          issue("connector does not start at its target center");
+        }
+        if (distanceToCopyEdge(end) > 1.5) {
+          issue("connector does not terminate at the callout edge");
+        }
+      }
+    } else {
+      const style = getComputedStyle(callout);
+      const leaderStyle = getComputedStyle(callout, "::before");
+      const length = Number.parseFloat(style.getPropertyValue("--leader-length"));
+      const angle = Number.parseFloat(style.getPropertyValue("--leader-angle"));
+      const leaderWidth = Number.parseFloat(leaderStyle.width);
+      const leaderLeft = Number.parseFloat(leaderStyle.left);
+      const leaderTop = Number.parseFloat(leaderStyle.top);
+      const leaderHeight = Number.parseFloat(leaderStyle.height);
+      const matrixValues = leaderStyle.transform.match(/^matrix\(([^)]+)\)$/)?.[1]
+        ?.split(",")
+        .map(Number);
+      const originParts = leaderStyle.transformOrigin.split(/\s+/);
+      const originValue = (value, size) => value?.endsWith("%")
+        ? Number.parseFloat(value) * size / 100
+        : Number.parseFloat(value);
+      const originX = originValue(originParts[0], leaderWidth);
+      const originY = originValue(originParts[1], leaderHeight);
+      if (
+        leaderStyle.display === "none"
+        || leaderStyle.visibility === "hidden"
+        || Number.parseFloat(leaderStyle.opacity || "0") <= .99
+        || leaderStyle.backgroundColor === "rgba(0, 0, 0, 0)"
+      ) {
+        issue("open about connector is not visibly rendered");
+      } else if (
+        !Number.isFinite(length)
+        || !Number.isFinite(angle)
+        || !Number.isFinite(leaderWidth)
+        || !Number.isFinite(leaderLeft)
+        || !Number.isFinite(leaderTop)
+        || !Number.isFinite(leaderHeight)
+        || !Number.isFinite(originX)
+        || !Number.isFinite(originY)
+        || !matrixValues
+        || matrixValues.length !== 6
+        || length <= 0
+      ) {
+        issue("about connector has incomplete runtime geometry");
+      } else {
+        const calloutRect = callout.getBoundingClientRect();
+        const transformPoint = (x, y) => ({
+          x: calloutRect.left + leaderLeft + originX
+            + matrixValues[0] * (x - originX)
+            + matrixValues[2] * (y - originY)
+            + matrixValues[4],
+          y: calloutRect.top + leaderTop + originY
+            + matrixValues[1] * (x - originX)
+            + matrixValues[3] * (y - originY)
+            + matrixValues[5],
+        });
+        const start = transformPoint(0, leaderHeight / 2);
+        const end = transformPoint(leaderWidth, leaderHeight / 2);
+        if (Math.hypot(start.x - dotCenter.x, start.y - dotCenter.y) > 1.5) {
+          issue("about connector does not start at its target center");
+        }
+        if (distanceToCopyEdge(end) > 1.5) {
+          issue("about connector does not terminate at the callout edge");
+        }
+      }
+    }
   }
 
   return { key, issues };

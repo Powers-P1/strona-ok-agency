@@ -217,9 +217,10 @@ const auditScene = async (page, scene, label) => {
   }
 };
 
-const BASE_URL = await resolveBaseUrl();
-const browser = await chromium.launch({ headless: true });
+let browser;
 try {
+  const BASE_URL = await resolveBaseUrl();
+  browser = await chromium.launch({ headless: true });
   for (const viewport of VIEWPORTS) {
     const context = await browser.newContext({ viewport, reducedMotion: "no-preference" });
     await context.addInitScript(() => {
@@ -256,8 +257,10 @@ try {
       await context.close();
     }
   }
+} catch (error) {
+  failures.push(`runner: ${error.message}`);
 } finally {
-  await browser.close();
+  await browser?.close().catch(() => {});
   managedServer?.kill();
 }
 

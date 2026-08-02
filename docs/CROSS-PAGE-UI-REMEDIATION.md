@@ -1,7 +1,7 @@
 # Systemowy plan napraw UI między podstronami
 
 Data utworzenia: 2026-08-01
-Status: **Fazy 0–10 opublikowane; stabilizacja kotwic w ponownym odbiorze**
+Status: **Fazy 0–10 opublikowane; stabilizacja kotwic zakończona i odebrana produkcyjnie**
 Zakres tego dokumentu: system wspólny i desktop; mobile jest bramką regresji i osobnym zakresem koordynowanym z `MOBILE-QA-2026-08-01.md`.
 
 ## 1. Cel i reguły wykonania

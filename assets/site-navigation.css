@@ -330,13 +330,14 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-curr
   height: 12px;
 }
 
-.ok-nav-offer__popover a {
+/* Keep route-level `.site-header nav a` rules out of the nested disclosure. */
+body header[data-ok-global-nav] .ok-nav-offer__popover > a {
   width: 100%;
   min-height: 44px;
   padding: 9px 12px;
-  display: grid;
+  display: flex;
   align-items: center;
-  justify-items: start;
+  justify-content: flex-start;
   box-sizing: border-box;
   color: var(--ok-nav-navy);
   border-bottom: 1px solid rgba(20, 32, 48, .11);
@@ -352,19 +353,19 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-curr
     padding-left .3s var(--ok-nav-ease);
 }
 
-.ok-nav-offer__popover a:last-child {
+body header[data-ok-global-nav] .ok-nav-offer__popover > a:last-child {
   border-bottom: 0;
 }
 
-.ok-nav-offer__popover a:hover,
-.ok-nav-offer__popover a:focus-visible,
-.ok-nav-offer__popover a[aria-current="page"] {
+body header[data-ok-global-nav] .ok-nav-offer__popover > a:hover,
+body header[data-ok-global-nav] .ok-nav-offer__popover > a:focus-visible,
+body header[data-ok-global-nav] .ok-nav-offer__popover > a[aria-current="page"] {
   padding-left: 17px;
   color: var(--ok-nav-rose-strong);
   background: rgba(255, 255, 255, .31);
 }
 
-.ok-nav-offer__popover a:first-child {
+body header[data-ok-global-nav] .ok-nav-offer__popover > a:first-child {
   font-weight: 740;
 }
 

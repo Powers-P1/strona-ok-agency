@@ -104,12 +104,12 @@ assert.match(
 );
 assert.match(
   css,
-  /\.ok-nav-offer__popover a\s*\{[\s\S]*?justify-items:\s*start[\s\S]*?text-align:\s*left/,
-  "Oferta links must use one left-aligned layout contract.",
+  /body header\[data-ok-global-nav\] \.ok-nav-offer__popover > a\s*\{[\s\S]*?display:\s*flex[\s\S]*?justify-content:\s*flex-start[\s\S]*?text-align:\s*left/,
+  "Oferta links must override route-level flex centering with one left-aligned layout contract.",
 );
 assert.match(
   css,
-  /\.ok-nav-offer__popover a\s*\{[\s\S]*?box-sizing:\s*border-box/,
+  /body header\[data-ok-global-nav\] \.ok-nav-offer__popover > a\s*\{[\s\S]*?box-sizing:\s*border-box/,
   "Oferta links must keep their padding inside the popover grid width.",
 );
 assert.match(

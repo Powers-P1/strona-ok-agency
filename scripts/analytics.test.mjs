@@ -464,6 +464,27 @@ test("page locations strip query and path values that look like PII", () => {
   );
 });
 
+test("oversized attribution still replaces the browser URL with a sanitized fallback", () => {
+  const gclid = `g-${"a".repeat(510)}`;
+  const fbclid = `f-${"b".repeat(510)}`;
+  const runtime = loadAnalytics({
+    url: `https://okagency.pl/diagnoza?gclid=${gclid}&fbclid=${fbclid}&email=pii@example.com#result`,
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+
+  const replaced = runtime.replacedUrl();
+  assert.ok(replaced, "sanitized browser URL must never be skipped");
+  assert.ok(replaced.length <= 1000);
+  assert.match(replaced, /gclid=g-/);
+  assert.doesNotMatch(replaced, /fbclid|email|pii%40example\.com/i);
+  assert.match(replaced, /#result$/);
+
+  const pageView = eventCommands(runtime).find(command => command[1] === "page_view");
+  assert.ok(pageView[2].page_location.length <= 1000);
+  assert.match(pageView[2].page_location, /gclid=g-/);
+  assert.doesNotMatch(pageView[2].page_location, /fbclid|email|pii%40example\.com|#result/i);
+});
+
 test("DiagnosisComplete tracker emits once per completion and resets for a new run", () => {
   const sandbox = {
     document: { querySelector: () => null },

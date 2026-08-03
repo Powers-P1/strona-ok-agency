@@ -103,14 +103,16 @@
       ) url.pathname = "/";
       url.hash = "";
       url.search = "";
+      if (url.toString().length > 1000) url.pathname = "/";
       if (keepAttribution) {
         const params = attributionParamsFromUrl(value);
         for (const key of ATTRIBUTION_KEYS) {
-          if (params[key]) url.searchParams.set(key, params[key]);
+          if (!params[key]) continue;
+          url.searchParams.set(key, params[key]);
+          if (url.toString().length > 1000) url.searchParams.delete(key);
         }
       }
-      const normalized = url.toString();
-      return normalized.length <= 1000 ? normalized : "";
+      return url.toString();
     } catch {
       return "";
     }

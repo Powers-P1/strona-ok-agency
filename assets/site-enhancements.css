@@ -130,6 +130,8 @@ html[data-motion="paused"] *::after {
 /* Większe pola aktywne bez powiększania wizualnego punktu. */
 /* Warstwa zakupowa i treść łatwa do znalezienia przez ludzi oraz systemy AI. */
 .decision-guide {
+  --ok-decision-label: max(13px, var(--ok-type-label, 12px));
+  --ok-decision-content: max(15px, var(--ok-type-content, 14px));
   position: relative;
   z-index: 3;
   padding: clamp(72px, 9vw, 132px) clamp(20px, 6vw, 96px);
@@ -141,14 +143,14 @@ html[data-motion="paused"] *::after {
 }
 
 .decision-guide__intro {
-  max-width: 920px;
+  max-width: var(--ok-rail-section, 920px);
   margin-bottom: clamp(38px, 5vw, 72px);
 }
 
 .decision-guide__eyebrow {
   margin: 0 0 16px;
   color: var(--ok-pink-on-light);
-  font-size: 13px;
+  font-size: var(--ok-decision-label);
   font-weight: 750;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -156,8 +158,8 @@ html[data-motion="paused"] *::after {
 
 .decision-guide h2 {
   margin: 0;
-  max-width: 900px;
-  font: 550 clamp(46px, 6vw, 92px)/.95 var(--ok-font-display);
+  max-width: var(--ok-rail-section, 900px);
+  font: 550 clamp(46px, 6vw, 92px)/var(--ok-leading-display, 1.2) var(--ok-font-display);
   letter-spacing: -.025em;
 }
 
@@ -165,8 +167,8 @@ html[data-motion="paused"] *::after {
   max-width: 760px;
   margin: 24px 0 0;
   color: #34424c;
-  font-size: clamp(16px, 1.35vw, 20px);
-  line-height: 1.65;
+  font-size: max(16px, var(--ok-type-content, 14px));
+  line-height: var(--ok-leading-content, 1.5);
 }
 
 .decision-guide__grid {
@@ -178,18 +180,22 @@ html[data-motion="paused"] *::after {
 
 .decision-guide__item {
   min-width: 0;
-  padding: 28px clamp(18px, 2.2vw, 34px) 32px 0;
+  padding: clamp(28px, 2.4vh, 96px) clamp(18px, 1.8vh, 72px) clamp(32px, 2.7vh, 108px) 0;
+}
+
+:is(.privacy-title, .error-title) {
+  line-height: var(--ok-leading-display, 1.21);
 }
 
 .decision-guide__item + .decision-guide__item {
-  padding-left: clamp(18px, 2.2vw, 34px);
+  padding-left: clamp(18px, 1.8vh, 72px);
   border-left: 1px solid rgba(7, 26, 44, .16);
 }
 
 .decision-guide__item h3 {
-  margin: 0 0 12px;
+  margin: 0 0 clamp(12px, 1vh, 36px);
   color: var(--ok-pink-on-light);
-  font-size: 13px;
+  font-size: var(--ok-decision-label);
   font-weight: 750;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -198,8 +204,8 @@ html[data-motion="paused"] *::after {
 .decision-guide__item p,
 .decision-guide__item li {
   color: #34424c;
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: var(--ok-decision-content);
+  line-height: var(--ok-leading-content, 1.5);
 }
 
 .decision-guide__item p {
@@ -212,7 +218,7 @@ html[data-motion="paused"] *::after {
 }
 
 .decision-guide__faq {
-  max-width: 980px;
+  max-width: var(--ok-rail-section, 980px);
   margin-top: clamp(42px, 6vw, 78px);
 }
 
@@ -230,14 +236,14 @@ html[data-motion="paused"] *::after {
 }
 
 .decision-guide__faq summary {
-  min-height: 56px;
+  min-height: max(56px, var(--ok-size-interactive-row, 46px));
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 14px 0;
+  padding: var(--ok-space-interactive-inset, 14px) 0;
   color: #071a2c;
-  font-size: clamp(17px, 1.5vw, 21px);
+  font-size: max(17px, var(--ok-type-content, 14px));
   font-weight: 650;
   cursor: pointer;
 }
@@ -258,8 +264,8 @@ html[data-motion="paused"] *::after {
   margin: 0;
   padding: 0 0 22px;
   color: #34424c;
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: max(16px, var(--ok-type-content, 14px));
+  line-height: var(--ok-leading-content, 1.5);
 }
 
 .offer-intro {

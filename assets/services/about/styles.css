@@ -124,7 +124,6 @@ body[data-theme="dark"] .wordmark img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--ok-type-label-min, 12px);
   font-weight: 600;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -260,16 +259,11 @@ h2 {
   font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-weight: 500;
   letter-spacing: -.035em;
-  line-height: .9;
   text-wrap: balance;
 }
 
 h1 {
   font-size: clamp(62px, 5.6vw, 94px);
-}
-
-.scene-01 h1 {
-  line-height: var(--about-hero-heading-leading, .9);
 }
 
 h2 {
@@ -318,7 +312,6 @@ h2 {
 
 @media (min-width: 1101px) {
   .scene-01 {
-    --about-hero-heading-leading: .94;
     --about-hero-lead-gap: 24px;
     --about-hero-chip-gap: 20px;
   }
@@ -1119,7 +1112,6 @@ h2 {
 
   .site-header nav a {
     padding-block: 9px;
-    font-size: 12px;
     letter-spacing: .08em;
   }
 
@@ -1187,7 +1179,6 @@ h2 {
 
   h1 {
     font-size: clamp(43px, 12.4vw, 52px);
-    line-height: .88;
   }
 
   h2,
@@ -1195,7 +1186,6 @@ h2 {
   .scene-03 h2,
   .scene-04 h2 {
     font-size: clamp(38px, 10.6vw, 45px);
-    line-height: .9;
   }
 
   .lead,
@@ -1579,7 +1569,6 @@ h2 {
   }
 
   .site-header nav a {
-    font-size: 12px;
     letter-spacing: .11em;
   }
 

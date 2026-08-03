@@ -98,7 +98,7 @@ html.ok-scene-page .ok-nav-slot {
     --ok-scene-copy-gap: 14px;
     --ok-scene-section-gap: 14px;
     --ok-scene-row-block: 7px;
-    --ok-scene-proof-top: 11%;
+    --ok-scene-proof-top: max(calc(var(--ok-nav-docked-height, 80px) + 10px), 11%);
     --ok-scene-editorial-top: 15%;
   }
 

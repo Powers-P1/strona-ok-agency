@@ -115,7 +115,6 @@
   font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
   font-weight: 500;
   font-stretch: condensed;
-  line-height: .82;
   letter-spacing: -.055em;
   text-wrap: balance;
 }
@@ -123,6 +122,7 @@
 .home-intro h2 {
   max-width: 11.5ch;
   font-size: clamp(4.25rem, 8.35vw, 8.65rem);
+  line-height: .82;
 }
 
 .home-intro h2 span,
@@ -189,6 +189,7 @@
 .decision-guide h2 {
   max-width: 9.6ch;
   font-size: clamp(4rem, 7.35vw, 7.65rem);
+  line-height: var(--ok-leading-display, 1.2);
 }
 
 .decision-guide__lead,
@@ -201,14 +202,15 @@
 .decision-guide__faq h2 {
   max-width: none;
   font-size: clamp(3rem, 4.8vw, 5rem);
-  line-height: .88;
+  line-height: var(--ok-leading-display, 1.21);
 }
 
 @media (min-width: 1100px) {
   .decision-guide__intro,
   .decision-guide__grid,
   .decision-guide__faq {
-    width: min(58vw, 980px);
+    width: min(58vw, var(--ok-rail-section, 980px));
+    max-width: none;
   }
 
   .decision-guide__grid {
@@ -216,7 +218,7 @@
   }
 
   .decision-guide__item {
-    padding: 28px clamp(18px, 2.2vw, 34px) 32px 0;
+    padding: clamp(28px, 2.4vh, 96px) clamp(18px, 1.8vh, 72px) clamp(32px, 2.7vh, 108px) 0;
   }
 
   .decision-guide__item:nth-child(even) {

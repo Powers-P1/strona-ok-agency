@@ -152,7 +152,6 @@ svg {
   min-height: 44px;
   display: grid;
   align-items: center;
-  font-size: 12px;
   font-weight: 650;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -226,7 +225,6 @@ svg {
   font-size: clamp(64px, 5.15vw, 86px);
   font-weight: 500;
   letter-spacing: -.035em;
-  line-height: .92;
 }
 
 .opening-copy h1 em,
@@ -360,7 +358,6 @@ svg {
   font-size: clamp(58px, 4.9vw, 82px);
   font-weight: 500;
   letter-spacing: .005em;
-  line-height: .91;
   text-transform: uppercase;
 }
 
@@ -408,7 +405,6 @@ svg {
   font-size: clamp(58px, 4.65vw, 78px);
   font-weight: 500;
   letter-spacing: -.025em;
-  line-height: .92;
 }
 
 .proof-content h2 em {
@@ -736,10 +732,6 @@ svg {
 
   .site-header nav {
     gap: 20px;
-  }
-
-  .site-header nav a {
-    font-size: var(--ok-type-label-min, 12px);
   }
 
   .opening-copy {

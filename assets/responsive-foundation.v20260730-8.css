@@ -130,7 +130,54 @@ canvas {
   font-size: inherit;
 }
 
+/* Compact/tablet routes keep their approved composition, but the leading is
+ * still owned here instead of being repeated by every route stylesheet. */
+@media (max-width: 1024px) {
+  :is(.campaign-page, .social-page, .web-service)
+    :is(.opening-copy h1, .proof-content h2),
+  .process-page :is(.proof-content h2, .process-editorial-content h2) {
+    line-height: .92;
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .journey-intro h2 {
+    line-height: .91;
+  }
+
+  .process-page .process-opening-copy h1 {
+    line-height: .9;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1024px) {
+  .about-page .scene :is(h1, h2) {
+    line-height: .9;
+  }
+}
+
+@media (max-width: 900px) {
+  .about-page .scene h1 {
+    line-height: .88;
+  }
+
+  .about-page .scene h2 {
+    line-height: .9;
+  }
+}
+
 @media (min-width: 1025px) {
+  :is(.campaign-page, .social-page, .web-service)
+    :is(.opening-copy h1, .journey-intro h2, .proof-content h2),
+  .process-page :is(
+    .process-opening-copy h1,
+    .journey-intro h2,
+    .proof-content h2,
+    .process-editorial-content h2
+  ),
+  .about-page .scene :is(h1, h2) {
+    line-height: var(--ok-leading-display);
+  }
+
   .campaign-page .site-header,
   .social-page .site-header,
   .web-service .site-header,
@@ -152,19 +199,12 @@ canvas {
     gap: clamp(38px, 4svh, 64px);
   }
 
-  .campaign-page .site-header nav a,
-  .social-page .site-header nav a,
-  .web-service .site-header nav a,
-  .process-page .site-header nav a {
-    font-size: var(--ok-type-label);
-  }
-
   .campaign-page .opening-copy h1,
   .social-page .opening-copy h1 {
     font-size: var(--ok-type-display-service, var(--ok-service-display));
   }
 
-  .social-page .opening-copy {
+  :is(.campaign-page, .social-page) .opening-copy {
     left: var(--ok-canvas-inset);
     width: min(var(--ok-rail-opening, 760px), calc(100vw - (2 * var(--ok-canvas-inset))));
   }
@@ -353,6 +393,17 @@ canvas {
 
   .diagnosis-service :is(.result-content h2, .contact-panel h2) {
     font-size: var(--ok-type-display-result, clamp(48px, 6vh, 240px));
+  }
+}
+
+/* The collision-safe display line box is taller than the historical .92
+ * route value. Move the shared standard opening rail up as one component so
+ * its CTA retains the scene's 18px floor without per-route offsets. Short
+ * desktops keep the dedicated scene-viewport composition below. */
+@media (min-width: 1025px) and (min-height: 731px) {
+  :is(.campaign-page, .social-page, .web-service:not(.diagnosis-service))
+    .opening-copy {
+    top: 40%;
   }
 }
 
@@ -763,9 +814,39 @@ html[data-ok-nav-compact="tall"] .home-page .cta {
   geometry budget. Keeping the override here prevents the large-canvas rail
   and spacing tokens from undoing the compact scene contract loaded earlier.
 */
+@media (min-width: 821px) and (max-width: 1024px) {
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-actions {
+    flex-flow: row nowrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  :is(.campaign-page, .social-page, .web-service)
+    .opening-copy .outline-cta {
+    margin-top: 12px;
+  }
+
+  .about-page .scene .actions {
+    margin-top: 2px;
+  }
+}
+
+@media (min-width: 1025px) and (min-height: 731px) and (max-height: 820px) {
+  .about-page .scene-04 .proof-statement,
+  .about-page .scene-04 .accordion {
+    margin-top: 7px;
+  }
+
+  .about-page .scene-04 .result,
+  .about-page .scene-04 .actions {
+    margin-top: 5px;
+  }
+}
+
 @media (min-width: 1025px) and (max-height: 730px) {
   html.ok-scene-page {
-    --ok-short-proof-rail: 900px;
+    --ok-short-proof-rail: 1100px;
     --ok-short-about-art-corridor: 45.5rem;
     --ok-short-about-rail: clamp(
       552px,
@@ -773,7 +854,7 @@ html[data-ok-nav-compact="tall"] .home-page .cta {
       var(--ok-rail-about)
     );
     --ok-short-interactive-row: 44px;
-    --ok-short-actions-gap: 3px;
+    --ok-short-actions-gap: 0px;
     --ok-short-actions-inline-gap: 12px;
     --ok-short-detail-padding: max(0px, calc(var(--ok-scene-row-block) - 2px));
   }
@@ -821,6 +902,26 @@ html[data-ok-nav-compact="tall"] .home-page .cta {
 
   .about-page :is(.scene-02, .scene-03, .scene-04) .copy-panel {
     width: min(var(--ok-short-about-rail), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
+  .about-page .scene :is(.facts, .model-points) {
+    margin-top: 6px;
+  }
+
+  .about-page .scene .kicker {
+    margin-bottom: 6px;
+  }
+
+  .about-page .scene .lead {
+    margin-top: 3px;
+  }
+
+  .about-page .scene :is(.facts li, .model-points li) {
+    padding-block: 4px;
+  }
+
+  .about-page .scene .result {
+    margin-top: 0;
   }
 }
 

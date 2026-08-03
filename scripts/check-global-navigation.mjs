@@ -211,8 +211,26 @@ assert.match(
   /scroll-padding-top:\s*var\(--ok-nav-slot-height\)/,
   "Global anchor offset must use the navigation slot height.",
 );
-assert.match(css, /--ok-nav-docked-height:\s*80px/, "Docked rail must be 80px.");
-assert.match(css, /--ok-nav-floating-height:\s*64px/, "Detached rail must be 64px.");
+assert.match(
+  css,
+  /--ok-nav-docked-height:\s*clamp\(80px,\s*7vh,\s*224px\)/,
+  "Docked rail must retain its 80px floor and scale with the desktop canvas.",
+);
+assert.match(
+  css,
+  /--ok-nav-floating-height:\s*clamp\(64px,\s*5\.6vh,\s*180px\)/,
+  "Detached rail must retain its 64px floor and scale with the desktop canvas.",
+);
+assert.match(
+  css,
+  /--ok-nav-primary-type:\s*max\(12px,\s*var\(--ok-type-label,\s*12px\)\)/,
+  "Primary navigation must consume the semantic label role without shrinking below 12px.",
+);
+assert.match(
+  css,
+  /--ok-nav-popover-type:\s*max\(13px,\s*var\(--ok-type-label,\s*12px\)\)/,
+  "Oferta navigation must consume the semantic label role without shrinking below 13px.",
+);
 assert.match(css, /\[data-ok-nav-state="detached"\]/, "Detached state styles are required.");
 assert.match(css, /border-radius:\s*16px/, "Detached rail must use a restrained radius.");
 assert.match(

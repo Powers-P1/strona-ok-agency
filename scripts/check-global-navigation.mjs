@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
+import { createServer } from "node:net";
 import { dirname, join } from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { chromium } from "playwright";
 import { versionedAsset } from "./asset-versions.mjs";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -20,6 +24,95 @@ const expectedOfferRoutes = [
   "/kampanie",
   "/diagnoza",
 ];
+
+const availablePort = () => new Promise((resolve, reject) => {
+  const server = createServer();
+  server.once("error", reject);
+  server.listen(0, "127.0.0.1", () => {
+    const address = server.address();
+    server.close(() => resolve(address.port));
+  });
+});
+
+const startAuditServer = async () => {
+  const port = await availablePort();
+  const baseUrl = `http://127.0.0.1:${port}`;
+  const server = spawn(
+    process.execPath,
+    ["server.mjs", "--host", "127.0.0.1", "--port", String(port)],
+    { cwd: projectRoot, stdio: "ignore" },
+  );
+
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    try {
+      const response = await fetch(baseUrl);
+      if (response.ok) return { baseUrl, server };
+    } catch {
+      // The local server may need a few scheduler turns before accepting requests.
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  server.kill();
+  throw new Error(`Global navigation audit server did not start at ${baseUrl}`);
+};
+
+const auditComputedDropdownAlignment = async () => {
+  const { baseUrl, server } = await startAuditServer();
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+
+  try {
+    for (const pageName of publicPages) {
+      const page = await context.newPage();
+      try {
+        await page.goto(new URL(`/${pageName}`, baseUrl).href, { waitUntil: "domcontentloaded" });
+        const disclosure = page.locator(".ok-nav-offer > summary");
+        assert.equal(await disclosure.count(), 1, `${pageName}: Oferta disclosure is missing at runtime.`);
+        await disclosure.click();
+
+        const links = await page.locator(".ok-nav-offer__popover > a").evaluateAll(elements => (
+          elements.map(element => {
+            const style = getComputedStyle(element);
+            const bounds = element.getBoundingClientRect();
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const textBounds = range.getBoundingClientRect();
+            return {
+              display: style.display,
+              justifyContent: style.justifyContent,
+              textAlign: style.textAlign,
+              leftInset: textBounds.left - bounds.left,
+              paddingLeft: Number.parseFloat(style.paddingLeft),
+            };
+          })
+        ));
+
+        assert.equal(
+          links.length,
+          expectedOfferRoutes.length,
+          `${pageName}: Oferta runtime link count changed.`,
+        );
+        links.forEach((link, index) => {
+          const label = `${pageName}: Oferta runtime link ${index + 1}`;
+          assert.equal(link.display, "flex", `${label} must use the shared flex layout.`);
+          assert.equal(link.justifyContent, "flex-start", `${label} is not left aligned.`);
+          assert.equal(link.textAlign, "left", `${label} text alignment is not left.`);
+          assert.ok(
+            Math.abs(link.leftInset - link.paddingLeft) <= 1,
+            `${label} content does not start at its declared left padding.`,
+          );
+        });
+      } finally {
+        await page.close();
+      }
+    }
+  } finally {
+    await context.close();
+    await browser.close();
+    server.kill();
+  }
+};
 
 for (const page of publicPages) {
   const html = readFileSync(join(projectRoot, page), "utf8");
@@ -143,6 +236,8 @@ assert.match(script, /document\.activeElement\s*===\s*first/, "Backward focus wr
 assert.match(script, /document\.activeElement\s*===\s*last/, "Forward focus wrapping is required.");
 assert.match(script, /trigger\.focus\(\{\s*preventScroll:\s*true\s*\}\)/, "Focus must return to MENU.");
 
+await auditComputedDropdownAlignment();
+
 console.log(
-  `Global navigation check passed for ${publicPages.length} public pages.`,
+  `Global navigation source and computed-style checks passed for ${publicPages.length} public pages.`,
 );

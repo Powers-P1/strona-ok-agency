@@ -38,7 +38,7 @@ Docelowy przepływ:
 - [x] Automatyczny audyt wszystkich wyjątków, lokalnych ownerów i `!important`.
 - [x] Chromium + WebKit: geometria, kontrast, overflow, stabilność resize i screenshoty.
 - [x] Pełny build/quality/link/UI oraz niezależny review.
-- [ ] Integracja, publikacja i smoke produkcyjny.
+- [x] Integracja, publikacja i smoke produkcyjny.
 
 ## Potwierdzone źródła regresji
 
@@ -56,7 +56,7 @@ Stan po migracji:
 - deklaracje typografii w lokalnych arkuszach tras: **983**,
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **297**,
 - inline `style` w HTML: **28**,
-- mutacje stylu z JS: **46**.
+- mutacje stylu z JS: **45**.
 
 ## Wynik macierzy renderowania
 
@@ -66,6 +66,13 @@ Stan po migracji:
 - Diagnoza: semantyczna skala treści, pytań, odpowiedzi i wyniku zweryfikowana do 8K; ciemna scena ma własne ciemne tło awaryjne podczas zimnego ładowania grafiki.
 - Strona główna: brak skalowania pełnego rastra/canvasu; wariant compact jest przypięty do kadru obrazu i nie tworzy prostokątnego szwu.
 - Diagnoza: naturalna, wspólna siatka pytania rezerwuje wysokość najdłuższego z czterech kroków; odpowiedzi, „Wstecz” i nota prywatności nie nakładają się przy 2K/4K/8K. Błąd pobrania grafiki przechodzi do semantycznego tła awaryjnego i nie blokuje startu.
+- Krótki desktop Diagnozy: profil 1366×600 zachowuje kompaktową typografię, pięć odpowiedzi, „Wstecz” i notę prywatności w jednym kadrze bez kolizji.
 - O nas: sceny przekazują autorską szerokość panelu przez wspólny token railu. Punkty pozostają przypięte do obrazu, a karty i CTA nie przecinają treści przy 1024–1512 px ani w niskim oknie.
 - Runtime: ResizeObserver wykonuje stabilny pomiar treści bez zerowania opublikowanej wysokości sceny; reset wysokości pozostaje wyłącznie odpowiedzialnością prawdziwej zmiany viewportu.
 - Inwentarz obejmuje każdy produkcyjny CSS spoza jawnego rejestru wspólnych właścicieli, w tym `visual-direction-scenes.v20260730-2.css`.
+
+## Publikacja
+
+- PR #88 scalono do `main` jako `4582756425791bc8c77f6720793ab18ae87b6e40`.
+- Cloudflare Pages wdrożył produkcję jako `48db18a4-a32b-487d-9f88-276073991866`.
+- Smoke `okagency.pl`: Diagnoza 1366×600 (cztery pytania), O nas 390×844 oraz hero 1365×1218 — PASS, bez overflow i błędów konsoli.

@@ -6,17 +6,18 @@ import { chromium } from "playwright";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const DEFAULT_VIEWPORTS = [
+  { width: 1366, height: 768 },
+  { width: 1536, height: 864 },
+  { width: 1920, height: 1080 },
+  { width: 2560, height: 1440 },
+  { width: 3840, height: 2160 },
+  { width: 7680, height: 4320 },
   { width: 1440, height: 900 },
+  { width: 2560, height: 1080 },
+  { width: 1024, height: 768 },
   { width: 1440, height: 640 },
   { width: 1440, height: 600 },
-  { width: 1280, height: 720 },
   { width: 1152, height: 600 },
-  { width: 1024, height: 640 },
-  { width: 1024, height: 600 },
-  { width: 900, height: 620 },
-  { width: 821, height: 620 },
-  { width: 840, height: 700 },
-  { width: 840, height: 640 },
   { width: 390, height: 844 },
   { width: 360, height: 640 },
 ];
@@ -126,7 +127,7 @@ const layoutIssues = (scene, expectedScrollTop, {
       && style.display !== "none" && style.visibility !== "hidden";
   };
   if (shouldCheckActions) {
-    const requiredClearance = innerWidth >= 821 ? 11 : 0;
+    const requiredClearance = innerWidth >= 821 ? 18 : 0;
     [...element.querySelectorAll(actionSelector)].filter(visible).forEach((action, index) => {
       const clearance = sceneRect.bottom - action.getBoundingClientRect().bottom;
       if (clearance < requiredClearance) {

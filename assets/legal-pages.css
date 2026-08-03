@@ -171,7 +171,6 @@ img {
   font-size: clamp(76px, 6.2vw, 104px);
   font-weight: 500;
   letter-spacing: -.045em;
-  line-height: .84;
 }
 
 .privacy-lead {
@@ -409,7 +408,6 @@ img {
   font-size: clamp(78px, 7vw, 116px);
   font-weight: 500;
   letter-spacing: -.045em;
-  line-height: .82;
 }
 
 .error-title span {

@@ -39,6 +39,10 @@
   --ok-type-display-document: var(--ok-type-display-document-runtime, clamp(76px, 8.8vh, 360px));
   --ok-type-content-min: var(--ok-type-content);
   --ok-type-label-min: var(--ok-type-label);
+  /* Barlow Condensed extends below its em box on Polish diacritics and on
+   * descenders such as j/g/y. A shared display line box must therefore be at
+   * least 1.2em on desktop; tighter route-owned values visibly intersect. */
+  --ok-leading-display: 1.21;
   --ok-leading-content: 1.5;
   --ok-tracking-label: .08em;
 
@@ -46,8 +50,8 @@
    * Keeping the old 1.2–1.6K caps while type continued to 8K forced headings
    * into many short lines and pushed actions outside their scene. */
   --ok-rail-opening: clamp(650px, 42vw, 3200px);
-  --ok-rail-section: clamp(620px, 38vw, 2880px);
-  --ok-rail-about: clamp(620px, 38vw, 2880px);
+  --ok-rail-section: clamp(760px, 42vw, 2880px);
+  --ok-rail-about: clamp(760px, 42vw, 2880px);
   --ok-rail-reading: clamp(560px, 32vw, 2400px);
 
   --ok-color-paper: #ead9cb;

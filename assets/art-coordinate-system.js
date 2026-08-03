@@ -363,7 +363,9 @@
 
   const activeProfiles = artBounds => {
     if (innerHeight <= 800 && innerWidth > 640) return ["short", "compact", "base"];
-    if (artBounds.masked || innerWidth <= 1180) return ["compact", "base"];
+    if ((artBounds.masked && artBounds.maskShape !== "local-hole") || innerWidth <= 1180) {
+      return ["compact", "base"];
+    }
     return ["base", "compact"];
   };
 
@@ -402,10 +404,13 @@
     if (safety) {
       const fullVisible = normalizeRect(safety.fullVisible);
       const feather = normalizeRect(safety.feather);
+      const protectedRect = normalizeRect(safety.protected);
       return {
         masked: Boolean(safety.masked),
+        maskShape: safety.maskShape || null,
         fullVisible,
         interactiveVisible: unionRect(fullVisible, feather),
+        protected: protectedRect,
       };
     }
     const left = Math.max(0, geometry.left);
@@ -414,6 +419,8 @@
     const bottom = Math.min(scene.clientHeight, geometry.top + geometry.height);
     return {
       masked: art.dataset.okSafeArt === "active",
+      maskShape: null,
+      protected: null,
       fullVisible: right >= left && bottom >= top
         ? rect(left, top, right - left, bottom - top)
         : null,
@@ -470,6 +477,7 @@
       adapter.scene.clientHeight - SAFE_INSET * 2,
     );
     if (!artBounds.interactiveVisible || !contains(artBounds.interactiveVisible, ring)) return false;
+    if (artBounds.protected && intersects(ring, artBounds.protected)) return false;
     if (!contains(sceneSafe, ring)) return false;
     if (adapter.scene.clientHeight - point.y < BOTTOM_CLEARANCE) return false;
     if (obstacles.content.some(obstacle => intersects(ring, obstacle))) return false;
@@ -486,6 +494,7 @@
       adapter.scene.clientHeight - SAFE_INSET * 2,
     );
     if (!artBounds.interactiveVisible || !contains(artBounds.interactiveVisible, ring)) reasons.push("visible-art");
+    if (artBounds.protected && intersects(ring, artBounds.protected)) reasons.push("protected-content");
     if (!contains(sceneSafe, ring)) reasons.push("scene-inset");
     if (adapter.scene.clientHeight - point.y < BOTTOM_CLEARANCE) reasons.push("bottom-clearance");
     if (obstacles.content.some(obstacle => intersects(ring, obstacle))) reasons.push("content");
@@ -686,6 +695,14 @@
           artBounds.interactiveVisible.height,
         ].map(value => Math.round(value)).join(",")
         : "no-art-bounds",
+      artBounds.protected
+        ? [
+          artBounds.protected.left,
+          artBounds.protected.top,
+          artBounds.protected.width,
+          artBounds.protected.height,
+        ].map(value => Math.round(value)).join(",")
+        : "no-protected-bounds",
       fixedAnchorObstacles.content
         .map(bounds => [bounds.left, bounds.top, bounds.width, bounds.height]
           .map(value => Math.round(value))
@@ -946,6 +963,7 @@
     overlay.setAttribute("aria-hidden", "true");
 
     appendDebugBox(overlay, safety.fullVisible, "visible-art");
+    appendDebugBox(overlay, safety.protected, "protected-content");
     obstacles.content.forEach(bounds => appendDebugBox(overlay, bounds, "content"));
     obstacles.fixed.forEach(bounds => appendDebugBox(overlay, bounds, "fixed-ui"));
     solution?.rings.forEach(bounds => appendDebugBox(overlay, bounds, "ring"));

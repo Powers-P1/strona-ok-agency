@@ -66,6 +66,10 @@
   let frame = 0;
   let needsRemeasure = false;
   let artBoundsChanged = false;
+  let sceneAnchorFrame = 0;
+  let currentSceneAnchor = null;
+  let pendingSceneAnchor = null;
+  let viewportSize = { width: window.innerWidth, height: window.innerHeight };
 
   const selectors = {
     serviceScene: [
@@ -139,29 +143,41 @@
   };
 
   const visualContentRect = content => {
-    const elements = [
-      content,
-      ...content.querySelectorAll(
-        "h1,h2,h3,p,button,a,li,summary,label,input,select,textarea,form,fieldset",
-      ),
-    ].filter(rendered);
-
-    return elements.reduce((bounds, element) => {
-      const rect = element.getBoundingClientRect();
-      const right = Math.max(rect.right, rect.left + element.scrollWidth);
-      const bottom = Math.max(rect.bottom, rect.top + element.scrollHeight);
-      return {
-        top: Math.min(bounds.top, rect.top),
-        right: Math.max(bounds.right, right),
-        bottom: Math.max(bounds.bottom, bottom),
-        left: Math.min(bounds.left, rect.left),
-      };
-    }, {
+    const elements = [...content.querySelectorAll(
+      "h1,h2,h3,p,button,a,li,summary,label,input,select,textarea",
+    )].filter(rendered);
+    const bounds = {
       top: Number.POSITIVE_INFINITY,
       right: Number.NEGATIVE_INFINITY,
       bottom: Number.NEGATIVE_INFINITY,
       left: Number.POSITIVE_INFINITY,
+    };
+    const includeRect = rect => {
+      if (!rect?.width || !rect?.height) return;
+      bounds.top = Math.min(bounds.top, rect.top);
+      bounds.right = Math.max(bounds.right, rect.right);
+      bounds.bottom = Math.max(bounds.bottom, rect.bottom);
+      bounds.left = Math.min(bounds.left, rect.left);
+    };
+
+    elements.forEach(element => {
+      if (element.matches("input,select,textarea")) {
+        includeRect(element.getBoundingClientRect());
+        return;
+      }
+
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const textRects = [...range.getClientRects()].filter(rect => rect.width && rect.height);
+      if (textRects.length) {
+        textRects.forEach(includeRect);
+      } else {
+        includeRect(element.getBoundingClientRect());
+      }
+      range.detach?.();
     });
+
+    return Number.isFinite(bounds.top) ? bounds : stableContentRect(content);
   };
 
   const stableContentRect = content => {
@@ -219,52 +235,30 @@
       artRect.bottom - sceneRect.top,
     );
     const scene = rectFromEdges(0, 0, sceneRect.width, sceneRect.height);
-    let fullVisible = intersectRect(art, scene);
+    const fullVisible = intersectRect(art, scene);
+    let protectedRect = null;
     let feather = null;
 
     if (mask) {
-      const horizontal = mask.axis === "x";
-      const featherStart = Math.min(mask.cut, mask.reveal);
-      const featherEnd = Math.max(mask.cut, mask.reveal);
-      const featherBounds = horizontal
-        ? rectFromEdges(
-            art.left + featherStart,
-            art.top,
-            art.left + featherEnd,
-            art.bottom,
-          )
-        : rectFromEdges(
-            art.left,
-            art.top + featherStart,
-            art.right,
-            art.top + featherEnd,
-          );
-      const visibleBounds = mask.revealSide === "right"
-        ? rectFromEdges(art.left + mask.reveal, art.top, art.right, art.bottom)
-        : mask.revealSide === "left"
-          ? rectFromEdges(art.left, art.top, art.left + mask.reveal, art.bottom)
-          : mask.revealSide === "bottom"
-            ? rectFromEdges(art.left, art.top + mask.reveal, art.right, art.bottom)
-            : rectFromEdges(art.left, art.top, art.right, art.top + mask.reveal);
-      const visibleInScene = intersectRect(visibleBounds, scene);
-      const featherInScene = intersectRect(featherBounds, scene);
-
-      fullVisible = visibleInScene;
-      feather = {
-        axis: mask.axis,
-        start: horizontal ? featherInScene.left : featherInScene.top,
-        end: horizontal ? featherInScene.right : featherInScene.bottom,
-        ...featherInScene,
-      };
+      const withinScene = localRect => intersectRect(rectFromEdges(
+        art.left + localRect.left,
+        art.top + localRect.top,
+        art.left + localRect.right,
+        art.top + localRect.bottom,
+      ), scene);
+      protectedRect = withinScene(mask.protected);
+      feather = withinScene(mask.feather);
     }
 
     const record = deepFreeze({
-      version: 1,
+      version: 2,
       coordinateSpace: "scene-css-px",
       masked: Boolean(mask),
-      revealSide: mask?.revealSide ?? null,
+      maskShape: mask?.shape ?? null,
+      revealSide: null,
       art,
       fullVisible,
+      protected: protectedRect,
       feather,
     });
     const previous = artBounds.get(layout.scene) || artBounds.get(layout.art);
@@ -282,6 +276,7 @@
   const clearArtMask = (layout, sceneRect, artRect) => {
     layout.art.dataset.okSafeArt = "idle";
     delete layout.art.dataset.okSafeReveal;
+    delete layout.art.dataset.okSafeShape;
     layout.art.style.removeProperty("--ok-safe-mask-image");
     publishArtBounds(layout, sceneRect, artRect);
   };
@@ -385,13 +380,6 @@
      * picture source before visualViewport settles after desktop resize. */
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const tallPortrait = viewportHeight > 760
-      && viewportHeight > viewportWidth * 1.35;
-    const compact = viewportWidth <= 1180
-      || viewportHeight <= 760
-      || tallPortrait
-      || contentRect.width >= sceneRect.width * .5;
-
     const gap = Math.max(20, Math.min(56, sceneRect.width * .03));
     const offsetBottom = contentBottomWithin(content, layout.scene);
     let requiredHeight = Math.ceil(
@@ -448,10 +436,10 @@
     }
 
     const artMaskMode = layout.scene.dataset.okSafeMask || "auto";
-    const forceArtMask = artMaskMode === "always";
     const suppressArtMask = artMaskMode === "never";
+    const maskableScene = layout.mode === "scene";
 
-    if (suppressArtMask || (!compact && !forceArtMask && !isHome)) {
+    if (suppressArtMask || !maskableScene) {
       if (layout.mode === "grow") {
         layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
       } else {
@@ -467,53 +455,43 @@
       layout.scene.style.removeProperty("--ok-safe-required-height");
     }
 
-    const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
-    const spaces = {
-      left: Math.max(0, contentRect.left - artRect.left),
-      right: Math.max(0, artRect.right - contentRect.right),
-      top: Math.max(0, contentRect.top - artRect.top),
-      bottom: Math.max(0, artRect.bottom - contentRect.bottom),
-    };
-    const allowedSides = ["left", "right", "top", "bottom"];
-    const revealSide = allowedSides.reduce(
-      (best, side) => spaces[side] > spaces[best] ? side : best,
-      allowedSides[0],
+    const hardMargin = Math.max(18, Math.min(64, Math.min(sceneRect.width, sceneRect.height) * .025));
+    const featherSize = Math.max(48, Math.min(144, Math.min(sceneRect.width, sceneRect.height) * .08));
+    const clampX = value => Math.max(0, Math.min(artRect.width, value));
+    const clampY = value => Math.max(0, Math.min(artRect.height, value));
+    const protectedRect = rectFromEdges(
+      clampX(contentRect.left - artRect.left - hardMargin),
+      clampY(contentRect.top - artRect.top - hardMargin),
+      clampX(contentRect.right - artRect.left + hardMargin),
+      clampY(contentRect.bottom - artRect.top + hardMargin),
     );
-    const horizontalFeather = Math.max(96, Math.min(240, artRect.width * .18));
-    const verticalFeather = Math.max(96, Math.min(240, artRect.height * .18));
-    let maskImage = "";
-    let cut = 0;
-    let reveal = 0;
-    let axis = "x";
-
-    if (revealSide === "right") {
-      cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
-      reveal = clamp(cut + horizontalFeather, artRect.width);
-      maskImage = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
-    } else if (revealSide === "left") {
-      cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
-      reveal = clamp(cut - horizontalFeather, artRect.width);
-      maskImage = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
-    } else if (revealSide === "bottom") {
-      axis = "y";
-      cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
-      reveal = clamp(cut + verticalFeather, artRect.height);
-      maskImage = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
-    } else {
-      axis = "y";
-      cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
-      reveal = clamp(cut - verticalFeather, artRect.height);
-      maskImage = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
-    }
+    const featherRect = rectFromEdges(
+      clampX(protectedRect.left - featherSize),
+      clampY(protectedRect.top - featherSize),
+      clampX(protectedRect.right + featherSize),
+      clampY(protectedRect.bottom + featherSize),
+    );
+    const fixed = value => (Math.round(value * 100) / 100).toString();
+    const svgMask = [
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${fixed(artRect.width)} ${fixed(artRect.height)}">`,
+      `<defs><filter id="blur" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">`,
+      `<feGaussianBlur stdDeviation="${fixed(featherSize * .42)}"/></filter>`,
+      `<mask id="safe" maskUnits="userSpaceOnUse" x="0" y="0" width="${fixed(artRect.width)}" height="${fixed(artRect.height)}" mask-type="luminance">`,
+      `<rect width="100%" height="100%" fill="white"/>`,
+      `<rect x="${fixed(protectedRect.left)}" y="${fixed(protectedRect.top)}" width="${fixed(protectedRect.width)}" height="${fixed(protectedRect.height)}" fill="black" filter="url(#blur)"/>`,
+      `<rect x="${fixed(protectedRect.left)}" y="${fixed(protectedRect.top)}" width="${fixed(protectedRect.width)}" height="${fixed(protectedRect.height)}" fill="black"/>`,
+      `</mask></defs><rect width="100%" height="100%" fill="white" mask="url(#safe)"/></svg>`,
+    ].join("");
+    const maskImage = `url("data:image/svg+xml,${encodeURIComponent(svgMask)}")`;
 
     layout.art.style.setProperty("--ok-safe-mask-image", maskImage);
-    layout.art.dataset.okSafeReveal = revealSide;
+    delete layout.art.dataset.okSafeReveal;
+    layout.art.dataset.okSafeShape = "local-hole";
     layout.art.dataset.okSafeArt = "active";
     publishArtBounds(layout, sceneRect, artRect, {
-      axis,
-      cut,
-      reveal,
-      revealSide,
+      shape: "local-hole",
+      protected: protectedRect,
+      feather: featherRect,
     });
   };
 
@@ -567,6 +545,74 @@
     setMenuOverflow(true);
   };
 
+  const sceneElements = () => [...new Set(
+    layouts.filter(layout => layout.mode === "scene").map(layout => layout.scene),
+  )];
+
+  const captureSceneAnchor = () => {
+    if (window.innerWidth <= 640) {
+      currentSceneAnchor = null;
+      return null;
+    }
+    const scenes = sceneElements();
+    if (!scenes.length) return null;
+    const candidates = scenes.map(scene => ({ scene, rect: scene.getBoundingClientRect() }));
+    const active = candidates.find(({ rect }) => rect.top <= 0 && rect.bottom > 0)
+      || candidates.reduce((closest, candidate) => {
+        const distance = Math.abs(candidate.rect.top);
+        return distance < closest.distance ? { ...candidate, distance } : closest;
+      }, { ...candidates[0], distance: Number.POSITIVE_INFINITY });
+    if (!active?.rect.height) return null;
+    currentSceneAnchor = {
+      scene: active.scene,
+      offset: Math.max(0, Math.min(1, -active.rect.top / active.rect.height)),
+    };
+    return currentSceneAnchor;
+  };
+
+  const scheduleSceneAnchorCapture = () => {
+    if (pendingSceneAnchor || sceneAnchorFrame) return;
+    sceneAnchorFrame = requestAnimationFrame(() => {
+      sceneAnchorFrame = 0;
+      captureSceneAnchor();
+    });
+  };
+
+  const cancelPendingSceneAnchor = () => {
+    if (!pendingSceneAnchor) return;
+    pendingSceneAnchor = null;
+    captureSceneAnchor();
+  };
+
+  const sceneAnchorScrollKeys = new Set([
+    "ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " ",
+  ]);
+
+  const cancelPendingSceneAnchorFromKey = event => {
+    if (event.defaultPrevented) return;
+    const target = event.target;
+    if (target instanceof HTMLElement && (
+      target.isContentEditable
+      || /^(INPUT|SELECT|TEXTAREA)$/.test(target.tagName)
+    )) return;
+    if (!sceneAnchorScrollKeys.has(event.key)) return;
+    cancelPendingSceneAnchor();
+  };
+
+  const restoreSceneAnchor = () => {
+    const anchor = pendingSceneAnchor;
+    pendingSceneAnchor = null;
+    if (!anchor?.scene?.isConnected || window.innerWidth <= 640) {
+      captureSceneAnchor();
+      return;
+    }
+    const rect = anchor.scene.getBoundingClientRect();
+    const target = window.scrollY + rect.top + rect.height * anchor.offset;
+    const scrollHost = document.scrollingElement;
+    if (scrollHost && Number.isFinite(target)) scrollHost.scrollTop = Math.round(target);
+    captureSceneAnchor();
+  };
+
   const measure = () => {
     frame = 0;
     publishViewportTypeScale();
@@ -580,9 +626,11 @@
     measureCards();
     if (artBoundsChanged) {
       window.dispatchEvent(new CustomEvent("okagency:art-safety-change", {
-        detail: { version: 1 },
+        detail: { version: 2 },
       }));
     }
+    if (pendingSceneAnchor) restoreSceneAnchor();
+    else captureSceneAnchor();
   };
 
   const schedule = () => {
@@ -600,6 +648,18 @@
   };
 
   const scheduleViewportMeasure = () => {
+    const nextViewport = { width: window.innerWidth, height: window.innerHeight };
+    const viewportChanged = nextViewport.width !== viewportSize.width
+      || nextViewport.height !== viewportSize.height;
+    if (
+      viewportChanged
+      && viewportSize.width > 640
+      && nextViewport.width > 640
+      && !pendingSceneAnchor
+    ) {
+      pendingSceneAnchor = currentSceneAnchor || captureSceneAnchor();
+    }
+    viewportSize = nextViewport;
     /* Drop the previous viewport's grow-height before the next paint. */
     publishViewportTypeScale();
     layouts.forEach(layout => {
@@ -635,6 +695,10 @@
 
   window.addEventListener("resize", scheduleViewportMeasure, { passive: true });
   window.addEventListener("orientationchange", scheduleViewportMeasure, { passive: true });
+  window.addEventListener("scroll", scheduleSceneAnchorCapture, { passive: true });
+  window.addEventListener("wheel", cancelPendingSceneAnchor, { passive: true });
+  window.addEventListener("touchstart", cancelPendingSceneAnchor, { passive: true });
+  window.addEventListener("keydown", cancelPendingSceneAnchorFromKey);
   window.visualViewport?.addEventListener("resize", scheduleViewportMeasure, { passive: true });
   window.matchMedia("(max-width: 1180px), (max-aspect-ratio: 4/3)")
     .addEventListener?.("change", scheduleViewportMeasure);
@@ -650,6 +714,7 @@
       shieldedArt: document.querySelectorAll('[data-ok-safe-art="active"]').length,
       scrollRegions: document.querySelectorAll('[data-ok-safe-scroll="true"]').length,
       stackedCards: Boolean(document.querySelector('[data-ok-safe-cards="stacked"]')),
+      anchoredScene: currentSceneAnchor?.scene?.id || null,
     }),
   });
 })();

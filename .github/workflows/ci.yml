@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chromium for UI contract tests
-        run: npx playwright install --with-deps chromium
+      - name: Install browsers for UI contract tests
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Validate global navigation runtime
         run: npm run check:global-navigation-runtime
@@ -45,6 +45,12 @@ jobs:
 
       - name: Validate desktop typography and component geometry
         run: npm run check:desktop-system-components
+
+      - name: Validate FHD to 8K responsive remediation contracts
+        run: npm run check:fhd-2k-responsive
+
+      - name: Validate responsive mask and resize contracts in WebKit
+        run: npm run check:fhd-2k-responsive:webkit
 
       - name: Check local links
         run: npm run check:links

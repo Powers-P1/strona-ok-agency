@@ -7,11 +7,15 @@
  */
 
 :root {
-  --ok-nav-docked-height: 80px;
-  --ok-nav-floating-height: 64px;
+  --ok-nav-docked-height: clamp(80px, 7vh, 224px);
+  --ok-nav-floating-height: clamp(64px, 5.6vh, 180px);
   --ok-nav-slot-height: var(--ok-nav-docked-height);
-  --ok-nav-brand-width: clamp(142px, 9vw, 154px);
-  --ok-nav-brand-detached-width: clamp(126px, 8vw, 140px);
+  --ok-nav-brand-width: clamp(154px, 12vh, 336px);
+  --ok-nav-brand-detached-width: clamp(140px, 11vh, 304px);
+  --ok-nav-primary-type: max(12px, var(--ok-type-label, 12px));
+  --ok-nav-popover-type: max(13px, var(--ok-type-label, 12px));
+  --ok-nav-popover-inline: clamp(12px, .9vh, 30px);
+  --ok-nav-target-size: max(44px, var(--ok-size-interactive-row, 44px));
   --ok-nav-canvas: #f0dfcf;
   --ok-nav-canvas-solid: #efe0d2;
   --ok-nav-floating-canvas: var(--ok-nav-canvas-solid);
@@ -80,7 +84,7 @@ body header[data-ok-global-nav] {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(22px, 3vw, 54px);
+  gap: clamp(22px, 3vh, 96px);
   overflow: visible;
   color: var(--ok-nav-navy) !important;
   border: 0 !important;
@@ -115,7 +119,7 @@ body header[data-ok-global-nav][data-ok-nav-state="detached"] {
   left: 14px !important;
   height: var(--ok-nav-floating-height) !important;
   min-height: var(--ok-nav-floating-height) !important;
-  padding-inline: clamp(18px, 3vw, 42px) !important;
+  padding-inline: clamp(18px, 3vh, 72px) !important;
   border-radius: 16px;
   background-color: var(--ok-nav-floating-canvas);
   -webkit-backdrop-filter: none;
@@ -171,22 +175,22 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: clamp(18px, 2.15vw, 36px);
+  gap: clamp(18px, 2.4vh, 72px);
 }
 
 body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
 .ok-nav-offer > summary {
   position: relative;
   min-width: 44px;
-  min-height: 44px;
+  min-height: var(--ok-nav-target-size);
   padding: 0 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: clamp(7px, .55vh, 20px);
   color: var(--ok-nav-navy) !important;
   font-family: var(--ok-font-body, "Archivo", sans-serif);
-  font-size: 12px;
+  font-size: var(--ok-nav-primary-type);
   font-weight: 720;
   line-height: 1.2;
   letter-spacing: .105em;
@@ -279,8 +283,8 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"
 }
 
 body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta {
-  min-height: 44px !important;
-  padding: 0 18px !important;
+  min-height: var(--ok-nav-target-size) !important;
+  padding: 0 clamp(18px, 1.5vh, 54px) !important;
   color: var(--ok-nav-canvas) !important;
   border: 1px solid var(--ok-nav-navy);
   background: var(--ok-nav-navy);
@@ -304,10 +308,10 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-curr
 .ok-nav-offer__popover {
   position: absolute;
   z-index: 4;
-  top: calc(100% + 10px);
+  top: calc(100% + clamp(10px, .7vh, 24px));
   left: -22px;
-  width: min(340px, calc(100vw - 40px));
-  padding: 10px;
+  width: min(clamp(340px, 28vh, 720px), calc(100vw - 40px));
+  padding: clamp(10px, .8vh, 28px);
   display: grid;
   justify-items: stretch;
   box-sizing: border-box;
@@ -335,8 +339,8 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-curr
 /* Keep route-level `.site-header nav a` rules out of the nested disclosure. */
 body header[data-ok-global-nav] .ok-nav-offer__popover > a {
   width: 100%;
-  min-height: 44px;
-  padding: 9px 12px;
+  min-height: var(--ok-nav-target-size);
+  padding: clamp(9px, .65vh, 24px) var(--ok-nav-popover-inline);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -344,7 +348,7 @@ body header[data-ok-global-nav] .ok-nav-offer__popover > a {
   color: var(--ok-nav-navy);
   border-bottom: 1px solid rgba(20, 32, 48, .11);
   font-family: var(--ok-font-body, "Archivo", sans-serif);
-  font-size: 13px;
+  font-size: var(--ok-nav-popover-type);
   font-weight: 590;
   line-height: 1.35;
   text-align: left;
@@ -362,7 +366,7 @@ body header[data-ok-global-nav] .ok-nav-offer__popover > a:last-child {
 body header[data-ok-global-nav] .ok-nav-offer__popover > a:hover,
 body header[data-ok-global-nav] .ok-nav-offer__popover > a:focus-visible,
 body header[data-ok-global-nav] .ok-nav-offer__popover > a[aria-current="page"] {
-  padding-left: 17px;
+  padding-left: calc(var(--ok-nav-popover-inline) + 3px);
   color: var(--ok-nav-rose-strong);
   background: rgba(255, 255, 255, .31);
 }

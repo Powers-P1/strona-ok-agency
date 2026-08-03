@@ -64,8 +64,6 @@ for (const token of [
   "visualViewport",
   "visualContentRect",
   "stableContentRect",
-  "element.scrollWidth",
-  "element.scrollHeight",
   "document.fonts?.ready.then(() => requestAnimationFrame(schedule))",
   "data-ok-tall-portrait",
   "okSafeCurtain",
@@ -84,6 +82,7 @@ for (const token of [
   "deepFreeze",
   "Object.isFrozen",
   "fullVisible",
+  "protected",
   "feather",
   "typeRoles",
   "publishViewportTypeScale",
@@ -138,11 +137,14 @@ requireText(socialCss, "max-height: none", "rozwinięty sygnał nadal może być
 requireText(faqCss, "grid-template-columns: minmax(0, 1fr)", "FAQ nie zeruje minimalnej szerokości mobilnej kolumny");
 requireText(faqCss, "overflow-wrap: anywhere", "CTA FAQ nie chroni długiej etykiety przed przycięciem");
 
-requireText(script, "allowedSides", "JS nie wybiera najbezpieczniejszej strony grafiki");
+requireText(script, "document.createRange()", "JS nie mierzy faktycznie renderowanych rectów tekstu");
 requireText(script, 'layout.scene.dataset.okSafeMask || "auto"', "JS nie ma deklaratywnego trybu maski sceny");
-requireText(script, 'artMaskMode === "always"', "JS nie obsługuje wymuszonej ochrony treści");
 requireText(script, 'artMaskMode === "never"', "JS nie obsługuje jawnego wyłączenia maski");
-requireText(script, "--ok-safe-mask-image", "JS nie generuje liniowego featheru grafiki");
+requireText(script, "--ok-safe-mask-image", "JS nie generuje lokalnej maski grafiki");
+requireText(script, 'layout.art.dataset.okSafeShape = "local-hole"', "JS nie publikuje lokalnego kształtu maski");
+requireText(script, "encodeURIComponent(svgMask)", "JS nie generuje skalowalnej maski SVG");
+requireText(script, "pendingSceneAnchor", "JS nie zachowuje aktywnej sceny podczas resize");
+requireText(script, "restoreSceneAnchor", "JS nie odtwarza względnego offsetu aktywnej sceny");
 requireText(script, "copySafeZone", "JS nie utrzymuje jednego źródła progu bezpiecznej strefy hero");
 requireText(script, "homeLayout.copyFitsFirstView", "JS nie utrzymuje kompaktowego hero w pierwszym widoku");
 requireText(script, 'Math.ceil(viewportHeight)', "JS nie kotwiczy kompaktowego hero do jednego viewportu");
@@ -217,31 +219,24 @@ requireText(script, "artBounds.set(layout.scene, record)", "JS does not publish 
 requireText(script, "artBounds.set(layout.art, record)", "JS does not publish safety bounds under the artwork key");
 requireText(script, 'coordinateSpace: "scene-css-px"', "JS does not declare scene-relative CSS pixel coordinates");
 requireText(script, "masked: Boolean(mask)", "JS does not distinguish masked and unmasked artwork");
-requireText(script, "revealSide: mask?.revealSide ?? null", "JS does not publish the mask reveal side");
+requireText(script, 'maskShape: mask?.shape ?? null', "JS does not publish the local mask shape");
+requireText(script, "protected: protectedRect", "JS does not publish protected content bounds");
 requireText(script, "if (artBoundsChanged)", "JS does not consolidate bounds events per measurement cycle");
 requireText(script, 'new CustomEvent("okagency:art-safety-change"', "JS does not emit the artwork safety change event");
-requireText(script, "detail: { version: 1 }", "artwork safety event does not expose contract version 1");
+requireText(script, "detail: { version: 2 }", "artwork safety event does not expose contract version 2");
 requireText(script, "Object.values(value).forEach(deepFreeze)", "artwork bounds are not frozen recursively");
 requireText(script, "const record = deepFreeze({", "public artwork bounds record is not deep-frozen");
 
 for (const maskToken of [
-  "const horizontalFeather = Math.max(96, Math.min(240, artRect.width * .18));",
-  "const verticalFeather = Math.max(96, Math.min(240, artRect.height * .18));",
-  "cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);",
-  "reveal = clamp(cut + horizontalFeather, artRect.width);",
-  "maskImage = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;",
-  "cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);",
-  "reveal = clamp(cut - horizontalFeather, artRect.width);",
-  "maskImage = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;",
-  "cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);",
-  "reveal = clamp(cut + verticalFeather, artRect.height);",
-  "maskImage = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;",
-  "cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);",
-  "reveal = clamp(cut - verticalFeather, artRect.height);",
-  "maskImage = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;",
+  "const hardMargin = Math.max(18, Math.min(64",
+  "const featherSize = Math.max(48, Math.min(144",
+  "const protectedRect = rectFromEdges(",
+  "const featherRect = rectFromEdges(",
+  "const svgMask = [",
+  'shape: "local-hole"',
   'layout.art.style.setProperty("--ok-safe-mask-image", maskImage);',
 ]) {
-  requireText(script, maskToken, `responsive-safety.js: baseline mask token/formula changed: ${maskToken}`);
+  requireText(script, maskToken, `responsive-safety.js: local mask contract changed: ${maskToken}`);
 }
 
 if (/makeScrollRegion|dataset\.okSafeScroll\s*=/.test(script)) {

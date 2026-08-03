@@ -31,6 +31,9 @@ jobs:
       - name: Validate global navigation runtime
         run: npm run check:global-navigation-runtime
 
+      - name: Validate consent banner responsiveness
+        run: npm run check:consent-responsive
+
       - name: Validate scene disclosures
         run: npm run check:scene-disclosures
 

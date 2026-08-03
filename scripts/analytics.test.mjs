@@ -618,25 +618,45 @@ test("phone-number runs are removed from paths even though numeric campaign IDs 
   }
 });
 
-test("numeric campaign identifiers and non-phone dates remain valid attribution", () => {
+test("dates, percent values and opaque technical IDs remain valid attribution", () => {
   const cases = [
-    ["utm_campaign", "1234567890"],
-    ["utm_campaign", "campaign-1234567890"],
-    ["utm_campaign", "campaign-1234567890-2"],
-    ["utm_campaign", "1234567890-2"],
-    ["utm_content", "summer-2026080312"],
     ["utm_term", "2026-08-03-01"],
     ["utm_medium", "50%-off"],
     ["utm_source", "50%25-off"],
+    ["utm_content", "1234567890"],
+    ["gclid", "1234567890"],
   ];
   for (const [key, value] of cases) {
-    const query = new URLSearchParams({ [key]: value, gclid: "click-ab123456789xyz" });
+    const params = { [key]: value };
+    if (key !== "gclid") params.gclid = "click-ab123456789xyz";
+    const query = new URLSearchParams(params);
     const runtime = loadAnalytics({
       url: `https://okagency.pl/diagnoza?${query}`,
       localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
     });
     const touch = runtime.window.okAnalytics.attribution().first_touch;
     assert.equal(touch[key], value);
+    assert.equal(touch.gclid, key === "gclid" ? value : "click-ab123456789xyz");
+  }
+});
+
+test("unlabelled phone-length runs are rejected from non-technical campaign values", () => {
+  for (const [key, value] of [
+    ["utm_campaign", "1234567890"],
+    ["utm_campaign", "jan-501234567"],
+    ["utm_campaign", "campaign-1234567890"],
+    ["utm_campaign", "campaign-1234567890-2"],
+    ["utm_campaign", "1234567890-2"],
+    ["utm_term", "summer-2026080312"],
+  ]) {
+    const query = new URLSearchParams({ [key]: value, gclid: "click-ab123456789xyz" });
+    const runtime = loadAnalytics({
+      url: `https://okagency.pl/diagnoza?${query}`,
+      localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+    });
+    const touch = runtime.window.okAnalytics.attribution().first_touch;
+    assert.equal(touch[key], undefined);
+    assert.doesNotMatch(touch.landing_page, new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
     assert.equal(touch.gclid, "click-ab123456789xyz");
   }
 });

@@ -36,6 +36,9 @@
     "fbclid",
   ]);
   const ATTRIBUTION_KEY_SET = new Set(ATTRIBUTION_KEYS);
+  const OPAQUE_NUMERIC_ATTRIBUTION_KEYS = new Set([
+    "utm_content", "gclid", "gbraid", "wbraid", "fbclid",
+  ]);
   const DIAGNOSIS_OUTCOMES = new Set([
     "website",
     "social",
@@ -85,12 +88,17 @@
     /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value)
     || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value.replace(/\s+/g, ""))
   );
-  const looksLikePhone = value => {
+  const looksLikePhone = (value, allowOpaqueNumericId = false) => {
     if (
       /(?:^|[^\p{L}\p{N}])(?:tel(?:efon)?|phone|mobile|kom(?:o|ó)rka)[\s:=._/\-]*\+?\d[\d\s()./\-]{6,}\d(?:[\s._/\-]*(?:ext|wew)\.?\s*\d{1,6})?(?=$|[^\p{L}\p{N}])/iu.test(value)
     ) return true;
 
     if (/^\s+\d{9,15}\s*$/.test(value)) return true;
+    const trimmed = value.trim();
+    for (const match of value.matchAll(/(?:^|[^\p{L}\p{N}])(\d{9,15})(?=$|[^\p{L}\p{N}])/gu)) {
+      if (allowOpaqueNumericId && match[1] === trimmed) continue;
+      return true;
+    }
     for (const match of value.matchAll(/(?:^|[^\p{L}\p{N}])(\+?\d[\d\s()./\-]{6,}\d)(?=$|[^\p{L}\p{N}])/gu)) {
       const candidate = match[1];
       const digitCount = (candidate.match(/\d/g) || []).length;
@@ -106,9 +114,13 @@
     return false;
   };
 
-  const containsContactData = value => {
+  const containsContactData = (value, allowOpaqueNumericId = false) => {
     const decoded = decodeForPrivacyCheck(value);
-    return decoded === null || looksLikeEmail(decoded) || looksLikePhone(decoded);
+    return (
+      decoded === null
+      || looksLikeEmail(decoded)
+      || looksLikePhone(decoded, allowOpaqueNumericId)
+    );
   };
 
   const containsPathContactData = value => {
@@ -117,14 +129,17 @@
     return /(?:^|[^\p{L}\p{N}])\+?\d{9,15}(?=$|[^\p{L}\p{N}])/u.test(decoded);
   };
 
-  const cleanValue = (value, limit = 300) => {
+  const cleanValue = (value, limit = 300, allowOpaqueNumericId = false) => {
     if (typeof value !== "string") return "";
     const stripped = value.replace(/[\u0000-\u001f\u007f]/g, "");
     const cleaned = stripped
       .trim()
       .slice(0, limit);
     // Parametry kampanii nie mogą stać się kanałem wysyłki danych kontaktowych.
-    return containsContactData(value) || containsContactData(cleaned) ? "" : cleaned;
+    return (
+      containsContactData(value, allowOpaqueNumericId)
+      || containsContactData(cleaned, allowOpaqueNumericId)
+    ) ? "" : cleaned;
   };
 
   const attributionParamsFromUrl = value => {
@@ -134,7 +149,11 @@
       for (const [rawKey, rawValue] of url.searchParams) {
         const key = rawKey.toLowerCase();
         if (!ATTRIBUTION_KEY_SET.has(key) || Object.hasOwn(result, key)) continue;
-        const cleaned = cleanValue(rawValue, key.startsWith("utm_") ? 200 : 512);
+        const cleaned = cleanValue(
+          rawValue,
+          key.startsWith("utm_") ? 200 : 512,
+          OPAQUE_NUMERIC_ATTRIBUTION_KEYS.has(key),
+        );
         if (cleaned) result[key] = cleaned;
       }
     } catch {
@@ -409,7 +428,11 @@
       referrer: safeReferrer(input.referrer),
     };
     for (const key of ATTRIBUTION_KEYS) {
-      const value = cleanValue(input[key], key.startsWith("utm_") ? 200 : 512);
+      const value = cleanValue(
+        input[key],
+        key.startsWith("utm_") ? 200 : 512,
+        OPAQUE_NUMERIC_ATTRIBUTION_KEYS.has(key),
+      );
       if (value) touch[key] = value;
     }
     return touch.landing_page ? touch : null;

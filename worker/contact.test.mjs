@@ -56,10 +56,10 @@ test("deeply encoded PII and phone variants are rejected without losing numeric 
 
   assert.equal(
     attribution.first_touch.landing_page,
-    "https://okagency.pl/?utm_source=google&utm_campaign=1234567890&gclid=click-ab123456789xyz",
+    "https://okagency.pl/?utm_source=google&gclid=click-ab123456789xyz",
   );
   assert.equal(attribution.first_touch.utm_source, "50%25-off");
-  assert.equal(attribution.first_touch.utm_campaign, "campaign-1234567890");
+  assert.equal(attribution.first_touch.utm_campaign, undefined);
   assert.equal(attribution.first_touch.utm_content, "2026-08-03-01");
   assert.equal(attribution.first_touch.utm_medium, undefined);
   assert.equal(attribution.first_touch.utm_term, undefined);
@@ -69,6 +69,32 @@ test("deeply encoded PII and phone variants are rejected without losing numeric 
     JSON.stringify(attribution),
     /jan(?:%25|%40|@)|tel501|501(?:%2F|\/|\s)?234(?:%2F|\/|\s)?567/i,
   );
+});
+
+test("Worker keeps pure numeric technical IDs but rejects phone-length campaign runs", () => {
+  const landingPage = "https://okagency.pl/diagnoza?utm_campaign=jan-501234567&utm_content=1234567890&gclid=1234567890";
+  const attribution = normalizeAttribution({
+    first_touch: touch({
+      landing_page: landingPage,
+      utm_campaign: "jan-501234567",
+      utm_content: "1234567890",
+      gclid: "1234567890",
+    }),
+    last_touch: touch({
+      landing_page: landingPage,
+      utm_campaign: "1234567890",
+      utm_content: "1234567890",
+      gclid: "1234567890",
+    }),
+  });
+  assert.equal(
+    attribution.first_touch.landing_page,
+    "https://okagency.pl/diagnoza?utm_content=1234567890&gclid=1234567890",
+  );
+  assert.equal(attribution.first_touch.utm_campaign, undefined);
+  assert.equal(attribution.last_touch.utm_campaign, undefined);
+  assert.equal(attribution.first_touch.utm_content, "1234567890");
+  assert.equal(attribution.first_touch.gclid, "1234567890");
 });
 
 test("Worker rejects contact data hidden with control or zero-width separators", () => {

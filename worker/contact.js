@@ -36,6 +36,9 @@ const ATTRIBUTION_KEYS = Object.freeze([
   "fbclid",
 ]);
 const ATTRIBUTION_KEY_SET = new Set(ATTRIBUTION_KEYS);
+const OPAQUE_NUMERIC_ATTRIBUTION_KEYS = new Set([
+  "utm_content", "gclid", "gbraid", "wbraid", "fbclid",
+]);
 const ATTRIBUTION_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 const ATTRIBUTION_CLOCK_SKEW_MS = 5 * 60 * 1000;
 const MAX_ATTRIBUTION_URL_LENGTH = 1000;
@@ -96,12 +99,17 @@ function decodeForPrivacyCheck(value) {
   return decoded;
 }
 
-function looksLikePhone(value) {
+function looksLikePhone(value, allowOpaqueNumericId = false) {
   if (
     /(?:^|[^\p{L}\p{N}])(?:tel(?:efon)?|phone|mobile|kom(?:o|ó)rka)[\s:=._/\-]*\+?\d[\d\s()./\-]{6,}\d(?:[\s._/\-]*(?:ext|wew)\.?\s*\d{1,6})?(?=$|[^\p{L}\p{N}])/iu.test(value)
   ) return true;
 
   if (/^\s+\d{9,15}\s*$/.test(value)) return true;
+  const trimmed = value.trim();
+  for (const match of value.matchAll(/(?:^|[^\p{L}\p{N}])(\d{9,15})(?=$|[^\p{L}\p{N}])/gu)) {
+    if (allowOpaqueNumericId && match[1] === trimmed) continue;
+    return true;
+  }
   for (const match of value.matchAll(/(?:^|[^\p{L}\p{N}])(\+?\d[\d\s()./\-]{6,}\d)(?=$|[^\p{L}\p{N}])/gu)) {
     const candidate = match[1];
     const digitCount = (candidate.match(/\d/g) || []).length;
@@ -117,13 +125,13 @@ function looksLikePhone(value) {
   return false;
 }
 
-function containsContactData(value) {
+function containsContactData(value, allowOpaqueNumericId = false) {
   const decoded = decodeForPrivacyCheck(value);
   return (
     decoded === null
     || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(decoded)
     || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(decoded.replace(/\s+/g, ""))
-    || looksLikePhone(decoded)
+    || looksLikePhone(decoded, allowOpaqueNumericId)
   );
 }
 
@@ -138,13 +146,16 @@ function containsPathContactData(value) {
   return /(?:^|[^\p{L}\p{N}])\+?\d{9,15}(?=$|[^\p{L}\p{N}])/u.test(decoded);
 }
 
-function cleanAttributionValue(value, limit) {
+function cleanAttributionValue(value, limit, allowOpaqueNumericId = false) {
   if (typeof value !== "string") return "";
   const stripped = value.replace(/[\u0000-\u001f\u007f]/g, "");
   const cleaned = stripped
     .trim()
     .slice(0, limit);
-  return containsContactData(value) || containsContactData(cleaned) ? "" : cleaned;
+  return (
+    containsContactData(value, allowOpaqueNumericId)
+    || containsContactData(cleaned, allowOpaqueNumericId)
+  ) ? "" : cleaned;
 }
 
 function attributionParamsFromUrl(url) {
@@ -152,7 +163,11 @@ function attributionParamsFromUrl(url) {
   for (const [rawKey, rawValue] of url.searchParams) {
     const key = rawKey.toLowerCase();
     if (!ATTRIBUTION_KEY_SET.has(key) || Object.hasOwn(result, key)) continue;
-    const value = cleanAttributionValue(rawValue, key.startsWith("utm_") ? 200 : 512);
+    const value = cleanAttributionValue(
+      rawValue,
+      key.startsWith("utm_") ? 200 : 512,
+      OPAQUE_NUMERIC_ATTRIBUTION_KEYS.has(key),
+    );
     if (value) result[key] = value;
   }
   return result;
@@ -213,7 +228,11 @@ function normalizeTouch(input) {
   const referrer = cleanAttributionUrl(input.referrer, false);
   if (referrer) touch.referrer = referrer;
   for (const key of ATTRIBUTION_KEYS) {
-    const value = cleanAttributionValue(input[key], key.startsWith("utm_") ? 200 : 512);
+    const value = cleanAttributionValue(
+      input[key],
+      key.startsWith("utm_") ? 200 : 512,
+      OPAQUE_NUMERIC_ATTRIBUTION_KEYS.has(key),
+    );
     if (value) touch[key] = value;
   }
   return touch;

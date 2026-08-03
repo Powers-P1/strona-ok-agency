@@ -473,9 +473,16 @@ html[data-motion="paused"] *::after {
 
   .ok-consent__actions {
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .ok-consent__button {
     flex: 1 1 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .ok-consent__button {
+    flex-basis: 100%;
   }
 }

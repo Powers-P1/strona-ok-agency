@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ead9cb">
   <title>Polityka prywatności — OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/polityka-prywatnosci">
-  <meta name="description" content="Polityka prywatności serwisu OK Agency: formularz kontaktowy, Cloudflare, OVHcloud, analityka, retencja i prawa użytkownika.">
+  <meta name="description" content="Polityka prywatności serwisu OK Agency: formularze, Diagnoza, Cloudflare, Google Analytics, Google Ads, Meta Pixel, cookies, retencja i prawa użytkownika.">
   <meta property="og:title" content="Polityka prywatności | OK Agency">
   <meta property="og:description" content="Formularz kontaktowy, dostawcy techniczni, retencja danych i prawa użytkownika — jasno opisane.">
   <meta property="og:type" content="website">
@@ -52,10 +52,10 @@
   <link rel="stylesheet" href="/assets/responsive-foundation.v20260730-8.css?v=20260801-2">
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260801-1">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260803-1">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260803-2">
   <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260801-5">
   <script src="/assets/responsive-safety.js?v=20260803-1" defer></script>
-  <script src="/assets/analytics.js?v=20260801-1" defer></script>
+  <script src="/assets/analytics.js?v=20260803-7" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
 <body class="privacy-page">
@@ -93,9 +93,9 @@
       </div>
 
       <section class="privacy-status" aria-labelledby="privacy-status-title">
-        <p class="privacy-status__label">Status dokumentu <span>wersja 1.0</span></p>
+        <p class="privacy-status__label">Status dokumentu <span>wersja 2.0</span></p>
         <h2 id="privacy-status-title">Aktualna konfiguracja produkcyjna</h2>
-        <p>Stan na 29 lipca 2026 r. Dokument obejmuje Cloudflare Pages, Workers, Email Routing, Turnstile i Web Analytics, skrzynkę OVHcloud Zimbra, lokalnie hostowane fonty, formularz kontaktowy oraz lokalną „Diagnozę”.</p>
+        <p>Stan na 3 sierpnia 2026 r. Dokument obejmuje Cloudflare Pages, Workers, Email Routing, Turnstile i Web Analytics, skrzynkę OVHcloud Zimbra, formularze i „Diagnozę” oraz narzędzia Google Analytics, Google Ads i Meta uruchamiane zgodnie z wyborem użytkownika.</p>
       </section>
     </section>
 
@@ -121,8 +121,8 @@
       <article class="privacy-content">
 <section class="policy-section" id="zakres" aria-labelledby="zakres-title">
   <h2 id="zakres-title"><span>01 /</span>Zakres dokumentu</h2>
-  <p>Niniejsza Polityka prywatności wyjaśnia, w jaki sposób przetwarzane są dane osobowe podczas korzystania z serwisu okagency.pl, w tym po wejściu przez domenę ok-agency.pl, która przekierowuje do domeny głównej. Dokument obejmuje zwykłe przeglądanie strony, formularz kontaktowy, kontakt e-mail, narzędzie „Diagnoza” oraz usługi techniczne wykorzystywane do działania i zabezpieczenia serwisu.</p>
-  <p>Polityka opisuje aktualną konfigurację produkcyjną strony. Serwis nie prowadzi kont użytkowników, newslettera, sklepu internetowego ani śledzenia reklamowego.</p>
+  <p>Niniejsza Polityka prywatności wyjaśnia, w jaki sposób przetwarzane są dane osobowe podczas korzystania z serwisu okagency.pl, w tym po wejściu przez domenę ok-agency.pl, która przekierowuje do domeny głównej. Dokument obejmuje zwykłe przeglądanie strony, formularze, kontakt e-mail, narzędzie „Diagnoza”, pomiar skuteczności serwisu i reklam oraz usługi techniczne wykorzystywane do działania i zabezpieczenia serwisu.</p>
+  <p>Polityka opisuje aktualną konfigurację produkcyjną strony. Serwis nie prowadzi kont użytkowników, newslettera ani sklepu internetowego. Narzędzia Google i Meta działają w Basic Consent Mode: przed wyborem oraz po wyborze „Odrzuć” ich skrypty nie są ładowane, a serwis nie wysyła do tych dostawców żadnych żądań ani danych. Google Analytics, Google Ads i Meta Pixel uruchamiają się wyłącznie w zakresie wybranym przez użytkownika.</p>
 </section>
 <section class="policy-section" id="administrator" aria-labelledby="administrator-title">
   <h2 id="administrator-title"><span>02 /</span>Administrator danych</h2>
@@ -140,15 +140,24 @@
   <p><strong>Podczas przeglądania strony.</strong> dane techniczne związane z połączeniem i bezpieczeństwem, takie jak adres IP, data i czas żądania, żądany adres URL, informacje o przeglądarce i systemie, nagłówki HTTP, strona odsyłająca, dane o routingu, błędach i zdarzeniach bezpieczeństwa oraz dane o wydajności ładowania strony.</p>
   <p><strong>W formularzu kontaktowym.</strong> imię i nazwisko, adres e-mail, wybrany temat i treść wiadomości. Numer telefonu i nazwa firmy są opcjonalne. Przetwarzany jest też jednorazowy token Cloudflare Turnstile oraz dane techniczne potrzebne do sprawdzenia, czy formularz wysyła człowiek, a nie automat.</p>
   <p><strong>W wiadomości e-mail.</strong> adres nadawcy, treść korespondencji, podpis, dane zawarte w załącznikach oraz techniczne metadane wiadomości.</p>
-  <p><strong>W narzędziu „Diagnoza”.</strong> odpowiedzi na cztery pytania są przetwarzane wyłącznie lokalnie w pamięci przeglądarki w celu wyświetlenia wyniku. Odpowiedzi nie są wysyłane do serwera ani zapisywane przez OK Agency.</p>
-  <p>Dane pochodzą bezpośrednio od osoby, której dotyczą, albo są generowane automatycznie przez jej urządzenie, przeglądarkę i infrastrukturę sieciową podczas korzystania z serwisu.</p>
+  <p><strong>W narzędziu „Diagnoza”.</strong> odpowiedzi na cztery pytania są najpierw przetwarzane lokalnie w bieżącej pamięci strony, aby obliczyć i wyświetlić wynik. Jeżeli użytkownik nie wyśle opcjonalnego formularza kontaktowego, odpowiedzi nie są przekazywane OK Agency. Dopiero wysłanie tego formularza powoduje dołączenie odpowiedzi, wyniku i rekomendowanych kroków do treści zgłoszenia. Samo ukończenie narzędzia może przekazać dostawcy analityki wyłącznie ogólną kategorię wyniku opisaną poniżej, nigdy konkretne odpowiedzi.</p>
+  <p><strong>Przed wyborem oraz po wyborze „Odrzuć”.</strong> serwis nie ładuje skryptów Google Analytics, Google Ads ani Meta Pixel i nie wysyła żadnych żądań ani danych do Google lub Meta. Nie zapisuje również atrybucji marketingowej w sessionStorage ani nie dołącza jej do zgłoszenia. Niezbędne usługi Cloudflare i bezcookiesowe Cloudflare Web Analytics działają niezależnie na zasadach opisanych poniżej.</p>
+  <p><strong>Analityka Google Analytics 4 — po wyborze „Tylko analityka” albo „Analityka i reklamy”.</strong> informacje o odwiedzonej stronie i własnych zdarzeniach w serwisie, na przykład wyświetleniu strony, rozpoczęciu lub ukończeniu „Diagnozy” i skutecznym wysłaniu formularza; adres strony odsyłającej; przybliżona lokalizacja; informacje o urządzeniu, przeglądarce i połączeniu oraz identyfikatory analityczne zapisane przez Google.</p>
+  <p><strong>Ogólna kategoria wyniku „Diagnozy”.</strong> zdarzenie ukończenia może zawierać parametr <code>diagnosis_outcome</code> o jednej z wartości: <code>website</code>, <code>social</code>, <code>campaign</code>, <code>conversation</code> albo <code>none</code>. Parametr trafia do Google Analytics przy zgodzie analitycznej, a przy wyborze „Analityka i reklamy” także do Meta. Nie zawiera treści ani wartości czterech odpowiedzi.</p>
+  <p><strong>Dane reklamowe — po wyborze „Analityka i reklamy”.</strong> zdarzenia konwersji Google Ads i Meta Pixel, identyfikatory reklamowe przeglądarki oraz parametry kampanii i kliknięcia, takie jak UTM, <code>gclid</code>, <code>gbraid</code>, <code>wbraid</code> lub <code>fbclid</code>, jeżeli występują w adresie wejścia.</p>
+  <p><strong>Losowy identyfikator zdarzenia — po wyborze „Analityka i reklamy”.</strong> przy próbie wysłania formularza serwis tworzy losowy identyfikator techniczny, który nie zawiera danych kontaktowych ani informacji o osobie. Identyfikator jest dołączany do zgłoszenia, a po pomyślnym przyjęciu formularza ten sam identyfikator może zostać przekazany jako <code>eventID</code> do Meta i <code>transaction_id</code> do Google Ads. Służy do technicznego powiązania zapisu z konwersją i ograniczenia podwójnego zliczania tego samego zdarzenia.</p>
+  <p><strong>Atrybucja zapytania — po wyborze „Analityka i reklamy”.</strong> serwis może zachować na czas sesji źródło wejścia, pierwszą stronę wizyty, stronę odsyłającą oraz powyższe parametry kampanii i kliknięcia. Jeżeli użytkownik wyśle formularz, dostępne dane atrybucyjne mogą zostać dołączone do zgłoszenia, aby ustalić, z jakiego działania marketingowego pochodzi zapytanie. Przy wyborze „Odrzuć” lub „Tylko analityka” formularz działa bez atrybucji marketingowej.</p>
+  <p>Imię, adres e-mail, telefon, nazwa firmy, treść wiadomości i konkretne odpowiedzi „Diagnozy” nie są przekazywane jako parametry zdarzeń do Google Analytics ani Meta Pixel. Dane pochodzą bezpośrednio od osoby, której dotyczą, albo są generowane automatycznie przez jej urządzenie, przeglądarkę i infrastrukturę sieciową podczas korzystania z serwisu.</p>
 </section>
 <section class="policy-section" id="cele" aria-labelledby="cele-title">
   <h2 id="cele-title"><span>04 /</span>Cele i podstawy prawne</h2>
   <p><strong>Obsługa zapytania, rozmowy o projekcie, przygotowanie wyceny lub oferty i podjęcie działań przed zawarciem umowy.</strong> art. 6 ust. 1 lit. b RODO - przetwarzanie jest niezbędne do podjęcia działań na żądanie osoby przed zawarciem umowy.</p>
   <p><strong>Odpowiedź na pytanie, które nie zmierza bezpośrednio do zawarcia umowy, prowadzenie korespondencji i organizacja kontaktu.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na komunikacji z osobami zainteresowanymi działalnością OK Agency.</p>
   <p><strong>Zapewnienie działania strony, bezpieczeństwa połączeń i formularza, przeciwdziałanie spamowi, botom i nadużyciom oraz diagnozowanie błędów.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ochronie serwisu, danych i ciągłości działania.</p>
-  <p><strong>Pomiar zagregowanego ruchu i wydajności strony za pomocą Cloudflare Web Analytics.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ocenie działania i poprawie jakości serwisu, bez wykorzystywania cookies reklamowych.</p>
+  <p><strong>Pomiar zagregowanego ruchu i wydajności strony za pomocą Cloudflare Web Analytics.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ocenie działania i poprawie jakości serwisu. Cloudflare Web Analytics działa bez tworzenia profilu pojedynczego odwiedzającego i bez cookies analitycznych.</p>
+  <p><strong>Pomiar korzystania z serwisu w Google Analytics 4.</strong> art. 6 ust. 1 lit. a RODO - zgoda analityczna udzielana wyborem „Tylko analityka” albo „Analityka i reklamy”. Obejmuje zapis lub odczyt identyfikatorów analitycznych oraz wysyłanie własnych zdarzeń do Google Analytics. Nie obejmuje Google Ads, Meta Pixel ani atrybucji marketingowej, jeśli użytkownik wybrał wyłącznie analitykę.</p>
+  <p><strong>Mierzenie konwersji i skuteczności kampanii Google Ads i Meta Ads, łączenie wizyty z kampanią, ograniczanie powtarzalności i personalizacja reklam.</strong> art. 6 ust. 1 lit. a RODO - odrębny, szerszy zakres zgody udzielany wyborem „Analityka i reklamy”. Obejmuje zapis lub odczyt identyfikatorów reklamowych, Meta Pixel, krótkotrwałą atrybucję marketingową oraz losowy identyfikator zdarzenia służący powiązaniu i deduplikacji konwersji. Odmowa nie ogranicza możliwości korzystania ze strony ani wysłania formularza.</p>
+  <p><strong>Zachowanie decyzji o zgodzie.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na respektowaniu i wykazaniu wyboru użytkownika. Informacja pozostaje w pamięci przeglądarki w zakresie opisanym w punkcie 07.</p>
   <p><strong>Wypełnianie obowiązków wynikających z prawa, w szczególności podatkowych i rachunkowych, jeśli zapytanie doprowadzi do współpracy.</strong> art. 6 ust. 1 lit. c RODO.</p>
   <p><strong>Ustalenie, dochodzenie lub obrona roszczeń.</strong> art. 6 ust. 1 lit. f RODO - prawnie uzasadniony interes Administratora polegający na ochronie swoich praw.</p>
   <p>Dane przekazane w zapytaniu nie są automatycznie dopisywane do newslettera ani używane do wysyłania marketingu bezpośredniego. Takie wykorzystanie wymagałoby odrębnej podstawy prawnej i osobnej informacji.</p>
@@ -157,7 +166,8 @@
   <h2 id="formularz-title"><span>05 /</span>Formularz kontaktowy i poczta</h2>
   <p>Formularz wysyła dane szyfrowanym połączeniem do funkcji Cloudflare Worker. Funkcja sprawdza pochodzenie żądania, rozmiar i poprawność pól oraz jednorazowy token Cloudflare Turnstile. Po pozytywnej weryfikacji wiadomość jest przekazywana przez Cloudflare Email Routing do skrzynki hello@okagency.pl obsługiwanej w usłudze OVHcloud Zimbra.</p>
   <p>OK Agency nie zapisuje treści formularza w osobnej bazie danych. Treść wiadomości znajduje się w korespondencji e-mail. Logi funkcji formularza rejestrują techniczne nazwy zdarzeń i wynik operacji, ale nie treść wiadomości przesłanej przez użytkownika.</p>
-  <p>Pola obowiązkowe są potrzebne, aby ustalić nadawcę, odpowiedzieć i zrozumieć sprawę. Telefon i nazwa firmy są dobrowolne. Z formularza nie należy przesyłać danych szczególnych kategorii, dokumentów tożsamości ani innych informacji, które nie są potrzebne do opisania zapytania.</p>
+  <p>Pola obowiązkowe są potrzebne, aby ustalić nadawcę, odpowiedzieć i zrozumieć sprawę. Telefon i nazwa firmy są dobrowolne. W formularzu na ekranie wyniku „Diagnozy” użytkownik podaje imię i e-mail, a serwis dołącza do wiadomości wynik i cztery wybrane odpowiedzi. Jeżeli użytkownik wybrał „Analityka i reklamy”, do wiadomości mogą zostać dołączone dostępne dane atrybucyjne kampanii oraz losowy identyfikator zdarzenia. Z formularza nie należy przesyłać danych szczególnych kategorii, dokumentów tożsamości ani innych informacji, które nie są potrzebne do opisania zapytania.</p>
+  <p>Po pomyślnym przyjęciu formularza własne zdarzenie leada jest wysyłane do Google Analytics przy zgodzie analitycznej, a do Google Ads i Meta przy zgodzie „Analityka i reklamy”. Zdarzenie informuje o wykonaniu działania, ale nie zawiera pól formularza ani konkretnych odpowiedzi „Diagnozy”. Przed wyborem oraz po wyborze „Odrzuć” żadne zdarzenie ani żądanie nie jest wysyłane do Google lub Meta.</p>
   <p>Bezpośredni kontakt na adres hello@okagency.pl podlega tym samym zasadom co korespondencja przesłana z formularza.</p>
 </section>
 <section class="policy-section" id="narzedzia" aria-labelledby="narzedzia-title">
@@ -165,26 +175,36 @@
   <p><strong>Cloudflare.</strong> zapewnia DNS, ochronę i dostarczanie strony, Cloudflare Pages, Cloudflare Workers, Email Routing, Cloudflare Turnstile oraz Cloudflare Web Analytics. Treść formularza i dane techniczne przechodzą przez infrastrukturę Cloudflare w zakresie koniecznym do wykonania tych usług.</p>
   <p><strong>Cloudflare Turnstile.</strong> chroni formularz przed botami. Przetwarza między innymi adres IP, informacje o przeglądarce i połączeniu, sygnały środowiska przeglądarki, identyfikator witryny i pochodzenie żądania. Cloudflare działa jako podmiot przetwarzający, gdy zabezpiecza stronę na polecenie OK Agency, oraz jako odrębny administrator w zakresie, w którym wykorzystuje sygnały do ulepszania własnych mechanizmów wykrywania botów.</p>
   <p><strong>Cloudflare Web Analytics.</strong> dostarcza zagregowane statystyki odwiedzin i dane o wydajności. Beacon nie korzysta z cookies, localStorage ani sessionStorage. Cloudflare wskazuje, że adres IP odebrany w zwykłym procesie obsługi żądania jest odrzucany w najbliższym centrum danych i nie jest przechowywany w głównych bazach ani logach tej usługi.</p>
+  <p><strong>Google Analytics 4 i Google Ads — Google Ireland Limited.</strong> Google nie otrzymuje żadnych żądań ani danych przed wyborem i po wyborze „Odrzuć”. Po wyborze „Tylko analityka” ładowany jest Google Analytics, który zapisuje lub odczytuje identyfikatory analityczne i otrzymuje dane o wizytach, własnych zdarzeniach oraz ogólnej kategorii wyniku „Diagnozy”. Dopiero wybór „Analityka i reklamy” uruchamia dodatkowo Google Ads, w tym zdarzenia konwersji, identyfikatory reklamowe, dane atrybucyjne kampanii i losowy identyfikator konwersji.</p>
+  <p><strong>Google Consent Mode v2 — tryb Basic.</strong> bez zgody Google tag nie jest ładowany. Wybór „Tylko analityka” uruchamia wyłącznie Google Analytics: <code>analytics_storage</code> ma stan <code>granted</code>, a <code>ad_storage</code>, <code>ad_user_data</code> i <code>ad_personalization</code> pozostają <code>denied</code>. Wybór „Analityka i reklamy” uruchamia Google Analytics i Google Ads oraz ustawia wszystkie cztery stany na <code>granted</code>.</p>
+  <p><strong>Meta Pixel — Meta Platforms Ireland Limited.</strong> uruchamia się dopiero po wyborze „Analityka i reklamy”. Przekazuje zdarzenia takie jak wyświetlenie strony, ukończenie „Diagnozy” wraz z ogólną kategorią wyniku lub skuteczne wysłanie formularza, a także dane techniczne, identyfikatory przeglądarki, źródła kampanii i losowy identyfikator zdarzenia leada. Meta wykorzystuje te informacje do pomiaru kampanii, atrybucji, tworzenia raportów oraz doboru i personalizacji reklam.</p>
   <p><strong>OVHcloud.</strong> obsługuje skrzynkę pocztową, na której przechowywana jest korespondencja z formularza i wiadomości wysłane bezpośrednio do OK Agency.</p>
   <p><strong>Fonty.</strong> kroje Archivo i Barlow Condensed są przechowywane lokalnie w serwisie i nie wymagają połączenia przeglądarki z zewnętrznym dostawcą fontów.</p>
   <p><strong>Informacje dostawców:</strong></p>
   <p><a href="https://www.cloudflare.com/policies/privacy/" target="_blank" rel="noopener noreferrer">Polityka prywatności Cloudflare</a></p>
   <p><a href="https://www.cloudflare.com/turnstile-privacy-policy/" target="_blank" rel="noopener noreferrer">Informacja prywatności Cloudflare Turnstile</a></p>
+  <p><a href="https://policies.google.com/privacy?hl=pl" target="_blank" rel="noopener noreferrer">Polityka prywatności Google</a></p>
+  <p><a href="https://support.google.com/analytics/answer/12329599?hl=pl" target="_blank" rel="noopener noreferrer">Informacja Google o zarządzaniu zgodą</a></p>
+  <p><a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer">Polityka prywatności Meta</a></p>
+  <p><a href="https://www.facebook.com/privacy/policies/cookies/" target="_blank" rel="noopener noreferrer">Polityka cookies Meta</a></p>
   <p><a href="https://www.ovhcloud.com/pl/personal-data-protection/" target="_blank" rel="noopener noreferrer">Ochrona danych w OVHcloud</a></p>
 </section>
 <section class="policy-section" id="cookies" aria-labelledby="cookies-title">
   <h2 id="cookies-title"><span>07 /</span>Cookies, pamięć przeglądarki i „Diagnoza”</h2>
-  <p>W aktualnej konfiguracji OK Agency nie używa własnych cookies analitycznych, reklamowych ani marketingowych i nie zapisuje identyfikatorów użytkownika w localStorage lub sessionStorage.</p>
-  <p>Serwis może zapisać w sessionStorage wyłącznie techniczną preferencję „animacje wstrzymane” albo „animacje włączone”. Ustawienie nie identyfikuje użytkownika, nie jest wysyłane do OK Agency i znika po zamknięciu sesji przeglądarki.</p>
+  <p><strong>Wybór użytkownika.</strong> przy pierwszej wizycie serwis nie ładuje Google tag ani Meta Pixel. Baner daje trzy możliwości: „Odrzuć”, „Tylko analityka” oraz „Analityka i reklamy”. Pierwsza nie uruchamia żadnego narzędzia Google lub Meta; druga uruchamia wyłącznie Google Analytics; trzecia uruchamia Google Analytics, Google Ads, Meta Pixel i atrybucję marketingową. Decyzja, numer wersji mechanizmu zgody i data wyboru są zapisywane w localStorage pod kluczem technicznym <code>ok-consent</code>, aby nie pytać ponownie przy każdym przejściu między podstronami.</p>
+  <p>W każdej chwili można ponownie otworzyć panel przyciskiem „Ustawienia cookies” w stopce i zmienić albo wycofać wybrany zakres. Po wyborze „Odrzuć” oraz po pełnym wycofaniu serwis nie wysyła kolejnych żądań do Google ani Meta; w razie potrzeby odświeża widok, aby usunąć wcześniej załadowane tagi. Wycofanie nie wpływa na zgodność z prawem wcześniejszego przetwarzania. Cookies zapisane wcześniej przez dostawcę mogą pozostać w przeglądarce do czasu ich wygaśnięcia lub ręcznego usunięcia w ustawieniach przeglądarki.</p>
+  <p><strong>Cookies Google i Meta.</strong> po zgodzie analitycznej mogą zostać zapisane analityczne cookies z rodziny <code>_ga</code>. Dopiero po wyborze „Analityka i reklamy” mogą zostać zapisane identyfikatory reklamowe i atrybucyjne, na przykład cookies z rodzin <code>_gcl_*</code>, <code>_fbp</code> lub <code>_fbc</code>. Dokładna nazwa i okres ważności zależą od konfiguracji oraz polityki dostawcy. Użytkownik może również zarządzać cookies w ustawieniach przeglądarki.</p>
+  <p><strong>Pamięć sesji.</strong> serwis może zapisać w sessionStorage techniczną preferencję „animacje wstrzymane” albo „animacje włączone”. Dopiero po wyborze „Analityka i reklamy” może także zapisać dane atrybucyjne wizyty: źródło i parametry kampanii, identyfikator kliknięcia, pierwszą stronę wejścia i stronę odsyłającą. Informacje te znikają po zakończeniu sesji przeglądarki, chyba że wcześniej zostaną dołączone do dobrowolnie wysłanego zgłoszenia.</p>
   <p>Cloudflare Web Analytics działa bez cookies i bez odczytu pamięci przeglądarki. W widżecie Turnstile wyłączono funkcję pre-clearance, dlatego widżet nie wydaje pliku cf_clearance. Turnstile nadal przetwarza niezbędne sygnały techniczne służące ochronie formularza.</p>
-  <p>Odpowiedzi udzielone w narzędziu „Diagnoza” pozostają wyłącznie w bieżącej pamięci strony. Po odświeżeniu lub zamknięciu strony znikają. Po przejściu do formularza kontaktowego może zostać przekazana jedynie ogólna kategoria wyniku, aby wstępnie wybrać temat kontaktu; konkretne odpowiedzi nie są wysyłane.</p>
+  <p>Odpowiedzi udzielone w narzędziu „Diagnoza” pozostają w bieżącej pamięci strony podczas wypełniania narzędzia. Samo ukończenie „Diagnozy” nie wysyła odpowiedzi OK Agency ani dostawcom analitycznym; po właściwej zgodzie może wysłać jedynie ogólną kategorię <code>website</code>, <code>social</code>, <code>campaign</code>, <code>conversation</code> albo <code>none</code>. Konkretne odpowiedzi są przekazywane Administratorowi dopiero wtedy, gdy użytkownik świadomie wyśle opcjonalny formularz kontaktowy na ekranie wyniku.</p>
 </section>
 <section class="policy-section" id="odbiorcy" aria-labelledby="odbiorcy-title">
   <h2 id="odbiorcy-title"><span>08 /</span>Odbiorcy danych i transfery poza EOG</h2>
-  <p>Dostęp do danych mogą otrzymać dostawcy usług działający na rzecz Administratora w zakresie niezbędnym do świadczenia usług: Cloudflare i jego podwykonawcy oraz OVHcloud.</p>
+  <p>Dostęp do danych mogą otrzymać dostawcy usług działający na rzecz Administratora w zakresie niezbędnym do świadczenia usług: Cloudflare i jego podwykonawcy oraz OVHcloud. Po wyborze „Tylko analityka” odbiorcą danych Google Analytics, w tym ogólnej kategorii wyniku „Diagnozy”, jest także Google Ireland Limited. Po wyborze „Analityka i reklamy” Google i Meta otrzymują dodatkowo zdarzenia reklamowe, dane kampanii i losowy identyfikator zdarzenia. Przed wyborem i po wyborze „Odrzuć” Google i Meta nie otrzymują od serwisu żadnych żądań ani danych. Google i Meta nie otrzymują treści formularza ani konkretnych odpowiedzi „Diagnozy” jako parametrów własnych zdarzeń.</p>
   <p>Dane mogą być także ujawnione organom publicznym lub innym podmiotom, jeśli obowiązek taki wynika z przepisów prawa albo jest to konieczne do ustalenia, dochodzenia lub obrony roszczeń.</p>
-  <p>Cloudflare jest grupą działającą globalnie, dlatego dane techniczne mogą być przetwarzane poza Europejskim Obszarem Gospodarczym, w szczególności w Stanach Zjednoczonych. Dostawca deklaruje stosowanie odpowiednich mechanizmów transferowych, w tym EU-U.S. Data Privacy Framework oraz standardowych klauzul umownych Komisji Europejskiej, zależnie od danego przepływu danych.</p>
-  <p>OK Agency nie sprzedaje danych osobowych i nie udostępnia ich brokerom danych ani sieciom reklamowym.</p>
+  <p>Cloudflare, Google i Meta są grupami działającymi globalnie, dlatego dane mogą być przetwarzane także poza Europejskim Obszarem Gospodarczym, w szczególności w Stanach Zjednoczonych. Zależnie od konkretnego przepływu dostawcy wskazują mechanizmy takie jak decyzje stwierdzające odpowiedni stopień ochrony, EU-U.S. Data Privacy Framework albo standardowe klauzule umowne Komisji Europejskiej wraz z dodatkowymi zabezpieczeniami. Szczegóły znajdują się w dokumentach dostawców podlinkowanych w punkcie 06.</p>
+  <p>W zakresie zbierania i przekazywania danych przez Meta Pixel OK Agency i Meta mogą działać jako współadministratorzy na zasadach określonych przez Meta. Dalsze wykorzystanie danych przez Meta odbywa się według jej własnych zasad. Analogicznie Google przetwarza część danych zgodnie z warunkami właściwego produktu i własną polityką prywatności.</p>
+  <p>OK Agency nie sprzedaje danych osobowych i nie udostępnia ich brokerom danych. Przekazanie danych Google Analytics, Google Ads lub Meta odbywa się wyłącznie w opisanych celach i zgodnie z zakresem wybranym przez użytkownika.</p>
 </section>
 <section class="policy-section" id="retencja" aria-labelledby="retencja-title">
   <h2 id="retencja-title"><span>09 /</span>Jak długo dane są przechowywane</h2>
@@ -192,12 +212,17 @@
   <p><strong>Zapytanie, które doprowadziło do zawarcia umowy.</strong> przez czas realizacji współpracy, a następnie przez okres wymagany przepisami prawa oraz do upływu właściwych terminów przedawnienia roszczeń.</p>
   <p><strong>Dokumentacja podatkowa i rachunkowa.</strong> przez okres wymagany właściwymi przepisami.</p>
   <p><strong>Jednorazowy token Turnstile.</strong> jest używany do pojedynczej weryfikacji formularza i nie jest przechowywany przez OK Agency po zakończeniu weryfikacji.</p>
-  <p><strong>Odpowiedzi w „Diagnozie”.</strong> nie są przechowywane przez OK Agency.</p>
+  <p><strong>Odpowiedzi w „Diagnozie”.</strong> bez wysłania formularza pozostają tylko w bieżącej pamięci strony. Po wysłaniu formularza stają się częścią korespondencji i są przechowywane według zasad dotyczących zapytania.</p>
+  <p><strong>Losowy identyfikator zdarzenia.</strong> po wyborze „Analityka i reklamy” identyfikator może zostać zapisany w wiadomości e-mail razem ze zgłoszeniem i jest wtedy przechowywany według zasad dotyczących zapytania. Google Ads i Meta przechowują otrzymany identyfikator zgodnie z zasadami właściwego produktu.</p>
+  <p><strong>Decyzja o zgodzie.</strong> pozostaje w localStorage maksymalnie przez 180 dni albo krócej — do czasu jej zmiany, usunięcia danych strony przez użytkownika lub zmiany wersji mechanizmu zgody, która wymaga ponownego wyboru. Dane atrybucyjne w sessionStorage co do zasady znikają po zakończeniu sesji przeglądarki.</p>
+  <p><strong>Google Analytics 4.</strong> retencja danych na poziomie użytkownika i zdarzenia jest ustawiona na 14 miesięcy. Ustawienie nie wpływa na standardowe raporty zagregowane, które Google może utrzymywać dłużej. Dane Google Ads są przechowywane zgodnie z zasadami i ustawieniami tego produktu.</p>
+  <p><strong>Meta.</strong> okres przechowywania danych zdarzeń i identyfikatorów wynika z konfiguracji konta, rodzaju danych i zasad Meta. Meta wskazuje w warunkach narzędzi biznesowych, że dane zdarzeń mogą być przechowywane maksymalnie przez dwa lata; utworzone grupy odbiorców mogą pozostać do czasu ich usunięcia.</p>
   <p><strong>Logi i dane techniczne.</strong> przez okres wynikający z ustawień i zasad właściwej usługi oraz tak długo, jak jest to potrzebne do zapewnienia bezpieczeństwa, analizy awarii lub obrony przed nadużyciem. Logi funkcji formularza nie zawierają treści zapytania.</p>
 </section>
 <section class="policy-section" id="prawa" aria-labelledby="prawa-title">
   <h2 id="prawa-title"><span>10 /</span>Prawa osoby, której dane dotyczą</h2>
-  <p>W granicach przewidzianych przez RODO przysługuje prawo dostępu do danych i otrzymania ich kopii, sprostowania danych, usunięcia danych, ograniczenia przetwarzania, przenoszenia danych oraz wniesienia sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie. Jeżeli w przyszłości określone przetwarzanie będzie oparte na zgodzie, zgodę można wycofać w dowolnym momencie bez wpływu na zgodność wcześniejszego przetwarzania z prawem.</p>
+  <p>W granicach przewidzianych przez RODO przysługuje prawo dostępu do danych i otrzymania ich kopii, sprostowania danych, usunięcia danych, ograniczenia przetwarzania, przenoszenia danych oraz wniesienia sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie.</p>
+  <p>Zakres zgody można zmienić lub całkowicie wycofać w dowolnym momencie przyciskiem „Ustawienia cookies” w stopce. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania dokonanego przed jej wycofaniem. Cookies można dodatkowo usunąć w ustawieniach przeglądarki, a preferencje reklamowe zmienić w ustawieniach kont Google i Meta.</p>
   <p>Żądanie można wysłać na hello@okagency.pl albo pocztą na adres Administratora. Dla ochrony danych Administrator może poprosić o informacje potrzebne do potwierdzenia tożsamości wnioskodawcy. Poszczególne prawa nie mają charakteru bezwzględnego i mogą nie przysługiwać w konkretnej sytuacji, na przykład gdy dalsze przechowywanie danych jest wymagane prawem lub potrzebne do obrony roszczeń.</p>
   <p>Osoba, która uważa, że jej dane są przetwarzane niezgodnie z prawem, ma prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych.</p>
   <p><strong>Więcej informacji:</strong></p>
@@ -207,13 +232,13 @@
   <h2 id="automatyzacja-title"><span>11 /</span>Automatyczne mechanizmy i profilowanie</h2>
   <p>Cloudflare Turnstile automatycznie ocenia sygnały techniczne w celu rozróżnienia użytkownika od bota. Negatywny wynik może uniemożliwić wysłanie formularza, ale nie wywołuje skutków prawnych ani w podobny sposób istotnie nie wpływa na osobę.</p>
   <p>Narzędzie „Diagnoza” automatycznie oblicza rekomendowany kierunek na podstawie odpowiedzi udzielonych w przeglądarce. Wynik ma charakter informacyjny, nie jest ofertą ani wyceną i nie powoduje podjęcia decyzji wywołującej skutki prawne.</p>
-  <p>OK Agency nie stosuje profilowania marketingowego ani zautomatyzowanego podejmowania decyzji w rozumieniu art. 22 RODO.</p>
+  <p>Po zgodzie analitycznej Google może analizować własne zdarzenia serwisu. Dopiero po wyborze „Analityka i reklamy” Google i Meta mogą łączyć zdarzenia z kampanią, tworzyć grupy odbiorców i dobierać reklamy na podstawie aktywności oraz informacji posiadanych przez te platformy. Przed wyborem i po wyborze „Odrzuć” serwis nie przekazuje im danych do takiego przetwarzania. Mechanizmy te nie są wykorzystywane przez OK Agency do podejmowania wobec użytkownika decyzji wywołujących skutki prawne lub w podobny sposób istotnie na niego wpływających w rozumieniu art. 22 RODO.</p>
 </section>
 <section class="policy-section" id="bezpieczenstwo" aria-labelledby="bezpieczenstwo-title">
   <h2 id="bezpieczenstwo-title"><span>12 /</span>Bezpieczeństwo i zmiany dokumentu</h2>
   <p>Administrator stosuje środki adekwatne do charakteru serwisu, w tym szyfrowanie HTTPS, ograniczenie dozwolonych źródeł połączeń, walidację pól i rozmiaru żądania, jednorazową weryfikację Turnstile, ograniczenie zakresu logów oraz kontrolę dostępu do skrzynki i usług administracyjnych.</p>
   <p>Polityka może zostać zmieniona, jeżeli zmieni się prawo, zakres usług, dostawcy lub konfiguracja techniczna strony. Aktualna wersja jest publikowana pod adresem okagency.pl/polityka-prywatnosci wraz z datą aktualizacji.</p>
-  <p>Wersja 1.0. Stan na 29 lipca 2026 r.</p>
+  <p>Wersja 2.0. Stan na 3 sierpnia 2026 r.</p>
 </section>
       </article>
     </div>

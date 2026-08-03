@@ -43,16 +43,68 @@ const expectedUrls = new Set(publicFiles.map(file => `https://okagency.pl${route
 const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 const sitemapUrls = new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gi)].map(match => match[1].trim()));
 const headers = await readFile(join(root, "_headers"), "utf8");
+if (!/^\s*Referrer-Policy:\s*origin\s*$/mi.test(headers)) {
+  failures.push("_headers: Referrer-Policy musi ograniczać referrer do origin");
+}
 const contentSecurityPolicy = headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)?.[1] || "";
 const cspDirectives = new Map(contentSecurityPolicy
   .split(";")
   .map(directive => directive.trim().split(/\s+/))
   .filter(parts => parts[0])
   .map(([name, ...values]) => [name, new Set(values)]));
+if (!cspDirectives.has("upgrade-insecure-requests")) {
+  failures.push("_headers: CSP nie wymusza upgrade-insecure-requests");
+}
 
-for (const directive of ["img-src", "connect-src"]) {
-  if (!cspDirectives.get(directive)?.has("pagead2.googlesyndication.com")) {
-    failures.push(`_headers: ${directive} blokuje endpoint Google Ads consent-mode`);
+const cspAllowsHost = (directive, host) => {
+  const sources = cspDirectives.get(directive) || new Set();
+  if (sources.has(host)) return true;
+  return [...sources].some(source => (
+    source.startsWith("*.")
+    && host.endsWith(source.slice(1))
+    && host !== source.slice(2)
+  ));
+};
+
+const requiredCspHosts = {
+  "frame-src": ["www.googletagmanager.com", "td.doubleclick.net"],
+  "script-src": [
+    "connect.facebook.net",
+    "www.googletagmanager.com",
+    "www.googleadservices.com",
+    "www.google.com",
+    "pagead2.googlesyndication.com",
+    "googleads.g.doubleclick.net",
+  ],
+  "img-src": [
+    "www.facebook.com",
+    "www.googletagmanager.com",
+    "www.google-analytics.com",
+    "www.googleadservices.com",
+    "www.google.com",
+    "google.com",
+    "www.google.pl",
+    "pagead2.googlesyndication.com",
+    "googleads.g.doubleclick.net",
+  ],
+  "connect-src": [
+    "www.facebook.com",
+    "www.google-analytics.com",
+    "region1.analytics.google.com",
+    "www.googleadservices.com",
+    "www.google.com",
+    "google.com",
+    "www.google.pl",
+    "pagead2.googlesyndication.com",
+    "ad.doubleclick.net",
+  ],
+};
+
+for (const [directive, hosts] of Object.entries(requiredCspHosts)) {
+  for (const host of hosts) {
+    if (!cspAllowsHost(directive, host)) {
+      failures.push(`_headers: ${directive} blokuje wymagany endpoint ${host}`);
+    }
   }
 }
 

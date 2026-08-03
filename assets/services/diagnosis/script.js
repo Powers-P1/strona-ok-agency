@@ -116,7 +116,22 @@
       : ranking[0].service;
   }
 
-  window.OKAgencyDiagnosis = Object.freeze({ calculateOutcome });
+  function createCompletionTracker(track) {
+    let tracked = false;
+    return Object.freeze({
+      reset() {
+        tracked = false;
+      },
+      complete(outcome) {
+        if (tracked) return false;
+        tracked = true;
+        track?.(outcome);
+        return true;
+      },
+    });
+  }
+
+  window.OKAgencyDiagnosis = Object.freeze({ calculateOutcome, createCompletionTracker });
 
   const tool = document.querySelector("[data-diagnosis-tool]");
   if (!tool) return;
@@ -133,6 +148,9 @@
   const themeColor = document.querySelector('meta[name="theme-color"]');
   const answers = {};
   let currentQuestion = 1;
+  const diagnosisCompletionTracker = createCompletionTracker(outcome => {
+    window.okAnalytics?.diagnosisComplete(outcome);
+  });
 
   const focusAfterPaint = element => {
     requestAnimationFrame(() => requestAnimationFrame(() => element?.focus({ preventScroll: true })));
@@ -237,6 +255,8 @@
 
   tool.addEventListener("click", event => {
     if (event.target.closest("[data-start-diagnosis]")) {
+      diagnosisCompletionTracker.reset();
+      window.okAnalytics?.diagnosisStart();
       showAct("map", false);
       showQuestion(1);
       return;
@@ -254,7 +274,7 @@
       } else {
         renderResult(calculateOutcome(answers));
         showAct("outcome");
-        window.okAnalytics?.diagnoza();
+        diagnosisCompletionTracker.complete(currentOutcome);
       }
       return;
     }
@@ -281,6 +301,7 @@
     }
 
     if (event.target.closest("[data-restart]")) {
+      diagnosisCompletionTracker.reset();
       Object.keys(answers).forEach(key => delete answers[key]);
       syncPressed();
       showQuestion(1);
@@ -373,6 +394,7 @@
       leadSubmit.disabled = true;
       leadSubmit.setAttribute("aria-busy", "true");
       setLeadStatus("Wysyłamy…", "");
+      const analyticsEventId = window.okAnalytics?.createMarketingEventId?.() || "";
 
       try {
         const response = await fetch("/api/contact", {
@@ -387,6 +409,8 @@
             message: buildLeadMessage(),
             fax: "",
             turnstileToken,
+            attribution: window.okAnalytics?.attribution?.() || null,
+            analyticsEventId,
           }),
         });
 
@@ -398,7 +422,7 @@
         resetLeadTurnstile();
         setLeadStatus("Dziękujemy — odezwiemy się z konkretem.", "success");
         leadForm.querySelectorAll("input, button").forEach(element => { element.disabled = true; });
-        window.okAnalytics?.lead();
+        window.okAnalytics?.generateLead("diagnosis", analyticsEventId);
       } catch {
         resetLeadTurnstile();
         setLeadStatus("Nie udało się wysłać. Napisz na hello@okagency.pl albo spróbuj z formularza kontaktowego.", "error");

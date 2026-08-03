@@ -239,7 +239,8 @@ canvas {
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-trigger {
+    .proof-trigger,
+  .about-page .scene .accordion-trigger {
     min-height: var(--ok-size-interactive-row);
     padding-block: var(--ok-space-interactive-inset);
     grid-template-columns:
@@ -250,22 +251,32 @@ canvas {
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-index {
+    .proof-index,
+  .about-page .scene .accordion-index {
     font-size: var(--ok-type-icon);
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-label strong {
+    .proof-label strong,
+  .about-page .scene .accordion-label strong {
     font-size: var(--ok-type-label);
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    :is(.proof-label small, .proof-detail p, .proof-output) {
+    :is(.proof-label small, .proof-detail p, .proof-output),
+  .about-page .scene :is(.accordion-label small, .accordion-detail p) {
     font-size: var(--ok-type-content);
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-detail {
+    .proof-label,
+  .about-page .scene .accordion-label {
+    gap: var(--ok-space-component-label-gap);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-detail,
+  .about-page .scene .accordion-detail {
     padding-inline:
       calc(var(--ok-size-interactive-index) + var(--ok-space-interactive-gap))
       var(--ok-space-interactive-inset);
@@ -273,28 +284,32 @@ canvas {
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-item.is-open .proof-detail {
+    .proof-item.is-open .proof-detail,
+  .about-page .scene .accordion-item.is-open .accordion-detail {
     max-height: none;
     padding-bottom: var(--ok-space-interactive-inset);
     overflow: visible;
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-actions {
+    .proof-actions,
+  .about-page .scene .actions {
     margin-top: var(--ok-space-content-gap);
     gap: var(--ok-space-content-gap);
     align-items: center;
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-primary {
+    .proof-primary,
+  .about-page .scene .primary-cta {
     min-width: max(268px, 18em);
     min-height: var(--ok-size-interactive-row);
     padding-inline: max(18px, var(--ok-space-interactive-inset));
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)
-    .proof-secondary {
+    .proof-secondary,
+  .about-page .scene .text-link {
     min-height: var(--ok-size-interactive-row);
   }
 
@@ -483,9 +498,7 @@ canvas {
     .proof-statement,
     .result,
     .facts .row-content > span,
-    .model-points .row-content > span,
-    .accordion-label small,
-    .accordion-detail p
+    .model-points .row-content > span
   ) {
     font-size: var(--ok-type-content);
   }
@@ -494,53 +507,16 @@ canvas {
     .kicker,
     .chips li,
     .facts strong,
-    .model-points strong,
-    .accordion-label strong
+    .model-points strong
   ) {
     font-size: var(--ok-type-label);
   }
 
-  .about-page .scene :is(.row-index, .accordion-index) {
+  .about-page .scene .row-index {
     font-size: var(--ok-type-icon);
   }
 
-  .about-page .scene :is(.facts li, .model-points li, .accordion-trigger) {
-    min-height: var(--ok-size-interactive-row);
-  }
-
-  .about-page .scene .accordion-trigger {
-    grid-template-columns:
-      var(--ok-size-interactive-index)
-      minmax(0, 1fr)
-      var(--ok-type-icon);
-    gap: var(--ok-space-interactive-gap);
-  }
-
-  .about-page .scene .accordion-detail {
-    padding-inline:
-      calc(var(--ok-size-interactive-index) + var(--ok-space-interactive-gap))
-      var(--ok-space-interactive-inset);
-    transition: opacity .22s ease;
-  }
-
-  .about-page .scene .accordion-item.is-open .accordion-detail {
-    max-height: none;
-    padding-bottom: var(--ok-space-interactive-inset);
-    overflow: visible;
-  }
-
-  .about-page .scene .actions {
-    margin-top: var(--ok-space-content-gap);
-    gap: var(--ok-space-content-gap);
-  }
-
-  .about-page .scene .primary-cta {
-    min-width: max(230px, 15em);
-    min-height: var(--ok-size-interactive-row);
-    padding-inline: max(16px, var(--ok-space-interactive-inset));
-  }
-
-  .about-page .scene .text-link {
+  .about-page .scene :is(.facts li, .model-points li) {
     min-height: var(--ok-size-interactive-row);
   }
 }
@@ -777,4 +753,82 @@ html[data-ok-nav-compact="tall"] .home-page .cta {
   margin-top: var(--ok-type-label);
   padding-block: .9em;
   font-size: var(--ok-type-control);
+}
+
+/*
+  Short desktop frames use the same semantic component contract as large
+  canvases, but spend width before compressing readable type. This late owner
+  intentionally follows the general desktop rules above: route sheets keep
+  artwork and colour, while proof rows, actions and About panels share one
+  geometry budget. Keeping the override here prevents the large-canvas rail
+  and spacing tokens from undoing the compact scene contract loaded earlier.
+*/
+@media (min-width: 1025px) and (max-height: 730px) {
+  html.ok-scene-page {
+    --ok-short-proof-rail: 900px;
+    --ok-short-about-art-corridor: 45.5rem;
+    --ok-short-about-rail: clamp(
+      552px,
+      calc(100vw - var(--ok-short-about-art-corridor)),
+      var(--ok-rail-about)
+    );
+    --ok-short-interactive-row: 44px;
+    --ok-short-actions-gap: 3px;
+    --ok-short-actions-inline-gap: 12px;
+    --ok-short-detail-padding: max(0px, calc(var(--ok-scene-row-block) - 2px));
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    :is(.campaign-frame, .social-frame, .process-frame)
+    .proof-content {
+    width: min(var(--ok-short-proof-rail), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-content h2,
+  .about-page .scene h2 {
+    font-size: var(--ok-scene-section-display, var(--ok-section-display));
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    :is(.campaign-frame, .social-frame, .process-frame)
+    .proof-actions,
+  .about-page .scene .actions {
+    margin-top: var(--ok-short-actions-gap);
+    gap: var(--ok-short-actions-inline-gap);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    :is(.campaign-frame, .social-frame, .process-frame)
+    .proof-trigger,
+  .about-page .scene .accordion-trigger {
+    min-height: var(--ok-short-interactive-row);
+    padding-block: var(--ok-scene-row-block);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    :is(.campaign-frame, .social-frame, .process-frame)
+    .proof-item.is-open .proof-detail,
+  .about-page .scene .accordion-item.is-open .accordion-detail {
+    padding-bottom: var(--ok-short-detail-padding);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    :is(.proof-primary, .proof-secondary),
+  .about-page .scene :is(.primary-cta, .text-link) {
+    min-height: var(--ok-short-interactive-row);
+  }
+
+  .about-page :is(.scene-02, .scene-03, .scene-04) .copy-panel {
+    width: min(var(--ok-short-about-rail), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+}
+
+/* The only About accordion uses the same short-frame rail as every service
+ * disclosure. Other About scenes retain the protected artwork corridor, so
+ * their fixed tree/portrait annotations keep the same authored anchors. */
+@media (min-width: 1025px) and (max-height: 730px) {
+  .about-page .copy-panel:has(.accordion) {
+    width: min(var(--ok-short-proof-rail), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
 }

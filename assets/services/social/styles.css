@@ -789,20 +789,8 @@ svg {
 }
 
 @media (min-width: 1400px) and (min-height: 850px) {
-  .social-opening .opening-copy {
-    transform: scale(1.1);
-    transform-origin: left center;
-  }
-
-  .social-rhythm .journey-intro {
-    transform: scale(1.08);
-    transform-origin: top left;
-  }
-
   .proof-content {
     top: 14.5%;
-    transform: scale(1.12);
-    transform-origin: top left;
   }
 
   .social-signals .campaign-art {
@@ -816,17 +804,8 @@ svg {
 }
 
 @media (min-width: 1800px) and (min-height: 1000px) {
-  .social-opening .opening-copy {
-    transform: scale(1.18);
-  }
-
-  .social-rhythm .journey-intro {
-    transform: scale(1.16);
-  }
-
   .proof-content {
     top: 15%;
-    transform: scale(1.2);
   }
 
   .social-signals .campaign-art {

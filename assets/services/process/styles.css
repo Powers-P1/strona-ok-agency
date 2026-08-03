@@ -694,8 +694,6 @@ svg {
 @media (min-width: 1400px) and (min-height: 850px) {
   .proof-content {
     top: 14.5%;
-    transform: scale(1.12);
-    transform-origin: top left;
   }
 
   .campaign-proof .campaign-art {
@@ -711,7 +709,6 @@ svg {
 @media (min-width: 1800px) and (min-height: 1000px) {
   .proof-content {
     top: 15%;
-    transform: scale(1.2);
   }
 
   .campaign-proof .campaign-art {

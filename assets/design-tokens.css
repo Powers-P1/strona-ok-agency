@@ -69,6 +69,7 @@
   --ok-size-interactive-index: clamp(44px, 3.1vh, 128px);
   --ok-space-interactive-gap: clamp(6px, .65vh, 24px);
   --ok-space-interactive-inset: clamp(6px, .65vh, 24px);
+  --ok-space-component-label-gap: clamp(2px, .25vh, 8px);
   --ok-space-flow-tight: clamp(8px, .65vh, 24px);
 
   --ok-scene-safe-inset: 24px;

@@ -28,6 +28,7 @@ const [css, script, ...htmlFiles] = await Promise.all([
 const storyCss = await read("assets/story-standard.css");
 const sceneViewport = await read("assets/scene-viewport.css");
 const designTokens = await read("assets/design-tokens.css");
+const homeCss = await read("assets/page-home.css");
 const socialCss = await read("assets/services/social/styles.css");
 const faqCss = await read("assets/page-faq.css");
 
@@ -35,6 +36,12 @@ const failures = [];
 const requireText = (source, text, message) => {
   if (!source.includes(text)) failures.push(message);
 };
+
+requireText(
+  homeCss,
+  "@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941)",
+  "Home hero must feather image-rig from the source artwork aspect ratio",
+);
 
 pages.forEach((page, index) => {
   const html = htmlFiles[index];

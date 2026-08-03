@@ -117,6 +117,19 @@ canvas {
 
 /* ---------- Service stories ---------- */
 
+/* Semantic control type is independent of the layout band. This keeps the
+ * same readable label at 1024px, large desktop and mobile while each route
+ * continues to own only its colour and wording. */
+:is(.campaign-page, .social-page, .web-service, .process-page)
+  :is(.proof-primary, .proof-secondary),
+.about-page :is(.primary-cta, .primary-cta span, .text-link) {
+  font-size: var(--ok-type-control);
+}
+
+.about-page .primary-cta span {
+  font-size: inherit;
+}
+
 @media (min-width: 1025px) {
   .campaign-page .site-header,
   .social-page .site-header,
@@ -213,6 +226,76 @@ canvas {
   .web-service .proof-content h2,
   .process-page .proof-content h2 {
     font-size: var(--ok-section-display);
+  }
+
+  /* Proof/disclosure components are shared by every service route. Route
+   * sheets keep their colours and composition; this late system owner keeps
+   * typography, rows and actions on the same semantic scale from desktop to
+   * 8K. Natural open height prevents translated copy or font metrics from
+   * being clipped by a historical 110px cap. */
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-content :is(.proof-list, .proof-output) {
+    max-width: 100%;
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-trigger {
+    min-height: var(--ok-size-interactive-row);
+    padding-block: var(--ok-space-interactive-inset);
+    grid-template-columns:
+      var(--ok-size-interactive-index)
+      minmax(0, 1fr)
+      var(--ok-type-icon);
+    gap: var(--ok-space-interactive-gap);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-index {
+    font-size: var(--ok-type-icon);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-label strong {
+    font-size: var(--ok-type-label);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    :is(.proof-label small, .proof-detail p, .proof-output) {
+    font-size: var(--ok-type-content);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-detail {
+    padding-inline:
+      calc(var(--ok-size-interactive-index) + var(--ok-space-interactive-gap))
+      var(--ok-space-interactive-inset);
+    transition: opacity .22s ease, transform .28s var(--ease);
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-item.is-open .proof-detail {
+    max-height: none;
+    padding-bottom: var(--ok-space-interactive-inset);
+    overflow: visible;
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-actions {
+    margin-top: var(--ok-space-content-gap);
+    gap: var(--ok-space-content-gap);
+    align-items: center;
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-primary {
+    min-width: max(268px, 18em);
+    min-height: var(--ok-size-interactive-row);
+    padding-inline: max(18px, var(--ok-space-interactive-inset));
+  }
+
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-secondary {
+    min-height: var(--ok-size-interactive-row);
   }
 
   .web-service:not(.diagnosis-service) .opening-copy,
@@ -375,16 +458,16 @@ canvas {
 }
 
 @media (min-width: 1025px) {
-  .about-page h1 {
+  .about-page .scene h1 {
     font-size: var(--ok-type-display-service, var(--ok-service-display));
   }
 
-  .about-page h2 {
+  .about-page .scene h2 {
     font-size: var(--ok-type-display-section, var(--ok-section-display));
   }
 
   .about-page :is(.scene-01, .scene-02, .scene-03, .scene-04) .copy-panel {
-    width: min(var(--ok-rail-section, 720px), calc(100vw - (2 * var(--ok-canvas-inset))));
+    width: min(var(--ok-rail-about), calc(100vw - (2 * var(--ok-canvas-inset))));
   }
 
   .about-page .copy-left {
@@ -393,6 +476,72 @@ canvas {
 
   .about-page .copy-right {
     right: var(--ok-canvas-inset);
+  }
+
+  .about-page .scene :is(
+    .lead,
+    .proof-statement,
+    .result,
+    .facts .row-content > span,
+    .model-points .row-content > span,
+    .accordion-label small,
+    .accordion-detail p
+  ) {
+    font-size: var(--ok-type-content);
+  }
+
+  .about-page .scene :is(
+    .kicker,
+    .chips li,
+    .facts strong,
+    .model-points strong,
+    .accordion-label strong
+  ) {
+    font-size: var(--ok-type-label);
+  }
+
+  .about-page .scene :is(.row-index, .accordion-index) {
+    font-size: var(--ok-type-icon);
+  }
+
+  .about-page .scene :is(.facts li, .model-points li, .accordion-trigger) {
+    min-height: var(--ok-size-interactive-row);
+  }
+
+  .about-page .scene .accordion-trigger {
+    grid-template-columns:
+      var(--ok-size-interactive-index)
+      minmax(0, 1fr)
+      var(--ok-type-icon);
+    gap: var(--ok-space-interactive-gap);
+  }
+
+  .about-page .scene .accordion-detail {
+    padding-inline:
+      calc(var(--ok-size-interactive-index) + var(--ok-space-interactive-gap))
+      var(--ok-space-interactive-inset);
+    transition: opacity .22s ease;
+  }
+
+  .about-page .scene .accordion-item.is-open .accordion-detail {
+    max-height: none;
+    padding-bottom: var(--ok-space-interactive-inset);
+    overflow: visible;
+  }
+
+  .about-page .scene .actions {
+    margin-top: var(--ok-space-content-gap);
+    gap: var(--ok-space-content-gap);
+  }
+
+  .about-page .scene .primary-cta {
+    min-width: max(230px, 15em);
+    min-height: var(--ok-size-interactive-row);
+    padding-inline: max(16px, var(--ok-space-interactive-inset));
+  }
+
+  .about-page .scene .text-link {
+    min-height: var(--ok-size-interactive-row);
   }
 }
 

@@ -178,7 +178,7 @@ img {
   margin: 0;
   max-width: 690px;
   color: var(--legal-muted-light);
-  font-size: 15px;
+  font-size: var(--ok-type-content, 15px);
   line-height: 1.65;
 }
 
@@ -220,7 +220,7 @@ img {
 .privacy-status h2 {
   margin: 0 0 13px;
   font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
-  font-size: 30px;
+  font-size: max(30px, var(--ok-type-display-card, 30px));
   font-weight: 500;
   letter-spacing: -.01em;
   line-height: 1;
@@ -236,7 +236,9 @@ img {
 .privacy-document {
   padding: 0 clamp(38px, 5vw, 84px) 112px;
   display: grid;
-  grid-template-columns: minmax(230px, 320px) minmax(0, 850px);
+  grid-template-columns:
+    minmax(230px, clamp(320px, 16vw, 520px))
+    minmax(0, var(--ok-rail-reading, 850px));
   gap: clamp(76px, 10vw, 168px);
 }
 
@@ -268,7 +270,7 @@ img {
   border-bottom: 1px solid rgba(7, 26, 44, .08);
   color: rgba(7, 26, 44, .72);
   font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
-  font-size: 16px;
+  font-size: var(--ok-type-control, 16px);
   text-decoration: none;
   transition: color .25s ease, padding .3s var(--legal-ease);
 }
@@ -296,7 +298,7 @@ img {
 .policy-section h2 {
   margin: 0 0 18px;
   font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
-  font-size: 28px;
+  font-size: max(28px, var(--ok-type-display-card, 28px));
   font-weight: 500;
   letter-spacing: -.01em;
 }
@@ -304,7 +306,7 @@ img {
 .policy-section h2 span {
   margin-right: 13px;
   color: var(--legal-pink);
-  font-size: 18px;
+  font-size: var(--ok-type-icon, 18px);
 }
 
 .policy-section p {

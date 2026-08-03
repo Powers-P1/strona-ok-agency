@@ -11,6 +11,7 @@
     "check:consent-responsive": "node scripts/check-consent-responsive.mjs",
     "check:global-navigation-runtime": "node scripts/check-global-navigation.mjs --runtime",
     "check:global-navigation-webkit": "node scripts/check-global-navigation.mjs --runtime --webkit",
+    "check:desktop-system-components": "node scripts/check-desktop-system-components.mjs",
     "check:system-scale": "node scripts/check-system-scale.mjs",
     "check:system-scale:diagnosis-short": "node scripts/check-system-scale.mjs --diagnosis-short-only",
     "check:system-scale:full": "node scripts/check-system-scale.mjs --full --screenshots",

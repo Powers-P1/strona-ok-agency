@@ -60,7 +60,6 @@ body {
   mask-image: linear-gradient(to bottom, transparent 0, #000 20%, #000 100%);
 }
 
-.menu-stage > .site-header,
 .menu-stage > main {
   position: relative;
   z-index: 1;

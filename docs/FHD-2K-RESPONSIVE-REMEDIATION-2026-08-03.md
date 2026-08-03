@@ -1,8 +1,11 @@
 # FHD / 2K responsive system remediation
 
 Data: 2026-08-03  
-Status: implementacja i lokalne QA zakończone; publikacja w toku  
-Branch: `agent/fhd-2k-responsive-remediation`  
+Status: zakończone; wdrożenie produkcyjne i niezależny mobile QA zweryfikowane
+
+Branch implementacji: `agent/fhd-2k-responsive-remediation`
+
+Branch raportu końcowego: `agent/fhd-2k-responsive-final-report`
 Worktree: `G:\OK-Agency\.codex-worktrees\fhd-2k-responsive-remediation`  
 Baseline: `origin/main` / `a9b53652908427ec432f3d7e48d0acaf2128210a`  
 Baseline Pages: `511f002b-547c-4cb0-8e18-a8083bd04468`
@@ -110,9 +113,9 @@ W tym zadaniu obowiązują mierzalne reguły:
 - [x] Wykonać iteracyjne testy właścicieli oraz wizualne before/after Browser QA.
 - [x] Wykonać pełną bramkę lokalną i macierz viewportów.
 - [x] Zlecić niezależny review subagentom w trybie high+; naprawić i ponownie sprawdzić ustalenia.
-- [ ] Commit, push, PR, CI, merge do `main`.
-- [ ] Potwierdzić Cloudflare Pages, production smoke, Production monitor i przekazać handoff mobile.
-- [ ] Zatrzymać task-local server/browser helpers, sfinalizować Browser i zostawić czysty worktree.
+- [x] Commit, push, PR, CI, merge do `main`.
+- [x] Potwierdzić Cloudflare Pages, production smoke, Production monitor i przekazać handoff mobile.
+- [x] Zatrzymać task-local server/browser helpers, sfinalizować Browser i zostawić czysty worktree.
 
 ## Bramka testowa
 
@@ -148,3 +151,22 @@ Before/after będą przechowywane w `G:\OK-Agency\.tmp\fhd-2k-responsive-remedia
 - `npm run build`, Pages Functions build, Worker dry-run i `git diff --check` — PASS;
 - Browser QA: proof Kampanii FHD, Proces i maska WWW 2K, nav 2K, SEO proof 2K, support grid 2K oraz mobile 390 — PASS; brak błędów aplikacji w konsoli.
 - niezależny review high+ znalazł i doprowadził do naprawy wyboru kotwicy resize, fałszywie dodatniego testu maski, mobilnego leadingu i skoku popoveru nav; ponowne testy Chromium/WebKit są zielone.
+
+## Wynik publikacji
+
+- PR implementacyjny [#93](https://github.com/Powers-P1/strona-ok-agency/pull/93) został scalony metodą squash do `main` jako `ac408e650aae9f0504b4882802a4748752113e82`.
+- PR CI `30859989374` i ponowne CI `main` `30860901687` zakończyły pełną macierz wynikiem `SUCCESS`.
+- Cloudflare Pages opublikował produkcję jako deployment `bf881793-5ec2-471c-b8d7-fe13e0467f81`; Contact Worker deploy `30860901724` i ręczny Production monitor `30861090992` zakończyły się `SUCCESS`.
+- Produkcyjny Browser smoke na `okagency.pl` potwierdził assety `responsive-foundation.v20260730-8.css?v=20260803-8`, `design-tokens.css?v=20260803-8` i `responsive-safety.js?v=20260803-6`, pełne sceny FHD/2K, aktywną lokalną maskę SVG, nieobcięte proof/SEO, skalę nav/support grid oraz czystą konsolę.
+- Lokalny serwer `127.0.0.1:7312` został zatrzymany, viewport Browser zresetowany, sesja Browser sfinalizowana, a task-local procesy sprawdzone przed końcowym commitem dokumentacji.
+
+## Niezależny mobile QA
+
+Handoff do taska `019fbdb6-9044-7302-b461-f33f659f616c` zakończył pełną, read-only macierz produkcyjną `360×640` i `390×844`. PR #93 nie wprowadził regresji mobile: wszystkie trasy poza dwoma wcześniejszymi problemami miały `0` poziomego overflow, nested scrolla, mobilnych anotacji, overlay i błędów konsoli; wszystkie disclosure/menu oraz pełny flow Diagnozy zostały realnie kliknięte.
+
+Końcowa klasyfikacja to `FAIL / BASELINE`, nie fail wdrożenia:
+
+- stała `.motion-toggle` zasłania środek drugorzędnego CTA na części scen; identyczne recty, przecięcia i hit-test odtworzono na czystym `a9b5365` dla WWW i Procesu w `360×640`;
+- `.quiz-privacy` Diagnozy wypada poza `#diagnosis-map { overflow:hidden }` o 216 px w `360×640` i 12 px w `390×844`; identyczny wynik odtworzono na `a9b5365`, a arkusz Diagnozy nie był zmieniany w PR #93.
+
+Zgodnie z ograniczeniem zakresu nie dodano łaty mobile. Pełne selektory, właściciele, metryki i screenshoty są zapisane w `G:\OK-Agency\.tmp\OKAGENCY_AGENT_COORDINATION.md`; naprawa wymaga osobnego uzgodnienia ownerów motion/CTA i Diagnozy.

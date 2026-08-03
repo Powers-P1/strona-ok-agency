@@ -108,6 +108,9 @@ requireText(faqCss, "grid-template-columns: minmax(0, 1fr)", "FAQ nie zeruje min
 requireText(faqCss, "overflow-wrap: anywhere", "CTA FAQ nie chroni długiej etykiety przed przycięciem");
 
 requireText(script, "allowedSides", "JS nie wybiera najbezpieczniejszej strony grafiki");
+requireText(script, 'layout.scene.dataset.okSafeMask || "auto"', "JS nie ma deklaratywnego trybu maski sceny");
+requireText(script, 'artMaskMode === "always"', "JS nie obsługuje wymuszonej ochrony treści");
+requireText(script, 'artMaskMode === "never"', "JS nie obsługuje jawnego wyłączenia maski");
 requireText(script, "--ok-safe-mask-image", "JS nie generuje liniowego featheru grafiki");
 requireText(script, "copySafeZone", "JS nie utrzymuje jednego źródła progu bezpiecznej strefy hero");
 requireText(script, "homeLayout.copyFitsFirstView", "JS nie utrzymuje kompaktowego hero w pierwszym widoku");
@@ -120,6 +123,17 @@ requireText(css, ":root[data-ok-tall-portrait]", "CSS nie korzysta ze wspólnego
 requireText(css, "min-height: max(100svh, var(--ok-safe-required-height", "CSS nie honoruje wyliczonej wysokości hero");
 requireText(script, "contentBottomWithin", "JS nie mierzy stabilnej wysokości treści względem sceny");
 requireText(script, "element.getClientRects().length > 0", "JS traktuje dzieci ukrytych kontenerów jak widoczną treść");
+
+requireText(
+  htmlFiles[pages.indexOf("kampanie.html")],
+  'id="campaign-opening" aria-labelledby="opening-title" data-ok-safe-mask="always"',
+  "Kampanie nie korzystają ze wspólnej wymuszonej ochrony otwarcia",
+);
+requireText(
+  htmlFiles[pages.indexOf("proces.html")],
+  'id="process-discovery" data-stage-bg="#ead9cb" data-ok-safe-mask="always"',
+  "Proces nie korzysta ze wspólnej wymuszonej ochrony odkrycia",
+);
 
 requireText(script, "const artBounds = new WeakMap()", "JS does not index scene/art safety bounds in a WeakMap");
 requireText(script, "getArtBounds: sceneOrArt => artBounds.get(sceneOrArt) || null", "public responsive safety API does not expose getArtBounds(sceneOrArt)");

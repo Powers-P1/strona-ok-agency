@@ -207,6 +207,14 @@
     element.setAttribute(attribute, value);
   };
 
+  const serviceWirePathFor = (adapter, annotation) => {
+    const annotationId = annotation.callout.dataset.annotation;
+    if (!annotationId) return null;
+    const wire = [...adapter.scene.querySelectorAll(".annotation-wire")]
+      .find(layer => layer.dataset.line === annotationId);
+    return wire?.querySelector("path") || null;
+  };
+
   const exitingAnnotations = () => new Set(adapters.flatMap(adapter => (
     adapter.annotations.filter(annotation => {
       if (isOpen(annotation)) return false;
@@ -217,9 +225,18 @@
 
   const clearRuntime = (preservedAnnotations = new Set()) => {
     const preservedElements = new Set();
+    const preservedAttributeElements = new Set();
     preservedAnnotations.forEach(annotation => {
       preservedElements.add(annotation.callout);
       preservedElements.add(annotation.copy);
+    });
+    adapters.forEach(adapter => {
+      if (adapter.kind !== "service") return;
+      adapter.annotations.forEach(annotation => {
+        if (!preservedAnnotations.has(annotation)) return;
+        const path = serviceWirePathFor(adapter, annotation);
+        if (path) preservedAttributeElements.add(path);
+      });
     });
     const retainedStyles = new Map();
     runtimeStyles.forEach((properties, element) => {
@@ -237,13 +254,21 @@
       runtimeStyles.set(element, properties);
     });
 
+    const retainedAttributes = new Map();
     runtimeAttributes.forEach((attributes, element) => {
+      if (preservedAttributeElements.has(element)) {
+        retainedAttributes.set(element, attributes);
+        return;
+      }
       attributes.forEach((value, attribute) => {
         if (value === null) element.removeAttribute(attribute);
         else element.setAttribute(attribute, value);
       });
     });
     runtimeAttributes.clear();
+    retainedAttributes.forEach((attributes, element) => {
+      runtimeAttributes.set(element, attributes);
+    });
 
     adapters.forEach(adapter => {
       adapter.annotations.forEach(annotation => {
@@ -733,11 +758,7 @@
   };
 
   const updateServiceWire = (adapter, annotation, point, copy, geometry) => {
-    const annotationId = annotation.callout.dataset.annotation;
-    if (!annotationId) return;
-    const wire = [...adapter.scene.querySelectorAll(".annotation-wire")]
-      .find(layer => layer.dataset.line === annotationId);
-    const path = wire?.querySelector("path");
+    const path = serviceWirePathFor(adapter, annotation);
     if (!path) return;
 
     const copyIsRight = copy.left + copy.rect.width / 2 > point.x;
@@ -806,11 +827,12 @@
     setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
   };
 
-  const applyMeasuredConnectorGeometry = adapter => {
+  const applyMeasuredConnectorGeometry = (adapter, preservedCopies = new Set()) => {
     if (adapter.kind === "service") {
       const geometry = coverGeometry(adapter.scene, adapter.art);
       serviceConnectorGeometry(adapter, geometry);
       adapter.annotations.forEach(annotation => {
+        if (preservedCopies.has(annotation)) return;
         const measured = measuredAnnotationGeometry(adapter, annotation);
         updateServiceWire(adapter, annotation, measured.point, measured.copy, geometry);
       });
@@ -818,12 +840,13 @@
     }
 
     adapter.annotations.forEach(annotation => {
+      if (preservedCopies.has(annotation)) return;
       const measured = measuredAnnotationGeometry(adapter, annotation);
       updateAboutLeader(annotation, measured.point, measured.copy);
     });
   };
 
-  const applyAuthoredCopySafety = adapter => {
+  const applyAuthoredCopySafety = (adapter, preservedCopies = new Set()) => {
     const geometry = coverGeometry(adapter.scene, adapter.art);
     const artBounds = artBoundsFor(adapter.scene, adapter.art, geometry);
     const sceneRect = adapter.scene.getBoundingClientRect();
@@ -838,6 +861,7 @@
     if (adapter.kind === "service") {
       serviceConnectorGeometry(adapter, geometry);
       adapter.annotations.forEach((annotation, index) => {
+        if (preservedCopies.has(annotation)) return;
         const copy = copies[index];
         setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
         setRuntimeStyle(annotation.callout, "--copy-right", "auto");
@@ -848,6 +872,7 @@
     }
 
     adapter.annotations.forEach((annotation, index) => {
+      if (preservedCopies.has(annotation)) return;
       const point = points[index];
       const copy = copies[index];
       setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
@@ -859,7 +884,7 @@
     return true;
   };
 
-  const applyServiceSolution = (adapter, solution) => {
+  const applyServiceSolution = (adapter, solution, preservedCopies = new Set()) => {
     serviceConnectorGeometry(adapter, solution.geometry);
 
     adapter.annotations.forEach((annotation, index) => {
@@ -868,6 +893,7 @@
       setRuntimeStyle(annotation.callout, "--dot-x", `${point.x}px`);
       setRuntimeStyle(annotation.callout, "--dot-y", `${point.y}px`);
       setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
+      if (preservedCopies.has(annotation)) return;
       setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
       setRuntimeStyle(annotation.callout, "--copy-right", "auto");
       setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
@@ -875,7 +901,7 @@
     });
   };
 
-  const applyAboutSolution = (adapter, solution) => {
+  const applyAboutSolution = (adapter, solution, preservedCopies = new Set()) => {
     const sceneRect = adapter.scene.getBoundingClientRect();
     const innerRect = adapter.inner.getBoundingClientRect();
     const innerLeft = innerRect.left - sceneRect.left;
@@ -887,6 +913,7 @@
       setRuntimeStyle(annotation.callout, "--x", `${point.x - innerLeft}px`);
       setRuntimeStyle(annotation.callout, "--y", `${point.y - innerTop}px`);
       setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
+      if (preservedCopies.has(annotation)) return;
       setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
       setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
       setRuntimeStyle(annotation.copy, "right", "auto");
@@ -940,7 +967,8 @@
      * the new card can be positioned without snapping the old card back to its
      * authored coordinates for a single frame. The next solve may clear A once
      * its opacity reaches zero. */
-    clearRuntime(exitingAnnotations());
+    const preservedCopies = exitingAnnotations();
+    clearRuntime(preservedCopies);
     clearDebugOverlays();
     debugSnapshots.clear();
     if (innerWidth <= 640) {
@@ -976,12 +1004,14 @@
     adapters.forEach((adapter, index) => {
       const solution = solutions[index];
       if (!solution) {
-        if (!applyAuthoredCopySafety(adapter)) applyMeasuredConnectorGeometry(adapter);
+        if (!applyAuthoredCopySafety(adapter, preservedCopies)) {
+          applyMeasuredConnectorGeometry(adapter, preservedCopies);
+        }
         renderDebugOverlay(adapter, null);
         return;
       }
-      if (adapter.kind === "service") applyServiceSolution(adapter, solution);
-      else applyAboutSolution(adapter, solution);
+      if (adapter.kind === "service") applyServiceSolution(adapter, solution, preservedCopies);
+      else applyAboutSolution(adapter, solution, preservedCopies);
       renderDebugOverlay(adapter, solution);
     });
   };

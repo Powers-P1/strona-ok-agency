@@ -332,8 +332,8 @@
 
 @media (min-width: 641px) and (max-width: 1100px) {
   .about-page .annotation-copy {
-    width: 280px;
-    min-width: 280px;
+    width: var(--about-copy-width, 280px);
+    min-width: var(--about-copy-width, 280px);
   }
 }
 

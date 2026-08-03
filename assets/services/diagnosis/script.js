@@ -151,6 +151,31 @@
   const diagnosisCompletionTracker = createCompletionTracker(outcome => {
     window.okAnalytics?.diagnosisComplete(outcome);
   });
+  const artReadiness = new WeakMap();
+
+  const ensureFrameArtReady = frame => {
+    const art = frame?.querySelector(".campaign-art");
+    if (!art) return Promise.resolve();
+    if (artReadiness.has(art)) return artReadiness.get(art);
+
+    art.loading = "eager";
+    /* `complete` is also true after an image error. Resolve that state and
+     * let the semantic scene fallback render; attaching an error listener
+     * after the event has fired would otherwise lock the start controls. */
+    const loaded = art.complete
+      ? Promise.resolve()
+      : new Promise(resolve => {
+          art.addEventListener("load", resolve, { once: true });
+          art.addEventListener("error", resolve, { once: true });
+        });
+    const ready = loaded.then(async () => {
+      if (!art.naturalWidth) return;
+      if (typeof art.decode !== "function") return;
+      await art.decode().catch(() => {});
+    });
+    artReadiness.set(art, ready);
+    return ready;
+  };
 
   const focusAfterPaint = element => {
     requestAnimationFrame(() => requestAnimationFrame(() => element?.focus({ preventScroll: true })));
@@ -253,12 +278,40 @@
     if (announcer) announcer.textContent = `Wynik diagnozy: ${copy.title}`;
   };
 
+  const mapFrame = frames.find(frame => frame.dataset.act === "map");
+  const outcomeFrame = frames.find(frame => frame.dataset.act === "outcome");
+  const startButtons = Array.from(tool.querySelectorAll("[data-start-diagnosis]"));
+  let mapActivation = null;
+  const enterMap = () => {
+    if (mapActivation) return mapActivation;
+    startButtons.forEach(button => {
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+    });
+    mapActivation = ensureFrameArtReady(mapFrame).then(() => {
+      showAct("map", false);
+      showQuestion(1);
+      void ensureFrameArtReady(outcomeFrame);
+    }).finally(() => {
+      startButtons.forEach(button => {
+        button.disabled = false;
+        button.removeAttribute("aria-busy");
+      });
+      mapActivation = null;
+    });
+    return mapActivation;
+  };
+
+  startButtons.forEach(button => {
+    button.addEventListener("pointerenter", () => { void ensureFrameArtReady(mapFrame); }, { once: true });
+    button.addEventListener("focus", () => { void ensureFrameArtReady(mapFrame); }, { once: true });
+  });
+
   tool.addEventListener("click", event => {
     if (event.target.closest("[data-start-diagnosis]")) {
       diagnosisCompletionTracker.reset();
       window.okAnalytics?.diagnosisStart();
-      showAct("map", false);
-      showQuestion(1);
+      void enterMap();
       return;
     }
 

@@ -17,7 +17,6 @@
         compact: false,
         portrait: false,
         shortLandscape,
-        artScale: 1,
         copySafeZone: 1,
         copyFitsFirstView: true,
         requiredHeight: Math.ceil(viewportHeight),
@@ -25,9 +24,6 @@
     }
 
     const portrait = viewportRatio <= 2 / 3;
-    const artScale = portrait
-      ? 1
-      : Math.min(1.22, Math.max(1, 1 + (4 / 3 - viewportRatio) * .85));
     const copySafeZone = shortLandscape
       ? 1
       : viewportWidth > 1180
@@ -49,7 +45,6 @@
       compact: true,
       portrait,
       shortLandscape,
-      artScale,
       copySafeZone,
       copyFitsFirstView,
       requiredHeight,
@@ -69,6 +64,7 @@
   const layouts = [];
   const artBounds = new WeakMap();
   let frame = 0;
+  let needsRemeasure = false;
   let artBoundsChanged = false;
 
   const selectors = {
@@ -86,6 +82,38 @@
       ".map-interface",
       ".result-content",
     ].join(","),
+  };
+
+  const typeRoles = Object.freeze({
+    "content": [14, .0155, 48],
+    "label": [12, .012, 32],
+    "control": [15, .0145, 42],
+    "icon": [18, .0165, 44],
+    "display-home": [96, .18, 720],
+    "display-home-compact": [120, .125, 360],
+    "display-service": [68, .087, 360],
+    "display-process": [74, .095, 392],
+    "display-section": [58, .078, 320],
+    "display-question": [28, .047, 192],
+    "display-card": [25, .032, 128],
+    "display-result": [48, .06, 240],
+    "display-document": [76, .088, 360],
+  });
+
+  const publishViewportTypeScale = () => {
+    const viewportHeight = window.innerHeight;
+    root.style.setProperty("--ok-viewport-height-runtime", `${viewportHeight}px`);
+    Object.entries(typeRoles).forEach(([role, [floor, ratio, ceiling]]) => {
+      const value = Math.min(ceiling, Math.max(floor, viewportHeight * ratio));
+      const resolvedValue = `${value.toFixed(3)}px`;
+      /* Publish the resolved semantic token itself as well as its diagnostic
+       * runtime value. WebKit can retain a stale result for a nested
+       * var(var(...)) chain after a live aspect-ratio change, even though the
+       * inner custom property has already changed. A direct semantic value
+       * makes the system transactional for every component. */
+      root.style.setProperty(`--ok-type-${role}-runtime`, resolvedValue);
+      root.style.setProperty(`--ok-type-${role}`, resolvedValue);
+    });
   };
 
   const rendered = element => {
@@ -296,7 +324,6 @@
     delete layout.scene.dataset.okSafeMobileHero;
     delete layout.scene.dataset.okSafeCompactFit;
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
-    layout.scene.style.removeProperty("--ok-home-compact-art-scale");
     layout.scene.style.removeProperty("--ok-safe-required-height");
     layout.scene.querySelectorAll("[data-ok-safe-content]").forEach(content => {
       restoreScrollRegion(content);
@@ -327,6 +354,18 @@
     delete layout.scene.dataset.okSafeMobileHero;
     delete layout.scene.dataset.okSafeCompactFit;
     layout.scene.style.removeProperty("--ok-safe-curtain-mask");
+
+    /*
+     * Measure grow-mode scenes from the current viewport, never from the
+     * height published by a previous viewport. Otherwise a wide/8K window can
+     * become the next portrait window's input and make the hero permanently
+     * taller after resize. Genuine text overflow is recalculated below and
+     * published again in the same frame.
+     */
+    if (layout.mode === "grow") {
+      layout.scene.style.removeProperty("--ok-safe-required-height");
+    }
+
     const sceneRect = layout.scene.getBoundingClientRect();
     const artRect = layout.art.getBoundingClientRect();
     const contentBounds = layout.mode === "grow"
@@ -342,9 +381,10 @@
       return;
     }
 
-    const viewport = window.visualViewport;
-    const viewportWidth = viewport?.width || window.innerWidth;
-    const viewportHeight = viewport?.height || window.innerHeight;
+    /* Match CSS media queries to the layout viewport. WebKit may update a
+     * picture source before visualViewport settles after desktop resize. */
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
     const tallPortrait = viewportHeight > 760
       && viewportHeight > viewportWidth * 1.35;
     const compact = viewportWidth <= 1180
@@ -369,21 +409,7 @@
         })
       : null;
     const compactHome = Boolean(homeLayout?.compact);
-    if (!compactHome) {
-      layout.scene.style.removeProperty("--ok-home-compact-art-scale");
-    }
     if (compactHome) {
-      /*
-       * The compact 4:3 plate deliberately reserves a clear copy zone above
-       * the sculpture. As the viewport becomes taller, zoom that plate around
-       * the tree base so the reserved zone does not grow into a visual void.
-       * The portrait asset already has its own crop and stays at natural scale.
-       */
-      layout.scene.style.setProperty(
-        "--ok-home-compact-art-scale",
-        homeLayout.artScale.toFixed(3),
-      );
-
       /*
        * The compact plates already contain the complete tree inside their
        * lower half. Keep the normal experience to exactly one viewport.
@@ -543,10 +569,10 @@
 
   const measure = () => {
     frame = 0;
+    publishViewportTypeScale();
     artBoundsChanged = false;
-    const viewport = window.visualViewport;
-    const viewportWidth = viewport?.width || window.innerWidth;
-    const viewportHeight = viewport?.height || window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
     const tallPortrait = viewportHeight > 760
       && viewportHeight > viewportWidth * 1.35;
     root.toggleAttribute("data-ok-tall-portrait", tallPortrait);
@@ -560,14 +586,40 @@
   };
 
   const schedule = () => {
-    if (frame) return;
-    frame = requestAnimationFrame(measure);
+    if (frame) {
+      needsRemeasure = true;
+      return;
+    }
+    frame = requestAnimationFrame(() => {
+      measure();
+      if (needsRemeasure) {
+        needsRemeasure = false;
+        schedule();
+      }
+    });
+  };
+
+  const scheduleViewportMeasure = () => {
+    /* Drop the previous viewport's grow-height before the next paint. */
+    publishViewportTypeScale();
+    layouts.forEach(layout => {
+      if (layout.mode === "grow") {
+        layout.scene.style.removeProperty("--ok-safe-required-height");
+      }
+    });
+    schedule();
   };
 
   discover();
+  publishViewportTypeScale();
 
   if ("ResizeObserver" in window) {
+    /* Content-driven resize notifications must not clear a grow scene's
+     * published height. Doing so creates a shrink/grow feedback loop. Only
+     * real viewport events use scheduleViewportMeasure; observed layout
+     * changes request a normal measurement against the current viewport. */
     const resizeObserver = new ResizeObserver(schedule);
+    resizeObserver.observe(root);
     observed.forEach(element => resizeObserver.observe(element));
     document.querySelectorAll(".menu-page .cards, .menu-page .card-text").forEach(element => {
       resizeObserver.observe(element);
@@ -581,9 +633,11 @@
     attributeFilter: ["aria-hidden", "class", "hidden", "inert"],
   });
 
-  window.addEventListener("resize", schedule, { passive: true });
-  window.addEventListener("orientationchange", schedule, { passive: true });
-  window.visualViewport?.addEventListener("resize", schedule, { passive: true });
+  window.addEventListener("resize", scheduleViewportMeasure, { passive: true });
+  window.addEventListener("orientationchange", scheduleViewportMeasure, { passive: true });
+  window.visualViewport?.addEventListener("resize", scheduleViewportMeasure, { passive: true });
+  window.matchMedia("(max-width: 1180px), (max-aspect-ratio: 4/3)")
+    .addEventListener?.("change", scheduleViewportMeasure);
   document.fonts?.ready.then(() => requestAnimationFrame(schedule));
   schedule();
 

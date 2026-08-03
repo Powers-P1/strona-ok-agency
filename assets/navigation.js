@@ -247,9 +247,32 @@
   const compactQuery = window.matchMedia(
     "(max-width: 1180px), (max-aspect-ratio: 4/3)",
   );
+  const compactByLayoutViewport = () => (
+    window.innerWidth <= 1180
+    || window.innerWidth / window.innerHeight <= 4 / 3
+  );
 
   const closeMenu = () => {
     if (dialog.open) dialog.close();
+  };
+
+  let compactFrame = 0;
+  const syncCompactProfile = () => {
+    compactFrame = 0;
+    const compact = compactQuery.matches || compactByLayoutViewport();
+    if (compact) {
+      document.documentElement.setAttribute(
+        "data-ok-nav-compact",
+        window.innerWidth <= 1180 ? "narrow" : "tall",
+      );
+    } else {
+      document.documentElement.removeAttribute("data-ok-nav-compact");
+    }
+    if (!compact) closeMenu();
+  };
+  const scheduleCompactProfile = () => {
+    if (compactFrame) return;
+    compactFrame = requestAnimationFrame(syncCompactProfile);
   };
 
   const openMenu = () => {
@@ -304,7 +327,11 @@
     }
   });
 
-  compactQuery.addEventListener("change", ({ matches }) => {
-    if (!matches) closeMenu();
-  });
+  compactQuery.addEventListener("change", scheduleCompactProfile);
+  window.addEventListener("resize", scheduleCompactProfile, { passive: true });
+  window.visualViewport?.addEventListener("resize", scheduleCompactProfile, { passive: true });
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(scheduleCompactProfile).observe(document.documentElement);
+  }
+  syncCompactProfile();
 })();

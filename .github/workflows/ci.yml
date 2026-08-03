@@ -40,6 +40,9 @@ jobs:
       - name: Validate annotation geometry
         run: npm run check:annotation-geometry
 
+      - name: Validate responsive scale and viewport contracts
+        run: npm run check:system-scale
+
       - name: Check local links
         run: npm run check:links
 

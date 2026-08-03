@@ -474,6 +474,7 @@ npm run check:links
 npx playwright install --with-deps chromium
 npm run check:scene-disclosures
 npm run check:annotation-geometry
+npm run check:system-scale
 npm run build
 npm run check:pages-functions
 npm run check:worker
@@ -485,14 +486,27 @@ Wersje wspólnych CSS/JS są utrzymywane wyłącznie w
 `check:asset-versions` blokuje ręcznie rozjechane query stringi.
 
 Workflow `CI / validate` instaluje Chromium wraz z zależnościami systemowymi i
-uruchamia `check:scene-disclosures` oraz `check:annotation-geometry` przed
-budowaniem artefaktu. Pierwsza bramka sprawdza pełnokadrową geometrię scen,
-brak wewnętrznych scrollerów, pełną widoczność rozwiniętych treści i położenie
-akcji. Druga otwiera punkty na sześciu trasach i kontroluje położenie dymków,
-końce łączników, bezpieczne strefy treści oraz widoczność po scrollowaniu.
+uruchamia trzy bramki kontraktu UI przed zbudowaniem artefaktu:
+
+- `check:scene-disclosures` sprawdza pełnokadrową geometrię scen, brak
+  wewnętrznych scrollerów, widoczność rozwiniętych treści i położenie akcji;
+- `check:annotation-geometry` otwiera punkty na sześciu trasach i kontroluje
+  dymki, łączniki, bezpieczne strefy treści oraz widoczność po scrollowaniu;
+- `check:system-scale` sprawdza 13 publicznych tras do 4K, wybrane proporcje
+  i resize do 8K, wspólne role typograficzne, pełny kadr scen, brak overflow
+  oraz wszystkie pytania Diagnozy wraz z awaryjnym wariantem bez grafiki.
+
+Podczas iteracji uruchamiaj różnicowo test odpowiadający zmienianemu
+kontraktowi. `check:system-scale` uruchom raz po ustabilizowaniu zmian i przed
+PR; CI wykonuje tę bramkę ponownie dla każdego PR i pushu do `main`.
+`check:system-scale:full` służy do ręcznego audytu pełnej macierzy, pionowych
+proporcji i zrzutów ekranu, a `check:system-scale:webkit` do kontroli silnika
+WebKit. Tych dwóch rozszerzonych wariantów nie uruchamiaj po każdej małej
+poprawce.
+
 Jeżeli instalacja przeglądarki lub którykolwiek test kontraktu zawiedzie, nie
-należy omijać bramki: najpierw odtwórz ją lokalnie powyższymi komendami i
-popraw wspólny kontrakt albo sam test razem z dokumentacją.
+omijaj bramki: odtwórz właściwy test lokalnie i popraw wspólny kontrakt albo
+sam test razem z dokumentacją.
 
 Następnie:
 

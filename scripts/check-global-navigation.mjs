@@ -164,7 +164,7 @@ for (const page of publicPages) {
   );
   assert.match(
     html,
-    /assets\/navigation\.js\?v=20260730-4/,
+    new RegExp(versionedAsset("assets/navigation.js").replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
     `${page}: versioned global navigation script is missing.`,
   );
   assert.match(
@@ -266,6 +266,13 @@ assert.match(script, /event\.key\s*!==\s*"Tab"/, "Explicit dialog focus-loop han
 assert.match(script, /document\.activeElement\s*===\s*first/, "Backward focus wrapping is required.");
 assert.match(script, /document\.activeElement\s*===\s*last/, "Forward focus wrapping is required.");
 assert.match(script, /trigger\.focus\(\{\s*preventScroll:\s*true\s*\}\)/, "Focus must return to MENU.");
+assert.match(script, /compactByLayoutViewport/, "Compact navigation must use the layout viewport profile.");
+assert.match(script, /data-ok-nav-compact/, "Navigation must publish one shared compact/tall profile.");
+assert.match(
+  script,
+  /window\.innerWidth\s*\/\s*window\.innerHeight/,
+  "Compact/tall classification must follow the same layout viewport as CSS.",
+);
 
 const runtimeAudit = process.argv.includes("--runtime");
 const webkitAudit = process.argv.includes("--webkit");

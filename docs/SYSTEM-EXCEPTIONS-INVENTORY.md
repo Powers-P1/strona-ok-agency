@@ -102,7 +102,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-home.css | 760 | .copy > *, .topbar | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 761 | .copy > *, .topbar | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 762 | .copy > *, .topbar | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/page-home.css | 1355 | .home-intro__cta, .home-intro__cta::before, .home-intro__cta::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-home.css | 1356 | .home-intro__cta, .home-intro__cta::before, .home-intro__cta::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-menu.css | 681 | *, *::before, *::after | — | route-debt |
 | assets/page-menu.css | 682 | *, *::before, *::after | — | route-debt |
 | assets/page-menu.css | 683 | *, *::before, *::after | — | route-debt |
@@ -120,9 +120,9 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/about/styles.css | 1960 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/about/styles.css | 1961 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/about/styles.css | 1962 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/campaign/styles.css | 1004 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/campaign/styles.css | 1005 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/campaign/styles.css | 1006 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/campaign/styles.css | 1001 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/campaign/styles.css | 1002 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/campaign/styles.css | 1003 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/diagnosis/styles.css | 26 | .sr-only | — | accessibility |
 | assets/services/diagnosis/styles.css | 27 | .sr-only | — | accessibility |
 | assets/services/diagnosis/styles.css | 28 | .sr-only | — | accessibility |
@@ -136,12 +136,12 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/diagnosis/styles.css | 713 | *,*::before,*::after | @media (prefers-reduced-motion:reduce) | accessibility |
 | assets/services/diagnosis/styles.css | 714 | *,*::before,*::after | @media (prefers-reduced-motion:reduce) | accessibility |
 | assets/services/diagnosis/styles.css | 716 | .diagnosis-frame,.quiz-question | @media (prefers-reduced-motion:reduce) | accessibility |
-| assets/services/process/styles.css | 1286 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/process/styles.css | 1287 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/process/styles.css | 1288 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/social/styles.css | 1134 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/social/styles.css | 1135 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/social/styles.css | 1136 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/process/styles.css | 1283 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/process/styles.css | 1284 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/process/styles.css | 1285 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/social/styles.css | 1113 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/social/styles.css | 1114 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/social/styles.css | 1115 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/web/styles.css | 1247 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/web/styles.css | 1248 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/web/styles.css | 1249 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
@@ -502,34 +502,34 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-home.css | 729 | .detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) and (max-height: 720px) | semantic-token |
 | assets/page-home.css | 730 | .detail p | line-height | 1.45 | @media (max-width: 640px) and (max-height: 720px) | local-type-exception |
 | assets/page-home.css | 735 | .detail .anchor-spec | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) and (max-height: 720px) | semantic-token |
-| assets/page-home.css | 1084 | .nav a | font-size | clamp(.78rem, .55vw, .88rem) | — | local-type-exception |
-| assets/page-home.css | 1085 | .nav a | letter-spacing | .18em | — | local-type-exception |
-| assets/page-home.css | 1089 | .detail-kicker | font-size | .78rem | — | local-type-exception |
-| assets/page-home.css | 1103 | .cta::after | font-size | 1.25rem | — | local-type-exception |
-| assets/page-home.css | 1134 | .home-intro__eyebrow | font-size | 13px | — | local-type-exception |
-| assets/page-home.css | 1135 | .home-intro__eyebrow | font-weight | 700 | — | local-type-exception |
-| assets/page-home.css | 1136 | .home-intro__eyebrow | letter-spacing | .18em | — | local-type-exception |
-| assets/page-home.css | 1150 | .home-intro h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-home.css | 1151 | .home-intro h2 | font-size | clamp(52px, 7.4vw, 112px) | — | local-type-exception |
-| assets/page-home.css | 1152 | .home-intro h2 | font-weight | 500 | — | local-type-exception |
-| assets/page-home.css | 1153 | .home-intro h2 | line-height | .92 | — | local-type-exception |
-| assets/page-home.css | 1154 | .home-intro h2 | letter-spacing | -.035em | — | local-type-exception |
-| assets/page-home.css | 1169 | .home-intro__copy p, .home-intro__trust | font-size | clamp(16px, 1.25vw, 19px) | — | local-type-exception |
-| assets/page-home.css | 1170 | .home-intro__copy p, .home-intro__trust | line-height | 1.72 | — | local-type-exception |
-| assets/page-home.css | 1205 | .home-service span | font-size | 13px | — | local-type-exception |
-| assets/page-home.css | 1206 | .home-service span | font-weight | 700 | — | local-type-exception |
-| assets/page-home.css | 1207 | .home-service span | letter-spacing | .16em | — | local-type-exception |
-| assets/page-home.css | 1213 | .home-service h3 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-home.css | 1214 | .home-service h3 | font-size | clamp(32px, 3.1vw, 48px) | — | local-type-exception |
-| assets/page-home.css | 1215 | .home-service h3 | font-weight | 500 | — | local-type-exception |
-| assets/page-home.css | 1216 | .home-service h3 | line-height | 1 | — | local-type-exception |
-| assets/page-home.css | 1223 | .home-service p | font-size | 15px | — | local-type-exception |
-| assets/page-home.css | 1224 | .home-service p | line-height | 1.65 | — | local-type-exception |
-| assets/page-home.css | 1248 | .home-intro__cta | font-size | 14px | — | local-type-exception |
-| assets/page-home.css | 1249 | .home-intro__cta | font-weight | 650 | — | local-type-exception |
-| assets/page-home.css | 1250 | .home-intro__cta | letter-spacing | .025em | — | local-type-exception |
-| assets/page-home.css | 1277 | .home-intro__cta::after | font-size | 1.15rem | — | local-type-exception |
-| assets/page-home.css | 1317 | .home-intro__trust a | font-weight | 700 | — | local-type-exception |
+| assets/page-home.css | 1085 | .nav a | font-size | clamp(.78rem, .55vw, .88rem) | — | local-type-exception |
+| assets/page-home.css | 1086 | .nav a | letter-spacing | .18em | — | local-type-exception |
+| assets/page-home.css | 1090 | .detail-kicker | font-size | .78rem | — | local-type-exception |
+| assets/page-home.css | 1104 | .cta::after | font-size | 1.25rem | — | local-type-exception |
+| assets/page-home.css | 1135 | .home-intro__eyebrow | font-size | 13px | — | local-type-exception |
+| assets/page-home.css | 1136 | .home-intro__eyebrow | font-weight | 700 | — | local-type-exception |
+| assets/page-home.css | 1137 | .home-intro__eyebrow | letter-spacing | .18em | — | local-type-exception |
+| assets/page-home.css | 1151 | .home-intro h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-home.css | 1152 | .home-intro h2 | font-size | clamp(52px, 7.4vw, 112px) | — | local-type-exception |
+| assets/page-home.css | 1153 | .home-intro h2 | font-weight | 500 | — | local-type-exception |
+| assets/page-home.css | 1154 | .home-intro h2 | line-height | .92 | — | local-type-exception |
+| assets/page-home.css | 1155 | .home-intro h2 | letter-spacing | -.035em | — | local-type-exception |
+| assets/page-home.css | 1170 | .home-intro__copy p, .home-intro__trust | font-size | clamp(16px, 1.25vw, 19px) | — | local-type-exception |
+| assets/page-home.css | 1171 | .home-intro__copy p, .home-intro__trust | line-height | 1.72 | — | local-type-exception |
+| assets/page-home.css | 1206 | .home-service span | font-size | 13px | — | local-type-exception |
+| assets/page-home.css | 1207 | .home-service span | font-weight | 700 | — | local-type-exception |
+| assets/page-home.css | 1208 | .home-service span | letter-spacing | .16em | — | local-type-exception |
+| assets/page-home.css | 1214 | .home-service h3 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-home.css | 1215 | .home-service h3 | font-size | clamp(32px, 3.1vw, 48px) | — | local-type-exception |
+| assets/page-home.css | 1216 | .home-service h3 | font-weight | 500 | — | local-type-exception |
+| assets/page-home.css | 1217 | .home-service h3 | line-height | 1 | — | local-type-exception |
+| assets/page-home.css | 1224 | .home-service p | font-size | 15px | — | local-type-exception |
+| assets/page-home.css | 1225 | .home-service p | line-height | 1.65 | — | local-type-exception |
+| assets/page-home.css | 1249 | .home-intro__cta | font-size | 14px | — | local-type-exception |
+| assets/page-home.css | 1250 | .home-intro__cta | font-weight | 650 | — | local-type-exception |
+| assets/page-home.css | 1251 | .home-intro__cta | letter-spacing | .025em | — | local-type-exception |
+| assets/page-home.css | 1278 | .home-intro__cta::after | font-size | 1.15rem | — | local-type-exception |
+| assets/page-home.css | 1318 | .home-intro__trust a | font-weight | 700 | — | local-type-exception |
 | assets/page-menu.css | 23 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-menu.css | 108 | .skip | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/page-menu.css | 148 | .header-nav a | font-size | 12px | — | local-type-exception |
@@ -805,27 +805,27 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/campaign/styles.css | 650 | .journey-note p | line-height | 1.55 | — | local-type-exception |
 | assets/services/campaign/styles.css | 658 | .journey-note small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/services/campaign/styles.css | 659 | .journey-note small | line-height | 1.45 | — | local-type-exception |
-| assets/services/campaign/styles.css | 737 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) | semantic-token |
-| assets/services/campaign/styles.css | 746 | .opening-copy h1 | font-size | clamp(48px, 6.2vw, 64px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/campaign/styles.css | 755 | .proof-content h2 | font-size | clamp(48px, 5.4vw, 62px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/campaign/styles.css | 800 | .opening-copy h1 | font-size | clamp(48px, 14vw, 72px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 824 | .journey-intro h2 | font-size | clamp(54px, 16vw, 76px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 830 | .journey-intro > p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 856 | .journey-mobile-steps b | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 857 | .journey-mobile-steps b | font-size | 24px | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 858 | .journey-mobile-steps b | font-weight | 400 | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 867 | .journey-mobile-steps strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 868 | .journey-mobile-steps strong | letter-spacing | .08em | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 874 | .journey-mobile-steps small | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 875 | .journey-mobile-steps small | line-height | 1.4 | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 899 | .proof-content h2 | font-size | clamp(43px, 12.7vw, 56px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 904 | .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 919 | .proof-index | font-size | 20px | @media (max-width: 820px) | local-type-exception |
-| assets/services/campaign/styles.css | 927 | .proof-label strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 932 | .proof-label small, .proof-detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 945 | .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/campaign/styles.css | 973 | .campaign-proof .proof-content h2 | font-size | 36px | @media (max-width: 640px) and (max-height: 700px) | local-type-exception |
-| assets/services/campaign/styles.css | 978 | .campaign-proof .proof-lead | line-height | 1.35 | @media (max-width: 640px) and (max-height: 700px) | local-type-exception |
+| assets/services/campaign/styles.css | 734 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) | semantic-token |
+| assets/services/campaign/styles.css | 743 | .opening-copy h1 | font-size | clamp(48px, 6.2vw, 64px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/campaign/styles.css | 752 | .proof-content h2 | font-size | clamp(48px, 5.4vw, 62px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/campaign/styles.css | 797 | .opening-copy h1 | font-size | clamp(48px, 14vw, 72px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 821 | .journey-intro h2 | font-size | clamp(54px, 16vw, 76px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 827 | .journey-intro > p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 853 | .journey-mobile-steps b | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 854 | .journey-mobile-steps b | font-size | 24px | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 855 | .journey-mobile-steps b | font-weight | 400 | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 864 | .journey-mobile-steps strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 865 | .journey-mobile-steps strong | letter-spacing | .08em | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 871 | .journey-mobile-steps small | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 872 | .journey-mobile-steps small | line-height | 1.4 | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 896 | .proof-content h2 | font-size | clamp(43px, 12.7vw, 56px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 901 | .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 916 | .proof-index | font-size | 20px | @media (max-width: 820px) | local-type-exception |
+| assets/services/campaign/styles.css | 924 | .proof-label strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 929 | .proof-label small, .proof-detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 942 | .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/campaign/styles.css | 970 | .campaign-proof .proof-content h2 | font-size | 36px | @media (max-width: 640px) and (max-height: 700px) | local-type-exception |
+| assets/services/campaign/styles.css | 975 | .campaign-proof .proof-lead | line-height | 1.35 | @media (max-width: 640px) and (max-height: 700px) | local-type-exception |
 | assets/services/diagnosis/styles.css | 18 | body | font-family | var(--ok-font-body) | — | semantic-token |
 | assets/services/diagnosis/styles.css | 22 | button | font | inherit | — | local-type-exception |
 | assets/services/diagnosis/styles.css | 149 | .site-header nav a | font-size | var(--ok-type-label) | — | semantic-token |
@@ -1000,65 +1000,65 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/process/styles.css | 650 | .journey-note p | line-height | 1.55 | — | local-type-exception |
 | assets/services/process/styles.css | 658 | .journey-note small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/services/process/styles.css | 659 | .journey-note small | line-height | 1.45 | — | local-type-exception |
-| assets/services/process/styles.css | 737 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) | semantic-token |
-| assets/services/process/styles.css | 746 | .opening-copy h1 | font-size | clamp(48px, 6.2vw, 64px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/process/styles.css | 755 | .proof-content h2 | font-size | clamp(48px, 5.4vw, 62px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/process/styles.css | 794 | .opening-copy h1 | font-size | clamp(48px, 14vw, 72px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 818 | .journey-intro h2 | font-size | clamp(54px, 16vw, 76px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 824 | .journey-intro > p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 850 | .journey-mobile-steps b | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 851 | .journey-mobile-steps b | font-size | 24px | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 852 | .journey-mobile-steps b | font-weight | 400 | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 861 | .journey-mobile-steps strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 862 | .journey-mobile-steps strong | letter-spacing | .08em | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 868 | .journey-mobile-steps small | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 869 | .journey-mobile-steps small | line-height | 1.4 | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 893 | .proof-content h2 | font-size | clamp(43px, 12.7vw, 56px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 898 | .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 913 | .proof-index | font-size | 20px | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 921 | .proof-label strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 926 | .proof-label small, .proof-detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 939 | .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 985 | .process-act | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/services/process/styles.css | 986 | .process-act | font-weight | 650 | — | local-type-exception |
-| assets/services/process/styles.css | 987 | .process-act | letter-spacing | .12em | — | local-type-exception |
-| assets/services/process/styles.css | 1000 | .process-editorial-content h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/services/process/styles.css | 1001 | .process-editorial-content h2 | font-size | clamp(58px, 4.7vw, 79px) | — | local-type-exception |
-| assets/services/process/styles.css | 1002 | .process-editorial-content h2 | font-weight | 500 | — | local-type-exception |
-| assets/services/process/styles.css | 1003 | .process-editorial-content h2 | letter-spacing | -.025em | — | local-type-exception |
-| assets/services/process/styles.css | 1004 | .process-editorial-content h2 | line-height | .92 | — | local-type-exception |
-| assets/services/process/styles.css | 1016 | .process-editorial-lead | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/process/styles.css | 1017 | .process-editorial-lead | line-height | 1.58 | — | local-type-exception |
-| assets/services/process/styles.css | 1037 | .process-evidence-list article > b | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/services/process/styles.css | 1038 | .process-evidence-list article > b | font-size | 25px | — | local-type-exception |
-| assets/services/process/styles.css | 1039 | .process-evidence-list article > b | font-weight | 400 | — | local-type-exception |
-| assets/services/process/styles.css | 1048 | .process-evidence-list strong | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/services/process/styles.css | 1049 | .process-evidence-list strong | font-weight | 650 | — | local-type-exception |
-| assets/services/process/styles.css | 1050 | .process-evidence-list strong | letter-spacing | .09em | — | local-type-exception |
-| assets/services/process/styles.css | 1056 | .process-evidence-list small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/process/styles.css | 1057 | .process-evidence-list small | line-height | 1.42 | — | local-type-exception |
-| assets/services/process/styles.css | 1064 | .process-stage-output | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/process/styles.css | 1065 | .process-stage-output | line-height | 1.5 | — | local-type-exception |
-| assets/services/process/styles.css | 1178 | .process-editorial-content h2 | font-size | clamp(48px, 5.5vw, 64px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/process/styles.css | 1228 | .process-act | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 1237 | .process-editorial-content h2 | font-size | clamp(42px, 11.8vw, 52px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 1242 | .process-editorial-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 1257 | .process-evidence-list article > b | font-size | 21px | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 1261 | .process-evidence-list strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 1266 | .process-evidence-list small, .process-stage-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 1301 | .process-opening-copy h1 | font-size | clamp(74px, 6.15vw, 103px) | — | local-type-exception |
-| assets/services/process/styles.css | 1302 | .process-opening-copy h1 | line-height | .9 | — | local-type-exception |
-| assets/services/process/styles.css | 1307 | .process-opening-copy p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/process/styles.css | 1344 | .process-method-intro h2 | font-size | clamp(60px, 5.05vw, 84px) | — | local-type-exception |
-| assets/services/process/styles.css | 1391 | .process-proof-content h2 | font-size | clamp(56px, 4.35vw, 73px) | — | local-type-exception |
-| assets/services/process/styles.css | 1424 | .process-opening-copy h1 | font-size | clamp(58px, 7.3vw, 78px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/process/styles.css | 1437 | .process-proof-content h2 | font-size | clamp(48px, 5.2vw, 61px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/process/styles.css | 1469 | .process-opening-copy h1 | font-size | clamp(50px, 14.5vw, 68px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 1473 | .process-opening-copy p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 1486 | .process-method-intro h2 | font-size | clamp(47px, 13.3vw, 62px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 1500 | .process-proof-content h2 | font-size | clamp(39px, 11.3vw, 50px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/process/styles.css | 1505 | .process-proof-content .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/process/styles.css | 1527 | .process-proof-content .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 734 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) | semantic-token |
+| assets/services/process/styles.css | 743 | .opening-copy h1 | font-size | clamp(48px, 6.2vw, 64px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/process/styles.css | 752 | .proof-content h2 | font-size | clamp(48px, 5.4vw, 62px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/process/styles.css | 791 | .opening-copy h1 | font-size | clamp(48px, 14vw, 72px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 815 | .journey-intro h2 | font-size | clamp(54px, 16vw, 76px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 821 | .journey-intro > p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 847 | .journey-mobile-steps b | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 848 | .journey-mobile-steps b | font-size | 24px | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 849 | .journey-mobile-steps b | font-weight | 400 | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 858 | .journey-mobile-steps strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 859 | .journey-mobile-steps strong | letter-spacing | .08em | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 865 | .journey-mobile-steps small | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 866 | .journey-mobile-steps small | line-height | 1.4 | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 890 | .proof-content h2 | font-size | clamp(43px, 12.7vw, 56px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 895 | .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 910 | .proof-index | font-size | 20px | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 918 | .proof-label strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 923 | .proof-label small, .proof-detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 936 | .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 982 | .process-act | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/services/process/styles.css | 983 | .process-act | font-weight | 650 | — | local-type-exception |
+| assets/services/process/styles.css | 984 | .process-act | letter-spacing | .12em | — | local-type-exception |
+| assets/services/process/styles.css | 997 | .process-editorial-content h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/services/process/styles.css | 998 | .process-editorial-content h2 | font-size | clamp(58px, 4.7vw, 79px) | — | local-type-exception |
+| assets/services/process/styles.css | 999 | .process-editorial-content h2 | font-weight | 500 | — | local-type-exception |
+| assets/services/process/styles.css | 1000 | .process-editorial-content h2 | letter-spacing | -.025em | — | local-type-exception |
+| assets/services/process/styles.css | 1001 | .process-editorial-content h2 | line-height | .92 | — | local-type-exception |
+| assets/services/process/styles.css | 1013 | .process-editorial-lead | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/process/styles.css | 1014 | .process-editorial-lead | line-height | 1.58 | — | local-type-exception |
+| assets/services/process/styles.css | 1034 | .process-evidence-list article > b | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/services/process/styles.css | 1035 | .process-evidence-list article > b | font-size | 25px | — | local-type-exception |
+| assets/services/process/styles.css | 1036 | .process-evidence-list article > b | font-weight | 400 | — | local-type-exception |
+| assets/services/process/styles.css | 1045 | .process-evidence-list strong | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/services/process/styles.css | 1046 | .process-evidence-list strong | font-weight | 650 | — | local-type-exception |
+| assets/services/process/styles.css | 1047 | .process-evidence-list strong | letter-spacing | .09em | — | local-type-exception |
+| assets/services/process/styles.css | 1053 | .process-evidence-list small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/process/styles.css | 1054 | .process-evidence-list small | line-height | 1.42 | — | local-type-exception |
+| assets/services/process/styles.css | 1061 | .process-stage-output | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/process/styles.css | 1062 | .process-stage-output | line-height | 1.5 | — | local-type-exception |
+| assets/services/process/styles.css | 1175 | .process-editorial-content h2 | font-size | clamp(48px, 5.5vw, 64px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/process/styles.css | 1225 | .process-act | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 1234 | .process-editorial-content h2 | font-size | clamp(42px, 11.8vw, 52px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 1239 | .process-editorial-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 1254 | .process-evidence-list article > b | font-size | 21px | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 1258 | .process-evidence-list strong | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 1263 | .process-evidence-list small, .process-stage-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 1298 | .process-opening-copy h1 | font-size | clamp(74px, 6.15vw, 103px) | — | local-type-exception |
+| assets/services/process/styles.css | 1299 | .process-opening-copy h1 | line-height | .9 | — | local-type-exception |
+| assets/services/process/styles.css | 1304 | .process-opening-copy p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/process/styles.css | 1341 | .process-method-intro h2 | font-size | clamp(60px, 5.05vw, 84px) | — | local-type-exception |
+| assets/services/process/styles.css | 1388 | .process-proof-content h2 | font-size | clamp(56px, 4.35vw, 73px) | — | local-type-exception |
+| assets/services/process/styles.css | 1421 | .process-opening-copy h1 | font-size | clamp(58px, 7.3vw, 78px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/process/styles.css | 1434 | .process-proof-content h2 | font-size | clamp(48px, 5.2vw, 61px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/process/styles.css | 1466 | .process-opening-copy h1 | font-size | clamp(50px, 14.5vw, 68px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 1470 | .process-opening-copy p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 1483 | .process-method-intro h2 | font-size | clamp(47px, 13.3vw, 62px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 1497 | .process-proof-content h2 | font-size | clamp(39px, 11.3vw, 50px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/process/styles.css | 1502 | .process-proof-content .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/process/styles.css | 1524 | .process-proof-content .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
 | assets/services/social/styles.css | 28 | body | font-family | var(--ok-font-body) | — | semantic-token |
 | assets/services/social/styles.css | 155 | .site-header nav a | font-size | 12px | — | local-type-exception |
 | assets/services/social/styles.css | 156 | .site-header nav a | font-weight | 650 | — | local-type-exception |
@@ -1124,32 +1124,32 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/social/styles.css | 703 | .social-opening .opening-copy h1 | font-size | clamp(62px, 5vw, 84px) | — | local-type-exception |
 | assets/services/social/styles.css | 783 | .social-terms | font-size | var(--ok-type-content-min) | — | semantic-token |
 | assets/services/social/styles.css | 784 | .social-terms | line-height | 1.45 | — | local-type-exception |
-| assets/services/social/styles.css | 852 | .site-header nav a | font-size | var(--ok-type-label-min) | @media (max-width: 1024px) | semantic-token |
-| assets/services/social/styles.css | 861 | .opening-copy h1 | font-size | clamp(48px, 6.2vw, 64px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/social/styles.css | 870 | .proof-content h2 | font-size | clamp(48px, 5.4vw, 62px) | @media (max-width: 1024px) | local-type-exception |
-| assets/services/social/styles.css | 909 | .opening-copy h1 | font-size | clamp(48px, 14vw, 72px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 936 | .journey-intro h2 | font-size | clamp(54px, 16vw, 76px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 942 | .journey-intro > p | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 970 | .journey-mobile-steps b | font-family | var(--ok-font-display) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 971 | .journey-mobile-steps b | font-size | 24px | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 972 | .journey-mobile-steps b | font-weight | 400 | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 981 | .journey-mobile-steps strong | font-size | var(--ok-type-label-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 982 | .journey-mobile-steps strong | letter-spacing | .08em | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 988 | .journey-mobile-steps small | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 989 | .journey-mobile-steps small | line-height | 1.3 | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1014 | .proof-content h2 | font-size | clamp(38px, 11.6vw, 50px) | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1019 | .proof-lead | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 1020 | .proof-lead | line-height | 1.3 | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1035 | .proof-index | font-size | 20px | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1043 | .proof-label strong | font-size | var(--ok-type-label-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 1048 | .proof-label small, .proof-detail p | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 1049 | .proof-label small, .proof-detail p | line-height | 1.3 | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1064 | .proof-output | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 1065 | .proof-output | line-height | 1.25 | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1070 | .social-terms | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
-| assets/services/social/styles.css | 1071 | .social-terms | line-height | 1.25 | @media (max-width: 820px) | local-type-exception |
-| assets/services/social/styles.css | 1100 | .social-signals .proof-content h2 | font-size | 36px | @media (max-width: 820px) and (max-height: 740px) | local-type-exception |
-| assets/services/social/styles.css | 1105 | .social-signals .proof-lead | line-height | 1.25 | @media (max-width: 820px) and (max-height: 740px) | local-type-exception |
+| assets/services/social/styles.css | 831 | .site-header nav a | font-size | var(--ok-type-label-min) | @media (max-width: 1024px) | semantic-token |
+| assets/services/social/styles.css | 840 | .opening-copy h1 | font-size | clamp(48px, 6.2vw, 64px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/social/styles.css | 849 | .proof-content h2 | font-size | clamp(48px, 5.4vw, 62px) | @media (max-width: 1024px) | local-type-exception |
+| assets/services/social/styles.css | 888 | .opening-copy h1 | font-size | clamp(48px, 14vw, 72px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 915 | .journey-intro h2 | font-size | clamp(54px, 16vw, 76px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 921 | .journey-intro > p | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 949 | .journey-mobile-steps b | font-family | var(--ok-font-display) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 950 | .journey-mobile-steps b | font-size | 24px | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 951 | .journey-mobile-steps b | font-weight | 400 | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 960 | .journey-mobile-steps strong | font-size | var(--ok-type-label-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 961 | .journey-mobile-steps strong | letter-spacing | .08em | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 967 | .journey-mobile-steps small | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 968 | .journey-mobile-steps small | line-height | 1.3 | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 993 | .proof-content h2 | font-size | clamp(38px, 11.6vw, 50px) | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 998 | .proof-lead | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 999 | .proof-lead | line-height | 1.3 | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 1014 | .proof-index | font-size | 20px | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 1022 | .proof-label strong | font-size | var(--ok-type-label-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 1027 | .proof-label small, .proof-detail p | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 1028 | .proof-label small, .proof-detail p | line-height | 1.3 | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 1043 | .proof-output | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 1044 | .proof-output | line-height | 1.25 | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 1049 | .social-terms | font-size | var(--ok-type-content-min) | @media (max-width: 820px) | semantic-token |
+| assets/services/social/styles.css | 1050 | .social-terms | line-height | 1.25 | @media (max-width: 820px) | local-type-exception |
+| assets/services/social/styles.css | 1079 | .social-signals .proof-content h2 | font-size | 36px | @media (max-width: 820px) and (max-height: 740px) | local-type-exception |
+| assets/services/social/styles.css | 1084 | .social-signals .proof-lead | line-height | 1.25 | @media (max-width: 820px) and (max-height: 740px) | local-type-exception |
 | assets/services/web/styles.css | 28 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/services/web/styles.css | 155 | .site-header nav a | font-size | 12px | — | local-type-exception |
 | assets/services/web/styles.css | 156 | .site-header nav a | font-weight | 650 | — | local-type-exception |
@@ -1320,8 +1320,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-home.css | 667 | .nav a | display | inline-flex | @media (max-width: 640px) |
 | assets/page-home.css | 669 | .nav a | font-size | .75rem | @media (max-width: 640px) |
 | assets/page-home.css | 708 | .topbar | height | 4.5rem | @media (max-width: 640px) and (max-height: 720px) |
-| assets/page-home.css | 1072 | .topbar | height | clamp(7rem, 9vh, 8.5rem) | — |
-| assets/page-home.css | 1084 | .nav a | font-size | clamp(.78rem, .55vw, .88rem) | — |
+| assets/page-home.css | 1073 | .topbar | height | clamp(7rem, 9vh, 8.5rem) | — |
+| assets/page-home.css | 1085 | .nav a | font-size | clamp(.78rem, .55vw, .88rem) | — |
 | assets/page-menu.css | 117 | /* ---------- header ---------- */ .site-header | height | var(--header-height) | — |
 | assets/page-menu.css | 119 | /* ---------- header ---------- */ .site-header | display | flex | — |
 | assets/page-menu.css | 138 | .header-nav | display | flex | — |
@@ -1451,10 +1451,10 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/campaign/styles.css | 306 | .scroll-cue | z-index | 10 | — |
 | assets/services/campaign/styles.css | 309 | .scroll-cue | display | flex | — |
 | assets/services/campaign/styles.css | 312 | .scroll-cue | font-size | 12px | — |
-| assets/services/campaign/styles.css | 728 | .site-header | height | 84px | @media (max-width: 1024px) |
-| assets/services/campaign/styles.css | 737 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) |
-| assets/services/campaign/styles.css | 778 | .story-stage, .campaign-frame | min-height | 720px | @media (max-width: 820px) |
-| assets/services/campaign/styles.css | 786 | .site-header nav a:nth-child(2) | display | none | @media (max-width: 820px) |
+| assets/services/campaign/styles.css | 725 | .site-header | height | 84px | @media (max-width: 1024px) |
+| assets/services/campaign/styles.css | 734 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) |
+| assets/services/campaign/styles.css | 775 | .story-stage, .campaign-frame | min-height | 720px | @media (max-width: 820px) |
+| assets/services/campaign/styles.css | 783 | .site-header nav a:nth-child(2) | display | none | @media (max-width: 820px) |
 | assets/services/diagnosis/styles.css | 58 | .diagnosis-story, .story-stage | position | relative | — |
 | assets/services/diagnosis/styles.css | 60 | .diagnosis-story, .story-stage | height | 100svh | — |
 | assets/services/diagnosis/styles.css | 64 | .story-stage | overflow | hidden | — |
@@ -1500,10 +1500,10 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/process/styles.css | 306 | .scroll-cue | z-index | 10 | — |
 | assets/services/process/styles.css | 309 | .scroll-cue | display | flex | — |
 | assets/services/process/styles.css | 312 | .scroll-cue | font-size | 12px | — |
-| assets/services/process/styles.css | 728 | .site-header | height | 84px | @media (max-width: 1024px) |
-| assets/services/process/styles.css | 737 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) |
-| assets/services/process/styles.css | 772 | .story-stage, .campaign-frame | min-height | 720px | @media (max-width: 820px) |
-| assets/services/process/styles.css | 780 | .site-header nav a:nth-child(2) | display | none | @media (max-width: 820px) |
+| assets/services/process/styles.css | 725 | .site-header | height | 84px | @media (max-width: 1024px) |
+| assets/services/process/styles.css | 734 | .site-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1024px) |
+| assets/services/process/styles.css | 769 | .story-stage, .campaign-frame | min-height | 720px | @media (max-width: 820px) |
+| assets/services/process/styles.css | 777 | .site-header nav a:nth-child(2) | display | none | @media (max-width: 820px) |
 | assets/services/social/styles.css | 66 | .story-stage | position | sticky | — |
 | assets/services/social/styles.css | 69 | .story-stage | height | 100svh | — |
 | assets/services/social/styles.css | 70 | .story-stage | min-height | 680px | — |
@@ -1527,10 +1527,10 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/social/styles.css | 306 | .scroll-cue | z-index | 10 | — |
 | assets/services/social/styles.css | 309 | .scroll-cue | display | flex | — |
 | assets/services/social/styles.css | 312 | .scroll-cue | font-size | 12px | — |
-| assets/services/social/styles.css | 843 | .site-header | height | 84px | @media (max-width: 1024px) |
-| assets/services/social/styles.css | 852 | .site-header nav a | font-size | var(--ok-type-label-min) | @media (max-width: 1024px) |
-| assets/services/social/styles.css | 887 | .story-stage, .social-frame | min-height | 720px | @media (max-width: 820px) |
-| assets/services/social/styles.css | 895 | .site-header nav a:nth-child(2) | display | none | @media (max-width: 820px) |
+| assets/services/social/styles.css | 822 | .site-header | height | 84px | @media (max-width: 1024px) |
+| assets/services/social/styles.css | 831 | .site-header nav a | font-size | var(--ok-type-label-min) | @media (max-width: 1024px) |
+| assets/services/social/styles.css | 866 | .story-stage, .social-frame | min-height | 720px | @media (max-width: 820px) |
+| assets/services/social/styles.css | 874 | .site-header nav a:nth-child(2) | display | none | @media (max-width: 820px) |
 | assets/services/web/styles.css | 66 | .story-stage | position | sticky | — |
 | assets/services/web/styles.css | 69 | .story-stage | height | 100svh | — |
 | assets/services/web/styles.css | 70 | .story-stage | min-height | 680px | — |

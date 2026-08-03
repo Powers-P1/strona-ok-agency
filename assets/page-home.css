@@ -998,11 +998,12 @@ h1 {
 }
 
 /*
-  Feather only the environment edge on ultrawide screens. A dedicated empty
-  atelier plate continues the wall, floor, grain and lighting behind it, while
-  the sculpture and canvases remain in one unchanged 1672:941 coordinate system.
+  Feather the environment edge whenever the viewport is wider than the source
+  plate. From that exact ratio onward the height-fitted image-rig no longer
+  reaches the left viewport edge; fading it into the dedicated empty atelier
+  plate prevents a hard vertical join at every intermediate window width.
 */
-@media (min-width: 1025px) and (min-aspect-ratio: 2 / 1) {
+@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941) {
   .image-rig {
     -webkit-mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 100%);
     mask-image: linear-gradient(to right, transparent 0, #000 15%, #000 100%);

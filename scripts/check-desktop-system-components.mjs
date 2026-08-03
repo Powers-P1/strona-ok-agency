@@ -7,6 +7,8 @@ import { chromium } from "playwright";
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const DESKTOP_VIEWPORTS = [
   { width: 1024, height: 768, name: "1024 sanity" },
+  { width: 1440, height: 600, name: "1440 short" },
+  { width: 1440, height: 640, name: "1440 short tall" },
   { width: 1440, height: 900, name: "1440 sanity" },
   { width: 2560, height: 1440, name: "2K" },
   { width: 3840, height: 2160, name: "4K" },
@@ -16,6 +18,7 @@ const MOBILE_VIEWPORT = { width: 390, height: 844, name: "390 mobile smoke" };
 const SERVICE_PROOFS = [
   { route: "/strony-internetowe", scene: "#web-proof", name: "WWW proof" },
   { route: "/social-media", scene: "#social-signals", name: "Social proof" },
+  { route: "/kampanie", scene: "#campaign-proof", name: "Campaign proof" },
   { route: "/proces", scene: "#process-proof", name: "Process proof" },
 ];
 const MOBILE_ROUTES = [
@@ -46,6 +49,34 @@ const textRoleCheck = (metrics, role, label) => {
       size + .75 >= role,
       `${label}: ${selector} is ${size}px, below its semantic role ${role}px`,
     );
+  });
+};
+const compareComponentSignatures = (entries, label) => {
+  const baseline = entries[0];
+  if (!baseline?.signature) return;
+  const numericKeys = [
+    "panelWidth",
+    "rowMinHeight",
+    "rowPaddingTop",
+    "rowGap",
+    "labelGap",
+    "actionMarginTop",
+    "actionGap",
+    "primaryMinHeight",
+    "primaryMinWidth",
+  ];
+  entries.slice(1).forEach(entry => {
+    if (!entry.signature) {
+      check(false, `${label}: ${entry.name} has no shared component signature`);
+      return;
+    }
+    numericKeys.forEach(key => {
+      const delta = Math.abs(entry.signature[key] - baseline.signature[key]);
+      check(
+        delta <= EPSILON,
+        `${label}: ${entry.name} ${key}=${entry.signature[key]} differs from ${baseline.name}=${baseline.signature[key]}`,
+      );
+    });
   });
 };
 
@@ -165,8 +196,13 @@ const auditServiceProof = async (page, baseUrl, viewport, proof) => {
       .filter(visible)
       .map(element => ({ selector, size: Number.parseFloat(getComputedStyle(element).fontSize) }));
     const openItem = scene.querySelector(".proof-item.is-open");
+    const openTrigger = openItem?.querySelector(".proof-trigger");
     const detail = openItem?.querySelector(".proof-detail:not([hidden])");
     const nextTrigger = openItem?.nextElementSibling?.querySelector(".proof-trigger");
+    const actions = scene.querySelector(".proof-actions");
+    const primary = scene.querySelector(".proof-primary");
+    const label = openTrigger?.querySelector(".proof-label");
+    const number = (element, property) => Number.parseFloat(getComputedStyle(element)[property]);
     const sceneRect = rect(scene);
     const actionRects = [...scene.querySelectorAll(".proof-actions, .proof-primary, .proof-secondary")]
       .filter(visible)
@@ -187,6 +223,18 @@ const auditServiceProof = async (page, baseUrl, viewport, proof) => {
       horizontalOverflow: documentElement.scrollWidth - documentElement.clientWidth,
       nestedSceneScroll: /(auto|scroll)/.test(getComputedStyle(scene).overflowY)
         && scene.scrollHeight > scene.clientHeight + epsilon,
+      componentSignature: openTrigger && actions && primary && label ? {
+        transform: getComputedStyle(scene.querySelector(".proof-content")).transform,
+        panelWidth: scene.querySelector(".proof-content").getBoundingClientRect().width,
+        rowMinHeight: number(openTrigger, "minHeight"),
+        rowPaddingTop: number(openTrigger, "paddingTop"),
+        rowGap: number(openTrigger, "gap"),
+        labelGap: number(label, "gap"),
+        actionMarginTop: number(actions, "marginTop"),
+        actionGap: number(actions, "gap"),
+        primaryMinHeight: number(primary, "minHeight"),
+        primaryMinWidth: number(primary, "minWidth"),
+      } : null,
     };
   }, EPSILON);
 
@@ -215,6 +263,8 @@ const auditServiceProof = async (page, baseUrl, viewport, proof) => {
   textRoleCheck(metrics.content, roles.content, label);
   check(metrics.horizontalOverflow <= EPSILON, `${label}: horizontal overflow ${metrics.horizontalOverflow}px`);
   check(!metrics.nestedSceneScroll, `${label}: proof scene creates a nested vertical scroller`);
+  check(metrics.componentSignature?.transform === "none", `${label}: proof panel uses local transform scaling`);
+  return metrics.componentSignature;
 };
 
 const auditAbout = async (page, baseUrl, viewport) => {
@@ -311,6 +361,25 @@ const auditAbout = async (page, baseUrl, viewport) => {
       horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       nestedSceneScroll: /(auto|scroll)/.test(getComputedStyle(scene).overflowY)
         && scene.scrollHeight > scene.clientHeight + epsilon,
+      componentSignature: (() => {
+        const trigger = openItem?.querySelector(".accordion-trigger");
+        const label = trigger?.querySelector(".accordion-label");
+        const actions = scene.querySelector(".actions");
+        const primary = scene.querySelector(".primary-cta");
+        const number = (element, property) => Number.parseFloat(getComputedStyle(element)[property]);
+        return trigger && label && actions && primary ? {
+          transform: getComputedStyle(scene.querySelector(".copy-panel")).transform,
+          panelWidth: scene.querySelector(".copy-panel").getBoundingClientRect().width,
+          rowMinHeight: number(trigger, "minHeight"),
+          rowPaddingTop: number(trigger, "paddingTop"),
+          rowGap: number(trigger, "gap"),
+          labelGap: number(label, "gap"),
+          actionMarginTop: number(actions, "marginTop"),
+          actionGap: number(actions, "gap"),
+          primaryMinHeight: number(primary, "minHeight"),
+          primaryMinWidth: number(primary, "minWidth"),
+        } : null;
+      })(),
     };
   }, EPSILON);
 
@@ -342,6 +411,7 @@ const auditAbout = async (page, baseUrl, viewport) => {
   fontRoleCheck(credibility.controls, roles.control, `${baseLabel} credibility`);
   check(credibility.horizontalOverflow <= EPSILON, `${baseLabel} credibility: horizontal overflow ${credibility.horizontalOverflow}px`);
   check(!credibility.nestedSceneScroll, `${baseLabel} credibility: scene creates a nested vertical scroller`);
+  check(credibility.componentSignature?.transform === "none", `${baseLabel} credibility: panel uses local transform scaling`);
 
   await page.waitForSelector("#site-footer");
   const footer = await page.locator("#site-footer").evaluate(element => {
@@ -371,6 +441,7 @@ const auditAbout = async (page, baseUrl, viewport) => {
   );
   check(footer.scrollWidth <= footer.clientWidth + EPSILON, `${baseLabel} footer: horizontal content is clipped`);
   check(footer.scrollHeight <= footer.clientHeight + EPSILON, `${baseLabel} footer: vertical content is clipped`);
+  return credibility.componentSignature;
 };
 
 const auditLegal = async (page, baseUrl, viewport) => {
@@ -488,10 +559,20 @@ try {
     page.setDefaultTimeout(12_000);
     page.setDefaultNavigationTimeout(20_000);
     try {
+      const componentSignatures = [];
       for (const proof of SERVICE_PROOFS) {
-        await auditServiceProof(page, baseUrl, viewport, proof);
+        componentSignatures.push({
+          name: proof.name,
+          signature: await auditServiceProof(page, baseUrl, viewport, proof),
+        });
       }
-      await auditAbout(page, baseUrl, viewport);
+      componentSignatures.push({
+        name: "About credibility",
+        signature: await auditAbout(page, baseUrl, viewport),
+      });
+      if (viewport.width >= 1440) {
+        compareComponentSignatures(componentSignatures, `${viewportLabel(viewport)} shared disclosure geometry`);
+      }
       await auditLegal(page, baseUrl, viewport);
     } catch (error) {
       failures.push(`${viewportLabel(viewport)} runner: ${error.message}`);

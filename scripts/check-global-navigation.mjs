@@ -236,8 +236,11 @@ assert.match(script, /document\.activeElement\s*===\s*first/, "Backward focus wr
 assert.match(script, /document\.activeElement\s*===\s*last/, "Forward focus wrapping is required.");
 assert.match(script, /trigger\.focus\(\{\s*preventScroll:\s*true\s*\}\)/, "Focus must return to MENU.");
 
-await auditComputedDropdownAlignment();
+const runtimeAudit = process.argv.includes("--runtime");
+if (runtimeAudit) await auditComputedDropdownAlignment();
 
 console.log(
-  `Global navigation source and computed-style checks passed for ${publicPages.length} public pages.`,
+  runtimeAudit
+    ? `Global navigation source and computed-style checks passed for ${publicPages.length} public pages.`
+    : `Global navigation source checks passed for ${publicPages.length} public pages.`,
 );

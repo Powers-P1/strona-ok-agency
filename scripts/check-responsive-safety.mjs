@@ -106,6 +106,9 @@ requireText(
   "@media (max-width: 1180px), (max-aspect-ratio: 4 / 3)",
   "CSS nie przełącza atomowo kompozycji 4:3 i mobile",
 );
+requireText(css, ".home-page .hero .hero-backdrop", "compact hero nadal zależy od runtime przy ukrywaniu backing plate");
+requireText(css, "will-change: auto", "compact hero nadal wymusza stałe kafle GPU");
+requireText(css, "filter: none", "compact raster hero nadal tworzy osobną filtrowaną warstwę GPU");
 requireText(css, "@media (max-aspect-ratio: 2 / 3)", "CSS nie ma osobnego kadru portretowego");
 requireText(css, "object-position: 56% bottom", "portretowe drzewko nie jest zakotwiczone do dołu kadru");
 requireText(css, "top: calc(100% - 36.43vw)", "animacja podstawy nie podąża za dolnym kadrowaniem");

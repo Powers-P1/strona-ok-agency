@@ -255,7 +255,8 @@ Finalne nagłówki po buildzie obejmują:
   odpowiedzi HTML przez [`functions/_middleware.js`](../functions/_middleware.js);
 - `frame-ancestors 'none'` i `X-Frame-Options: DENY`;
 - `X-Content-Type-Options: nosniff`;
-- `Referrer-Policy: strict-origin-when-cross-origin`;
+- `Referrer-Policy: origin`, aby także nawigacja wewnętrzna nie przekazywała
+  ścieżki ani parametrów adresu do narzędzi zewnętrznych;
 - ograniczone Permissions Policy;
 - COOP i Cross-Origin-Resource-Policy;
 - `upgrade-insecure-requests`.

@@ -36,6 +36,8 @@ const ATTRIBUTION_KEYS = Object.freeze([
 const ATTRIBUTION_KEY_SET = new Set(ATTRIBUTION_KEYS);
 const ATTRIBUTION_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 const ATTRIBUTION_CLOCK_SKEW_MS = 5 * 60 * 1000;
+const MAX_ATTRIBUTION_URL_LENGTH = 1000;
+const MAX_PRIVACY_DECODE_PASSES = 3;
 const ALLOWED_ATTRIBUTION_HOSTS = new Set([
   "okagency.pl",
   "www.okagency.pl",
@@ -66,13 +68,81 @@ function normalizePayload(input) {
   return payload;
 }
 
+function decodeForPrivacyCheck(value) {
+  if (typeof value !== "string") return null;
+  const normalize = input => input
+    .normalize("NFKC")
+    .replace(/[\p{Z}\p{Cc}\p{Cf}]/gu, " ");
+  let decoded = normalize(value);
+  for (let pass = 0; pass < MAX_PRIVACY_DECODE_PASSES; pass += 1) {
+    if (!/%[0-9A-Fa-f]{2}/.test(decoded)) break;
+    let invalidEncoding = false;
+    const next = decoded.replace(/(?:%[0-9A-Fa-f]{2})+/g, encoded => {
+      try {
+        return decodeURIComponent(encoded);
+      } catch {
+        invalidEncoding = true;
+        return encoded;
+      }
+    });
+    if (invalidEncoding) return null;
+    const normalized = normalize(next);
+    if (normalized === decoded) break;
+    decoded = normalized;
+  }
+  if (/%[0-9A-Fa-f]{2}/.test(decoded)) return null;
+  return decoded;
+}
+
+function looksLikePhone(value) {
+  if (
+    /(?:^|[^\p{L}\p{N}])(?:tel(?:efon)?|phone|mobile|kom(?:o|ó)rka)[\s:=._/\-]*\+?\d[\d\s()./\-]{6,}\d(?:[\s._/\-]*(?:ext|wew)\.?\s*\d{1,6})?(?=$|[^\p{L}\p{N}])/iu.test(value)
+  ) return true;
+
+  if (/^\s+\d{9,15}\s*$/.test(value)) return true;
+  for (const match of value.matchAll(/(?:^|[^\p{L}\p{N}])(\+?\d[\d\s()./\-]{6,}\d)(?=$|[^\p{L}\p{N}])/gu)) {
+    const candidate = match[1];
+    const digitCount = (candidate.match(/\d/g) || []).length;
+    if (digitCount < 9 || digitCount > 15) continue;
+    if (candidate.startsWith("+")) return true;
+    const groups = candidate.split(/\D+/).filter(Boolean);
+    if (
+      groups.length >= 3
+      && groups[0].length <= 3
+      && groups.every(group => group.length <= 4)
+    ) return true;
+  }
+  return false;
+}
+
+function containsContactData(value) {
+  const decoded = decodeForPrivacyCheck(value);
+  return (
+    decoded === null
+    || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(decoded)
+    || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(decoded.replace(/\s+/g, ""))
+    || looksLikePhone(decoded)
+  );
+}
+
+function containsPathContactData(value) {
+  const decoded = decodeForPrivacyCheck(value);
+  if (
+    decoded === null
+    || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(decoded)
+    || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(decoded.replace(/\s+/g, ""))
+    || looksLikePhone(decoded)
+  ) return true;
+  return /(?:^|[^\p{L}\p{N}])\+?\d{9,15}(?=$|[^\p{L}\p{N}])/u.test(decoded);
+}
+
 function cleanAttributionValue(value, limit) {
   if (typeof value !== "string") return "";
-  const cleaned = value
-    .replace(/[\u0000-\u001f\u007f]/g, "")
+  const stripped = value.replace(/[\u0000-\u001f\u007f]/g, "");
+  const cleaned = stripped
     .trim()
     .slice(0, limit);
-  return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(cleaned) ? "" : cleaned;
+  return containsContactData(value) || containsContactData(cleaned) ? "" : cleaned;
 }
 
 function attributionParamsFromUrl(url) {
@@ -99,27 +169,24 @@ function cleanAttributionUrl(value, keepAttribution) {
         || !ALLOWED_ATTRIBUTION_HOSTS.has(url.hostname)
       )
     ) return "";
-    if (!keepAttribution) return url.origin.slice(0, 1000);
+    if (!keepAttribution) {
+      return url.origin.length <= MAX_ATTRIBUTION_URL_LENGTH ? url.origin : "";
+    }
     url.username = "";
     url.password = "";
-    let decodedPath = url.pathname;
-    try {
-      decodedPath = decodeURIComponent(decodedPath);
-    } catch {
-      /* pozostaw zakodowaną ścieżkę do kontroli poniżej */
-    }
-    if (
-      /[^\s/@]+@[^\s/]+\.[^\s/]+/.test(decodedPath)
-      || /(?:^|\/)\+?\d[\d(). -]{6,}\d(?:\/|$)/.test(decodedPath)
-    ) url.pathname = "/";
+    if (containsPathContactData(url.pathname)) url.pathname = "/";
     const params = keepAttribution ? attributionParamsFromUrl(url) : {};
     url.hash = "";
     url.search = "";
+    if (url.toString().length > MAX_ATTRIBUTION_URL_LENGTH) url.pathname = "/";
+    if (url.toString().length > MAX_ATTRIBUTION_URL_LENGTH) return "";
     for (const key of ATTRIBUTION_KEYS) {
-      if (params[key]) url.searchParams.set(key, params[key]);
+      if (!params[key]) continue;
+      url.searchParams.set(key, params[key]);
+      if (url.toString().length > MAX_ATTRIBUTION_URL_LENGTH) url.searchParams.delete(key);
     }
     const normalized = url.toString();
-    return normalized.length <= 1000 ? normalized : "";
+    return normalized.length <= MAX_ATTRIBUTION_URL_LENGTH ? normalized : "";
   } catch {
     return "";
   }

@@ -124,7 +124,10 @@ function loadAnalytics({
   referrer = "",
   localStorage = createStorage(),
   sessionStorage = createStorage(),
+  existingIds = ["contact-form", "diagnosis-outcome"],
+  replaceStateMode = "available",
 } = {}) {
+  let activeReplaceStateMode = replaceStateMode;
   const head = new FakeElement("head");
   const body = new FakeElement("body");
   const documentListeners = new Map();
@@ -135,6 +138,9 @@ function loadAnalytics({
     readyState: "complete",
     referrer,
     createElement: tagName => new FakeElement(tagName),
+    getElementById(id) {
+      return existingIds.includes(id) ? { id } : null;
+    },
     addEventListener(name, listener) {
       documentListeners.set(name, listener);
     },
@@ -143,15 +149,21 @@ function loadAnalytics({
   let replacedUrl = null;
   const location = new URL(url);
   location.reload = () => { reloadCount += 1; };
+  const history = {
+    state: null,
+  };
+  if (activeReplaceStateMode !== "missing") {
+    history.replaceState = (_state, _title, nextUrl) => {
+      if (activeReplaceStateMode === "throw") throw new Error("replaceState unavailable");
+      if (activeReplaceStateMode === "noop") return;
+      replacedUrl = String(nextUrl);
+      location.href = new URL(replacedUrl, location.href).href;
+    };
+  }
   const window = {
     location,
     crypto: { randomUUID: () => "runtime-event-id-12345" },
-    history: {
-      state: null,
-      replaceState(_state, _title, nextUrl) {
-        replacedUrl = String(nextUrl);
-      },
-    },
+    history,
     addEventListener(name, listener) {
       const listeners = windowListeners.get(name) || [];
       listeners.push(listener);
@@ -182,16 +194,21 @@ function loadAnalytics({
   const dispatchStorage = key => {
     for (const listener of windowListeners.get("storage") || []) listener({ key });
   };
+  const dispatchWindow = (name, event = {}) => {
+    for (const listener of windowListeners.get(name) || []) listener(event);
+  };
 
   return {
     body,
     button,
     commands,
     dispatchStorage,
+    dispatchWindow,
     localStorage,
     pixelCommands,
     reloadCount: () => reloadCount,
     replacedUrl: () => replacedUrl,
+    setReplaceStateMode: mode => { activeReplaceStateMode = mode; },
     scripts,
     sessionStorage,
     window,
@@ -438,7 +455,7 @@ test("expired or v1 consent is invalidated and prompts again", () => {
 
 test("page locations strip query and path values that look like PII", () => {
   const runtime = loadAnalytics({
-    url: "https://okagency.pl/jan@example.com?utm_source=google&utm_campaign=jan-501234567&utm_content=tel-%2B48%20501%20234%20567&gclid=click-ab123456789xyz&email=other@example.com#contact-form",
+    url: "https://okagency.pl/jan@example.com?utm_source=google&utm_campaign=tel501234567&utm_content=tel-%2B48%20501%20234%20567&gclid=click-ab123456789xyz&email=other@example.com#contact-form",
     localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
   });
   const attribution = runtime.window.okAnalytics.attribution();
@@ -468,7 +485,7 @@ test("oversized attribution still replaces the browser URL with a sanitized fall
   const gclid = `g-${"a".repeat(510)}`;
   const fbclid = `f-${"b".repeat(510)}`;
   const runtime = loadAnalytics({
-    url: `https://okagency.pl/diagnoza?gclid=${gclid}&fbclid=${fbclid}&email=pii@example.com#result`,
+    url: `https://okagency.pl/diagnoza?gclid=${gclid}&fbclid=${fbclid}&email=pii@example.com#diagnosis-outcome`,
     localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
   });
 
@@ -477,12 +494,218 @@ test("oversized attribution still replaces the browser URL with a sanitized fall
   assert.ok(replaced.length <= 1000);
   assert.match(replaced, /gclid=g-/);
   assert.doesNotMatch(replaced, /fbclid|email|pii%40example\.com/i);
-  assert.match(replaced, /#result$/);
+  assert.match(replaced, /#diagnosis-outcome$/);
 
   const pageView = eventCommands(runtime).find(command => command[1] === "page_view");
   assert.ok(pageView[2].page_location.length <= 1000);
   assert.match(pageView[2].page_location, /gclid=g-/);
-  assert.doesNotMatch(pageView[2].page_location, /fbclid|email|pii%40example\.com|#result/i);
+  assert.doesNotMatch(pageView[2].page_location, /fbclid|email|pii%40example\.com|#diagnosis-outcome/i);
+});
+
+test("vendor URL keeps only an existing safe fragment and drops fragment PII", () => {
+  const safeRuntime = loadAnalytics({
+    url: "https://okagency.pl/kontakt?utm_source=google#contact-form",
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+  assert.match(safeRuntime.window.location.href, /#contact-form$/);
+  assert.equal(safeRuntime.window.location.hash, "#contact-form");
+
+  for (const hash of [
+    "#jan%2540example%252Ecom",
+    "#jan%25252540example%2525252Ecom",
+    "#tel%252B48%252F501%252F234%252F567",
+    "#not-an-existing-anchor",
+  ]) {
+    const runtime = loadAnalytics({
+      url: `https://okagency.pl/kontakt?email=other@example.com${hash}`,
+      localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+    });
+    assert.equal(runtime.replacedUrl(), "https://okagency.pl/kontakt");
+    assert.equal(runtime.window.location.hash, "");
+    assert.ok(runtime.scripts().some(src => src.includes("facebook.net")));
+    assert.doesNotMatch(
+      JSON.stringify({
+        href: runtime.window.location.href,
+        commands: runtime.commands(),
+        pixel: runtime.pixelCommands(),
+      }),
+      /jan(?:%25|%40|@)|other(?:%40|@)|501(?:%2F|\/)?234(?:%2F|\/)?567|not-an-existing-anchor/i,
+    );
+  }
+});
+
+test("later fragment changes are scrubbed before subsequent vendor events", () => {
+  const runtime = loadAnalytics({
+    url: "https://okagency.pl/diagnoza?utm_source=google",
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+
+  runtime.window.location.hash = "#jan%2540example%252Ecom";
+  runtime.dispatchWindow("hashchange");
+  assert.equal(runtime.window.location.hash, "");
+
+  runtime.window.location.hash = "#tel501234567";
+  runtime.window.okAnalytics.diagnosisComplete("website");
+  assert.equal(runtime.window.location.hash, "");
+
+  runtime.window.location.hash = "#other%2540example%252Ecom";
+  runtime.window.okAnalytics.generateLead("diagnosis", "lead-event-12345");
+  assert.equal(runtime.window.location.hash, "");
+  assert.doesNotMatch(
+    JSON.stringify({ href: runtime.window.location.href, commands: runtime.commands() }),
+    /jan|other|tel501|example(?:%252E|%2E|\.)com/i,
+  );
+});
+
+test("deeply encoded contact data and labelled phone variants never enter attribution", () => {
+  const runtime = loadAnalytics({
+    url: "https://okagency.pl/jan%2540example%252Ecom?utm_source=google&utm_medium=%252B48%252F501%252F234%252F567&utm_campaign=jan%2540example%252Ecom&utm_content=tel501234567&utm_term=%2B48%C2%A0501%C2%A0234%C2%A0567&gclid=click-ab123456789xyz&gbraid=tel%252B48501234567&wbraid=jan%2540example%252Ecom&fbclid=+48501234567",
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+  const attribution = runtime.window.okAnalytics.attribution();
+
+  assert.equal(
+    attribution.first_touch.landing_page,
+    "https://okagency.pl/?utm_source=google&gclid=click-ab123456789xyz",
+  );
+  assert.deepEqual(
+    plain(Object.fromEntries(Object.entries(attribution.first_touch).filter(([key]) => key.startsWith("utm_") || key.endsWith("clid") || key.endsWith("braid")))),
+    { utm_source: "google", gclid: "click-ab123456789xyz" },
+  );
+  assert.doesNotMatch(
+    JSON.stringify({ attribution, commands: runtime.commands(), href: runtime.window.location.href }),
+    /jan(?:%25|%40|@)|tel501|501(?:%2F|\/|\s)?234(?:%2F|\/|\s)?567/i,
+  );
+});
+
+test("control and zero-width separators cannot hide contact data in paths or campaign values", () => {
+  for (const unsafe of [
+    "501\u200B234\u200B567",
+    "tel\u200B501234567",
+    "501\u0000 234\u0000 567",
+    "jan\u200B@example.com",
+    "tel/501234567",
+    "tel501234567ext123",
+  ]) {
+    const encoded = encodeURIComponent(unsafe);
+    const runtime = loadAnalytics({
+      url: `https://okagency.pl/${encoded}?utm_content=${encoded}&gclid=click-ab123456789xyz`,
+      localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+    });
+    const touch = runtime.window.okAnalytics.attribution().first_touch;
+    assert.equal(touch.landing_page, "https://okagency.pl/?gclid=click-ab123456789xyz");
+    assert.equal(touch.utm_content, undefined);
+    assert.doesNotMatch(JSON.stringify(touch), /501|tel|jan|example/i);
+  }
+});
+
+test("phone-number runs are removed from paths even though numeric campaign IDs are allowed", () => {
+  for (const path of [
+    "501234567",
+    "tel/501234567",
+    "lead/48501234567",
+    "lead-501234567",
+    "501234567.html",
+    "id_48501234567_x",
+  ]) {
+    const runtime = loadAnalytics({
+      url: `https://okagency.pl/${path}?gclid=click-ab123456789xyz`,
+      localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+    });
+    const touch = runtime.window.okAnalytics.attribution().first_touch;
+    assert.equal(touch.landing_page, "https://okagency.pl/?gclid=click-ab123456789xyz");
+    assert.doesNotMatch(runtime.window.location.href, /501234567|48501234567/);
+  }
+});
+
+test("numeric campaign identifiers and non-phone dates remain valid attribution", () => {
+  const cases = [
+    ["utm_campaign", "1234567890"],
+    ["utm_campaign", "campaign-1234567890"],
+    ["utm_campaign", "campaign-1234567890-2"],
+    ["utm_campaign", "1234567890-2"],
+    ["utm_content", "summer-2026080312"],
+    ["utm_term", "2026-08-03-01"],
+    ["utm_medium", "50%-off"],
+    ["utm_source", "50%25-off"],
+  ];
+  for (const [key, value] of cases) {
+    const query = new URLSearchParams({ [key]: value, gclid: "click-ab123456789xyz" });
+    const runtime = loadAnalytics({
+      url: `https://okagency.pl/diagnoza?${query}`,
+      localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+    });
+    const touch = runtime.window.okAnalytics.attribution().first_touch;
+    assert.equal(touch[key], value);
+    assert.equal(touch.gclid, "click-ab123456789xyz");
+  }
+});
+
+test("functional parameters have priority while final vendor URLs stay within 1000 characters", () => {
+  const identifiers = {
+    gclid: `g-${"f".repeat(510)}`,
+    fbclid: `m-${"g".repeat(440)}`,
+  };
+  const baseRuntime = loadAnalytics({
+    url: `https://okagency.pl/diagnoza?${new URLSearchParams(identifiers)}`,
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+  const basePageView = eventCommands(baseRuntime).find(command => command[1] === "page_view");
+  assert.ok(basePageView[2].page_location.length > 980);
+  assert.match(basePageView[2].page_location, /fbclid=m-/);
+
+  const query = new URLSearchParams({
+    ...identifiers,
+    context: "diagnosis",
+  });
+  const runtime = loadAnalytics({
+    url: `https://okagency.pl/kontakt?${query}`,
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+  const pageView = eventCommands(runtime).find(command => command[1] === "page_view");
+
+  assert.ok(runtime.replacedUrl().length <= 1000);
+  assert.ok(pageView[2].page_location.length <= 1000);
+  assert.equal(new URL(runtime.replacedUrl()).searchParams.get("context"), "diagnosis");
+  assert.equal(new URL(pageView[2].page_location).searchParams.get("context"), "diagnosis");
+  assert.match(pageView[2].page_location, /gclid=g-/);
+  assert.doesNotMatch(pageView[2].page_location, /fbclid/);
+});
+
+test("unsafe location blocks Google and Meta when replaceState is missing, throws or is ineffective", () => {
+  for (const replaceStateMode of ["missing", "throw", "noop"]) {
+    const runtime = loadAnalytics({
+      url: "https://okagency.pl/kontakt?email=pii@example.com#jan@example.com",
+      localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+      replaceStateMode,
+    });
+    assert.equal(runtime.replacedUrl(), null);
+    assert.equal(runtime.scripts().some(src => /googletagmanager|facebook\.net/.test(src)), false);
+    assert.equal(runtime.pixelCommands().length, 0);
+  }
+});
+
+test("analytics-to-marketing upgrade never grants vendors before an unsafe URL is scrubbed", () => {
+  for (const replaceStateMode of ["throw", "noop"]) {
+    const localStorage = createStorage({ "ok-consent": consentValue("analytics") });
+    const runtime = loadAnalytics({ localStorage });
+    const consentUpdatesBefore = runtime.commands().filter(command => (
+      command[0] === "consent" && command[1] === "update"
+    )).length;
+
+    runtime.window.location.href = "https://okagency.pl/kontakt?email=pii@example.com#jan@example.com";
+    runtime.setReplaceStateMode(replaceStateMode);
+    localStorage.setItem("ok-consent", consentValue("marketing"));
+    runtime.dispatchStorage("ok-consent");
+
+    const consentUpdatesAfter = runtime.commands().filter(command => (
+      command[0] === "consent" && command[1] === "update"
+    )).length;
+    assert.equal(consentUpdatesAfter, consentUpdatesBefore);
+    assert.equal(runtime.scripts().some(src => src.includes("facebook.net")), false);
+    assert.equal(runtime.pixelCommands().length, 0);
+    assert.equal(runtime.commands().some(command => command[0] === "config" && command[1] === "AW-18361103115"), false);
+  }
 });
 
 test("DiagnosisComplete tracker emits once per completion and resets for a new run", () => {

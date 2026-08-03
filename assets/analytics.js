@@ -21,6 +21,8 @@
   const CONSENT_CLOCK_SKEW_MS = 5 * 60 * 1000;
   const ATTRIBUTION_STORAGE_KEY = "ok-attribution";
   const ATTRIBUTION_VERSION = 1;
+  const MAX_VENDOR_URL_LENGTH = 1000;
+  const MAX_PRIVACY_DECODE_PASSES = 3;
 
   const ATTRIBUTION_KEYS = Object.freeze([
     "utm_source",
@@ -53,19 +55,76 @@
 
   /* ---------- bezpieczne dane strony i kampanii ---------- */
 
-  const looksLikeEmail = value => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value);
-  const looksLikePhone = value => (
-    /(?:^|[^\p{L}\p{N}])\+?\d[\d(). -]{6,}\d(?=$|[^\p{L}\p{N}])/u.test(value)
+  const decodeForPrivacyCheck = value => {
+    if (typeof value !== "string") return null;
+    const normalize = input => input
+      .normalize("NFKC")
+      .replace(/[\p{Z}\p{Cc}\p{Cf}]/gu, " ");
+    let decoded = normalize(value);
+    for (let pass = 0; pass < MAX_PRIVACY_DECODE_PASSES; pass += 1) {
+      if (!/%[0-9A-Fa-f]{2}/.test(decoded)) break;
+      let invalidEncoding = false;
+      const next = decoded.replace(/(?:%[0-9A-Fa-f]{2})+/g, encoded => {
+        try {
+          return decodeURIComponent(encoded);
+        } catch {
+          invalidEncoding = true;
+          return encoded;
+        }
+      });
+      if (invalidEncoding) return null;
+      const normalized = normalize(next);
+      if (normalized === decoded) break;
+      decoded = normalized;
+    }
+    if (/%[0-9A-Fa-f]{2}/.test(decoded)) return null;
+    return decoded;
+  };
+
+  const looksLikeEmail = value => (
+    /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value)
+    || /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value.replace(/\s+/g, ""))
   );
+  const looksLikePhone = value => {
+    if (
+      /(?:^|[^\p{L}\p{N}])(?:tel(?:efon)?|phone|mobile|kom(?:o|ó)rka)[\s:=._/\-]*\+?\d[\d\s()./\-]{6,}\d(?:[\s._/\-]*(?:ext|wew)\.?\s*\d{1,6})?(?=$|[^\p{L}\p{N}])/iu.test(value)
+    ) return true;
+
+    if (/^\s+\d{9,15}\s*$/.test(value)) return true;
+    for (const match of value.matchAll(/(?:^|[^\p{L}\p{N}])(\+?\d[\d\s()./\-]{6,}\d)(?=$|[^\p{L}\p{N}])/gu)) {
+      const candidate = match[1];
+      const digitCount = (candidate.match(/\d/g) || []).length;
+      if (digitCount < 9 || digitCount > 15) continue;
+      if (candidate.startsWith("+")) return true;
+      const groups = candidate.split(/\D+/).filter(Boolean);
+      if (
+        groups.length >= 3
+        && groups[0].length <= 3
+        && groups.every(group => group.length <= 4)
+      ) return true;
+    }
+    return false;
+  };
+
+  const containsContactData = value => {
+    const decoded = decodeForPrivacyCheck(value);
+    return decoded === null || looksLikeEmail(decoded) || looksLikePhone(decoded);
+  };
+
+  const containsPathContactData = value => {
+    const decoded = decodeForPrivacyCheck(value);
+    if (decoded === null || looksLikeEmail(decoded) || looksLikePhone(decoded)) return true;
+    return /(?:^|[^\p{L}\p{N}])\+?\d{9,15}(?=$|[^\p{L}\p{N}])/u.test(decoded);
+  };
 
   const cleanValue = (value, limit = 300) => {
     if (typeof value !== "string") return "";
-    const cleaned = value
-      .replace(/[\u0000-\u001f\u007f]/g, "")
+    const stripped = value.replace(/[\u0000-\u001f\u007f]/g, "");
+    const cleaned = stripped
       .trim()
       .slice(0, limit);
     // Parametry kampanii nie mogą stać się kanałem wysyłki danych kontaktowych.
-    return looksLikeEmail(cleaned) || looksLikePhone(cleaned) ? "" : cleaned;
+    return containsContactData(value) || containsContactData(cleaned) ? "" : cleaned;
   };
 
   const attributionParamsFromUrl = value => {
@@ -91,28 +150,21 @@
       if (!/^https?:$/.test(url.protocol)) return "";
       url.username = "";
       url.password = "";
-      let decodedPath = url.pathname;
-      try {
-        decodedPath = decodeURIComponent(decodedPath);
-      } catch {
-        /* pozostaw zakodowaną ścieżkę do kontroli poniżej */
-      }
-      if (
-        looksLikeEmail(decodedPath)
-        || looksLikePhone(decodedPath)
-      ) url.pathname = "/";
+      if (containsPathContactData(url.pathname)) url.pathname = "/";
       url.hash = "";
       url.search = "";
-      if (url.toString().length > 1000) url.pathname = "/";
+      if (url.toString().length > MAX_VENDOR_URL_LENGTH) url.pathname = "/";
+      if (url.toString().length > MAX_VENDOR_URL_LENGTH) return "";
       if (keepAttribution) {
         const params = attributionParamsFromUrl(value);
         for (const key of ATTRIBUTION_KEYS) {
           if (!params[key]) continue;
           url.searchParams.set(key, params[key]);
-          if (url.toString().length > 1000) url.searchParams.delete(key);
+          if (url.toString().length > MAX_VENDOR_URL_LENGTH) url.searchParams.delete(key);
         }
       }
-      return url.toString();
+      const normalized = url.toString();
+      return normalized.length <= MAX_VENDOR_URL_LENGTH ? normalized : "";
     } catch {
       return "";
     }
@@ -147,11 +199,39 @@
       const source = new URL(window.location.href);
       for (const [key, allowed] of Object.entries(SAFE_FUNCTIONAL_PARAMS)) {
         const value = source.searchParams.get(key);
-        if (allowed.has(value)) target.searchParams.set(key, value);
+        if (!allowed.has(value)) continue;
+        target.searchParams.set(key, value);
+        while (target.toString().length > MAX_VENDOR_URL_LENGTH) {
+          const removable = [...ATTRIBUTION_KEYS]
+            .reverse()
+            .find(attributionKey => target.searchParams.has(attributionKey));
+          if (!removable) {
+            target.searchParams.delete(key);
+            break;
+          }
+          target.searchParams.delete(removable);
+        }
       }
-      return target.toString();
+      const normalized = target.toString();
+      return normalized.length <= MAX_VENDOR_URL_LENGTH ? normalized : "";
     } catch {
-      return baseValue;
+      return baseValue.length <= MAX_VENDOR_URL_LENGTH ? baseValue : "";
+    }
+  };
+
+  const safeBrowserHash = value => {
+    if (typeof value !== "string" || !value.startsWith("#") || value.length < 2) return "";
+    const decoded = decodeForPrivacyCheck(value.slice(1));
+    if (
+      decoded === null
+      || !/^[A-Za-z][A-Za-z0-9_-]{0,79}$/.test(decoded)
+      || looksLikeEmail(decoded)
+      || looksLikePhone(decoded)
+    ) return "";
+    try {
+      return document.getElementById?.(decoded) ? `#${decoded}` : "";
+    } catch {
+      return "";
     }
   };
 
@@ -249,15 +329,30 @@
 
   const prepareVendorLocation = () => {
     const target = marketingGranted ? marketingPageLocation : analyticsPageLocation;
-    if (!target || !window.history?.replaceState) return;
-    const browserTarget = `${target}${window.location.hash || ""}`;
-    if (browserTarget === window.location.href) return;
-    window.history.replaceState(window.history.state, "", browserTarget);
+    if (!target) return false;
+    const safeHash = safeBrowserHash(window.location.hash || "");
+    const browserTarget = target.length + safeHash.length <= MAX_VENDOR_URL_LENGTH
+      ? `${target}${safeHash}`
+      : target;
+    if (browserTarget === window.location.href) return true;
+    if (typeof window.history?.replaceState !== "function") return false;
+    try {
+      window.history.replaceState(window.history.state, "", browserTarget);
+      return window.location.href === browserTarget;
+    } catch {
+      return false;
+    }
   };
 
+  const recheckVendorLocation = () => {
+    if (analyticsGranted || marketingGranted) prepareVendorLocation();
+  };
+  window.addEventListener("hashchange", recheckVendorLocation);
+  window.addEventListener("popstate", recheckVendorLocation);
+
   const loadGoogleTag = () => {
-    prepareVendorLocation();
-    if (googleTagLoaded || !hasGoogleTag) return;
+    if (googleTagLoaded) return true;
+    if (!hasGoogleTag || !prepareVendorLocation()) return false;
     googleTagLoaded = true;
     const loaderId = hasGa4 ? GA4_ID : GOOGLE_ADS_ID;
     const tag = document.createElement("script");
@@ -265,11 +360,12 @@
     tag.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(loaderId)}`;
     document.head.appendChild(tag);
     window.gtag("js", new Date());
+    return true;
   };
 
   const configureGa4 = () => {
     if (!analyticsGranted || !hasGa4 || ga4Configured) return;
-    loadGoogleTag();
+    if (!loadGoogleTag()) return;
     ga4Configured = true;
     window.gtag("config", GA4_ID, {
       send_page_view: false,
@@ -280,8 +376,7 @@
 
   const configureGoogleAds = () => {
     if (!marketingGranted || !hasGoogleAds || googleAdsConfigured) return;
-    prepareVendorLocation();
-    loadGoogleTag();
+    if (!prepareVendorLocation() || !loadGoogleTag()) return;
     googleAdsConfigured = true;
     window.gtag("config", GOOGLE_ADS_ID, {
       page_location: marketingPageLocation,
@@ -389,7 +484,7 @@
 
   const startPixel = () => {
     if (!marketingGranted || !hasMeta) return;
-    prepareVendorLocation();
+    if (!prepareVendorLocation()) return;
 
     if (pixelStarted) {
       window.fbq?.("consent", "grant");
@@ -430,26 +525,25 @@
   let contactViewSent = false;
 
   const ga4Event = (name, parameters = {}) => {
-    if (!analyticsGranted || !hasGa4) return;
+    if (!analyticsGranted || !hasGa4 || !prepareVendorLocation()) return false;
     window.gtag("event", name, {
       ...parameters,
       send_to: GA4_ID,
     });
+    return true;
   };
 
   const sendPageEvents = () => {
     if (!analyticsGranted || !hasGa4) return;
     if (!pageViewSent) {
-      pageViewSent = true;
-      ga4Event("page_view", {
+      pageViewSent = ga4Event("page_view", {
         page_location: marketingGranted ? marketingPageLocation : analyticsPageLocation,
         page_referrer: currentReferrer,
       });
     }
     const contactPath = window.location.pathname.replace(/\/+$/, "") === "/kontakt";
     if (contactPath && !contactViewSent) {
-      contactViewSent = true;
-      ga4Event("contact_view");
+      contactViewSent = ga4Event("contact_view");
     }
   };
 
@@ -485,6 +579,14 @@
     analyticsGranted = nextAnalyticsGranted;
     marketingGranted = nextMarketingGranted;
     decision = level;
+    const vendorLocationReady = !nextAnalyticsGranted || prepareVendorLocation();
+    if (!vendorLocationReady) {
+      if (!marketingGranted) {
+        revokePixel();
+        clearAttribution();
+      }
+      return;
+    }
     setGoogleConsent(level);
     configureGa4();
     configureGoogleAds();
@@ -507,7 +609,7 @@
     const safeOutcome = DIAGNOSIS_OUTCOMES.has(outcome) ? outcome : "none";
     ga4Event("diagnosis_complete", { diagnosis_outcome: safeOutcome });
 
-    if (marketingGranted && hasMeta && window.fbq) {
+    if (marketingGranted && hasMeta && window.fbq && prepareVendorLocation()) {
       window.fbq("trackCustom", "DiagnosisComplete", {
         diagnosis_outcome: safeOutcome,
       });
@@ -516,6 +618,7 @@
       marketingGranted
       && hasGoogleAds
       && hasGoogleAdsDiagnosis
+      && prepareVendorLocation()
     ) {
       window.gtag("event", "conversion", {
         send_to: `${GOOGLE_ADS_ID}/${GOOGLE_ADS_DIAGNOSIS_LABEL}`,
@@ -545,12 +648,17 @@
       : "";
     ga4Event("generate_lead", { form_type: safeFormType });
 
-    if (marketingGranted && hasMeta && window.fbq) {
+    if (marketingGranted && hasMeta && window.fbq && prepareVendorLocation()) {
       // Jeden standardowy event zgodny z optymalizacją zestawu reklam.
       // eventID umożliwia deduplikację, jeśli CAPI zostanie spięte z tym samym ID.
       window.fbq("track", "Contact", {}, { eventID: eventId });
     }
-    if (marketingGranted && hasGoogleAds && hasGoogleAdsLead) {
+    if (
+      marketingGranted
+      && hasGoogleAds
+      && hasGoogleAdsLead
+      && prepareVendorLocation()
+    ) {
       window.gtag("event", "conversion", {
         send_to: `${GOOGLE_ADS_ID}/${GOOGLE_ADS_LEAD_LABEL}`,
         transaction_id: eventId,

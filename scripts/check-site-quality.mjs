@@ -43,6 +43,9 @@ const expectedUrls = new Set(publicFiles.map(file => `https://okagency.pl${route
 const sitemap = await readFile(join(root, "sitemap.xml"), "utf8");
 const sitemapUrls = new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gi)].map(match => match[1].trim()));
 const headers = await readFile(join(root, "_headers"), "utf8");
+if (!/^\s*Referrer-Policy:\s*origin\s*$/mi.test(headers)) {
+  failures.push("_headers: Referrer-Policy musi ograniczać referrer do origin");
+}
 const contentSecurityPolicy = headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)?.[1] || "";
 const cspDirectives = new Map(contentSecurityPolicy
   .split(";")

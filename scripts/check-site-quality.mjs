@@ -50,9 +50,55 @@ const cspDirectives = new Map(contentSecurityPolicy
   .filter(parts => parts[0])
   .map(([name, ...values]) => [name, new Set(values)]));
 
-for (const directive of ["img-src", "connect-src"]) {
-  if (!cspDirectives.get(directive)?.has("pagead2.googlesyndication.com")) {
-    failures.push(`_headers: ${directive} blokuje endpoint Google Ads consent-mode`);
+const cspAllowsHost = (directive, host) => {
+  const sources = cspDirectives.get(directive) || new Set();
+  if (sources.has(host)) return true;
+  return [...sources].some(source => (
+    source.startsWith("*.")
+    && host.endsWith(source.slice(1))
+    && host !== source.slice(2)
+  ));
+};
+
+const requiredCspHosts = {
+  "frame-src": ["www.googletagmanager.com"],
+  "script-src": [
+    "connect.facebook.net",
+    "www.googletagmanager.com",
+    "www.googleadservices.com",
+    "www.google.com",
+    "pagead2.googlesyndication.com",
+    "googleads.g.doubleclick.net",
+  ],
+  "img-src": [
+    "www.facebook.com",
+    "www.googletagmanager.com",
+    "www.google-analytics.com",
+    "www.googleadservices.com",
+    "www.google.com",
+    "google.com",
+    "www.google.pl",
+    "pagead2.googlesyndication.com",
+    "googleads.g.doubleclick.net",
+  ],
+  "connect-src": [
+    "www.facebook.com",
+    "www.google-analytics.com",
+    "region1.analytics.google.com",
+    "www.googleadservices.com",
+    "www.google.com",
+    "google.com",
+    "www.google.pl",
+    "pagead2.googlesyndication.com",
+    "ad.doubleclick.net",
+  ],
+};
+
+for (const [directive, hosts] of Object.entries(requiredCspHosts)) {
+  for (const host of hosts) {
+    if (!cspAllowsHost(directive, host)) {
+      failures.push(`_headers: ${directive} blokuje wymagany endpoint ${host}`);
+    }
   }
 }
 

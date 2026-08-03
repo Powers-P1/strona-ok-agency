@@ -22,6 +22,25 @@ const LIMITS = {
   fax: 200,
 };
 
+const ATTRIBUTION_KEYS = Object.freeze([
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "gclid",
+  "gbraid",
+  "wbraid",
+  "fbclid",
+]);
+const ATTRIBUTION_KEY_SET = new Set(ATTRIBUTION_KEYS);
+const ATTRIBUTION_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
+const ATTRIBUTION_CLOCK_SKEW_MS = 5 * 60 * 1000;
+const ALLOWED_ATTRIBUTION_HOSTS = new Set([
+  "okagency.pl",
+  "www.okagency.pl",
+]);
+
 function json(body, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(body), {
     status,
@@ -36,9 +55,107 @@ function clean(value, limit) {
 }
 
 function normalizePayload(input) {
-  return Object.fromEntries(
+  const payload = Object.fromEntries(
     Object.entries(LIMITS).map(([key, limit]) => [key, clean(input?.[key], limit)]),
   );
+  payload.attribution = normalizeAttribution(input?.attribution);
+  const analyticsEventId = clean(input?.analyticsEventId, 100);
+  payload.analyticsEventId = /^[A-Za-z0-9._:-]{8,100}$/.test(analyticsEventId)
+    ? analyticsEventId
+    : "";
+  return payload;
+}
+
+function cleanAttributionValue(value, limit) {
+  if (typeof value !== "string") return "";
+  const cleaned = value
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .trim()
+    .slice(0, limit);
+  return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(cleaned) ? "" : cleaned;
+}
+
+function attributionParamsFromUrl(url) {
+  const result = {};
+  for (const [rawKey, rawValue] of url.searchParams) {
+    const key = rawKey.toLowerCase();
+    if (!ATTRIBUTION_KEY_SET.has(key) || Object.hasOwn(result, key)) continue;
+    const value = cleanAttributionValue(rawValue, key.startsWith("utm_") ? 200 : 512);
+    if (value) result[key] = value;
+  }
+  return result;
+}
+
+function cleanAttributionUrl(value, keepAttribution) {
+  if (typeof value !== "string" || !value) return "";
+  try {
+    const url = new URL(value);
+    if (!/^https?:$/.test(url.protocol)) return "";
+    if (
+      keepAttribution
+      && (
+        url.protocol !== "https:"
+        || url.port
+        || !ALLOWED_ATTRIBUTION_HOSTS.has(url.hostname)
+      )
+    ) return "";
+    if (!keepAttribution) return url.origin.slice(0, 1000);
+    url.username = "";
+    url.password = "";
+    let decodedPath = url.pathname;
+    try {
+      decodedPath = decodeURIComponent(decodedPath);
+    } catch {
+      /* pozostaw zakodowaną ścieżkę do kontroli poniżej */
+    }
+    if (
+      /[^\s/@]+@[^\s/]+\.[^\s/]+/.test(decodedPath)
+      || /(?:^|\/)\+?\d[\d(). -]{6,}\d(?:\/|$)/.test(decodedPath)
+    ) url.pathname = "/";
+    const params = keepAttribution ? attributionParamsFromUrl(url) : {};
+    url.hash = "";
+    url.search = "";
+    for (const key of ATTRIBUTION_KEYS) {
+      if (params[key]) url.searchParams.set(key, params[key]);
+    }
+    const normalized = url.toString();
+    return normalized.length <= 1000 ? normalized : "";
+  } catch {
+    return "";
+  }
+}
+
+function normalizeTouch(input) {
+  if (!input || typeof input !== "object") return null;
+  const timestamp = Date.parse(input.captured_at);
+  const landingPage = cleanAttributionUrl(input.landing_page, true);
+  const age = Date.now() - timestamp;
+  if (
+    !Number.isFinite(timestamp)
+    || age < -ATTRIBUTION_CLOCK_SKEW_MS
+    || age > ATTRIBUTION_MAX_AGE_MS
+    || !landingPage
+  ) return null;
+
+  const touch = {
+    captured_at: new Date(timestamp).toISOString(),
+    landing_page: landingPage,
+  };
+  const referrer = cleanAttributionUrl(input.referrer, false);
+  if (referrer) touch.referrer = referrer;
+  for (const key of ATTRIBUTION_KEYS) {
+    const value = cleanAttributionValue(input[key], key.startsWith("utm_") ? 200 : 512);
+    if (value) touch[key] = value;
+  }
+  return touch;
+}
+
+function normalizeAttribution(input) {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return null;
+  const firstTouch = normalizeTouch(input.first_touch);
+  const lastTouch = normalizeTouch(input.last_touch);
+  if (!firstTouch || !lastTouch) return null;
+  return { first_touch: firstTouch, last_touch: lastTouch };
 }
 
 function isValidEmail(value) {
@@ -47,6 +164,36 @@ function isValidEmail(value) {
 
 function safeHeader(value) {
   return value.replace(/[\r\n]+/g, " ").trim();
+}
+
+function attributionLines(attribution) {
+  if (!attribution) return [];
+  const labels = {
+    captured_at: "czas",
+    landing_page: "landing",
+    referrer: "referrer",
+    utm_source: "utm_source",
+    utm_medium: "utm_medium",
+    utm_campaign: "utm_campaign",
+    utm_content: "utm_content",
+    utm_term: "utm_term",
+    gclid: "gclid",
+    gbraid: "gbraid",
+    wbraid: "wbraid",
+    fbclid: "fbclid",
+  };
+  const formatTouch = (title, touch) => [
+    title,
+    ...Object.entries(labels)
+      .filter(([key]) => touch[key])
+      .map(([key, label]) => `- ${label}: ${touch[key]}`),
+  ];
+  return [
+    "",
+    "Atrybucja kampanii (dane przekazane przez przeglądarkę):",
+    ...formatTouch("First touch:", attribution.first_touch),
+    ...formatTouch("Last touch:", attribution.last_touch),
+  ];
 }
 
 async function readJsonBody(request) {
@@ -154,6 +301,8 @@ function buildEmail(payload, from, to) {
       payload.company ? `Firma: ${payload.company}` : null,
       "",
       payload.message,
+      payload.analyticsEventId ? `Identyfikator zdarzenia: ${payload.analyticsEventId}` : null,
+      ...attributionLines(payload.attribution),
     ].filter(value => value !== null).join("\n"),
   };
 }
@@ -238,4 +387,10 @@ export default {
     }
     return handleContact(request, env);
   },
+};
+
+export {
+  buildEmail,
+  normalizeAttribution,
+  normalizePayload,
 };

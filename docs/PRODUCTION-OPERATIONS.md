@@ -1,6 +1,6 @@
 # Produkcja OK Agency — konfiguracja i utrzymanie
 
-Stan dokumentacji: 2026-07-29.
+Stan dokumentacji: 2026-08-03.
 
 Ten dokument opisuje produkcyjną konfigurację serwisu, podział
 odpowiedzialności między GitHub, Cloudflare i OVH oraz bezpieczne procedury
@@ -36,6 +36,9 @@ a osobny Worker obsługuje wyłącznie endpoint formularza kontaktowego.
 | Przekierowania domen | Cloudflare | domena → Rules → Redirect Rules |
 | Turnstile | Cloudflare | Turnstile → widget `okagency-contact` |
 | Web Analytics | Cloudflare | Analytics & Logs → Web Analytics |
+| Analityka serwisu | Google Analytics 4 | Analytics → właściwość i strumień `okagency.pl` |
+| Konwersje reklamowe | Google Ads | Cele → Konwersje oraz połączony Google tag |
+| Konwersje Meta | Meta Events Manager | Dataset / Pixel przypisany do `okagency.pl` |
 | Rejestracja domen i rekordy DS | OVHcloud | Web Cloud → Domain names → domena |
 | Skrzynka `hello@okagency.pl` | OVHcloud | Web Cloud → Email / Zimbra |
 | Sekrety wdrożeniowe | GitHub | Settings → Secrets and variables → Actions |
@@ -259,7 +262,10 @@ Finalne nagłówki po buildzie obejmują:
 
 Fonty Archivo i Barlow Condensed są publikowane lokalnie z
 `/assets/fonts/`, dlatego przeglądarka nie łączy się z Google Fonts. Zewnętrzne
-źródła w CSP są ograniczone do Cloudflare Turnstile i Cloudflare Web Analytics.
+źródła w CSP są ograniczone do rzeczywiście używanych endpointów Cloudflare,
+Google tag / Google Analytics / Google Ads i Meta Pixel. Przy zmianie dostawcy
+lub sposobu wysyłania zdarzeń należy najpierw zaktualizować `_headers`, testy CSP
+i Politykę prywatności; nie wolno rozszerzać dyrektyw domeną „na zapas”.
 
 Cloudflare Bot Fight Mode na planie Free automatycznie uruchamia JavaScript
 Detections i dokleja skrypt do odpowiedzi HTML. Middleware dodaje nonce do
@@ -295,7 +301,9 @@ ponieważ utworzyłoby to drugą, potencjalnie sprzeczną politykę.
 Przy zmianie kontaktu należy zaktualizować `security.txt`. Przed datą
 `Expires` trzeba odnowić jego termin.
 
-## 9. Web Analytics
+## 9. Analityka, reklamy i zgody
+
+### Cloudflare Web Analytics
 
 Cloudflare Web Analytics jest skonfigurowane w trybie automatycznym dla
 `okagency.pl`. Beacon jest wstrzykiwany przez Cloudflare i nie jest ręcznie
@@ -307,6 +315,84 @@ CSP zezwala na:
 - połączenia do `https://cloudflareinsights.com` oraz własnej domeny.
 
 To rozwiązanie działa w Cloudflare Free.
+
+### Google Analytics 4, Google Ads i Meta Pixel
+
+Właścicielem implementacji przeglądarkowej jest
+[`assets/analytics.js`](../assets/analytics.js). Plik obsługuje Google tag dla
+Google Analytics 4 i Google Ads, Meta Pixel, stan zgody oraz atrybucję źródła
+wizyty. Identyfikatory publicznych tagów znajdują się wyłącznie w tym pliku;
+nie należy tworzyć drugiej implementacji w HTML ani wstrzykiwać dodatkowego
+kontenera przez panel hostingu.
+
+Kontrakt prywatności:
+
+- obowiązuje Basic Consent Mode: przed wyborem oraz po „Odrzuć” skrypty Google
+  i Meta nie są ładowane i nie może powstać żaden request do ich endpointów;
+- „Tylko analityka” ustawia wyłącznie `analytics_storage: granted`; uruchamia
+  wyłącznie GA4, ale pozostawia wszystkie trzy stany reklamowe jako `denied` i
+  nie inicjalizuje Google Ads, Meta Pixel ani atrybucji marketingowej;
+- „Analityka i reklamy” ustawia wszystkie cztery stany na `granted` i dopiero
+  wtedy uruchamia Meta Pixel, konwersje Google Ads oraz atrybucję marketingową;
+- odmowa nie blokuje strony, „Diagnozy” ani formularzy;
+- decyzja jest zapisywana lokalnie wraz z wersją polityki maksymalnie przez
+  180 dni, a „Ustawienia cookies” w stopce ponownie otwierają panel i pozwalają
+  zmienić jej zakres;
+- obniżenie lub wycofanie zgody zatrzymuje requesty objęte wycofanym zakresem;
+  przy pełnym wycofaniu widok jest w razie potrzeby odświeżany, aby usunąć
+  wcześniej załadowane tagi Google i Meta;
+- zdarzenia analityczne nie mogą zawierać imienia, e-maila, telefonu, nazwy
+  firmy, treści wiadomości ani konkretnych odpowiedzi „Diagnozy”;
+- zdarzenie `diagnosis_complete` może zawierać wyłącznie parametr
+  `diagnosis_outcome` z allowlisty `website`, `social`, `campaign`,
+  `conversation`, `none`; trafia do GA4 po zgodzie analitycznej i do Meta po
+  zgodzie marketingowej, nigdy nie zawiera konkretnych odpowiedzi;
+- losowy `analyticsEventId` jest tworzony wyłącznie po zgodzie marketingowej,
+  nie zawiera PII i jest dołączany do requestu formularza oraz wiadomości e-mail;
+  po odpowiedzi API z `ok: true` ten sam identyfikator trafia jako Meta
+  `eventID` i Google Ads `transaction_id`, aby technicznie powiązać konwersję i
+  ograniczyć jej podwójne zliczenie;
+- zdarzenie leada jest wywoływane dopiero po odpowiedzi API z `ok: true`;
+- ukończenie „Diagnozy” nie przesyła odpowiedzi. Odpowiedzi trafiają do
+  Administratora dopiero po świadomym wysłaniu opcjonalnego formularza.
+
+Atrybucja może zostać uruchomiona wyłącznie po wyborze „Analityka i reklamy”.
+Przechowuje na czas sesji parametry kampanii i kliknięcia (`utm_*`, `gclid`,
+`gbraid`, `wbraid`, `fbclid`), stronę wejścia i referrer. Dostępne dane mogą
+zostać dołączone do wysyłanego zgłoszenia. Po „Odrzuć” i „Tylko analityka”
+formularz działa bez atrybucji marketingowej. Nie należy zapisywać w tym
+mechanizmie pól formularza ani innych danych podanych przez użytkownika.
+
+Identyfikator zdarzenia nie jest atrybucją ani identyfikatorem osoby. Nie może
+powstać przy poziomie `denied` lub `analytics`. Samo przekazanie Meta `eventID`
+nie oznacza aktywnej integracji Conversions API; ewentualne CAPI wymagałoby
+osobnego, zgodnego źródła zdarzenia serwerowego używającego tego samego ID.
+
+Po każdej zmianie analityki należy sprawdzić co najmniej pięć scenariuszy:
+
+1. pierwsza wizyta bez decyzji — wszystkie cztery stany `denied`, brak cookies,
+   skryptów, cookies, requestów Google i Meta oraz zapisanej atrybucji;
+2. „Odrzuć” — ten sam stan `denied`, zero requestów Google i Meta oraz poprawne
+   działanie strony, „Diagnozy” i formularza;
+3. „Tylko analityka” — `analytics_storage: granted`, trzy stany reklamowe
+   `denied`, pojedyncze zdarzenia w GA4 DebugView, brak requestów Google Ads i
+   Meta Pixel, brak atrybucji marketingowej i brak `analyticsEventId`;
+4. „Analityka i reklamy” — wszystkie cztery stany `granted`, pojedyncze
+   zdarzenia w GA4 DebugView, Google Ads i Meta Test Events oraz atrybucja bez
+   pól formularza i innych PII; dla leada ten sam losowy identyfikator występuje
+   w żądaniu formularza, e-mailu, Meta `eventID` i Google Ads
+   `transaction_id`;
+5. obniżenie zakresu lub „Odrzuć” po wcześniejszej zgodzie — właściwe stany
+   `denied`, wyczyszczona atrybucja po utracie zgody marketingowej i zero
+   requestów do narzędzi objętych wycofanym zakresem po zastosowaniu decyzji.
+
+Retencja danych na poziomie użytkownika i zdarzenia w GA4 jest ustawiona na
+14 miesięcy. Decyzja o zgodzie wygasa po 180 dniach. Ustawienia retencji i
+udostępniania danych w Google Ads oraz Meta wymagają okresowego przeglądu.
+Enhanced Conversions, Meta Automatic Advanced Matching i ręczne przekazywanie
+danych kontaktowych do Google lub Meta pozostają wyłączone. Ich uruchomienie
+wymaga osobnej oceny prawnej, aktualizacji mechanizmu zgody, Polityki
+prywatności i testów braku niezamierzonego PII.
 
 ## 10. GitHub i wdrożenia
 

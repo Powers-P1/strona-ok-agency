@@ -217,6 +217,7 @@
 
     const v = id => document.getElementById(id).value.trim();
     const submitButton = form.querySelector(".submit");
+    const analyticsEventId = window.okAnalytics?.createMarketingEventId?.() || "";
     submitButton.disabled = true;
     submitButton.setAttribute("aria-busy", "true");
 
@@ -233,6 +234,8 @@
           message: v("f-message"),
           fax: v("f-fax"),
           turnstileToken,
+          attribution: window.okAnalytics?.attribution?.() || null,
+          analyticsEventId,
         }),
       });
 
@@ -242,7 +245,7 @@
       form.reset();
       resetTurnstile();
       showState(handoffState, handoffTitle);
-      window.okAnalytics?.lead();
+      window.okAnalytics?.generateLead("contact", analyticsEventId);
     } catch {
       resetTurnstile();
       showState(fallbackState, fallbackTitle);

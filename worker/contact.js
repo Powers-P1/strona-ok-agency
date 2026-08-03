@@ -37,7 +37,7 @@ const ATTRIBUTION_KEYS = Object.freeze([
 ]);
 const ATTRIBUTION_KEY_SET = new Set(ATTRIBUTION_KEYS);
 const OPAQUE_NUMERIC_ATTRIBUTION_KEYS = new Set([
-  "utm_content", "gclid", "gbraid", "wbraid", "fbclid",
+  "gclid", "gbraid", "wbraid", "fbclid",
 ]);
 const ATTRIBUTION_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
 const ATTRIBUTION_CLOCK_SKEW_MS = 5 * 60 * 1000;

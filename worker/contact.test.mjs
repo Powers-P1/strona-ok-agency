@@ -34,7 +34,7 @@ test("normalizes allowlisted attribution and strips URL PII and unknown fields",
   assert.doesNotMatch(JSON.stringify(attribution), /pii@example\.com|secret=1|drop-me/);
 });
 
-test("deeply encoded PII and phone variants are rejected without losing numeric campaign IDs", () => {
+test("deeply encoded PII and phone variants are rejected without losing safe attribution", () => {
   const unsafeLanding = "https://okagency.pl/jan%2540example%252Ecom?utm_source=google&utm_campaign=1234567890&utm_content=tel501234567&gclid=click-ab123456789xyz&wbraid=jan%2540example%252Ecom";
   const attribution = normalizeAttribution({
     first_touch: touch({
@@ -71,29 +71,30 @@ test("deeply encoded PII and phone variants are rejected without losing numeric 
   );
 });
 
-test("Worker keeps pure numeric technical IDs but rejects phone-length campaign runs", () => {
-  const landingPage = "https://okagency.pl/diagnoza?utm_campaign=jan-501234567&utm_content=1234567890&gclid=1234567890";
+test("Worker keeps click IDs but rejects phone-length UTM runs", () => {
+  const landingPage = "https://okagency.pl/diagnoza?utm_campaign=jan-501234567&utm_content=48501234567&gclid=1234567890";
   const attribution = normalizeAttribution({
     first_touch: touch({
       landing_page: landingPage,
       utm_campaign: "jan-501234567",
-      utm_content: "1234567890",
+      utm_content: "48501234567",
       gclid: "1234567890",
     }),
     last_touch: touch({
       landing_page: landingPage,
       utm_campaign: "1234567890",
-      utm_content: "1234567890",
+      utm_content: "48501234567",
       gclid: "1234567890",
     }),
   });
   assert.equal(
     attribution.first_touch.landing_page,
-    "https://okagency.pl/diagnoza?utm_content=1234567890&gclid=1234567890",
+    "https://okagency.pl/diagnoza?gclid=1234567890",
   );
   assert.equal(attribution.first_touch.utm_campaign, undefined);
   assert.equal(attribution.last_touch.utm_campaign, undefined);
-  assert.equal(attribution.first_touch.utm_content, "1234567890");
+  assert.equal(attribution.first_touch.utm_content, undefined);
+  assert.equal(attribution.last_touch.utm_content, undefined);
   assert.equal(attribution.first_touch.gclid, "1234567890");
 });
 

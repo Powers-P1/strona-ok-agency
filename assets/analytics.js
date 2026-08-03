@@ -37,7 +37,7 @@
   ]);
   const ATTRIBUTION_KEY_SET = new Set(ATTRIBUTION_KEYS);
   const OPAQUE_NUMERIC_ATTRIBUTION_KEYS = new Set([
-    "utm_content", "gclid", "gbraid", "wbraid", "fbclid",
+    "gclid", "gbraid", "wbraid", "fbclid",
   ]);
   const DIAGNOSIS_OUTCOMES = new Set([
     "website",

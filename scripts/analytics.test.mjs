@@ -599,7 +599,7 @@ test("control and zero-width separators cannot hide contact data in paths or cam
   }
 });
 
-test("phone-number runs are removed from paths even though numeric campaign IDs are allowed", () => {
+test("phone-number runs are removed from paths while safe click IDs remain", () => {
   for (const path of [
     "501234567",
     "tel/501234567",
@@ -623,7 +623,7 @@ test("dates, percent values and opaque technical IDs remain valid attribution", 
     ["utm_term", "2026-08-03-01"],
     ["utm_medium", "50%-off"],
     ["utm_source", "50%25-off"],
-    ["utm_content", "1234567890"],
+    ["utm_content", "ad1234567890"],
     ["gclid", "1234567890"],
   ];
   for (const [key, value] of cases) {
@@ -648,6 +648,7 @@ test("unlabelled phone-length runs are rejected from non-technical campaign valu
     ["utm_campaign", "campaign-1234567890-2"],
     ["utm_campaign", "1234567890-2"],
     ["utm_term", "summer-2026080312"],
+    ["utm_content", "48501234567"],
   ]) {
     const query = new URLSearchParams({ [key]: value, gclid: "click-ab123456789xyz" });
     const runtime = loadAnalytics({

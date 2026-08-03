@@ -28,7 +28,7 @@ Status: in progress
 - [x] Opt Campaigns opening and Process discovery into that shared contract.
 - [x] Remove the Campaigns rule that disables the shared mask.
 - [x] Remove duplicate artwork layers and tune the About reading rhythm after screenshot review.
-- [x] Preserve an exiting callout's coordinates during rapid A → B interaction.
+- [x] Preserve an exiting callout's coordinates and connector geometry during rapid A → B interaction, including solver fallback paths.
 - [x] Remove FAQ label and extend system checks.
 - [x] Synchronize asset versions.
 

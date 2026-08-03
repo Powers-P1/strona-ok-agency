@@ -200,6 +200,8 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/visibleCopies\.some\(sibling => intersects\(copyRect, sibling\)\)/, "odrzucenia kolizji otwartych dymków"],
     [/lastSolutions/, "ostatniego poprawnego układu bez ukrywania grupy"],
     [/const preservedCopies = exitingAnnotations\(\)/, "migawki zamykanych dymków"],
+    [/preservedAttributeElements\.add\(path\)/, "ochrony linii zamykanego dymka"],
+    [/retainedAttributes\.set\(element, attributes\)/, "zachowania runtime SVG podczas wyjścia dymka"],
     [/applyServiceSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka w scenach usług"],
     [/applyAboutSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka na O nas"],
     [/applyAuthoredCopySafety\(adapter, preservedCopies\)/, "ochrony wyjścia dymka w authored fallback"],

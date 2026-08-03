@@ -207,6 +207,14 @@
     element.setAttribute(attribute, value);
   };
 
+  const serviceWirePathFor = (adapter, annotation) => {
+    const annotationId = annotation.callout.dataset.annotation;
+    if (!annotationId) return null;
+    const wire = [...adapter.scene.querySelectorAll(".annotation-wire")]
+      .find(layer => layer.dataset.line === annotationId);
+    return wire?.querySelector("path") || null;
+  };
+
   const exitingAnnotations = () => new Set(adapters.flatMap(adapter => (
     adapter.annotations.filter(annotation => {
       if (isOpen(annotation)) return false;
@@ -217,9 +225,18 @@
 
   const clearRuntime = (preservedAnnotations = new Set()) => {
     const preservedElements = new Set();
+    const preservedAttributeElements = new Set();
     preservedAnnotations.forEach(annotation => {
       preservedElements.add(annotation.callout);
       preservedElements.add(annotation.copy);
+    });
+    adapters.forEach(adapter => {
+      if (adapter.kind !== "service") return;
+      adapter.annotations.forEach(annotation => {
+        if (!preservedAnnotations.has(annotation)) return;
+        const path = serviceWirePathFor(adapter, annotation);
+        if (path) preservedAttributeElements.add(path);
+      });
     });
     const retainedStyles = new Map();
     runtimeStyles.forEach((properties, element) => {
@@ -237,13 +254,21 @@
       runtimeStyles.set(element, properties);
     });
 
+    const retainedAttributes = new Map();
     runtimeAttributes.forEach((attributes, element) => {
+      if (preservedAttributeElements.has(element)) {
+        retainedAttributes.set(element, attributes);
+        return;
+      }
       attributes.forEach((value, attribute) => {
         if (value === null) element.removeAttribute(attribute);
         else element.setAttribute(attribute, value);
       });
     });
     runtimeAttributes.clear();
+    retainedAttributes.forEach((attributes, element) => {
+      runtimeAttributes.set(element, attributes);
+    });
 
     adapters.forEach(adapter => {
       adapter.annotations.forEach(annotation => {
@@ -733,11 +758,7 @@
   };
 
   const updateServiceWire = (adapter, annotation, point, copy, geometry) => {
-    const annotationId = annotation.callout.dataset.annotation;
-    if (!annotationId) return;
-    const wire = [...adapter.scene.querySelectorAll(".annotation-wire")]
-      .find(layer => layer.dataset.line === annotationId);
-    const path = wire?.querySelector("path");
+    const path = serviceWirePathFor(adapter, annotation);
     if (!path) return;
 
     const copyIsRight = copy.left + copy.rect.width / 2 > point.x;

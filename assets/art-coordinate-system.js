@@ -806,11 +806,12 @@
     setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
   };
 
-  const applyMeasuredConnectorGeometry = adapter => {
+  const applyMeasuredConnectorGeometry = (adapter, preservedCopies = new Set()) => {
     if (adapter.kind === "service") {
       const geometry = coverGeometry(adapter.scene, adapter.art);
       serviceConnectorGeometry(adapter, geometry);
       adapter.annotations.forEach(annotation => {
+        if (preservedCopies.has(annotation)) return;
         const measured = measuredAnnotationGeometry(adapter, annotation);
         updateServiceWire(adapter, annotation, measured.point, measured.copy, geometry);
       });
@@ -818,12 +819,13 @@
     }
 
     adapter.annotations.forEach(annotation => {
+      if (preservedCopies.has(annotation)) return;
       const measured = measuredAnnotationGeometry(adapter, annotation);
       updateAboutLeader(annotation, measured.point, measured.copy);
     });
   };
 
-  const applyAuthoredCopySafety = adapter => {
+  const applyAuthoredCopySafety = (adapter, preservedCopies = new Set()) => {
     const geometry = coverGeometry(adapter.scene, adapter.art);
     const artBounds = artBoundsFor(adapter.scene, adapter.art, geometry);
     const sceneRect = adapter.scene.getBoundingClientRect();
@@ -838,6 +840,7 @@
     if (adapter.kind === "service") {
       serviceConnectorGeometry(adapter, geometry);
       adapter.annotations.forEach((annotation, index) => {
+        if (preservedCopies.has(annotation)) return;
         const copy = copies[index];
         setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
         setRuntimeStyle(annotation.callout, "--copy-right", "auto");
@@ -848,6 +851,7 @@
     }
 
     adapter.annotations.forEach((annotation, index) => {
+      if (preservedCopies.has(annotation)) return;
       const point = points[index];
       const copy = copies[index];
       setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
@@ -979,7 +983,9 @@
     adapters.forEach((adapter, index) => {
       const solution = solutions[index];
       if (!solution) {
-        if (!applyAuthoredCopySafety(adapter)) applyMeasuredConnectorGeometry(adapter);
+        if (!applyAuthoredCopySafety(adapter, preservedCopies)) {
+          applyMeasuredConnectorGeometry(adapter, preservedCopies);
+        }
         renderDebugOverlay(adapter, null);
         return;
       }

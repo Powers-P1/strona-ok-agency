@@ -109,6 +109,11 @@ assert.match(
 );
 assert.match(
   css,
+  /\.ok-nav-offer__popover a\s*\{[\s\S]*?box-sizing:\s*border-box/,
+  "Oferta links must keep their padding inside the popover grid width.",
+);
+assert.match(
+  css,
   /@media \(max-width: 420px\)[\s\S]*--ok-nav-floating-canvas-filtered:\s*var\(--ok-nav-canvas-solid\)/,
   "Mobile detached rail must use an opaque canvas token.",
 );

@@ -202,6 +202,8 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/const preservedCopies = exitingAnnotations\(\)/, "migawki zamykanych dymków"],
     [/applyServiceSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka w scenach usług"],
     [/applyAboutSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka na O nas"],
+    [/applyAuthoredCopySafety\(adapter, preservedCopies\)/, "ochrony wyjścia dymka w authored fallback"],
+    [/applyMeasuredConnectorGeometry\(adapter, preservedCopies\)/, "ochrony wyjścia dymka w measured fallback"],
     [/innerWidth <= 640/, "zachowania centralnego kontraktu mobile"],
     [/annotation-debug-overlay/, "debug overlay dla audytu kotwic"],
   ]) {

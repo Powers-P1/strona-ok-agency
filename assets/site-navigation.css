@@ -337,6 +337,7 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-curr
   display: grid;
   align-items: center;
   justify-items: start;
+  box-sizing: border-box;
   color: var(--ok-nav-navy);
   border-bottom: 1px solid rgba(20, 32, 48, .11);
   font-family: var(--ok-font-body, "Archivo", sans-serif);

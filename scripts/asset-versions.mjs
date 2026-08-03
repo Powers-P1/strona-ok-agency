@@ -1,7 +1,7 @@
 export const ASSET_VERSIONS = Object.freeze({
   "assets/analytics.js": "20260801-1",
   "assets/annotation-system.css": "20260802-2",
-  "assets/art-coordinate-system.js": "20260803-1",
+  "assets/art-coordinate-system.js": "20260803-2",
   "assets/design-tokens.css": "20260801-1",
   "assets/fonts.css": "20260801-1",
   "assets/page-contact.css": "20260802-1",
@@ -20,7 +20,7 @@ export const ASSET_VERSIONS = Object.freeze({
   "assets/site-enhancements.css": "20260803-1",
   "assets/site-footer.css": "20260801-2",
   "assets/site-footer.js": "20260801-2",
-  "assets/site-navigation.css": "20260803-1",
+  "assets/site-navigation.css": "20260803-2",
   "assets/story-standard.css": "20260801-4",
   "assets/tree-map-loader.js": "20260801-2",
 });

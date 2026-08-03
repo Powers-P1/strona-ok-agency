@@ -53,14 +53,19 @@
 
   /* ---------- bezpieczne dane strony i kampanii ---------- */
 
+  const looksLikeEmail = value => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(value);
+  const looksLikePhone = value => (
+    /(?:^|[^\p{L}\p{N}])\+?\d[\d(). -]{6,}\d(?=$|[^\p{L}\p{N}])/u.test(value)
+  );
+
   const cleanValue = (value, limit = 300) => {
     if (typeof value !== "string") return "";
     const cleaned = value
       .replace(/[\u0000-\u001f\u007f]/g, "")
       .trim()
       .slice(0, limit);
-    // Parametry kampanii nie mogą stać się kanałem wysyłki adresu e-mail do GA4.
-    return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(cleaned) ? "" : cleaned;
+    // Parametry kampanii nie mogą stać się kanałem wysyłki danych kontaktowych.
+    return looksLikeEmail(cleaned) || looksLikePhone(cleaned) ? "" : cleaned;
   };
 
   const attributionParamsFromUrl = value => {
@@ -93,8 +98,8 @@
         /* pozostaw zakodowaną ścieżkę do kontroli poniżej */
       }
       if (
-        /[^\s/@]+@[^\s/]+\.[^\s/]+/.test(decodedPath)
-        || /(?:^|\/)\+?\d[\d(). -]{6,}\d(?:\/|$)/.test(decodedPath)
+        looksLikeEmail(decodedPath)
+        || looksLikePhone(decodedPath)
       ) url.pathname = "/";
       url.hash = "";
       url.search = "";
@@ -242,8 +247,10 @@
 
   const prepareVendorLocation = () => {
     const target = marketingGranted ? marketingPageLocation : analyticsPageLocation;
-    if (!target || !window.history?.replaceState || target === window.location.href) return;
-    window.history.replaceState(window.history.state, "", target);
+    if (!target || !window.history?.replaceState) return;
+    const browserTarget = `${target}${window.location.hash || ""}`;
+    if (browserTarget === window.location.href) return;
+    window.history.replaceState(window.history.state, "", browserTarget);
   };
 
   const loadGoogleTag = () => {

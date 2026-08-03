@@ -438,13 +438,30 @@ test("expired or v1 consent is invalidated and prompts again", () => {
 
 test("page locations strip query and path values that look like PII", () => {
   const runtime = loadAnalytics({
-    url: "https://okagency.pl/jan@example.com?utm_source=google&email=other@example.com",
+    url: "https://okagency.pl/jan@example.com?utm_source=google&utm_campaign=jan-501234567&utm_content=tel-%2B48%20501%20234%20567&gclid=click-ab123456789xyz&email=other@example.com#contact-form",
     localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
   });
   const attribution = runtime.window.okAnalytics.attribution();
-  assert.equal(attribution.first_touch.landing_page, "https://okagency.pl/?utm_source=google");
-  assert.equal(runtime.replacedUrl(), "https://okagency.pl/?utm_source=google");
-  assert.doesNotMatch(JSON.stringify(runtime.commands()), /jan@example\.com|other@example\.com/);
+  assert.equal(
+    attribution.first_touch.landing_page,
+    "https://okagency.pl/?utm_source=google&gclid=click-ab123456789xyz",
+  );
+  assert.equal(attribution.first_touch.utm_campaign, undefined);
+  assert.equal(attribution.first_touch.utm_content, undefined);
+  assert.equal(attribution.first_touch.gclid, "click-ab123456789xyz");
+  assert.equal(
+    runtime.replacedUrl(),
+    "https://okagency.pl/?utm_source=google&gclid=click-ab123456789xyz#contact-form",
+  );
+  const pageView = eventCommands(runtime).find(command => command[1] === "page_view");
+  assert.equal(
+    pageView[2].page_location,
+    "https://okagency.pl/?utm_source=google&gclid=click-ab123456789xyz",
+  );
+  assert.doesNotMatch(
+    JSON.stringify({ attribution, commands: runtime.commands() }),
+    /jan@example\.com|other@example\.com|501234567|501%20234%20567|contact-form/,
+  );
 });
 
 test("DiagnosisComplete tracker emits once per completion and resets for a new run", () => {

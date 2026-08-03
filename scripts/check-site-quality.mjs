@@ -61,7 +61,7 @@ const cspAllowsHost = (directive, host) => {
 };
 
 const requiredCspHosts = {
-  "frame-src": ["www.googletagmanager.com"],
+  "frame-src": ["www.googletagmanager.com", "td.doubleclick.net"],
   "script-src": [
     "connect.facebook.net",
     "www.googletagmanager.com",

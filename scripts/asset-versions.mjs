@@ -1,5 +1,5 @@
 export const ASSET_VERSIONS = Object.freeze({
-  "assets/analytics.js": "20260803-2",
+  "assets/analytics.js": "20260803-3",
   "assets/annotation-system.css": "20260803-1",
   "assets/art-coordinate-system.js": "20260803-3",
   "assets/design-tokens.css": "20260801-1",
@@ -20,7 +20,7 @@ export const ASSET_VERSIONS = Object.freeze({
   "assets/services/process/styles.css": "20260802-1",
   "assets/services/social/styles.css": "20260801-4",
   "assets/services/web/styles.css": "20260802-1",
-  "assets/site-enhancements.css": "20260803-1",
+  "assets/site-enhancements.css": "20260803-2",
   "assets/site-footer.css": "20260801-2",
   "assets/site-footer.js": "20260801-2",
   "assets/site-navigation.css": "20260803-3",

@@ -20,7 +20,7 @@ export const ASSET_VERSIONS = Object.freeze({
   "assets/site-enhancements.css": "20260803-1",
   "assets/site-footer.css": "20260801-2",
   "assets/site-footer.js": "20260801-2",
-  "assets/site-navigation.css": "20260803-2",
+  "assets/site-navigation.css": "20260803-3",
   "assets/story-standard.css": "20260801-4",
   "assets/tree-map-loader.js": "20260801-2",
 });

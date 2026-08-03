@@ -1,6 +1,6 @@
 # Global navigation and content protection remediation
 
-Status: in progress
+Status: complete
 
 ## Scope and invariants
 
@@ -39,5 +39,14 @@ Status: in progress
 - [x] Target annotation geometry for Campaigns, Process and About at seven viewports.
 - [x] Full 42-case annotation geometry matrix and affected-route placement-mask audit.
 - [x] Quality, links, UI-system checks, build and `git diff --check`.
-- [ ] Commit, PR, CI, merge and production deployment.
-- [ ] Production smoke on the affected routes.
+- [x] Commit, PR, CI, merge and production deployment.
+- [x] Production smoke on the affected routes.
+
+## Release record
+
+- PR #82 merged to `main` as `60359810072213138c9e958570058d6fe7f961d7`.
+- PR CI `30774262673` and `main` CI `30774705241`: PASS.
+- Cloudflare Pages production deployment `92bf641e-e4ae-41db-81d3-56b9677d220d`.
+- Production monitor `30774825186`: PASS.
+- Production Chromium and WebKit smoke: navigation, Campaigns, Process, About and FAQ PASS at 1512×800 and 1024×768; zero horizontal overflow.
+- Rapid A → B production interaction: exiting card and connector remained stable for every visible transition sample.

@@ -28,15 +28,15 @@ body.home-page {
 }
 
 /*
-  Below 1180px of usable width, or at 4:3 and narrower, the hero switches
-  atomically to purpose-built compact/portrait plates. Their upper halves are
-  real photographed canvas and their sculptures start below the copy safe zone,
-  so this mode needs neither the desktop backdrop nor a collision mask. The
-  complete raster remains unscaled to avoid renderer-dependent tile seams.
+  Compact plates own the full canvas. Avoid permanent GPU promotion so
+  scaling cannot expose renderer tile boundaries or the backing plate.
 */
 @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) {
-  .home-page .hero[data-ok-safe-scene] .hero-backdrop {
+  .home-page .hero .hero-backdrop {
     display: none;
+  }
+  .home-page .hero :is(.art-stage, .image-rig) {
+    will-change: auto;
   }
 
   .home-page .hero[data-ok-safe-scene] .art-stage {
@@ -65,8 +65,8 @@ body.home-page {
   .home-page .hero[data-ok-safe-scene] .sculpture {
     object-fit: cover;
     object-position: 56% top;
+    filter: none;
   }
-
   /*
     The portrait plate is taller than most 4:3-to-mobile viewports. Anchor it
     to the floor so cover-cropping removes surplus empty canvas above the tree

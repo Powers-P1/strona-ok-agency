@@ -4,13 +4,47 @@
  */
 
 :root {
+  /* Scene geometry always follows the small viewport. Runtime measurements
+   * are published separately so mobile browser chrome cannot make a 100svh
+   * scene taller than the visible frame. */
+  --ok-viewport-height: 100svh;
+
   --ok-font-body: "Archivo", sans-serif;
   --ok-font-display: "Barlow Condensed", sans-serif;
 
-  --ok-type-content-min: 14px;
-  --ok-type-label-min: 12px;
+  /*
+   * Fluid semantic roles. The historic `*-min` names remain as compatibility
+   * aliases because every public route consumes them, but their value now
+   * follows the layout viewport height up to an explicit 8K ceiling. `vh` is
+   * deliberate here: unlike `svh`, it updates deterministically after desktop
+   * window resize while remaining stable across mobile browser chrome changes.
+   * This keeps
+   * physical reading size comparable on high-density desktop canvases while
+   * preserving the 14/12 px mobile floors.
+   */
+  --ok-type-content-floor: 14px;
+  --ok-type-label-floor: 12px;
+  --ok-type-content: var(--ok-type-content-runtime, clamp(var(--ok-type-content-floor), 1.55vh, 48px));
+  --ok-type-label: var(--ok-type-label-runtime, clamp(var(--ok-type-label-floor), 1.2vh, 32px));
+  --ok-type-control: var(--ok-type-control-runtime, clamp(15px, 1.45vh, 42px));
+  --ok-type-icon: var(--ok-type-icon-runtime, clamp(18px, 1.65vh, 44px));
+  --ok-type-display-home: var(--ok-type-display-home-runtime, clamp(96px, 18vh, 720px));
+  --ok-type-display-home-compact: var(--ok-type-display-home-compact-runtime, clamp(120px, 12.5vh, 360px));
+  --ok-type-display-service: var(--ok-type-display-service-runtime, clamp(68px, 8.7vh, 360px));
+  --ok-type-display-process: var(--ok-type-display-process-runtime, clamp(74px, 9.5vh, 392px));
+  --ok-type-display-section: var(--ok-type-display-section-runtime, clamp(58px, 7.8vh, 320px));
+  --ok-type-display-question: var(--ok-type-display-question-runtime, clamp(28px, 4.7vh, 192px));
+  --ok-type-display-card: var(--ok-type-display-card-runtime, clamp(25px, 3.2vh, 128px));
+  --ok-type-display-result: var(--ok-type-display-result-runtime, clamp(48px, 6vh, 240px));
+  --ok-type-display-document: var(--ok-type-display-document-runtime, clamp(76px, 8.8vh, 360px));
+  --ok-type-content-min: var(--ok-type-content);
+  --ok-type-label-min: var(--ok-type-label);
   --ok-leading-content: 1.5;
   --ok-tracking-label: .08em;
+
+  --ok-rail-opening: clamp(650px, 42vw, 1600px);
+  --ok-rail-section: clamp(620px, 38vw, 1440px);
+  --ok-rail-reading: clamp(560px, 32vw, 1200px);
 
   --ok-color-paper: #ead9cb;
   --ok-color-navy: #071a2c;
@@ -24,6 +58,15 @@
   --ok-space-content-gap: clamp(14px, 2.4vh, 22px);
   --ok-space-content-gap-compact: clamp(8px, 1.4vh, 14px);
 
+  /* Shared interactive geometry grows with the same layout viewport that
+   * drives the semantic type roles. Interactive stacks must not retain a
+   * fixed 1K-era height while their copy grows on 2K/4K/8K canvases. */
+  --ok-size-interactive-row: clamp(46px, 3.75vh, 150px);
+  --ok-size-interactive-index: clamp(44px, 3.1vh, 128px);
+  --ok-space-interactive-gap: clamp(6px, .65vh, 24px);
+  --ok-space-interactive-inset: clamp(6px, .65vh, 24px);
+  --ok-space-flow-tight: clamp(8px, .65vh, 24px);
+
   --ok-scene-safe-inset: 24px;
   --ok-annotation-target-size: 44px;
   --ok-annotation-core-size: 22px;
@@ -31,4 +74,8 @@
   --ok-annotation-copy-gap: 32px;
   --ok-annotation-bottom-inset: 88px;
   --ok-annotation-ui-clearance: 16px;
+}
+
+body {
+  font-size: var(--ok-type-content);
 }

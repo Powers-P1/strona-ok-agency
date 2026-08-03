@@ -27,6 +27,7 @@ const [css, script, ...htmlFiles] = await Promise.all([
 ]);
 const storyCss = await read("assets/story-standard.css");
 const sceneViewport = await read("assets/scene-viewport.css");
+const designTokens = await read("assets/design-tokens.css");
 const socialCss = await read("assets/services/social/styles.css");
 const faqCss = await read("assets/page-faq.css");
 
@@ -40,6 +41,15 @@ pages.forEach((page, index) => {
   requireText(html, `/${versionedAsset("assets/responsive-safety.css")}`, `${page}: brak responsive-safety.css`);
   requireText(html, `/${versionedAsset("assets/responsive-safety.js")}`, `${page}: brak responsive-safety.js`);
 });
+
+requireText(
+  script,
+  "new ResizeObserver(schedule)",
+  "ResizeObserver must schedule a stable measure without clearing scene height",
+);
+if (/new ResizeObserver\(scheduleViewportMeasure\)/.test(script)) {
+  failures.push("ResizeObserver creates a shrink/grow loop by clearing observed scene height");
+}
 
 for (const token of [
   "ResizeObserver",
@@ -56,7 +66,6 @@ for (const token of [
   "okSafeCompactFit",
   "getHomeHeroLayout",
   "shortLandscape",
-  "artScale",
   "data-ok-safe-cards",
   "data-ok-safe-menu-overflow",
   'document.fonts.status !== "loaded"',
@@ -69,6 +78,10 @@ for (const token of [
   "Object.isFrozen",
   "fullVisible",
   "feather",
+  "typeRoles",
+  "publishViewportTypeScale",
+  "--ok-viewport-height-runtime",
+  "--ok-type-${role}-runtime",
 ]) {
   requireText(script, token, `responsive-safety.js: brak ${token}`);
 }
@@ -88,12 +101,20 @@ for (const selector of [
 requireText(css, '[data-ok-safe-art="active"]', "CSS nie ma aktywnej osłony grafiki");
 requireText(css, ".home-page .hero", "CSS nie ma reflow hero");
 requireText(css, "mask-image: var(--ok-safe-mask-image)", "CSS nie korzysta z dynamicznego featheru");
-requireText(css, "[data-ok-safe-mobile-hero] .sculpture", "CSS nie ma dedykowanej kompozycji 4:3 i mobile");
-requireText(css, 'data-ok-safe-mobile-hero="portrait"] .sculpture', "CSS nie ma osobnego kadru portretowego");
+requireText(
+  css,
+  "@media (max-width: 1180px), (max-aspect-ratio: 4 / 3)",
+  "CSS nie przełącza atomowo kompozycji 4:3 i mobile",
+);
+requireText(css, "@media (max-aspect-ratio: 2 / 3)", "CSS nie ma osobnego kadru portretowego");
 requireText(css, "object-position: 56% bottom", "portretowe drzewko nie jest zakotwiczone do dołu kadru");
 requireText(css, "top: calc(100% - 36.43vw)", "animacja podstawy nie podąża za dolnym kadrowaniem");
 requireText(storyCss, ".about-page .scene", "wspólny model scen nie obejmuje O nas");
-requireText(sceneViewport, "--ok-scene-viewport-height: 100svh", "wspólny model nie wypełnia sceną całego viewportu");
+requireText(
+  sceneViewport,
+  "--ok-scene-viewport-height: var(--ok-viewport-height, 100svh)",
+  "wspólny model scen nie korzysta z centralnej wysokości layout viewportu",
+);
 requireText(sceneViewport, "html.ok-scene-page .ok-nav-slot", "wspólny model nie usuwa slotu nawigacji z geometrii scen");
 requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "wspólny model pozwala scenom wyjść poza kadr");
 requireText(sceneViewport, ".diagnosis-story .story-stage", "wspólny model wysokości nie obejmuje Diagnozy");
@@ -117,10 +138,55 @@ requireText(script, "homeLayout.copyFitsFirstView", "JS nie utrzymuje kompaktowe
 requireText(script, 'Math.ceil(viewportHeight)', "JS nie kotwiczy kompaktowego hero do jednego viewportu");
 requireText(script, '"accessible-overflow"', "JS nie zachowuje dostępnego reflow po powiększeniu tekstu");
 requireText(script, "viewportWidth <= 1180 || viewportRatio <= 4 / 3", "JS nie ma wspólnego progu kompaktowego hero");
+if (/visualViewport\?\.width|visualViewport\?\.height/.test(script)) {
+  failures.push("klasyfikacja scen używa opóźnionego visualViewport zamiast layout viewportu media queries");
+}
+requireText(
+  script,
+  'layout.scene.style.removeProperty("--ok-safe-required-height")',
+  "pomiar scen grow zależy od wysokości opublikowanej dla poprzedniego viewportu",
+);
+requireText(
+  script,
+  'window.addEventListener("resize", scheduleViewportMeasure',
+  "resize nie zeruje synchronicznie wysokości opublikowanej przez poprzedni viewport",
+);
+requireText(script, "needsRemeasure", "zdarzenie resize zgłoszone w trakcie pomiaru jest bezpowrotnie gubione");
+requireText(
+  script,
+  'matchMedia("(max-width: 1180px), (max-aspect-ratio: 4/3)")',
+  "JS nie reaguje na atomowe przełączenie art direction przez media query",
+);
 requireText(script, "homeLayout.portrait", "JS nie rozróżnia assetu kompaktowego i portretowego");
 requireText(script, "viewportWidth * 1.35", "JS nie rozróżnia wysokiego portretu od krótkiego okna");
 requireText(css, ":root[data-ok-tall-portrait]", "CSS nie korzysta ze wspólnego profilu wysokiego portretu");
-requireText(css, "min-height: max(100svh, var(--ok-safe-required-height", "CSS nie honoruje wyliczonej wysokości hero");
+requireText(css, "var(--ok-viewport-height, 100svh)", "CSS nie korzysta z centralnej wysokości layout viewportu");
+requireText(
+  await read("assets/responsive-foundation.v20260730-8.css"),
+  "@media (min-width: 1025px) and (min-height: 781px)",
+  "wspólna skala Diagnozy nadpisuje kompaktową kompozycję krótkiego desktopu",
+);
+requireText(
+  designTokens,
+  "--ok-viewport-height: 100svh;",
+  "centralna wysokość scen nie jest zakotwiczona bezpośrednio do small viewportu",
+);
+requireText(
+  script,
+  'root.style.setProperty("--ok-viewport-height-runtime", `${viewportHeight}px`)',
+  "JS nie publikuje oddzielnego pomiaru runtime podczas resize",
+);
+if (script.includes('root.style.setProperty("--ok-viewport-height",')) {
+  failures.push("JS nie może nadpisywać kontraktu scen 100svh wartością window.innerHeight");
+}
+if (designTokens.includes("--ok-viewport-height: var(--ok-viewport-height-runtime")) {
+  failures.push("publiczny kontrakt scen nie może aliasować pomiaru runtime");
+}
+requireText(
+  script,
+  'root.style.setProperty(`--ok-type-${role}`, resolvedValue)',
+  "JS nie publikuje końcowych tokenów semantycznych odpornych na cache WebKit",
+);
 requireText(script, "contentBottomWithin", "JS nie mierzy stabilnej wysokości treści względem sceny");
 requireText(script, "element.getClientRects().length > 0", "JS traktuje dzieci ukrytych kontenerów jak widoczną treść");
 
@@ -178,11 +244,13 @@ if (/:is\(\.campaign-frame, \.social-frame, \.process-frame\)[^{]*\{[^}]*(?:min-
   failures.push("responsive safety nadal lokalnie nadpisuje globalną wysokość scen");
 }
 
-requireText(
-  css,
-  "scale: var(--ok-home-compact-art-scale, 1)",
-  "CSS nie stosuje wyliczonej skali kompaktowego kadru hero",
-);
+requireText(css, "scale: none", "CSS nie utrzymuje kompaktowej płyty hero w naturalnej skali");
+if (/ok-home-compact-art-scale|\bartScale\b/.test(`${css}\n${script}`)) {
+  failures.push("responsive safety zawiera historyczne skalowanie całej płyty hero");
+}
+if (/data-ok-safe-mobile-hero[^}]*!important/s.test(css)) {
+  failures.push("kompaktowy profil hero nie może opierać się na !important");
+}
 
 if (/\bfont-size\s*:/.test(css)) {
   failures.push("responsive-safety.css nie może zmieniać rozmiarów fontów");

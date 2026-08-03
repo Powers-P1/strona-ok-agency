@@ -90,13 +90,13 @@ if (foundationCss.includes("data-ok-safe-compact-density")) {
 }
 requireText(
   foundationCss,
-  "@media (min-width: 1181px) and (max-aspect-ratio: 4 / 3)",
-  "wysoki desktop nie ma dedykowanej skali typografii hero",
+  'html[data-ok-nav-compact="tall"] .home-page .copy h1',
+  "wysoki desktop nie korzysta z atomowego profilu typografii hero",
 );
 requireText(
   foundationCss,
-  "font-size: clamp(7.5rem, min(12.5vw, 12.5svh), 11.25rem);",
-  "nagłówek hero na wysokim desktopie nie zachowuje skali desktopowej",
+  "font-size: var(--ok-type-display-home-compact);",
+  "nagłówek hero na wysokim desktopie omija semantyczny token compact",
 );
 requireText(html, "responsive-foundation.v20260730-8.css", "strona główna nie ładuje wersjonowanej warstwy kaskady");
 const desktopHomeType = foundationCss.indexOf("font-size: var(--ok-home-display);");
@@ -142,6 +142,13 @@ const resizeFixture = viewportHeight => getHomeHeroLayout({
 const shortBeforeResize = resizeFixture(500);
 const tallAfterResize = resizeFixture(768);
 const shortAfterResize = resizeFixture(500);
+const tallDesktop = getHomeHeroLayout({
+  viewportWidth: 1365,
+  viewportHeight: 1218,
+  sceneTop: 0,
+  contentBottom: 600,
+  gap: 40,
+});
 
 if (!shortBeforeResize.copyFitsFirstView) {
   failures.push("niski viewport 1024x500 nie powinien tworzyć pustej rezerwy pod treścią");
@@ -154,6 +161,12 @@ if (JSON.stringify(shortBeforeResize) !== JSON.stringify(shortAfterResize)) {
 }
 if (shortBeforeResize.copySafeZone !== 1 || tallAfterResize.copySafeZone !== .6) {
   failures.push("krótki landscape powinien wykorzystać pełną wysokość, a wysoki compact zachować strefę grafiki");
+}
+if (!tallDesktop.compact || tallDesktop.portrait) {
+  failures.push("desktop 1365x1218 powinien używać kompaktowej płyty bez traktowania go jak portret");
+}
+if ("artScale" in tallDesktop || "artScale" in shortBeforeResize) {
+  failures.push("układ hero nie może publikować historycznego skalowania całej płyty");
 }
 if (shortBeforeResize.requiredHeight !== 500) {
   failures.push(`niski viewport 1024x500 ma sztuczną wysokość ${shortBeforeResize.requiredHeight}px`);

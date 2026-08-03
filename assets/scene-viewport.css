@@ -6,7 +6,7 @@
  */
 
 :root {
-  --ok-scene-viewport-height: 100svh;
+  --ok-scene-viewport-height: var(--ok-viewport-height, 100svh);
 }
 
 html.ok-scene-page {

@@ -114,7 +114,11 @@ for (const page of scenePages) {
 requireText(routeMotion, "--ok-motion-spring", "brak wspólnego easing ruchu");
 requireText(routeMotion, "--ok-motion-cue-duration", "brak wspólnego czasu scroll cue");
 requireText(storyCss, ".about-page .scene", "O nas nie korzysta ze wspólnego modelu scen");
-requireText(sceneViewport, "--ok-scene-viewport-height: 100svh", "sceny podstron nie wypełniają pełnego viewportu");
+requireText(
+  sceneViewport,
+  "--ok-scene-viewport-height: var(--ok-viewport-height, 100svh)",
+  "sceny podstron nie korzystają z centralnej wysokości pełnego viewportu",
+);
 requireText(sceneViewport, "html.ok-scene-page .ok-nav-slot", "slot nawigacji nadal skraca sceny podstron");
 requireText(sceneViewport, "scroll-padding-top: 0", "nawigacja nadal przesuwa sceny poza pełny kadr");
 requireText(sceneViewport, "max-height: var(--ok-scene-viewport-height) !important", "sceny podstron mogą przekroczyć wysokość viewportu");

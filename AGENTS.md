@@ -61,6 +61,11 @@ npm run check:quality
 npm run build
 ```
 
+Przy zmianie wspólnego kontraktu skali, typografii, pełnego kadru albo
+responsywności uruchom dodatkowo `npm run check:system-scale` po ustabilizowaniu
+zmian. Podczas iteracji używaj najwęższego testu odpowiadającego zmienianemu
+kontraktowi; pełną bramkę uruchamiaj raz przed PR.
+
 ## Publikacja
 
 - Gałąź produkcyjna: `main`.

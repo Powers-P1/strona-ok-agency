@@ -10,6 +10,8 @@
   --ok-nav-docked-height: 80px;
   --ok-nav-floating-height: 64px;
   --ok-nav-slot-height: var(--ok-nav-docked-height);
+  --ok-nav-brand-width: clamp(142px, 9vw, 154px);
+  --ok-nav-brand-detached-width: clamp(126px, 8vw, 140px);
   --ok-nav-canvas: #f0dfcf;
   --ok-nav-canvas-solid: #efe0d2;
   --ok-nav-floating-canvas: var(--ok-nav-canvas-solid);
@@ -143,7 +145,7 @@ body header[data-ok-global-nav] > a:first-child {
 }
 
 body header[data-ok-global-nav] > a:first-child > img {
-  width: clamp(142px, 9vw, 154px) !important;
+  width: var(--ok-nav-brand-width) !important;
   height: auto !important;
   display: block;
   filter: none !important;
@@ -151,7 +153,7 @@ body header[data-ok-global-nav] > a:first-child > img {
 }
 
 body header[data-ok-global-nav][data-ok-nav-state="detached"] > a:first-child > img {
-  width: clamp(126px, 8vw, 140px) !important;
+  width: var(--ok-nav-brand-detached-width) !important;
 }
 
 body header[data-ok-global-nav] > a:first-child:focus-visible,
@@ -681,6 +683,8 @@ body header[data-ok-global-nav] .ok-nav-offer__popover > a:first-child {
     --ok-nav-floating-height: 59px;
     --ok-nav-gutter: var(--ok-canvas-inset, clamp(20px, 4vw, 34px));
     --ok-nav-compact-trigger-width: 76px;
+    --ok-nav-brand-width: clamp(118px, 18vw, 132px);
+    --ok-nav-brand-detached-width: var(--ok-nav-brand-width);
   }
 
   html {
@@ -699,11 +703,6 @@ body header[data-ok-global-nav] .ok-nav-offer__popover > a:first-child {
     border-radius: 15px;
   }
 
-  body header[data-ok-global-nav] > a:first-child > img,
-  body header[data-ok-global-nav][data-ok-nav-state="detached"] > a:first-child > img {
-    width: clamp(118px, 18vw, 132px) !important;
-  }
-
   body header[data-ok-global-nav][data-ok-nav-ready] nav[data-ok-primary-nav] {
     display: none;
   }
@@ -712,6 +711,36 @@ body header[data-ok-global-nav] .ok-nav-offer__popover > a:first-child {
     min-width: var(--ok-nav-compact-trigger-width);
     display: inline-flex;
   }
+}
+
+/*
+ * WebKit can settle :root custom properties one frame later than replaced
+ * media/picture content during a live desktop resize. Navigation publishes the
+ * same compact classification as an attribute, so the rail and trigger switch
+ * atomically even in that engine. The media query above remains the no-JS and
+ * first-paint contract; this block is its state-stable equivalent.
+ */
+:root[data-ok-nav-compact] {
+  --ok-nav-docked-height: 68px;
+  --ok-nav-floating-height: 59px;
+  --ok-nav-gutter: var(--ok-canvas-inset, clamp(20px, 4vw, 34px));
+  --ok-nav-compact-trigger-width: 76px;
+  --ok-nav-brand-width: clamp(118px, 18vw, 132px);
+  --ok-nav-brand-detached-width: var(--ok-nav-brand-width);
+  scrollbar-gutter: auto;
+}
+
+html[data-ok-nav-compact] body header[data-ok-global-nav] {
+  gap: 18px;
+}
+
+html[data-ok-nav-compact] body header[data-ok-global-nav][data-ok-nav-ready] nav[data-ok-primary-nav] {
+  display: none;
+}
+
+html[data-ok-nav-compact] body header[data-ok-global-nav][data-ok-nav-ready] .ok-nav-trigger {
+  min-width: var(--ok-nav-compact-trigger-width);
+  display: inline-flex;
 }
 
 @media (max-width: 420px) {

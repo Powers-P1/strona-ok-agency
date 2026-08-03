@@ -14,11 +14,11 @@
     calc((100vw - var(--ok-canvas-max)) / 2 + var(--ok-gutter))
   );
   --ok-stage-min: 680px;
-  --ok-stage-size: max(100svh, var(--ok-stage-min));
-  --ok-home-display: clamp(96px, 18svh, 320px);
-  --ok-service-display: clamp(68px, 8.7svh, 144px);
-  --ok-section-display: clamp(58px, 7.8svh, 128px);
-  --ok-body-copy: clamp(15px, 1.55svh, 21px);
+  --ok-stage-size: max(var(--ok-viewport-height, 100svh), var(--ok-stage-min));
+  --ok-home-display: var(--ok-type-display-home, clamp(96px, 18vh, 720px));
+  --ok-service-display: var(--ok-type-display-service, clamp(68px, 8.7vh, 360px));
+  --ok-section-display: var(--ok-type-display-section, clamp(58px, 7.8vh, 320px));
+  --ok-body-copy: var(--ok-type-content, clamp(15px, 1.55vh, 48px));
 }
 
 html {
@@ -84,19 +84,22 @@ canvas {
 
   .home-page .scene-label,
   .home-page .detail-kicker {
-    font-size: clamp(12px, 1.25svh, 17px);
+    font-size: var(--ok-type-label);
   }
 
   .home-page .descriptor {
     margin-top: clamp(24px, 3.4svh, 54px);
-    font-size: clamp(15px, 1.6svh, 21px);
+  }
+
+  .home-page :is(.descriptor, .value-lead) {
+    font-size: var(--ok-type-content);
   }
 
   .home-page .cta {
     margin-top: clamp(22px, 3svh, 48px);
     min-width: clamp(268px, 16.5vw, 440px);
     padding-block: clamp(19px, 2.1svh, 28px);
-    font-size: clamp(15px, 1.45svh, 20px);
+    font-size: var(--ok-type-control);
   }
 
   .home-page .wordmark {
@@ -104,7 +107,7 @@ canvas {
   }
 
   .home-page .nav a {
-    font-size: clamp(13px, 1.2svh, 17px);
+    font-size: var(--ok-type-label);
   }
 
   .home-page .detail {
@@ -140,17 +143,17 @@ canvas {
   .social-page .site-header nav a,
   .web-service .site-header nav a,
   .process-page .site-header nav a {
-    font-size: clamp(13px, 1.2svh, 17px);
+    font-size: var(--ok-type-label);
   }
 
   .campaign-page .opening-copy h1,
   .social-page .opening-copy h1 {
-    font-size: clamp(68px, 8svh, 132px);
+    font-size: var(--ok-type-display-service, var(--ok-service-display));
   }
 
   .social-page .opening-copy {
     left: var(--ok-canvas-inset);
-    width: min(760px, 42vw);
+    width: min(var(--ok-rail-opening, 760px), calc(100vw - (2 * var(--ok-canvas-inset))));
   }
 
   .web-service:not(.diagnosis-service) .opening-copy h1 {
@@ -158,11 +161,11 @@ canvas {
   }
 
   .diagnosis-service .opening-copy h1 {
-    font-size: clamp(66px, 8.3svh, 140px);
+    font-size: var(--ok-type-display-service, var(--ok-service-display));
   }
 
   .process-page .process-opening-copy h1 {
-    font-size: clamp(74px, 9.5svh, 156px);
+    font-size: var(--ok-type-display-process, clamp(74px, 9.5vh, 392px));
   }
 
   .campaign-page .opening-copy p,
@@ -180,7 +183,7 @@ canvas {
   }
 
   .web-service:not(.diagnosis-service) .journey-intro {
-    width: min(560px, 32vw);
+    width: min(var(--ok-rail-reading, 560px), calc(100vw - (2 * var(--ok-canvas-inset))));
   }
 
   .campaign-page .journey-intro h2,
@@ -202,7 +205,7 @@ canvas {
   .web-service .proof-content,
   .process-page .proof-content {
     left: var(--ok-canvas-inset);
-    width: min(720px, 38vw);
+    width: min(var(--ok-rail-section, 720px), calc(100vw - (2 * var(--ok-canvas-inset))));
   }
 
   .campaign-page .proof-content h2,
@@ -220,7 +223,38 @@ canvas {
 
   .web-service:not(.diagnosis-service) .opening-copy,
   .process-page .process-opening-copy {
-    width: min(760px, 42vw);
+    width: min(var(--ok-rail-opening, 760px), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
+  /*
+   * Diagnosis uses the same semantic scale as every other illustrated story.
+   * Its local file owns composition and colors; the shared foundation owns
+   * reading size and rail growth across 2K/4K/8K canvases.
+   */
+  .diagnosis-service :is(.opening-copy, .map-interface, .result-content) {
+    left: var(--ok-canvas-inset);
+    width: min(var(--ok-rail-section, 700px), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
+}
+
+/* The route's compact profile owns vertical composition in short desktop
+ * windows. Shared large-canvas type applies only when the frame has room. */
+@media (min-width: 1025px) and (min-height: 781px) {
+  .diagnosis-service .map-interface {
+    top: clamp(128px, 14.5svh, 620px);
+  }
+
+  .diagnosis-service .map-intro h2 {
+    font-size: var(--ok-type-display-section, var(--ok-section-display));
+  }
+
+  .diagnosis-service .quiz-question h3 {
+    font-size: var(--ok-type-display-question, clamp(28px, 4.7vh, 192px));
+  }
+
+  .diagnosis-service :is(.result-content h2, .contact-panel h2) {
+    font-size: var(--ok-type-display-result, clamp(48px, 6vh, 240px));
   }
 }
 
@@ -257,7 +291,7 @@ canvas {
 
   .menu-page .page-title {
     margin-inline: var(--ok-canvas-inset);
-    font-size: clamp(96px, 12svh, 144px);
+    font-size: var(--ok-type-display-service, var(--ok-service-display));
   }
 
   .menu-page .cards {
@@ -266,12 +300,12 @@ canvas {
   }
 
   .menu-page .card-title {
-    font-size: clamp(22px, 2.3svh, 34px);
+    font-size: var(--ok-type-display-card, clamp(25px, 3.2vh, 128px));
   }
 
   .menu-page .card-quote,
   .menu-page .card-description {
-    font-size: clamp(14px, 1.4svh, 18px);
+    font-size: var(--ok-type-content, var(--ok-body-copy));
   }
 }
 
@@ -288,15 +322,35 @@ canvas {
   }
 
   .contact-page .page-title {
-    font-size: clamp(38px, 5.4svh, 86px);
+    font-size: var(--ok-type-display-result, clamp(48px, 6vh, 240px));
   }
 
   .contact-page .lead {
-    font-size: clamp(17px, 1.65svh, 21px);
+    font-size: var(--ok-type-content, var(--ok-body-copy));
   }
 
   .contact-page .kicker {
-    font-size: 13px;
+    font-size: var(--ok-type-label, 12px);
+  }
+
+  .contact-page :is(
+    .proof li,
+    .field label,
+    .consent,
+    .form-status,
+    .direct-mail p,
+    .context-note p,
+    .context-note strong
+  ) {
+    font-size: var(--ok-type-content, var(--ok-body-copy));
+  }
+
+  .contact-page :is(.field input, .field select, .field textarea) {
+    font-size: var(--ok-type-control, var(--ok-body-copy));
+  }
+
+  .contact-page .direct-mail a {
+    font-size: var(--ok-type-display-card, clamp(25px, 3.2vh, 128px));
   }
 }
 
@@ -321,6 +375,18 @@ canvas {
 }
 
 @media (min-width: 1025px) {
+  .about-page h1 {
+    font-size: var(--ok-type-display-service, var(--ok-service-display));
+  }
+
+  .about-page h2 {
+    font-size: var(--ok-type-display-section, var(--ok-section-display));
+  }
+
+  .about-page :is(.scene-01, .scene-02, .scene-03, .scene-04) .copy-panel {
+    width: min(var(--ok-rail-section, 720px), calc(100vw - (2 * var(--ok-canvas-inset))));
+  }
+
   .about-page .copy-left {
     left: var(--ok-canvas-inset);
   }
@@ -346,11 +412,27 @@ canvas {
 
 @media (min-width: 1025px) {
   .privacy-page .privacy-title {
-    font-size: clamp(76px, 8.8svh, 144px);
+    font-size: var(--ok-type-display-document, clamp(76px, 8.8vh, 360px));
   }
 
   .error-page .error-title {
-    font-size: clamp(78px, 10.7svh, 180px);
+    font-size: var(--ok-type-display-home, clamp(96px, 18vh, 720px));
+  }
+
+  .faq-page .faq-intro h1 {
+    font-size: var(--ok-type-display-service, var(--ok-service-display));
+  }
+
+  .faq-page :is(.faq-lead, .faq-answer p) {
+    font-size: var(--ok-type-content, var(--ok-body-copy));
+  }
+
+  .faq-page :is(.faq-kicker, .faq-list__label, .faq-number, .faq-intro__link, .faq-cta a) {
+    font-size: var(--ok-type-label, 12px);
+  }
+
+  .faq-page :is(.faq-list summary, .faq-cta p) {
+    font-size: var(--ok-type-display-card, clamp(25px, 3.2vh, 128px));
   }
 }
 
@@ -375,7 +457,7 @@ canvas {
   .campaign-frame,
   .social-frame,
   .process-frame {
-    height: max(100svh, 720px);
+    height: max(var(--ok-viewport-height, 100svh), 720px);
     min-height: 720px;
   }
 }
@@ -429,37 +511,6 @@ canvas {
 
   .home-page .cta {
     margin-top: 1.25rem;
-  }
-}
-
-/* 4K at 100% browser scaling: retain readable control and form type. */
-@media (min-width: 2561px) and (min-height: 1600px) {
-  .contact-page .form,
-  .contact-page .contact-direct {
-    max-width: 800px;
-  }
-
-  .contact-page .proof li,
-  .contact-page .field label,
-  .contact-page .consent,
-  .contact-page .form-status {
-    font-size: 15px;
-  }
-
-  .contact-page .field input,
-  .contact-page .field select,
-  .contact-page .field textarea {
-    font-size: 17px;
-  }
-
-  .contact-page .direct-mail p,
-  .contact-page .context-note p,
-  .contact-page .context-note strong {
-    font-size: 14px;
-  }
-
-  .contact-page .direct-mail a {
-    font-size: 28px;
   }
 }
 
@@ -527,7 +578,7 @@ canvas {
     margin-top: clamp(.45rem, .9svh, .7rem);
     min-height: 48px;
     padding-block: clamp(.72rem, 1.4svh, .9rem);
-    font-size: clamp(.8rem, 1.2vw, .9rem);
+    font-size: var(--ok-type-control);
   }
 
   .home-page .detail {
@@ -543,39 +594,38 @@ canvas {
 /*
   A tall desktop uses the compact artwork, but it must retain desktop type
   hierarchy. The generic stacked values above are intentionally tablet-sized;
-  this ratio-specific layer keeps the headline and supporting copy visually
-  proportional on large windows without changing the mobile composition.
+  this centrally published profile keeps the headline and supporting copy
+  visually proportional on large windows without depending on WebKit media
+  query timing during live resize.
 */
-@media (min-width: 1181px) and (max-aspect-ratio: 4 / 3) {
-  .home-page .copy {
-    max-width: min(46rem, calc(100vw - (2 * var(--ok-canvas-inset))));
-  }
+html[data-ok-nav-compact="tall"] .home-page .copy {
+  max-width: min(46rem, calc(100vw - (2 * var(--ok-canvas-inset))));
+}
 
-  .home-page .scene-label {
-    margin-bottom: clamp(1rem, 1.6svh, 1.35rem);
-    font-size: clamp(.8rem, 1vw, 1rem);
-  }
+html[data-ok-nav-compact="tall"] .home-page .scene-label {
+  margin-bottom: var(--ok-type-label);
+  font-size: var(--ok-type-label);
+}
 
-  .home-page .copy h1 {
-    font-size: clamp(7.5rem, min(12.5vw, 12.5svh), 11.25rem);
-  }
+html[data-ok-nav-compact="tall"] .home-page .copy h1 {
+  font-size: var(--ok-type-display-home-compact);
+}
 
-  .home-page .descriptor {
-    max-width: 38rem;
-    margin-top: clamp(.8rem, 1.3svh, 1.1rem);
-    font-size: clamp(.95rem, 1.2vw, 1.1rem);
-  }
+html[data-ok-nav-compact="tall"] .home-page .descriptor {
+  max-width: 38rem;
+  margin-top: var(--ok-type-label);
+  font-size: var(--ok-type-content);
+}
 
-  .home-page .value-lead {
-    max-width: 42rem;
-    margin-top: clamp(.45rem, .8svh, .7rem);
-    font-size: clamp(1rem, 1.25vw, 1.15rem);
-  }
+html[data-ok-nav-compact="tall"] .home-page .value-lead {
+  max-width: 42rem;
+  margin-top: .5em;
+  font-size: var(--ok-type-content);
+}
 
-  .home-page .cta {
-    min-width: clamp(19rem, 22vw, 22rem);
-    margin-top: clamp(1rem, 1.7svh, 1.4rem);
-    padding-block: clamp(1rem, 1.6svh, 1.25rem);
-    font-size: clamp(.9rem, 1.05vw, 1rem);
-  }
+html[data-ok-nav-compact="tall"] .home-page .cta {
+  min-width: clamp(19rem, 22vw, 22rem);
+  margin-top: var(--ok-type-label);
+  padding-block: .9em;
+  font-size: var(--ok-type-control);
 }

@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  MAX_BODY_BYTES,
   buildEmail,
   normalizeAttribution,
   normalizePayload,
+  readJsonBody,
 } from "./contact.js";
 
 const timestamp = () => new Date().toISOString();
@@ -185,4 +187,45 @@ test("sanitizes event ID and includes accepted attribution in the email", () => 
   assert.match(email.text, /Atrybucja kampanii \(dane przekazane przez przeglądarkę\)/);
   assert.match(email.text, /utm_campaign: brand/);
   assert.doesNotMatch(email.text, /pii@example\.com|secret=1/);
+});
+
+test("request-size budget accepts the largest valid Unicode form with full attribution", async () => {
+  const unicode = "😀";
+  const maxTouch = {
+    captured_at: timestamp(),
+    landing_page: `https://okagency.pl/${"a".repeat(978)}`,
+    referrer: `https://${"a".repeat(240)}.pl`,
+    utm_source: unicode.repeat(200),
+    utm_medium: unicode.repeat(200),
+    utm_campaign: unicode.repeat(200),
+    utm_content: unicode.repeat(200),
+    utm_term: unicode.repeat(200),
+    gclid: unicode.repeat(512),
+    gbraid: unicode.repeat(512),
+    wbraid: unicode.repeat(512),
+    fbclid: unicode.repeat(512),
+  };
+  const body = JSON.stringify({
+    name: unicode.repeat(100),
+    email: `${"a".repeat(240)}@x.pl`,
+    phone: unicode.repeat(50),
+    company: unicode.repeat(150),
+    topic: unicode.repeat(100),
+    message: unicode.repeat(5000),
+    fax: "",
+    turnstileToken: "x".repeat(2048),
+    attribution: { first_touch: maxTouch, last_touch: { ...maxTouch } },
+    analyticsEventId: "x".repeat(100),
+  });
+  const byteLength = new TextEncoder().encode(body).byteLength;
+  assert.ok(byteLength > 16_384, "fixture must cover the previous request-size failure");
+  assert.ok(byteLength <= MAX_BODY_BYTES, "valid payload must fit the Worker budget");
+
+  const parsed = await readJsonBody(new Request("https://okagency.pl/api/contact", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body,
+  }));
+  assert.equal(parsed.error, undefined);
+  assert.equal(parsed.value.message.length, 5000 * 2);
 });

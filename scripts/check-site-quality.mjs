@@ -52,6 +52,9 @@ const cspDirectives = new Map(contentSecurityPolicy
   .map(directive => directive.trim().split(/\s+/))
   .filter(parts => parts[0])
   .map(([name, ...values]) => [name, new Set(values)]));
+if (!cspDirectives.has("upgrade-insecure-requests")) {
+  failures.push("_headers: CSP nie wymusza upgrade-insecure-requests");
+}
 
 const cspAllowsHost = (directive, host) => {
   const sources = cspDirectives.get(directive) || new Set();

@@ -10,7 +10,9 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 const EXPECTED_TURNSTILE_ACTION = "contact";
-const MAX_BODY_BYTES = 16_384;
+// Obejmuje najdłuższe poprawne pola UTF-8, token Turnstile i dwie pełne
+// migawki atrybucji. Normalizacja poniżej nadal ogranicza każde pole osobno.
+const MAX_BODY_BYTES = 65_536;
 
 const LIMITS = {
   name: 100,
@@ -457,7 +459,9 @@ export default {
 };
 
 export {
+  MAX_BODY_BYTES,
   buildEmail,
   normalizeAttribution,
   normalizePayload,
+  readJsonBody,
 };

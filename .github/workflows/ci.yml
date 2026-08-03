@@ -43,6 +43,9 @@ jobs:
       - name: Validate responsive scale and viewport contracts
         run: npm run check:system-scale
 
+      - name: Validate desktop typography and component geometry
+        run: npm run check:desktop-system-components
+
       - name: Check local links
         run: npm run check:links
 

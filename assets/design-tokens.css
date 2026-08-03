@@ -42,9 +42,13 @@
   --ok-leading-content: 1.5;
   --ok-tracking-label: .08em;
 
-  --ok-rail-opening: clamp(650px, 42vw, 1600px);
-  --ok-rail-section: clamp(620px, 38vw, 1440px);
-  --ok-rail-reading: clamp(560px, 32vw, 1200px);
+  /* Rails grow with large canvases as well as the semantic display roles.
+   * Keeping the old 1.2–1.6K caps while type continued to 8K forced headings
+   * into many short lines and pushed actions outside their scene. */
+  --ok-rail-opening: clamp(650px, 42vw, 3200px);
+  --ok-rail-section: clamp(620px, 38vw, 2880px);
+  --ok-rail-about: clamp(620px, 38vw, 2880px);
+  --ok-rail-reading: clamp(560px, 32vw, 2400px);
 
   --ok-color-paper: #ead9cb;
   --ok-color-navy: #071a2c;

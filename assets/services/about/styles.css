@@ -476,10 +476,14 @@ h2 {
   background: var(--paper);
 }
 
-.primary-cta span,
+.primary-cta,
 .text-link {
-  font-size: 12px;
+  font-size: var(--ok-type-control, 15px);
   font-weight: 600;
+}
+
+.primary-cta span {
+  font-size: inherit;
 }
 
 .primary-cta svg {
@@ -571,13 +575,8 @@ h2 {
   text-transform: uppercase;
 }
 
-.scene-02 {
-  --ok-rail-section: min(690px, 43vw);
-}
-
 .scene-02 .copy-panel {
   top: 6.8%;
-  width: var(--ok-rail-section);
 }
 
 .scene-02::before {
@@ -590,13 +589,8 @@ h2 {
   font-size: clamp(54px, 4.25vw, 72px);
 }
 
-.scene-03 {
-  --ok-rail-section: min(705px, 45vw);
-}
-
 .scene-03 .copy-panel {
   top: 7.2%;
-  width: var(--ok-rail-section);
 }
 
 .scene-03 h2 {
@@ -616,13 +610,8 @@ h2 {
   line-height: 1.12;
 }
 
-.scene-04 {
-  --ok-rail-section: min(770px, 51vw);
-}
-
 .scene-04 .copy-panel {
   top: 3.5%;
-  width: var(--ok-rail-section);
 }
 
 .scene-04 h2 {
@@ -1287,11 +1276,6 @@ h2 {
     flex: 1 1 auto;
   }
 
-  .primary-cta span,
-  .text-link {
-    font-size: 12px;
-  }
-
   .text-link {
     min-height: 44px;
   }
@@ -1811,17 +1795,6 @@ h2 {
   .scene-02 .portrait-frame figcaption {
     letter-spacing: .06em;
   }
-}
-
-.site-header nav a,
-.kicker,
-.chips li,
-.portrait-frame figcaption,
-.accordion-label strong,
-.primary-cta span,
-.text-link,
-.scroll-cue {
-  font-size: 12px;
 }
 
 @media (max-width: 390px) and (max-height: 740px) {

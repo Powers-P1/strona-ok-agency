@@ -5,8 +5,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 ## Podsumowanie
 
 - `!important`: **217**
-- deklaracje typografii w lokalnych arkuszach tras: **983**
-- lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **297**
+- deklaracje typografii w lokalnych arkuszach tras: **982**
+- lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **296**
 - inline `style` w HTML: **28**
 - mutacje stylu z JS: **45**
 
@@ -37,7 +37,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Liczba |
 | --- | --- |
-| assets/services/about/styles.css | 147 |
+| assets/services/about/styles.css | 146 |
 | assets/services/process/styles.css | 121 |
 | assets/services/diagnosis/styles.css | 112 |
 | assets/services/web/styles.css | 94 |
@@ -81,9 +81,9 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/annotation-system.css | 343 | .annotation-dot::before | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/annotation-system.css | 344 | .annotation-dot::before | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/annotation-system.css | 348 | .annotation-dot::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/legal-pages.css | 699 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/legal-pages.css | 700 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/legal-pages.css | 701 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/legal-pages.css | 702 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/legal-pages.css | 703 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-contact.css | 678 | .js .panel > .page-title | — | route-debt |
 | assets/page-contact.css | 678 | .js .panel > .page-title | — | route-debt |
 | assets/page-contact.css | 790 | *, *::before, *::after | — | route-debt |
@@ -116,10 +116,10 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/scene-viewport.css | 41 | .diagnosis-story, .diagnosis-story .story-stage | — | shared-contract |
 | assets/scene-viewport.css | 42 | .diagnosis-story, .diagnosis-story .story-stage | — | shared-contract |
 | assets/services/about/styles.css | 386 | .model-points li | — | route-debt |
-| assets/services/about/styles.css | 1986 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/about/styles.css | 1987 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/about/styles.css | 1988 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/about/styles.css | 1989 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/about/styles.css | 1959 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/about/styles.css | 1960 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/about/styles.css | 1961 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/about/styles.css | 1962 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/campaign/styles.css | 1004 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/campaign/styles.css | 1005 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/campaign/styles.css | 1006 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
@@ -291,60 +291,60 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/legal-pages.css | 172 | .privacy-title | font-weight | 500 | — | local-type-exception |
 | assets/legal-pages.css | 173 | .privacy-title | letter-spacing | -.045em | — | local-type-exception |
 | assets/legal-pages.css | 174 | .privacy-title | line-height | .84 | — | local-type-exception |
-| assets/legal-pages.css | 181 | .privacy-lead | font-size | 15px | — | local-type-exception |
+| assets/legal-pages.css | 181 | .privacy-lead | font-size | var(--ok-type-content, 15px) | — | semantic-token |
 | assets/legal-pages.css | 182 | .privacy-lead | line-height | 1.65 | — | local-type-exception |
 | assets/legal-pages.css | 210 | .privacy-status__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
 | assets/legal-pages.css | 211 | .privacy-status__label | font-weight | 700 | — | local-type-exception |
 | assets/legal-pages.css | 212 | .privacy-status__label | letter-spacing | .17em | — | local-type-exception |
 | assets/legal-pages.css | 222 | .privacy-status h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/legal-pages.css | 223 | .privacy-status h2 | font-size | 30px | — | local-type-exception |
+| assets/legal-pages.css | 223 | .privacy-status h2 | font-size | max(30px, var(--ok-type-display-card, 30px)) | — | semantic-token |
 | assets/legal-pages.css | 224 | .privacy-status h2 | font-weight | 500 | — | local-type-exception |
 | assets/legal-pages.css | 225 | .privacy-status h2 | letter-spacing | -.01em | — | local-type-exception |
 | assets/legal-pages.css | 226 | .privacy-status h2 | line-height | 1 | — | local-type-exception |
 | assets/legal-pages.css | 232 | .privacy-status p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/legal-pages.css | 233 | .privacy-status p | line-height | 1.62 | — | local-type-exception |
-| assets/legal-pages.css | 251 | .privacy-toc h2 | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/legal-pages.css | 252 | .privacy-toc h2 | font-weight | 700 | — | local-type-exception |
-| assets/legal-pages.css | 253 | .privacy-toc h2 | letter-spacing | .18em | — | local-type-exception |
-| assets/legal-pages.css | 270 | .privacy-toc a | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/legal-pages.css | 271 | .privacy-toc a | font-size | 16px | — | local-type-exception |
-| assets/legal-pages.css | 298 | .policy-section h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/legal-pages.css | 299 | .policy-section h2 | font-size | 28px | — | local-type-exception |
-| assets/legal-pages.css | 300 | .policy-section h2 | font-weight | 500 | — | local-type-exception |
-| assets/legal-pages.css | 301 | .policy-section h2 | letter-spacing | -.01em | — | local-type-exception |
-| assets/legal-pages.css | 307 | .policy-section h2 span | font-size | 18px | — | local-type-exception |
-| assets/legal-pages.css | 313 | .policy-section p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/legal-pages.css | 314 | .policy-section p | line-height | 1.6 | — | local-type-exception |
-| assets/legal-pages.css | 333 | .fill-row strong | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/legal-pages.css | 334 | .fill-row strong | letter-spacing | .06em | — | local-type-exception |
-| assets/legal-pages.css | 406 | .error-title | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/legal-pages.css | 407 | .error-title | font-size | clamp(78px, 7vw, 116px) | — | local-type-exception |
-| assets/legal-pages.css | 408 | .error-title | font-weight | 500 | — | local-type-exception |
-| assets/legal-pages.css | 409 | .error-title | letter-spacing | -.045em | — | local-type-exception |
-| assets/legal-pages.css | 410 | .error-title | line-height | .82 | — | local-type-exception |
-| assets/legal-pages.css | 421 | .error-lead | font-size | 15px | — | local-type-exception |
-| assets/legal-pages.css | 422 | .error-lead | line-height | 1.65 | — | local-type-exception |
-| assets/legal-pages.css | 439 | .error-actions a | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/legal-pages.css | 440 | .error-actions a | font-weight | 650 | — | local-type-exception |
-| assets/legal-pages.css | 441 | .error-actions a | letter-spacing | .08em | — | local-type-exception |
-| assets/legal-pages.css | 483 | .error-number | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/legal-pages.css | 484 | .error-number | font-size | min(34vw, 520px) | — | local-type-exception |
-| assets/legal-pages.css | 485 | .error-number | font-weight | 600 | — | local-type-exception |
-| assets/legal-pages.css | 486 | .error-number | letter-spacing | -.08em | — | local-type-exception |
-| assets/legal-pages.css | 487 | .error-number | line-height | .72 | — | local-type-exception |
-| assets/legal-pages.css | 500 | .error-meta | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/legal-pages.css | 501 | .error-meta | font-weight | 650 | — | local-type-exception |
-| assets/legal-pages.css | 502 | .error-meta | letter-spacing | .18em | — | local-type-exception |
-| assets/legal-pages.css | 517 | .legal-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1140px) | semantic-token |
-| assets/legal-pages.css | 564 | .privacy-title | font-size | clamp(58px, 17vw, 72px) | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 568 | .privacy-lead | font-size | 14px | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 569 | .privacy-lead | line-height | 1.58 | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 584 | .privacy-status h2 | font-size | 27px | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 608 | .policy-section h2 | font-size | 25px | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 609 | .policy-section h2 | line-height | 1.05 | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 654 | .error-title | font-size | clamp(64px, 20vw, 82px) | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 658 | .error-lead | font-size | 14px | @media (max-width: 640px) | local-type-exception |
-| assets/legal-pages.css | 677 | .error-number | font-size | min(63vw, 260px) | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 253 | .privacy-toc h2 | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/legal-pages.css | 254 | .privacy-toc h2 | font-weight | 700 | — | local-type-exception |
+| assets/legal-pages.css | 255 | .privacy-toc h2 | letter-spacing | .18em | — | local-type-exception |
+| assets/legal-pages.css | 272 | .privacy-toc a | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/legal-pages.css | 273 | .privacy-toc a | font-size | var(--ok-type-control, 16px) | — | semantic-token |
+| assets/legal-pages.css | 300 | .policy-section h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/legal-pages.css | 301 | .policy-section h2 | font-size | max(28px, var(--ok-type-display-card, 28px)) | — | semantic-token |
+| assets/legal-pages.css | 302 | .policy-section h2 | font-weight | 500 | — | local-type-exception |
+| assets/legal-pages.css | 303 | .policy-section h2 | letter-spacing | -.01em | — | local-type-exception |
+| assets/legal-pages.css | 309 | .policy-section h2 span | font-size | var(--ok-type-icon, 18px) | — | semantic-token |
+| assets/legal-pages.css | 315 | .policy-section p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/legal-pages.css | 316 | .policy-section p | line-height | 1.6 | — | local-type-exception |
+| assets/legal-pages.css | 335 | .fill-row strong | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/legal-pages.css | 336 | .fill-row strong | letter-spacing | .06em | — | local-type-exception |
+| assets/legal-pages.css | 408 | .error-title | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/legal-pages.css | 409 | .error-title | font-size | clamp(78px, 7vw, 116px) | — | local-type-exception |
+| assets/legal-pages.css | 410 | .error-title | font-weight | 500 | — | local-type-exception |
+| assets/legal-pages.css | 411 | .error-title | letter-spacing | -.045em | — | local-type-exception |
+| assets/legal-pages.css | 412 | .error-title | line-height | .82 | — | local-type-exception |
+| assets/legal-pages.css | 423 | .error-lead | font-size | 15px | — | local-type-exception |
+| assets/legal-pages.css | 424 | .error-lead | line-height | 1.65 | — | local-type-exception |
+| assets/legal-pages.css | 441 | .error-actions a | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/legal-pages.css | 442 | .error-actions a | font-weight | 650 | — | local-type-exception |
+| assets/legal-pages.css | 443 | .error-actions a | letter-spacing | .08em | — | local-type-exception |
+| assets/legal-pages.css | 485 | .error-number | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/legal-pages.css | 486 | .error-number | font-size | min(34vw, 520px) | — | local-type-exception |
+| assets/legal-pages.css | 487 | .error-number | font-weight | 600 | — | local-type-exception |
+| assets/legal-pages.css | 488 | .error-number | letter-spacing | -.08em | — | local-type-exception |
+| assets/legal-pages.css | 489 | .error-number | line-height | .72 | — | local-type-exception |
+| assets/legal-pages.css | 502 | .error-meta | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/legal-pages.css | 503 | .error-meta | font-weight | 650 | — | local-type-exception |
+| assets/legal-pages.css | 504 | .error-meta | letter-spacing | .18em | — | local-type-exception |
+| assets/legal-pages.css | 519 | .legal-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1140px) | semantic-token |
+| assets/legal-pages.css | 566 | .privacy-title | font-size | clamp(58px, 17vw, 72px) | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 570 | .privacy-lead | font-size | 14px | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 571 | .privacy-lead | line-height | 1.58 | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 586 | .privacy-status h2 | font-size | 27px | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 610 | .policy-section h2 | font-size | 25px | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 611 | .policy-section h2 | line-height | 1.05 | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 656 | .error-title | font-size | clamp(64px, 20vw, 82px) | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 660 | .error-lead | font-size | 14px | @media (max-width: 640px) | local-type-exception |
+| assets/legal-pages.css | 679 | .error-number | font-size | min(63vw, 260px) | @media (max-width: 640px) | local-type-exception |
 | assets/page-contact.css | 25 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-contact.css | 69 | .skip | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/page-contact.css | 102 | .site-nav a | font-size | 12px | — | local-type-exception |
@@ -630,120 +630,119 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/about/styles.css | 442 | .result | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/services/about/styles.css | 443 | .result | font-weight | 520 | — | local-type-exception |
 | assets/services/about/styles.css | 444 | .result | line-height | 1.5 | — | local-type-exception |
-| assets/services/about/styles.css | 481 | .primary-cta span, .text-link | font-size | 12px | — | local-type-exception |
-| assets/services/about/styles.css | 482 | .primary-cta span, .text-link | font-weight | 600 | — | local-type-exception |
-| assets/services/about/styles.css | 568 | .portrait-frame figcaption | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/services/about/styles.css | 569 | .portrait-frame figcaption | font-weight | 650 | — | local-type-exception |
-| assets/services/about/styles.css | 570 | .portrait-frame figcaption | letter-spacing | .13em | — | local-type-exception |
-| assets/services/about/styles.css | 590 | .scene-02 h2 | font-size | clamp(54px, 4.25vw, 72px) | — | local-type-exception |
-| assets/services/about/styles.css | 603 | .scene-03 h2 | font-size | clamp(54px, 4.35vw, 74px) | — | local-type-exception |
-| assets/services/about/styles.css | 614 | .proof-statement | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/services/about/styles.css | 615 | .proof-statement | font-size | clamp(18px, 1.3vw, 23px) | — | local-type-exception |
-| assets/services/about/styles.css | 616 | .proof-statement | line-height | 1.12 | — | local-type-exception |
-| assets/services/about/styles.css | 629 | .scene-04 h2 | font-size | clamp(48px, 3.85vw, 66px) | — | local-type-exception |
-| assets/services/about/styles.css | 635 | .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/about/styles.css | 663 | .accordion-index | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/services/about/styles.css | 664 | .accordion-index | font-size | 24px | — | local-type-exception |
-| assets/services/about/styles.css | 665 | .accordion-index | line-height | 1 | — | local-type-exception |
-| assets/services/about/styles.css | 674 | .accordion-label strong | font-size | 12px | — | local-type-exception |
-| assets/services/about/styles.css | 675 | .accordion-label strong | font-weight | 650 | — | local-type-exception |
-| assets/services/about/styles.css | 676 | .accordion-label strong | letter-spacing | .1em | — | local-type-exception |
-| assets/services/about/styles.css | 682 | .accordion-label small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/about/styles.css | 683 | .accordion-label small | line-height | 1.42 | — | local-type-exception |
-| assets/services/about/styles.css | 729 | .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/about/styles.css | 730 | .accordion-detail p | line-height | 1.5 | — | local-type-exception |
-| assets/services/about/styles.css | 736 | .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/about/styles.css | 771 | .mobile-details summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/services/about/styles.css | 772 | .mobile-details summary | font-size | 14px | — | local-type-exception |
-| assets/services/about/styles.css | 773 | .mobile-details summary | font-weight | 600 | — | local-type-exception |
-| assets/services/about/styles.css | 774 | .mobile-details summary | letter-spacing | .03em | — | local-type-exception |
-| assets/services/about/styles.css | 787 | .mobile-details summary::after | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
-| assets/services/about/styles.css | 788 | .mobile-details summary::after | font-weight | 400 | — | local-type-exception |
-| assets/services/about/styles.css | 798 | .mobile-details p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/services/about/styles.css | 799 | .mobile-details p | line-height | 1.45 | — | local-type-exception |
-| assets/services/about/styles.css | 819 | .scroll-cue | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/services/about/styles.css | 820 | .scroll-cue | font-weight | 600 | — | local-type-exception |
-| assets/services/about/styles.css | 821 | .scroll-cue | letter-spacing | .1em | — | local-type-exception |
-| assets/services/about/styles.css | 897 | h1 | font-size | clamp(58px, 5vw, 78px) | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
-| assets/services/about/styles.css | 901 | h2 | font-size | clamp(48px, 4vw, 66px) | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
-| assets/services/about/styles.css | 919 | .facts strong, .model-points strong | font-size | 17px | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
-| assets/services/about/styles.css | 928 | .facts .row-content > span, .model-points .row-content > span, .scene-04 .lead, .accordion-label small, .accordion-detail p, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-height: 800px) and (min-width: 901px) | semantic-token |
-| assets/services/about/styles.css | 936 | .accordion-label strong | font-size | 12px | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
-| assets/services/about/styles.css | 1008 | h1 | font-size | clamp(62px, 7vw, 74px) | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1013 | h2, .scene-03 h2 | font-size | clamp(48px, 5.4vw, 58px) | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1018 | .scene-02 h2, .scene-04 h2 | font-size | clamp(43px, 4.8vw, 51px) | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1024 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
-| assets/services/about/styles.css | 1040 | .facts strong, .model-points strong | font-size | 16px | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1045 | .facts .row-content > span, .model-points .row-content > span | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
-| assets/services/about/styles.css | 1046 | .facts .row-content > span, .model-points .row-content > span | line-height | 1.42 | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1052 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
-| assets/services/about/styles.css | 1080 | .proof-statement | font-size | 17px | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1093 | .accordion-label strong | font-size | 12px | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
-| assets/services/about/styles.css | 1098 | .accordion-label small, .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
-| assets/services/about/styles.css | 1133 | .site-header nav a | font-size | 12px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1134 | .site-header nav a | letter-spacing | .08em | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1192 | .kicker | font-size | 12px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1200 | h1 | font-size | clamp(43px, 12.4vw, 52px) | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1201 | h1 | line-height | .88 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1208 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | clamp(38px, 10.6vw, 45px) | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1209 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | line-height | .9 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1215 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1216 | .lead, .scene-04 .lead | line-height | 1.48 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1226 | .chips li | font-size | 12px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1259 | .facts strong, .model-points strong | font-size | 15px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1265 | .facts .row-content > span, .model-points .row-content > span | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1266 | .facts .row-content > span, .model-points .row-content > span | line-height | 1.42 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1273 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1274 | .result, .scene-04 .result | line-height | 1.45 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1292 | .primary-cta span, .text-link | font-size | 12px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1324 | .mobile-details summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1325 | .mobile-details summary | font-size | 14px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1326 | .mobile-details summary | font-weight | 600 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1327 | .mobile-details summary | letter-spacing | .03em | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1340 | .mobile-details summary::after | font-family | var(--ok-font-body, "Archivo", sans-serif) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1341 | .mobile-details summary::after | font-weight | 400 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1351 | .mobile-details p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1352 | .mobile-details p | line-height | 1.45 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1392 | .portrait-frame figcaption | font-size | 12px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1413 | .proof-statement | font-size | 16px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1428 | .accordion-index | font-size | 21px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1432 | .accordion-label strong | font-size | 12px | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1436 | .accordion-label small | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1437 | .accordion-label small | line-height | 1.4 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1450 | .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1451 | .accordion-detail p | line-height | 1.48 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1495 | .about-page .scene-01 h1 | font-size | clamp(42px, 4.4vw, 46px) | @media (min-width: 821px) and (max-height: 700px) | local-type-exception |
-| assets/services/about/styles.css | 1499 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(43px, 4.7vw, 49px) | @media (min-width: 821px) and (max-height: 700px) | local-type-exception |
-| assets/services/about/styles.css | 1532 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(39px, 4.1vw, 43px) | @media (min-width: 821px) and (max-height: 620px) | local-type-exception |
-| assets/services/about/styles.css | 1541 | .about-page .chips li | letter-spacing | .06em | @media (min-width: 821px) and (max-height: 620px) | local-type-exception |
-| assets/services/about/styles.css | 1598 | .site-header nav a | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1599 | .site-header nav a | letter-spacing | .11em | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1613 | h1 | font-size | 64px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1620 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | 50px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1625 | .lead, .scene-04 .lead | font-size | 14px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1629 | .chips li | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1643 | .facts strong, .model-points strong | font-size | 16px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1648 | .facts .row-content > span, .model-points .row-content > span | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1653 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1658 | .mobile-details summary | font-size | 16px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1662 | .mobile-details p | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1674 | .portrait-frame figcaption | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1689 | .proof-statement | font-size | 18px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1698 | .accordion-label strong | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1703 | .accordion-label small, .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
-| assets/services/about/styles.css | 1729 | .scene-04 .lead | line-height | 1.42 | @media (max-width: 900px) | local-type-exception |
-| assets/services/about/styles.css | 1779 | .scene-02 h2 | font-size | clamp(34px, 9.5vw, 38px) | @media (max-width: 599px) | local-type-exception |
-| assets/services/about/styles.css | 1783 | .scene-02 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 599px) | semantic-token |
-| assets/services/about/styles.css | 1784 | .scene-02 .lead | line-height | 1.42 | @media (max-width: 599px) | local-type-exception |
-| assets/services/about/styles.css | 1800 | .scene-02 .facts strong | font-size | 14px | @media (max-width: 599px) | local-type-exception |
-| assets/services/about/styles.css | 1812 | .scene-02 .portrait-frame figcaption | letter-spacing | .06em | @media (max-width: 599px) | local-type-exception |
-| assets/services/about/styles.css | 1824 | .site-header nav a, .kicker, .chips li, .portrait-frame figcaption, .accordion-label strong, .primary-cta span, .text-link, .scroll-cue | font-size | 12px | — | local-type-exception |
-| assets/services/about/styles.css | 1869 | .scene-01 h1, .scene-03 h2 | font-size | clamp(38px, 11.5vw, 44px) | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
-| assets/services/about/styles.css | 1873 | .scene-02 h2 | font-size | 31px | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
-| assets/services/about/styles.css | 1879 | .scene-01 .lead, .scene-03 .lead | line-height | 1.35 | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
-| assets/services/about/styles.css | 1893 | .mobile-details p | line-height | 1.35 | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
-| assets/services/about/styles.css | 1962 | .about-page .scene-01 h1 | font-size | 46px | — | local-type-exception |
-| assets/services/about/styles.css | 1966 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | 39px | — | local-type-exception |
+| assets/services/about/styles.css | 481 | .primary-cta, .text-link | font-size | var(--ok-type-control, 15px) | — | semantic-token |
+| assets/services/about/styles.css | 482 | .primary-cta, .text-link | font-weight | 600 | — | local-type-exception |
+| assets/services/about/styles.css | 486 | .primary-cta span | font-size | inherit | — | local-type-exception |
+| assets/services/about/styles.css | 572 | .portrait-frame figcaption | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/services/about/styles.css | 573 | .portrait-frame figcaption | font-weight | 650 | — | local-type-exception |
+| assets/services/about/styles.css | 574 | .portrait-frame figcaption | letter-spacing | .13em | — | local-type-exception |
+| assets/services/about/styles.css | 589 | .scene-02 h2 | font-size | clamp(54px, 4.25vw, 72px) | — | local-type-exception |
+| assets/services/about/styles.css | 597 | .scene-03 h2 | font-size | clamp(54px, 4.35vw, 74px) | — | local-type-exception |
+| assets/services/about/styles.css | 608 | .proof-statement | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/services/about/styles.css | 609 | .proof-statement | font-size | clamp(18px, 1.3vw, 23px) | — | local-type-exception |
+| assets/services/about/styles.css | 610 | .proof-statement | line-height | 1.12 | — | local-type-exception |
+| assets/services/about/styles.css | 618 | .scene-04 h2 | font-size | clamp(48px, 3.85vw, 66px) | — | local-type-exception |
+| assets/services/about/styles.css | 624 | .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/about/styles.css | 652 | .accordion-index | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/services/about/styles.css | 653 | .accordion-index | font-size | 24px | — | local-type-exception |
+| assets/services/about/styles.css | 654 | .accordion-index | line-height | 1 | — | local-type-exception |
+| assets/services/about/styles.css | 663 | .accordion-label strong | font-size | 12px | — | local-type-exception |
+| assets/services/about/styles.css | 664 | .accordion-label strong | font-weight | 650 | — | local-type-exception |
+| assets/services/about/styles.css | 665 | .accordion-label strong | letter-spacing | .1em | — | local-type-exception |
+| assets/services/about/styles.css | 671 | .accordion-label small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/about/styles.css | 672 | .accordion-label small | line-height | 1.42 | — | local-type-exception |
+| assets/services/about/styles.css | 718 | .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/about/styles.css | 719 | .accordion-detail p | line-height | 1.5 | — | local-type-exception |
+| assets/services/about/styles.css | 725 | .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/about/styles.css | 760 | .mobile-details summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/services/about/styles.css | 761 | .mobile-details summary | font-size | 14px | — | local-type-exception |
+| assets/services/about/styles.css | 762 | .mobile-details summary | font-weight | 600 | — | local-type-exception |
+| assets/services/about/styles.css | 763 | .mobile-details summary | letter-spacing | .03em | — | local-type-exception |
+| assets/services/about/styles.css | 776 | .mobile-details summary::after | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
+| assets/services/about/styles.css | 777 | .mobile-details summary::after | font-weight | 400 | — | local-type-exception |
+| assets/services/about/styles.css | 787 | .mobile-details p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/services/about/styles.css | 788 | .mobile-details p | line-height | 1.45 | — | local-type-exception |
+| assets/services/about/styles.css | 808 | .scroll-cue | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/services/about/styles.css | 809 | .scroll-cue | font-weight | 600 | — | local-type-exception |
+| assets/services/about/styles.css | 810 | .scroll-cue | letter-spacing | .1em | — | local-type-exception |
+| assets/services/about/styles.css | 886 | h1 | font-size | clamp(58px, 5vw, 78px) | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
+| assets/services/about/styles.css | 890 | h2 | font-size | clamp(48px, 4vw, 66px) | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
+| assets/services/about/styles.css | 908 | .facts strong, .model-points strong | font-size | 17px | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
+| assets/services/about/styles.css | 917 | .facts .row-content > span, .model-points .row-content > span, .scene-04 .lead, .accordion-label small, .accordion-detail p, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-height: 800px) and (min-width: 901px) | semantic-token |
+| assets/services/about/styles.css | 925 | .accordion-label strong | font-size | 12px | @media (max-height: 800px) and (min-width: 901px) | local-type-exception |
+| assets/services/about/styles.css | 997 | h1 | font-size | clamp(62px, 7vw, 74px) | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1002 | h2, .scene-03 h2 | font-size | clamp(48px, 5.4vw, 58px) | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1007 | .scene-02 h2, .scene-04 h2 | font-size | clamp(43px, 4.8vw, 51px) | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1013 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
+| assets/services/about/styles.css | 1029 | .facts strong, .model-points strong | font-size | 16px | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1034 | .facts .row-content > span, .model-points .row-content > span | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
+| assets/services/about/styles.css | 1035 | .facts .row-content > span, .model-points .row-content > span | line-height | 1.42 | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1041 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
+| assets/services/about/styles.css | 1069 | .proof-statement | font-size | 17px | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1082 | .accordion-label strong | font-size | 12px | @media (min-width: 901px) and (max-width: 1100px) | local-type-exception |
+| assets/services/about/styles.css | 1087 | .accordion-label small, .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) | semantic-token |
+| assets/services/about/styles.css | 1122 | .site-header nav a | font-size | 12px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1123 | .site-header nav a | letter-spacing | .08em | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1181 | .kicker | font-size | 12px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1189 | h1 | font-size | clamp(43px, 12.4vw, 52px) | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1190 | h1 | line-height | .88 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1197 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | clamp(38px, 10.6vw, 45px) | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1198 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | line-height | .9 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1204 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1205 | .lead, .scene-04 .lead | line-height | 1.48 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1215 | .chips li | font-size | 12px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1248 | .facts strong, .model-points strong | font-size | 15px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1254 | .facts .row-content > span, .model-points .row-content > span | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1255 | .facts .row-content > span, .model-points .row-content > span | line-height | 1.42 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1262 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1263 | .result, .scene-04 .result | line-height | 1.45 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1308 | .mobile-details summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1309 | .mobile-details summary | font-size | 14px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1310 | .mobile-details summary | font-weight | 600 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1311 | .mobile-details summary | letter-spacing | .03em | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1324 | .mobile-details summary::after | font-family | var(--ok-font-body, "Archivo", sans-serif) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1325 | .mobile-details summary::after | font-weight | 400 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1335 | .mobile-details p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1336 | .mobile-details p | line-height | 1.45 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1376 | .portrait-frame figcaption | font-size | 12px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1397 | .proof-statement | font-size | 16px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1412 | .accordion-index | font-size | 21px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1416 | .accordion-label strong | font-size | 12px | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1420 | .accordion-label small | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1421 | .accordion-label small | line-height | 1.4 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1434 | .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1435 | .accordion-detail p | line-height | 1.48 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1479 | .about-page .scene-01 h1 | font-size | clamp(42px, 4.4vw, 46px) | @media (min-width: 821px) and (max-height: 700px) | local-type-exception |
+| assets/services/about/styles.css | 1483 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(43px, 4.7vw, 49px) | @media (min-width: 821px) and (max-height: 700px) | local-type-exception |
+| assets/services/about/styles.css | 1516 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(39px, 4.1vw, 43px) | @media (min-width: 821px) and (max-height: 620px) | local-type-exception |
+| assets/services/about/styles.css | 1525 | .about-page .chips li | letter-spacing | .06em | @media (min-width: 821px) and (max-height: 620px) | local-type-exception |
+| assets/services/about/styles.css | 1582 | .site-header nav a | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1583 | .site-header nav a | letter-spacing | .11em | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1597 | h1 | font-size | 64px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1604 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | 50px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1609 | .lead, .scene-04 .lead | font-size | 14px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1613 | .chips li | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1627 | .facts strong, .model-points strong | font-size | 16px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1632 | .facts .row-content > span, .model-points .row-content > span | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1637 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1642 | .mobile-details summary | font-size | 16px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1646 | .mobile-details p | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1658 | .portrait-frame figcaption | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1673 | .proof-statement | font-size | 18px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1682 | .accordion-label strong | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1687 | .accordion-label small, .accordion-detail p | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) | semantic-token |
+| assets/services/about/styles.css | 1713 | .scene-04 .lead | line-height | 1.42 | @media (max-width: 900px) | local-type-exception |
+| assets/services/about/styles.css | 1763 | .scene-02 h2 | font-size | clamp(34px, 9.5vw, 38px) | @media (max-width: 599px) | local-type-exception |
+| assets/services/about/styles.css | 1767 | .scene-02 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 599px) | semantic-token |
+| assets/services/about/styles.css | 1768 | .scene-02 .lead | line-height | 1.42 | @media (max-width: 599px) | local-type-exception |
+| assets/services/about/styles.css | 1784 | .scene-02 .facts strong | font-size | 14px | @media (max-width: 599px) | local-type-exception |
+| assets/services/about/styles.css | 1796 | .scene-02 .portrait-frame figcaption | letter-spacing | .06em | @media (max-width: 599px) | local-type-exception |
+| assets/services/about/styles.css | 1842 | .scene-01 h1, .scene-03 h2 | font-size | clamp(38px, 11.5vw, 44px) | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
+| assets/services/about/styles.css | 1846 | .scene-02 h2 | font-size | 31px | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
+| assets/services/about/styles.css | 1852 | .scene-01 .lead, .scene-03 .lead | line-height | 1.35 | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
+| assets/services/about/styles.css | 1866 | .mobile-details p | line-height | 1.35 | @media (max-width: 390px) and (max-height: 740px) | local-type-exception |
+| assets/services/about/styles.css | 1935 | .about-page .scene-01 h1 | font-size | 46px | — | local-type-exception |
+| assets/services/about/styles.css | 1939 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | 39px | — | local-type-exception |
 | assets/services/campaign/styles.css | 28 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/services/campaign/styles.css | 155 | .site-header nav a | font-size | 12px | — | local-type-exception |
 | assets/services/campaign/styles.css | 156 | .site-header nav a | font-weight | 650 | — | local-type-exception |
@@ -1271,10 +1270,10 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/legal-pages.css | 125 | .legal-header nav a | font-size | var(--ok-type-label-min, 12px) | — |
 | assets/legal-pages.css | 134 | .legal-header nav a::after | position | absolute | — |
 | assets/legal-pages.css | 138 | .legal-header nav a::after | height | 1px | — |
-| assets/legal-pages.css | 517 | .legal-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1140px) |
-| assets/legal-pages.css | 554 | .legal-header nav a:nth-child(2) | display | none | @media (max-width: 640px) |
-| assets/legal-pages.css | 622 | .error-page .legal-header nav a | display | grid | @media (max-width: 640px) |
-| assets/legal-pages.css | 626 | .error-page .legal-header nav a:nth-child(2) | display | none | @media (max-width: 640px) |
+| assets/legal-pages.css | 519 | .legal-header nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 1140px) |
+| assets/legal-pages.css | 556 | .legal-header nav a:nth-child(2) | display | none | @media (max-width: 640px) |
+| assets/legal-pages.css | 624 | .error-page .legal-header nav a | display | grid | @media (max-width: 640px) |
+| assets/legal-pages.css | 628 | .error-page .legal-header nav a:nth-child(2) | display | none | @media (max-width: 640px) |
 | assets/page-contact.css | 78 | /* ---------- header ---------- */ .site-header | position | absolute | — |
 | assets/page-contact.css | 82 | /* ---------- header ---------- */ .site-header | z-index | 20 | — |
 | assets/page-contact.css | 83 | /* ---------- header ---------- */ .site-header | display | flex | — |
@@ -1359,77 +1358,76 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/about/styles.css | 218 | /* The semantic scene image is the only artwork layer. A duplicate background * would remain visible underneath the shared safety mask and create a ghosted * tree edge at compact desktop widths. */ .scene-inner | z-index | 3 | — |
 | assets/services/about/styles.css | 220 | /* The semantic scene image is the only artwork layer. A duplicate background * would remain visible underneath the shared safety mask and create a ghosted * tree edge at compact desktop widths. */ .scene-inner | overflow | visible | — |
 | assets/services/about/styles.css | 272 | .scene-01 h1 | height | var(--about-hero-heading-leading, .9) | — |
-| assets/services/about/styles.css | 590 | .scene-02 h2 | font-size | clamp(54px, 4.25vw, 72px) | — |
-| assets/services/about/styles.css | 603 | .scene-03 h2 | font-size | clamp(54px, 4.35vw, 74px) | — |
-| assets/services/about/styles.css | 629 | .scene-04 h2 | font-size | clamp(48px, 3.85vw, 66px) | — |
-| assets/services/about/styles.css | 635 | .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | — |
-| assets/services/about/styles.css | 736 | .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | — |
-| assets/services/about/styles.css | 811 | .scroll-cue | position | absolute | — |
-| assets/services/about/styles.css | 812 | .scroll-cue | z-index | 13 | — |
-| assets/services/about/styles.css | 815 | .scroll-cue | display | flex | — |
-| assets/services/about/styles.css | 819 | .scroll-cue | font-size | var(--ok-type-label-min, 12px) | — |
-| assets/services/about/styles.css | 827 | .scroll-cue span | height | 28px | — |
-| assets/services/about/styles.css | 828 | .scroll-cue span | display | grid | — |
-| assets/services/about/styles.css | 836 | .scroll-cue svg | height | 15px | — |
-| assets/services/about/styles.css | 883 | .scene-04 .accordion-trigger | min-height | 44px | @media (max-height: 800px) and (min-width: 901px) |
-| assets/services/about/styles.css | 928 | .facts .row-content > span, .model-points .row-content > span, .scene-04 .lead, .accordion-label small, .accordion-detail p, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-height: 800px) and (min-width: 901px) |
-| assets/services/about/styles.css | 951 | .scene-02 .portrait-frame | height | 68vh | @media (max-height: 800px) and (min-width: 1101px) |
-| assets/services/about/styles.css | 959 | .scene-02 .facts li | min-height | 78px | @media (max-height: 800px) and (min-width: 1101px) |
-| assets/services/about/styles.css | 971 | .scene-03 .model-points li | min-height | 68px | @media (max-height: 800px) and (min-width: 1101px) |
-| assets/services/about/styles.css | 1013 | h2, .scene-03 h2 | font-size | clamp(48px, 5.4vw, 58px) | @media (min-width: 901px) and (max-width: 1100px) |
-| assets/services/about/styles.css | 1018 | .scene-02 h2, .scene-04 h2 | font-size | clamp(43px, 4.8vw, 51px) | @media (min-width: 901px) and (max-width: 1100px) |
-| assets/services/about/styles.css | 1024 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) |
-| assets/services/about/styles.css | 1052 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) |
-| assets/services/about/styles.css | 1069 | .scene-01 .mobile-details, .tablet-details | display | block | @media (min-width: 901px) and (max-width: 1100px) |
-| assets/services/about/styles.css | 1074 | .scene-02 .facts, .scene-03 .model-points | display | none | @media (min-width: 901px) and (max-width: 1100px) |
-| assets/services/about/styles.css | 1133 | .site-header nav a | font-size | 12px | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1138 | .scene::before | z-index | -2 | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1154 | .scene-01 .scene-art | position | 68% center | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1158 | .scene-02 .scene-art | position | 34% center | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1162 | .scene-03 .scene-art | position | 71% center | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1166 | .scene-04 .scene-art | position | 76% center | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1208 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | clamp(38px, 10.6vw, 45px) | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1209 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | height | .9 | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1215 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1216 | .lead, .scene-04 .lead | height | 1.48 | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1273 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1274 | .result, .scene-04 .result | height | 1.45 | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1455 | .scroll-cue | display | none | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1495 | .about-page .scene-01 h1 | font-size | clamp(42px, 4.4vw, 46px) | @media (min-width: 821px) and (max-height: 700px) |
-| assets/services/about/styles.css | 1499 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(43px, 4.7vw, 49px) | @media (min-width: 821px) and (max-height: 700px) |
-| assets/services/about/styles.css | 1525 | .about-page .scene-03 .model-points li | min-height | 64px | @media (min-width: 821px) and (max-height: 700px) |
-| assets/services/about/styles.css | 1532 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(39px, 4.1vw, 43px) | @media (min-width: 821px) and (max-height: 620px) |
-| assets/services/about/styles.css | 1553 | .about-page .scene-04 .accordion-trigger | min-height | 44px | @media (min-width: 821px) and (max-height: 620px) |
-| assets/services/about/styles.css | 1557 | .about-page .scene-03 .model-points li | min-height | 56px | @media (min-width: 821px) and (max-height: 620px) |
-| assets/services/about/styles.css | 1563 | .scene-04 :is(.lead, .proof-statement, .result) | display | none | @media (max-width: 640px) and (max-height: 700px) |
-| assets/services/about/styles.css | 1598 | .site-header nav a | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) |
-| assets/services/about/styles.css | 1620 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | 50px | @media (min-width: 600px) and (max-width: 900px) |
-| assets/services/about/styles.css | 1625 | .lead, .scene-04 .lead | font-size | 14px | @media (min-width: 600px) and (max-width: 900px) |
-| assets/services/about/styles.css | 1653 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) |
-| assets/services/about/styles.css | 1714 | .scene-02 .tablet-details, .scene-03 .tablet-details | display | block | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1719 | .scene-02 .facts, .scene-03 .model-points | display | none | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1729 | .scene-04 .lead | height | 1.42 | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1737 | .scene-04 .accordion-trigger | min-height | 46px | @media (max-width: 900px) |
-| assets/services/about/styles.css | 1765 | .scene-02 .portrait-frame | height | 72vh | @media (min-width: 850px) and (max-width: 900px) and (max-height: 800px) |
-| assets/services/about/styles.css | 1779 | .scene-02 h2 | font-size | clamp(34px, 9.5vw, 38px) | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1783 | .scene-02 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1784 | .scene-02 .lead | height | 1.42 | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1794 | .scene-02 .facts li | min-height | 72px | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1800 | .scene-02 .facts strong | font-size | 14px | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1804 | .scene-02 .portrait-frame | z-index | 10 | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1808 | .scene-02 .portrait-frame | height | 176px | @media (max-width: 599px) |
-| assets/services/about/styles.css | 1824 | .site-header nav a, .kicker, .chips li, .portrait-frame figcaption, .accordion-label strong, .primary-cta span, .text-link, .scroll-cue | font-size | 12px | — |
-| assets/services/about/styles.css | 1842 | .scene-02 .portrait-frame | height | 150px | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1855 | .scene-01 .chips, .scene-02 .lead, .scene-02 .result, .scene-03 .result | display | none | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1860 | .scene-02 .kicker, :is(.scene-02, .scene-03) .mobile-details details:first-child > p:not(.mobile-context) | display | none | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1864 | :is(.scene-02, .scene-03) .mobile-details .mobile-context | display | block | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1869 | .scene-01 h1, .scene-03 h2 | font-size | clamp(38px, 11.5vw, 44px) | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1873 | .scene-02 h2 | font-size | 31px | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1879 | .scene-01 .lead, .scene-03 .lead | height | 1.35 | @media (max-width: 390px) and (max-height: 740px) |
-| assets/services/about/styles.css | 1920 | .scene-04 .accordion-trigger | min-height | 44px | @media (max-width: 640px) |
-| assets/services/about/styles.css | 1958 | .about-page .scene-02 .portrait-frame | height | 76vh | — |
-| assets/services/about/styles.css | 1962 | .about-page .scene-01 h1 | font-size | 46px | — |
-| assets/services/about/styles.css | 1966 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | 39px | — |
+| assets/services/about/styles.css | 589 | .scene-02 h2 | font-size | clamp(54px, 4.25vw, 72px) | — |
+| assets/services/about/styles.css | 597 | .scene-03 h2 | font-size | clamp(54px, 4.35vw, 74px) | — |
+| assets/services/about/styles.css | 618 | .scene-04 h2 | font-size | clamp(48px, 3.85vw, 66px) | — |
+| assets/services/about/styles.css | 624 | .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | — |
+| assets/services/about/styles.css | 725 | .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | — |
+| assets/services/about/styles.css | 800 | .scroll-cue | position | absolute | — |
+| assets/services/about/styles.css | 801 | .scroll-cue | z-index | 13 | — |
+| assets/services/about/styles.css | 804 | .scroll-cue | display | flex | — |
+| assets/services/about/styles.css | 808 | .scroll-cue | font-size | var(--ok-type-label-min, 12px) | — |
+| assets/services/about/styles.css | 816 | .scroll-cue span | height | 28px | — |
+| assets/services/about/styles.css | 817 | .scroll-cue span | display | grid | — |
+| assets/services/about/styles.css | 825 | .scroll-cue svg | height | 15px | — |
+| assets/services/about/styles.css | 872 | .scene-04 .accordion-trigger | min-height | 44px | @media (max-height: 800px) and (min-width: 901px) |
+| assets/services/about/styles.css | 917 | .facts .row-content > span, .model-points .row-content > span, .scene-04 .lead, .accordion-label small, .accordion-detail p, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-height: 800px) and (min-width: 901px) |
+| assets/services/about/styles.css | 940 | .scene-02 .portrait-frame | height | 68vh | @media (max-height: 800px) and (min-width: 1101px) |
+| assets/services/about/styles.css | 948 | .scene-02 .facts li | min-height | 78px | @media (max-height: 800px) and (min-width: 1101px) |
+| assets/services/about/styles.css | 960 | .scene-03 .model-points li | min-height | 68px | @media (max-height: 800px) and (min-width: 1101px) |
+| assets/services/about/styles.css | 1002 | h2, .scene-03 h2 | font-size | clamp(48px, 5.4vw, 58px) | @media (min-width: 901px) and (max-width: 1100px) |
+| assets/services/about/styles.css | 1007 | .scene-02 h2, .scene-04 h2 | font-size | clamp(43px, 4.8vw, 51px) | @media (min-width: 901px) and (max-width: 1100px) |
+| assets/services/about/styles.css | 1013 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) |
+| assets/services/about/styles.css | 1041 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 901px) and (max-width: 1100px) |
+| assets/services/about/styles.css | 1058 | .scene-01 .mobile-details, .tablet-details | display | block | @media (min-width: 901px) and (max-width: 1100px) |
+| assets/services/about/styles.css | 1063 | .scene-02 .facts, .scene-03 .model-points | display | none | @media (min-width: 901px) and (max-width: 1100px) |
+| assets/services/about/styles.css | 1122 | .site-header nav a | font-size | 12px | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1127 | .scene::before | z-index | -2 | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1143 | .scene-01 .scene-art | position | 68% center | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1147 | .scene-02 .scene-art | position | 34% center | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1151 | .scene-03 .scene-art | position | 71% center | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1155 | .scene-04 .scene-art | position | 76% center | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1197 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | clamp(38px, 10.6vw, 45px) | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1198 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | height | .9 | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1204 | .lead, .scene-04 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1205 | .lead, .scene-04 .lead | height | 1.48 | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1262 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1263 | .result, .scene-04 .result | height | 1.45 | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1439 | .scroll-cue | display | none | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1479 | .about-page .scene-01 h1 | font-size | clamp(42px, 4.4vw, 46px) | @media (min-width: 821px) and (max-height: 700px) |
+| assets/services/about/styles.css | 1483 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(43px, 4.7vw, 49px) | @media (min-width: 821px) and (max-height: 700px) |
+| assets/services/about/styles.css | 1509 | .about-page .scene-03 .model-points li | min-height | 64px | @media (min-width: 821px) and (max-height: 700px) |
+| assets/services/about/styles.css | 1516 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | clamp(39px, 4.1vw, 43px) | @media (min-width: 821px) and (max-height: 620px) |
+| assets/services/about/styles.css | 1537 | .about-page .scene-04 .accordion-trigger | min-height | 44px | @media (min-width: 821px) and (max-height: 620px) |
+| assets/services/about/styles.css | 1541 | .about-page .scene-03 .model-points li | min-height | 56px | @media (min-width: 821px) and (max-height: 620px) |
+| assets/services/about/styles.css | 1547 | .scene-04 :is(.lead, .proof-statement, .result) | display | none | @media (max-width: 640px) and (max-height: 700px) |
+| assets/services/about/styles.css | 1582 | .site-header nav a | font-size | 12px | @media (min-width: 600px) and (max-width: 900px) |
+| assets/services/about/styles.css | 1604 | h2, .scene-02 h2, .scene-03 h2, .scene-04 h2 | font-size | 50px | @media (min-width: 600px) and (max-width: 900px) |
+| assets/services/about/styles.css | 1609 | .lead, .scene-04 .lead | font-size | 14px | @media (min-width: 600px) and (max-width: 900px) |
+| assets/services/about/styles.css | 1637 | .result, .scene-04 .result | font-size | var(--ok-type-content-min, 14px) | @media (min-width: 600px) and (max-width: 900px) |
+| assets/services/about/styles.css | 1698 | .scene-02 .tablet-details, .scene-03 .tablet-details | display | block | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1703 | .scene-02 .facts, .scene-03 .model-points | display | none | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1713 | .scene-04 .lead | height | 1.42 | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1721 | .scene-04 .accordion-trigger | min-height | 46px | @media (max-width: 900px) |
+| assets/services/about/styles.css | 1749 | .scene-02 .portrait-frame | height | 72vh | @media (min-width: 850px) and (max-width: 900px) and (max-height: 800px) |
+| assets/services/about/styles.css | 1763 | .scene-02 h2 | font-size | clamp(34px, 9.5vw, 38px) | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1767 | .scene-02 .lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1768 | .scene-02 .lead | height | 1.42 | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1778 | .scene-02 .facts li | min-height | 72px | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1784 | .scene-02 .facts strong | font-size | 14px | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1788 | .scene-02 .portrait-frame | z-index | 10 | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1792 | .scene-02 .portrait-frame | height | 176px | @media (max-width: 599px) |
+| assets/services/about/styles.css | 1815 | .scene-02 .portrait-frame | height | 150px | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1828 | .scene-01 .chips, .scene-02 .lead, .scene-02 .result, .scene-03 .result | display | none | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1833 | .scene-02 .kicker, :is(.scene-02, .scene-03) .mobile-details details:first-child > p:not(.mobile-context) | display | none | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1837 | :is(.scene-02, .scene-03) .mobile-details .mobile-context | display | block | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1842 | .scene-01 h1, .scene-03 h2 | font-size | clamp(38px, 11.5vw, 44px) | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1846 | .scene-02 h2 | font-size | 31px | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1852 | .scene-01 .lead, .scene-03 .lead | height | 1.35 | @media (max-width: 390px) and (max-height: 740px) |
+| assets/services/about/styles.css | 1893 | .scene-04 .accordion-trigger | min-height | 44px | @media (max-width: 640px) |
+| assets/services/about/styles.css | 1931 | .about-page .scene-02 .portrait-frame | height | 76vh | — |
+| assets/services/about/styles.css | 1935 | .about-page .scene-01 h1 | font-size | 46px | — |
+| assets/services/about/styles.css | 1939 | .about-page :is(.scene-02, .scene-03, .scene-04) h2 | font-size | 39px | — |
 | assets/services/campaign/styles.css | 66 | .story-stage | position | sticky | — |
 | assets/services/campaign/styles.css | 69 | .story-stage | height | 100svh | — |
 | assets/services/campaign/styles.css | 70 | .story-stage | min-height | 680px | — |

@@ -187,11 +187,12 @@ npx wrangler secret put TURNSTILE_SECRET --config wrangler.contact.jsonc
 ```
 
 Token bezpośredniej integracji Meta istnieje wyłącznie jako GitHub Actions
-Secret `META_CAPI_TOKEN`. Workflow `Contact Worker deploy` przekazuje go do
-Wranglera przez wejście `secrets` i tworzy lub aktualizuje zaszyfrowany sekret
-Workera przed wdrożeniem. Token nie może trafić do `wrangler.contact.jsonc`,
-logów, PR ani dokumentacji. Po rotacji trzeba zastąpić wartość w GitHub Secret
-i uruchomić workflow ręcznie; nie wymaga to zmiany kodu.
+Secret `META_CAPI_TOKEN`. Workflow `Contact Worker deploy` przekazuje go przez
+stdin do `wrangler secret put META_CAPI_TOKEN --config wrangler.contact.jsonc`
+i tworzy lub aktualizuje zaszyfrowany sekret właściwego Workera przed
+wdrożeniem. Token nie może trafić do `wrangler.contact.jsonc`, logów, PR ani
+dokumentacji. Po rotacji trzeba zastąpić wartość w GitHub Secret i uruchomić
+workflow ręcznie; nie wymaga to zmiany kodu.
 
 ## 6. Poczta i ochrona domen
 

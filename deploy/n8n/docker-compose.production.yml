@@ -1,0 +1,147 @@
+name: okagency-site-audit
+
+services:
+  postgres:
+    image: postgres@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: n8n
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?missing POSTGRES_PASSWORD}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - audit
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 768m
+    cpus: 0.75
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n@sha256:8554136778e759f208205d13bf52ce0c782c43fefd72ecaab2b88285d7bc8046
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: "${POSTGRES_PASSWORD:?missing POSTGRES_PASSWORD}"
+      N8N_ENCRYPTION_KEY: "${N8N_ENCRYPTION_KEY:?missing N8N_ENCRYPTION_KEY}"
+      N8N_HOST: vps-eea6bbe0.vps.ovh.net
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: https://vps-eea6bbe0.vps.ovh.net/
+      N8N_EDITOR_BASE_URL: http://127.0.0.1:5678/
+      N8N_PROXY_HOPS: "1"
+      GENERIC_TIMEZONE: Europe/Warsaw
+      TZ: Europe/Warsaw
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      N8N_TEMPLATES_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      N8N_COMMUNITY_PACKAGES_ENABLED: "false"
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "true"
+      N8N_GIT_NODE_DISABLE_BARE_REPOS: "true"
+      EXECUTIONS_DATA_PRUNE: "true"
+      EXECUTIONS_DATA_MAX_AGE: "168"
+      EXECUTIONS_DATA_PRUNE_MAX_COUNT: "1000"
+      N8N_LOG_LEVEL: info
+    ports:
+      - "127.0.0.1:5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ../../n8n/workflows:/workflows:ro
+    networks:
+      - audit
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:5678/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1400m
+    cpus: 1.25
+
+  audit-runner:
+    build:
+      context: ../..
+      dockerfile: services/site-audit-runner/Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+      PAGESPEED_ENABLED: "true"
+      CALLBACK_HOSTNAMES: okagency.pl,www.okagency.pl,okagency-site-audit-api.oli-struska.workers.dev
+      WORKER_N8N_HMAC_SECRET: "${WORKER_N8N_HMAC_SECRET:?missing WORKER_N8N_HMAC_SECRET}"
+      N8N_CALLBACK_HMAC_SECRET: "${N8N_CALLBACK_HMAC_SECRET:?missing N8N_CALLBACK_HMAC_SECRET}"
+      RUNNER_SESSION_SECRET: "${RUNNER_SESSION_SECRET:?missing RUNNER_SESSION_SECRET}"
+      PAGESPEED_API_KEY: "${PAGESPEED_API_KEY:-}"
+    networks:
+      audit:
+        aliases:
+          - audit-runner
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 384m
+    cpus: 1.0
+
+  caddy:
+    image: caddy@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+    restart: unless-stopped
+    depends_on:
+      n8n:
+        condition: service_healthy
+    environment:
+      GATEWAY_CLIENT_ID: "${CF_ACCESS_CLIENT_ID:?missing CF_ACCESS_CLIENT_ID}"
+      GATEWAY_CLIENT_SECRET: "${CF_ACCESS_CLIENT_SECRET:?missing CF_ACCESS_CLIENT_SECRET}"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - audit
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 192m
+    cpus: 0.25
+
+networks:
+  audit:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:

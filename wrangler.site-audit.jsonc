@@ -1,0 +1,63 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "okagency-site-audit-api",
+  "main": "./worker/site-audit.js",
+  "compatibility_date": "2026-08-04",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "okagency.pl/api/site-audits*",
+      "zone_name": "okagency.pl"
+    },
+    {
+      "pattern": "www.okagency.pl/api/site-audits*",
+      "zone_name": "okagency.pl"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "okagency-site-audits",
+      "database_id": "4d14f2e2-bb15-4972-9b8c-a9f373deb0ae",
+      "migrations_dir": "migrations/site-audit"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "AUDIT_QUEUE",
+        "queue": "okagency-site-audits"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "okagency-site-audits",
+        "max_batch_size": 1,
+        "max_batch_timeout": 5,
+        "max_retries": 3,
+        "dead_letter_queue": "okagency-site-audits-dlq",
+        "retry_delay": 30
+      }
+    ]
+  },
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
+  "vars": {
+    "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl",
+    "CALLBACK_BASE_URL": "https://okagency-site-audit-api.oli-struska.workers.dev",
+    "CALLBACK_HOSTNAME": "okagency-site-audit-api.oli-struska.workers.dev",
+    "RULESET_VERSION": "2026.08.1",
+    "SCANNER_VERSION": "1.0.0"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
+  }
+}

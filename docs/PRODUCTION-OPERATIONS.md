@@ -615,3 +615,30 @@ Celowo wyłączone lub niewykorzystywane:
 
 Nie należy włączać płatnej funkcji Cloudflare bez osobnej decyzji. 2FA i
 metody płatności nie są częścią konfiguracji tego repozytorium.
+
+## 14. Rozszerzona diagnostyka WWW
+
+Produkcja rozszerzonej diagnostyki składa się z Workera `okagency-site-audit-api`, D1 `okagency-site-audits`, Queue i DLQ o tych samych nazwach oraz VPS OVHcloud `vps-eea6bbe0.vps.ovh.net` w Warszawie. VPS ma Ubuntu 24.04, 2 vCPU, 4 GB RAM, 40 GB dysku i automatyczny backup OVH.
+
+Kod wdrożenia znajduje się w [`deploy/n8n`](../deploy/n8n), a na serwerze w `/opt/okagency-audit`. Compose uruchamia PostgreSQL 16, n8n 1.123.65, izolowany audit runner i Caddy; obrazy bazowe są przypięte po digest. n8n słucha wyłącznie na `127.0.0.1:5678`, runner nie ma publicznego portu, a Caddy publikuje tylko `/healthz` i dokładny webhook intake. Pozostałe ścieżki zwracają `404`.
+
+SSH dopuszcza wyłącznie klucz użytkownika `ubuntu`; logowanie hasłem i root są wyłączone. Aktywne są UFW, fail2ban, unattended-upgrades i 1 GB swapu. Dedykowany klucz operatorski znajduje się poza repozytorium w `C:\Users\dkaro\.ssh\okagency_n8n_vps_ed25519`; jego odcisk to `SHA256:EZ2VIjmDV3cq0KHxlZGGwpfTBry0pTbq4wMx32gwB0E`.
+
+Worker wysyła webhook przez Caddy z dodatkową parą losowych nagłówków bramki i podpisem HMAC. Caddy redaguje identyfikator bramki, jej sekret oraz podpis z access logów. Callback omija Bot Fight Mode strefy przez callback-only host `okagency-site-audit-api.oli-struska.workers.dev`; kod udostępnia tam wyłącznie podpisany endpoint callbacku, a każdy inny request otrzymuje `404`.
+
+Codzienny backup PostgreSQL wykonuje `okagency-audit-backup.timer` około 03:20 czasu Warszawy. Pliki custom-format mają uprawnienia tylko dla roota, trafiają do `/var/backups/okagency-audit` i są utrzymywane przez 7 dni. Timer należy kontrolować poleceniami:
+
+```bash
+sudo systemctl status okagency-audit-backup.timer
+sudo systemctl status okagency-audit-backup.service
+sudo ls -lh /var/backups/okagency-audit
+```
+
+Odtworzenie wykonuje się do zatrzymanej lub pustej bazy po wcześniejszym skopiowaniu bieżącego dumpa poza serwer. Przykładowa kontrola i restore:
+
+```bash
+sudo docker exec -i okagency-site-audit-postgres-1 pg_restore --list < backup.dump
+sudo docker exec -i okagency-site-audit-postgres-1 pg_restore -U n8n -d n8n --clean --if-exists < backup.dump
+```
+
+Pełny pilot po wdrożeniu i finalnej rotacji sekretów zakończył się 2026-08-04 statusem `partial`, wynikiem 79/100, pięcioma kategoriami i poprawnym callbackiem do D1. `partial` jest oczekiwane bez opcjonalnego `PAGESPEED_API_KEY`. Publiczne limity pozostają: 100 nowych audytów dziennie globalnie, 3 na domenę, deduplikacja 24 godziny i retencja raportu 7 dni.

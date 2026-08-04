@@ -1,0 +1,45 @@
+{
+  admin off
+  email hello@okagency.pl
+}
+
+vps-eea6bbe0.vps.ovh.net {
+  encode zstd gzip
+
+  @audit_webhook {
+    method POST
+    path /webhook/okagency-site-audit-intake
+    header CF-Access-Client-Id {$GATEWAY_CLIENT_ID}
+    header CF-Access-Client-Secret {$GATEWAY_CLIENT_SECRET}
+  }
+
+  handle @audit_webhook {
+    reverse_proxy n8n:5678
+  }
+
+  handle /healthz {
+    respond "ok" 200
+  }
+
+  handle {
+    respond "not found" 404
+  }
+
+  header {
+    -Server
+    Strict-Transport-Security "max-age=31536000"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    Cache-Control "no-store"
+  }
+
+  log {
+    output stdout
+    format filter {
+      request>headers>Cf-Access-Client-Id replace "REDACTED"
+      request>headers>Cf-Access-Client-Secret replace "REDACTED"
+      request>headers>X-Ok-Signature replace "REDACTED"
+      wrap json
+    }
+  }
+}

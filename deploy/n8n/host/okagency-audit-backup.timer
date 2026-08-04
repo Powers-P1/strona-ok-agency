@@ -1,0 +1,12 @@
+[Unit]
+Description=Codzienny backup bazy audytów OK Agency
+
+[Timer]
+OnCalendar=*-*-* 03:20:00 Europe/Warsaw
+RandomizedDelaySec=20m
+Persistent=true
+Unit=okagency-audit-backup.service
+
+[Install]
+WantedBy=timers.target
+

@@ -1,0 +1,111 @@
+{
+  "manifestVersion": "1.0",
+  "projectRoot": "G:\\OK-Agency\\.codex-worktrees\\site-audit",
+  "accountId": "6f889ec5dcd5469d62f6ad6efbdfbc73",
+  "canonicalWrangler": {
+    "path": "C:\\Users\\dkaro\\.local\\wrangler-4.118.0\\wrangler.cmd",
+    "version": "4.118.0",
+    "sha256": "BB0C1C2F5AC089A4EFF147F4712E8A7DE8F6BCDDE65E493885F3B23E5873D515"
+  },
+  "requiredApiTokenPermissions": {
+    "account": [
+      "Workers Scripts Write",
+      "D1 Write",
+      "Queues Write",
+      "Turnstile Write",
+      "Account Settings Read"
+    ],
+    "zone_okagency_pl": [
+      "Workers Routes Write",
+      "Zone Read"
+    ]
+  },
+  "worker": {
+    "name": "okagency-site-audit-api",
+    "environment": "production",
+    "config": "G:\\OK-Agency\\.codex-worktrees\\site-audit\\wrangler.site-audit.jsonc",
+    "routes": [
+      "okagency.pl/api/site-audits*",
+      "www.okagency.pl/api/site-audits*"
+    ]
+  },
+  "currentRemoteState": {
+    "zoneMatchesAccount": true,
+    "d1TargetExists": true,
+    "d1DatabaseId": "4d14f2e2-bb15-4972-9b8c-a9f373deb0ae",
+    "queueTargetExists": true,
+    "queueId": "f5e6bedab70e4f9b87bc2ce4e1f294f7",
+    "dlqTargetExists": true,
+    "dlqId": "2750e4355f684aaab4958e49f1abcc9f",
+    "workerTargetExists": true,
+    "workerPublicRouteCount": 0,
+    "workerCronCount": 0,
+    "workerQueueConsumerCount": 0,
+    "workersDevEnabled": false,
+    "previewUrlsEnabled": false,
+    "turnstileSecretBindingConfirmed": true
+  },
+  "resourcesToCreate": [
+    { "type": "d1", "name": "okagency-site-audits", "binding": "DB" },
+    { "type": "queue", "name": "okagency-site-audits", "binding": "AUDIT_QUEUE" },
+    { "type": "queue", "name": "okagency-site-audits-dlq", "role": "dead-letter" }
+  ],
+  "existingTurnstileWidget": {
+    "sitekey": "0x4AAAAAAEA1pgmTfeMdKXil",
+    "action": "site_audit",
+    "expectedProductionDomains": ["okagency.pl", "www.okagency.pl"],
+    "secretDestination": {
+      "worker": "okagency-site-audit-api",
+      "environment": "production",
+      "binding": "TURNSTILE_SECRET"
+    },
+    "operationRequiresSeparateConfirmation": true
+  },
+  "secretBindings": [
+    { "name": "TURNSTILE_SECRET", "source": "guarded retrieval from existing widget" },
+    { "name": "WORKER_N8N_HMAC_SECRET", "source": "generated value shared with runner" },
+    { "name": "N8N_CALLBACK_HMAC_SECRET", "source": "generated value shared with runner" },
+    { "name": "N8N_WEBHOOK_URL", "source": "production VPS endpoint" },
+    { "name": "CF_ACCESS_CLIENT_ID", "source": "optional Cloudflare Access service token" },
+    { "name": "CF_ACCESS_CLIENT_SECRET", "source": "optional Cloudflare Access service token" }
+  ],
+  "phaseAApprovedWrites": [
+    "create D1 database",
+    "create Queue and DLQ",
+    "replace placeholder D1 database_id",
+    "apply D1 migration",
+    "upload a bootstrap Worker version without routes or public traffic",
+    "verify the exact Worker target before the secret write",
+    "retrieve and validate existing Turnstile secret without displaying or persisting it locally",
+    "write TURNSTILE_SECRET to the exact Worker through standard input",
+    "confirm only the binding name after the write"
+  ],
+  "explicitlyExcludedFromPhaseA": [
+    "creating or modifying the existing Turnstile widget",
+    "publishing Worker routes or workers.dev access",
+    "deploying the Queue consumer or cron",
+    "writing HMAC, webhook or Access secrets",
+    "making changes to OVH or a VPS"
+  ],
+  "unresolvedBeforePublicDeployment": [
+    "production n8n webhook URL",
+    "production HMAC handoff to the VPS runner",
+    "optional Cloudflare Access service token",
+    "fresh real Turnstile success and replay-rejection validation"
+  ],
+  "phaseACompletion": {
+    "completedAt": "2026-08-04T22:57:58+02:00",
+    "d1MigrationApplied": true,
+    "dailyGlobalLimit": 100,
+    "dailyDomainLimit": 3,
+    "rateLimitTriggersConfirmed": [
+      "audit_rate_global_guard",
+      "audit_rate_domain_guard"
+    ],
+    "bootstrapWorkerOnly": true,
+    "turnstileSecretValidatedWithSiteverify": true,
+    "turnstileSecretBinding": "TURNSTILE_SECRET",
+    "publicTrafficEnabled": false,
+    "excludedWritesPreserved": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "AUDIT40Report01X",
+  "name": "AUDIT-40 Score & Report",
+  "nodes": [
+    {
+      "parameters": { "inputSource": "passthrough" },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-420, 0],
+      "id": "b245b55e-4af6-46ad-a300-5672775b4fd4",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst required = ['performance', 'seo', 'accessibility', 'conversion', 'trust'];\nif (item?.report?.schemaVersion !== '1.0' || !required.every(key => Number.isInteger(item.report.categories?.[key]?.score))) {\n  throw new Error('invalid-final-report');\n}\nitem.report.priorities = (item.report.priorities || []).slice(0, 5);\nitem.report.strengths = (item.report.strengths || []).slice(0, 5);\nreturn [{ json: item }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-160, 0],
+      "id": "caa996be-b406-4505-ae97-78edfe427c45",
+      "name": "Enforce report contract"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://audit-runner:8080/finalize",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ jobId: $json.jobId, completionToken: $json.completionToken, report: $json.report }) }}",
+        "options": { "timeout": 30000 }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [120, 0],
+      "id": "b0053b3e-78fc-40fe-b20f-16286d2096ee",
+      "name": "Publish signed callback",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [[{ "node": "Enforce report contract", "type": "main", "index": 0 }]]
+    },
+    "Enforce report contract": {
+      "main": [[{ "node": "Publish signed callback", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1", "callerPolicy": "workflowsFromSameOwner" },
+  "active": false,
+  "versionId": "0f3eb70c-a6e8-4f27-83dc-991d64a7aa49",
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

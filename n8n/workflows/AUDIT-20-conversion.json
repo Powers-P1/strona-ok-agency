@@ -1,0 +1,34 @@
+{
+  "id": "AUDIT20Convert01",
+  "name": "AUDIT-20 Conversion",
+  "nodes": [
+    {
+      "parameters": { "inputSource": "passthrough" },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-360, 0],
+      "id": "7d9bbdda-f967-474a-9283-c88e00ac6081",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\nconst conversion = item?.report?.categories?.conversion;\nif (!item.jobId || !item.completionToken || !Number.isInteger(conversion?.score)) {\n  throw new Error('invalid-conversion-stage-input');\n}\nif (conversion.score < 0 || conversion.score > 100) {\n  throw new Error('invalid-conversion-score');\n}\nitem.auditStages = [...(item.auditStages || []), 'conversion'];\nreturn [{ json: item }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-60, 0],
+      "id": "968e33cb-ac42-4e23-850a-842fd570b17a",
+      "name": "Validate conversion findings"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [[{ "node": "Validate conversion findings", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1", "callerPolicy": "workflowsFromSameOwner" },
+  "active": false,
+  "versionId": "6a6f2da8-45bf-4c38-b465-c7227d094c50",
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

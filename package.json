@@ -31,7 +31,9 @@
     "check:production-art-safety": "node scripts/check-production-art-safety.mjs",
     "check:pages-functions": "wrangler pages functions build functions --outfile dist/pages-worker.js",
     "check:worker": "wrangler deploy --config wrangler.contact.jsonc --dry-run --outdir dist/worker-dry-run",
-    "prebuild": "npm run check:links && npm run check:quality",
+    "check:worker:audit": "wrangler deploy --config wrangler.site-audit.jsonc --dry-run --outdir dist/site-audit-worker-dry-run",
+    "check:site-audit": "node scripts/check-site-audit.mjs && node --test worker/site-audit.test.mjs services/site-audit-runner/test/*.test.mjs && npm run check:worker:audit",
+    "prebuild": "npm run check:links && npm run check:quality && npm run check:site-audit",
     "build": "node scripts/build.mjs"
   },
   "engines": {

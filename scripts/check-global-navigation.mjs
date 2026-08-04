@@ -23,6 +23,7 @@ const expectedOfferRoutes = [
   "/social-media",
   "/kampanie",
   "/diagnoza",
+  "/diagnoza-www",
 ];
 const desktopViewports = [
   { width: 1440, height: 900 },

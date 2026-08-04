@@ -4,8 +4,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 ## Podsumowanie
 
-- `!important`: **217**
-- deklaracje typografii w lokalnych arkuszach tras: **952**
+- `!important`: **218**
+- deklaracje typografii w lokalnych arkuszach tras: **1016**
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **283**
 - inline `style` w HTML: **28**
 - mutacje stylu z JS: **48**
@@ -32,6 +32,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/social/styles.css | 3 |
 | assets/services/web/styles.css | 3 |
 | assets/page-faq.css | 2 |
+| assets/services/site-audit/styles.css | 1 |
 
 ### Największe lokalne źródła typografii
 
@@ -47,6 +48,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-home.css | 72 |
 | assets/legal-pages.css | 67 |
 | assets/page-menu.css | 67 |
+| assets/services/site-audit/styles.css | 64 |
 | assets/page-faq.css | 39 |
 | assets/visual-direction-scenes.v20260730-2.css | 15 |
 
@@ -139,6 +141,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/process/styles.css | 1274 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/process/styles.css | 1275 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/process/styles.css | 1276 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/services/site-audit/styles.css | 22 | .site-audit-page [hidden] | — | route-debt |
 | assets/services/social/styles.css | 1104 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/social/styles.css | 1105 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/social/styles.css | 1106 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
@@ -1038,6 +1041,70 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/process/styles.css | 1487 | .process-proof-content h2 | font-size | clamp(39px, 11.3vw, 50px) | @media (max-width: 820px) | local-type-exception |
 | assets/services/process/styles.css | 1492 | .process-proof-content .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
 | assets/services/process/styles.css | 1514 | .process-proof-content .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
+| assets/services/site-audit/styles.css | 19 | .site-audit-page | font-family | var(--font-sans, Arial, sans-serif) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 46 | .audit-kicker | font-size | 0.73rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 47 | .audit-kicker | font-weight | 750 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 48 | .audit-kicker | letter-spacing | 0.13em | — | local-type-exception |
+| assets/services/site-audit/styles.css | 49 | .audit-kicker | line-height | 1.4 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 59 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | font-family | var(--font-display, Georgia, serif) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 60 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | font-weight | 500 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 61 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | letter-spacing | -0.045em | — | local-type-exception |
+| assets/services/site-audit/styles.css | 62 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | line-height | 0.96 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 66 | .audit-hero h1 | font-size | clamp(3.2rem, 7.5vw, 7rem) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 67 | .audit-hero h1 em | font-weight | 500 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 68 | .audit-lead | font-size | clamp(1.03rem, 1.6vw, 1.28rem) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 68 | .audit-lead | line-height | 1.55 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 83 | .audit-scope li | font-size | 0.82rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 84 | .audit-scope li | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 106 | .audit-field > span | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 116 | .audit-field input | font | inherit | — | local-type-exception |
+| assets/services/site-audit/styles.css | 117 | .audit-field input | font-size | 1.05rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 121 | .audit-hint | font-size | 0.83rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 121 | .audit-hint | line-height | 1.5 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 128 | .audit-consent | font-size | 0.88rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 129 | .audit-consent | line-height | 1.5 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 133 | .audit-legal-note | font-size | 0.76rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 133 | .audit-legal-note | line-height | 1.55 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 148 | .audit-submit, .audit-secondary | font | inherit | — | local-type-exception |
+| assets/services/site-audit/styles.css | 149 | .audit-submit, .audit-secondary | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 155 | .audit-submit i | font-size | 1.4rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 158 | .audit-status | font-size | 0.85rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 158 | .audit-status | line-height | 1.45 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 175 | .audit-progress h2, .audit-report h2, .audit-method h2 | font-size | clamp(2.3rem, 5vw, 4.8rem) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 176 | .audit-progress p:not(.audit-kicker) | line-height | 1.6 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 177 | .audit-progress__domain | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 189 | .audit-report__header p:not(.audit-kicker, .audit-report__meta) | line-height | 1.6 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 190 | .audit-report__meta | font-size | 0.8rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 190 | .audit-report__meta | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 192 | .audit-score strong | font-family | var(--font-display, Georgia, serif) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 192 | .audit-score strong | font-size | clamp(4rem, 8vw, 7.4rem) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 192 | .audit-score strong | font-weight | 500 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 192 | .audit-score strong | line-height | 0.8 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 193 | .audit-score span | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 197 | .audit-category span | font-size | 0.72rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 197 | .audit-category span | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 197 | .audit-category span | letter-spacing | 0.06em | — | local-type-exception |
+| assets/services/site-audit/styles.css | 197 | .audit-category span | line-height | 1.25 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-family | var(--font-display, Georgia, serif) | — | local-type-exception |
+| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-size | 2.4rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-weight | 500 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 199 | .audit-category small | font-size | 0.72rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 199 | .audit-category small | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 202 | .audit-report h3 | font-size | 1.45rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 205 | .audit-priorities li | line-height | 1.5 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 206 | .audit-priorities li::before | font-size | 0.75rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 206 | .audit-priorities li::before | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 208 | .audit-priorities p | font-size | 0.9rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 209 | .audit-strengths li | line-height | 1.5 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 212 | .audit-limitations summary | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 213 | .audit-limitations ul | line-height | 1.55 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 226 | .audit-method article > span | font-size | 0.72rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 226 | .audit-method article > span | font-weight | 800 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 226 | .audit-method article > span | letter-spacing | 0.12em | — | local-type-exception |
+| assets/services/site-audit/styles.css | 227 | .audit-method h3 | font-size | 1.25rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 228 | .audit-method article p, .audit-method__boundary | line-height | 1.6 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 229 | .audit-method__boundary | font-size | 0.86rem | — | local-type-exception |
+| assets/services/site-audit/styles.css | 258 | .audit-hero h1 | font-size | clamp(2.8rem, 15vw, 4.3rem) | @media (max-width: 520px) | local-type-exception |
 | assets/services/social/styles.css | 28 | body | font-family | var(--ok-font-body) | — | semantic-token |
 | assets/services/social/styles.css | 155 | .site-header nav a | font-weight | 650 | — | local-type-exception |
 | assets/services/social/styles.css | 156 | .site-header nav a | letter-spacing | .08em | — | local-type-exception |
@@ -1521,34 +1588,34 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Linia | Deklaracja |
 | --- | --- | --- |
-| kontakt.html | 90 | --i:0 |
-| kontakt.html | 92 | --i:1 |
-| kontakt.html | 95 | --d:0s |
-| kontakt.html | 96 | --d:.09s |
-| kontakt.html | 99 | --i:2 |
-| kontakt.html | 101 | --i:3 |
-| kontakt.html | 116 | --i:4 |
-| kontakt.html | 128 | --i:5 |
-| kontakt.html | 199 | --i:5 |
-| kontakt.html | 208 | --i:5 |
-| menu.html | 94 | --d:0s |
-| menu.html | 95 | --d:.09s |
-| menu.html | 104 | --i:0 |
-| menu.html | 118 | --i:1 |
-| menu.html | 132 | --i:2 |
-| menu.html | 146 | --i:3 |
-| o-nas.html | 127 | --x: 70%; --y: 62%; |
-| o-nas.html | 131 | --x: 87%; --y: 75%; |
-| o-nas.html | 135 | --x: 84%; --y: 35%; |
-| o-nas.html | 139 | --x: 73%; --y: 80%; --leader: 12px; --about-copy-width: 240px; |
-| o-nas.html | 191 | --x: 33%; --y: 72%; --leader: 48px; |
-| o-nas.html | 195 | --x: 32.5%; --y: 35%; --leader: 32px; --copy-w: 195px; |
-| o-nas.html | 199 | --x: 37%; --y: 76%; --leader: 38px; |
-| o-nas.html | 203 | --x: 49%; --y: 73%; |
-| o-nas.html | 248 | --x: 74%; --y: 62%; |
-| o-nas.html | 252 | --x: 84%; --y: 37%; |
-| o-nas.html | 256 | --x: 90%; --y: 73%; |
-| o-nas.html | 260 | --x: 79%; --y: 80%; |
+| kontakt.html | 91 | --i:0 |
+| kontakt.html | 93 | --i:1 |
+| kontakt.html | 96 | --d:0s |
+| kontakt.html | 97 | --d:.09s |
+| kontakt.html | 100 | --i:2 |
+| kontakt.html | 102 | --i:3 |
+| kontakt.html | 117 | --i:4 |
+| kontakt.html | 129 | --i:5 |
+| kontakt.html | 200 | --i:5 |
+| kontakt.html | 209 | --i:5 |
+| menu.html | 95 | --d:0s |
+| menu.html | 96 | --d:.09s |
+| menu.html | 105 | --i:0 |
+| menu.html | 119 | --i:1 |
+| menu.html | 133 | --i:2 |
+| menu.html | 147 | --i:3 |
+| o-nas.html | 128 | --x: 70%; --y: 62%; |
+| o-nas.html | 132 | --x: 87%; --y: 75%; |
+| o-nas.html | 136 | --x: 84%; --y: 35%; |
+| o-nas.html | 140 | --x: 73%; --y: 80%; --leader: 12px; --about-copy-width: 240px; |
+| o-nas.html | 192 | --x: 33%; --y: 72%; --leader: 48px; |
+| o-nas.html | 196 | --x: 32.5%; --y: 35%; --leader: 32px; --copy-w: 195px; |
+| o-nas.html | 200 | --x: 37%; --y: 76%; --leader: 38px; |
+| o-nas.html | 204 | --x: 49%; --y: 73%; |
+| o-nas.html | 249 | --x: 74%; --y: 62%; |
+| o-nas.html | 253 | --x: 84%; --y: 37%; |
+| o-nas.html | 257 | --x: 90%; --y: 73%; |
+| o-nas.html | 261 | --x: 79%; --y: 80%; |
 
 ## Mutacje stylu z JavaScript
 

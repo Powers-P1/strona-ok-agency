@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .wrangler/
+.dev.vars*
+deploy/n8n/.env
 
 # Local design and generation workspaces. Production assets live in assets/.
 05-editorial-atelier/

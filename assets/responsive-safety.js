@@ -235,30 +235,47 @@
       artRect.bottom - sceneRect.top,
     );
     const scene = rectFromEdges(0, 0, sceneRect.width, sceneRect.height);
-    const fullVisible = intersectRect(art, scene);
-    let protectedRect = null;
+    let fullVisible = intersectRect(art, scene);
     let feather = null;
 
     if (mask) {
-      const withinScene = localRect => intersectRect(rectFromEdges(
-        art.left + localRect.left,
-        art.top + localRect.top,
-        art.left + localRect.right,
-        art.top + localRect.bottom,
-      ), scene);
-      protectedRect = withinScene(mask.protected);
-      feather = withinScene(mask.feather);
+      const horizontal = mask.axis === "x";
+      const featherStart = Math.min(mask.cut, mask.reveal);
+      const featherEnd = Math.max(mask.cut, mask.reveal);
+      const featherBounds = horizontal
+        ? rectFromEdges(
+            art.left + featherStart,
+            art.top,
+            art.left + featherEnd,
+            art.bottom,
+          )
+        : rectFromEdges(
+            art.left,
+            art.top + featherStart,
+            art.right,
+            art.top + featherEnd,
+          );
+      const visibleBounds = mask.revealSide === "right"
+        ? rectFromEdges(art.left + mask.reveal, art.top, art.right, art.bottom)
+        : mask.revealSide === "left"
+          ? rectFromEdges(art.left, art.top, art.left + mask.reveal, art.bottom)
+          : mask.revealSide === "bottom"
+            ? rectFromEdges(art.left, art.top + mask.reveal, art.right, art.bottom)
+            : rectFromEdges(art.left, art.top, art.right, art.top + mask.reveal);
+
+      fullVisible = intersectRect(visibleBounds, scene);
+      feather = intersectRect(featherBounds, scene);
     }
 
     const record = deepFreeze({
       version: 2,
       coordinateSpace: "scene-css-px",
       masked: Boolean(mask),
-      maskShape: mask?.shape ?? null,
-      revealSide: null,
+      maskShape: mask ? "directional-feather" : null,
+      revealSide: mask?.revealSide ?? null,
       art,
       fullVisible,
-      protected: protectedRect,
+      protected: null,
       feather,
     });
     const previous = artBounds.get(layout.scene) || artBounds.get(layout.art);
@@ -380,6 +397,12 @@
      * picture source before visualViewport settles after desktop resize. */
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
+    const tallPortrait = viewportHeight > 760
+      && viewportHeight > viewportWidth * 1.35;
+    const compact = viewportWidth <= 1180
+      || viewportHeight <= 760
+      || tallPortrait
+      || contentRect.width >= sceneRect.width * .5;
     const gap = Math.max(20, Math.min(56, sceneRect.width * .03));
     const offsetBottom = contentBottomWithin(content, layout.scene);
     let requiredHeight = Math.ceil(
@@ -436,10 +459,10 @@
     }
 
     const artMaskMode = layout.scene.dataset.okSafeMask || "auto";
+    const forceArtMask = artMaskMode === "always";
     const suppressArtMask = artMaskMode === "never";
-    const maskableScene = layout.mode === "scene";
 
-    if (suppressArtMask || !maskableScene) {
+    if (suppressArtMask || (!compact && !forceArtMask && !isHome)) {
       if (layout.mode === "grow") {
         layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
       } else {
@@ -455,43 +478,54 @@
       layout.scene.style.removeProperty("--ok-safe-required-height");
     }
 
-    const hardMargin = Math.max(18, Math.min(64, Math.min(sceneRect.width, sceneRect.height) * .025));
-    const featherSize = Math.max(48, Math.min(144, Math.min(sceneRect.width, sceneRect.height) * .08));
-    const clampX = value => Math.max(0, Math.min(artRect.width, value));
-    const clampY = value => Math.max(0, Math.min(artRect.height, value));
-    const protectedRect = rectFromEdges(
-      clampX(contentRect.left - artRect.left - hardMargin),
-      clampY(contentRect.top - artRect.top - hardMargin),
-      clampX(contentRect.right - artRect.left + hardMargin),
-      clampY(contentRect.bottom - artRect.top + hardMargin),
+    const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
+    const spaces = {
+      left: Math.max(0, contentRect.left - artRect.left),
+      right: Math.max(0, artRect.right - contentRect.right),
+      top: Math.max(0, contentRect.top - artRect.top),
+      bottom: Math.max(0, artRect.bottom - contentRect.bottom),
+    };
+    const allowedSides = ["left", "right", "top", "bottom"];
+    const revealSide = allowedSides.reduce(
+      (best, side) => spaces[side] > spaces[best] ? side : best,
+      allowedSides[0],
     );
-    const featherRect = rectFromEdges(
-      clampX(protectedRect.left - featherSize),
-      clampY(protectedRect.top - featherSize),
-      clampX(protectedRect.right + featherSize),
-      clampY(protectedRect.bottom + featherSize),
-    );
-    const fixed = value => (Math.round(value * 100) / 100).toString();
-    const svgMask = [
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${fixed(artRect.width)} ${fixed(artRect.height)}">`,
-      `<defs><filter id="blur" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">`,
-      `<feGaussianBlur stdDeviation="${fixed(featherSize * .42)}"/></filter>`,
-      `<mask id="safe" maskUnits="userSpaceOnUse" x="0" y="0" width="${fixed(artRect.width)}" height="${fixed(artRect.height)}" mask-type="luminance">`,
-      `<rect width="100%" height="100%" fill="white"/>`,
-      `<rect x="${fixed(protectedRect.left)}" y="${fixed(protectedRect.top)}" width="${fixed(protectedRect.width)}" height="${fixed(protectedRect.height)}" fill="black" filter="url(#blur)"/>`,
-      `<rect x="${fixed(protectedRect.left)}" y="${fixed(protectedRect.top)}" width="${fixed(protectedRect.width)}" height="${fixed(protectedRect.height)}" fill="black"/>`,
-      `</mask></defs><rect width="100%" height="100%" fill="white" mask="url(#safe)"/></svg>`,
-    ].join("");
-    const maskImage = `url("data:image/svg+xml,${encodeURIComponent(svgMask)}")`;
+    const horizontalFeather = Math.max(96, Math.min(240, artRect.width * .18));
+    const verticalFeather = Math.max(96, Math.min(240, artRect.height * .18));
+    let maskImage = "";
+    let cut = 0;
+    let reveal = 0;
+    let axis = "x";
+
+    if (revealSide === "right") {
+      cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
+      reveal = clamp(cut + horizontalFeather, artRect.width);
+      maskImage = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
+    } else if (revealSide === "left") {
+      cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
+      reveal = clamp(cut - horizontalFeather, artRect.width);
+      maskImage = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
+    } else if (revealSide === "bottom") {
+      axis = "y";
+      cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
+      reveal = clamp(cut + verticalFeather, artRect.height);
+      maskImage = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
+    } else {
+      axis = "y";
+      cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
+      reveal = clamp(cut - verticalFeather, artRect.height);
+      maskImage = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
+    }
 
     layout.art.style.setProperty("--ok-safe-mask-image", maskImage);
-    delete layout.art.dataset.okSafeReveal;
-    layout.art.dataset.okSafeShape = "local-hole";
+    layout.art.dataset.okSafeReveal = revealSide;
+    layout.art.dataset.okSafeShape = "directional-feather";
     layout.art.dataset.okSafeArt = "active";
     publishArtBounds(layout, sceneRect, artRect, {
-      shape: "local-hole",
-      protected: protectedRect,
-      feather: featherRect,
+      axis,
+      cut,
+      reveal,
+      revealSide,
     });
   };
 

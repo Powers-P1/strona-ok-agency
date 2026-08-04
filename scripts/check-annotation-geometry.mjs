@@ -54,7 +54,7 @@ const requestedRoute = process.env.OK_ANNOTATION_ROUTE || "";
 const requestedViewport = process.env.OK_ANNOTATION_VIEWPORT || "";
 const consentInit = () => {
   localStorage.setItem("ok-consent", JSON.stringify({
-    version: 2,
+    version: 3,
     level: "denied",
     at: new Date().toISOString(),
   }));

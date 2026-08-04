@@ -229,7 +229,7 @@ try {
     const context = await browser.newContext({ viewport, reducedMotion: "no-preference" });
     await context.addInitScript(() => {
       localStorage.setItem("ok-consent", JSON.stringify({
-        version: 2,
+        version: 3,
         level: "denied",
         at: new Date().toISOString(),
       }));

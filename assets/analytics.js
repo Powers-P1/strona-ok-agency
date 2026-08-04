@@ -16,7 +16,7 @@
   const GOOGLE_ADS_DIAGNOSIS_LABEL = "";
 
   const CONSENT_STORAGE_KEY = "ok-consent";
-  const CONSENT_POLICY_VERSION = 2;
+  const CONSENT_POLICY_VERSION = 3;
   const CONSENT_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
   const CONSENT_CLOCK_SKEW_MS = 5 * 60 * 1000;
   const ATTRIBUTION_STORAGE_KEY = "ok-attribution";
@@ -664,7 +664,50 @@
 
   const createMarketingEventId = () => (marketingGranted ? createEventId() : "");
 
-  const generateLead = (formType, suppliedEventId) => {
+  const cookieValue = name => {
+    if (!marketingGranted || typeof document.cookie !== "string") return "";
+    const prefix = `${name}=`;
+    const match = document.cookie
+      .split(";")
+      .map(value => value.trim())
+      .find(value => value.startsWith(prefix));
+    if (!match) return "";
+    try {
+      return decodeURIComponent(match.slice(prefix.length)).slice(0, 250);
+    } catch {
+      return "";
+    }
+  };
+
+  const marketingContext = () => {
+    if (!marketingGranted) return { marketingConsent: false };
+    return {
+      marketingConsent: true,
+      eventSourceUrl: marketingPageLocation,
+      fbp: cookieValue("_fbp"),
+      fbc: cookieValue("_fbc"),
+    };
+  };
+
+  const enhancedConversionUserData = supplied => {
+    if (!marketingGranted || !supplied || typeof supplied !== "object") return null;
+    const email = typeof supplied.email === "string"
+      ? supplied.email.trim().toLowerCase()
+      : "";
+    const rawPhone = typeof supplied.phone === "string" ? supplied.phone.trim() : "";
+    let phone = rawPhone.replace(/[^\d+]/g, "").replace(/(?!^)\+/g, "");
+    if (/^\d{9}$/.test(phone)) phone = `+48${phone}`;
+    else if (/^00\d{9,15}$/.test(phone)) phone = `+${phone.slice(2)}`;
+    else if (/^\d{10,15}$/.test(phone)) phone = `+${phone}`;
+    else if (!/^\+\d{10,15}$/.test(phone)) phone = "";
+
+    const userData = {};
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) userData.email = email;
+    if (phone) userData.phone_number = phone;
+    return Object.keys(userData).length ? userData : null;
+  };
+
+  const generateLead = (formType, suppliedEventId, suppliedUserData) => {
     const safeFormType = FORM_TYPES.has(formType) ? formType : "contact";
     const eventId = marketingGranted
       ? normalizeEventId(suppliedEventId) || createEventId()
@@ -682,10 +725,18 @@
       && hasGoogleAdsLead
       && prepareVendorLocation()
     ) {
+      const userData = enhancedConversionUserData(suppliedUserData);
+      if (userData) window.gtag("set", "user_data", userData);
       window.gtag("event", "conversion", {
         send_to: `${GOOGLE_ADS_ID}/${GOOGLE_ADS_LEAD_LABEL}`,
         transaction_id: eventId,
       });
+      if (userData) {
+        window.gtag("set", "user_data", {
+          email: null,
+          phone_number: null,
+        });
+      }
     }
   };
 
@@ -723,7 +774,7 @@
     const body = document.createElement("p");
     body.className = "ok-consent__body";
     body.append(
-      "Możesz zgodzić się tylko na pomiar statystyczny GA4 albo również na atrybucję i narzędzia reklamowe. Przed wyborem i po odrzuceniu nie uruchamiamy narzędzi Google ani Meta. Szczegóły w ",
+      "Możesz zgodzić się tylko na pomiar statystyczny GA4 albo również na atrybucję i narzędzia reklamowe. Po zgodzie reklamowej i skutecznym wysłaniu formularza Google i Meta mogą otrzymać znormalizowany lub jednokierunkowo zaszyfrowany e-mail i telefon w celu dopasowania konwersji. Przed wyborem i po odrzuceniu nie uruchamiamy tych narzędzi. Szczegóły w ",
     );
     const link = document.createElement("a");
     link.href = "/polityka-prywatnosci";
@@ -814,6 +865,7 @@
     diagnosisComplete,
     generateLead,
     createMarketingEventId,
+    marketingContext,
     attribution: attributionForLead,
     // Aliasy zachowują kompatybilność z istniejącymi wywołaniami stron.
     lead: generateLead,

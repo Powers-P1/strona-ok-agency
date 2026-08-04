@@ -7,6 +7,15 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = resolve(root, "docs/SYSTEM-EXCEPTIONS-INVENTORY.md");
 const shouldWrite = process.argv.includes("--write");
 const shouldCheck = process.argv.includes("--check");
+const ignoredSourceRoots = Object.freeze([
+  ".git/",
+  ".wrangler/",
+  "05-editorial-atelier/",
+  "_src/",
+  "dist/",
+  "mockups/",
+  "node_modules/",
+]);
 
 const sharedOwners = new Set([
   "assets/annotation-system.css",
@@ -127,8 +136,7 @@ const allFiles = await walk(root);
 const sourceFiles = allFiles
   .map(absolute => ({ absolute, path: normalize(absolute) }))
   .filter(({ path }) => (
-    !path.startsWith("node_modules/")
-    && !path.startsWith("dist/")
+    !ignoredSourceRoots.some(prefix => path.startsWith(prefix))
     && /\.(?:css|js|html)$/.test(path)
   ));
 

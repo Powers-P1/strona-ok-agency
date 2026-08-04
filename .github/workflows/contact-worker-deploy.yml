@@ -33,3 +33,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4.115.0"
           command: deploy --config wrangler.contact.jsonc
+          secrets: |
+            META_CAPI_TOKEN
+        env:
+          META_CAPI_TOKEN: ${{ secrets.META_CAPI_TOKEN }}

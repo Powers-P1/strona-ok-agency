@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   MAX_BODY_BYTES,
+  buildMetaConversionEvent,
   buildEmail,
   normalizeAttribution,
   normalizePayload,
@@ -214,6 +215,79 @@ test("sanitizes event ID and includes accepted attribution in the email", () => 
   assert.match(email.text, /Atrybucja kampanii \(dane przekazane przez przeglądarkę\)/);
   assert.match(email.text, /utm_campaign: brand/);
   assert.doesNotMatch(email.text, /pii@example\.com|secret=1/);
+});
+
+test("builds a consented Meta Contact server event with hashed contact data", async () => {
+  const payload = normalizePayload({
+    name: "Jan Kowalski",
+    email: " Lead@Example.COM ",
+    phone: "501 234 567",
+    company: "",
+    topic: "Diagnoza: Strona",
+    message: "Proszę o kontakt w sprawie diagnozy.",
+    fax: "",
+    analyticsEventId: "lead-event-12345",
+    marketingConsent: true,
+    eventSourceUrl: "https://okagency.pl/diagnoza?utm_source=meta#result",
+    fbp: "fb.1.1720000000000.browser-id",
+    fbc: "fb.1.1720000000000.click-id",
+  });
+  const request = new Request("https://okagency.pl/api/contact", {
+    headers: {
+      "CF-Connecting-IP": "203.0.113.10",
+      "user-agent": "OK Agency analytics test",
+    },
+  });
+  const event = await buildMetaConversionEvent(payload, request, 1_720_000_000_000);
+
+  assert.equal(event.event_name, "Contact");
+  assert.equal(event.event_time, 1_720_000_000);
+  assert.equal(event.event_id, "lead-event-12345");
+  assert.equal(event.event_source_url, "https://okagency.pl/diagnoza");
+  assert.equal(event.action_source, "website");
+  assert.equal(event.user_data.client_ip_address, "203.0.113.10");
+  assert.equal(event.user_data.client_user_agent, "OK Agency analytics test");
+  assert.equal(event.user_data.fbp, "fb.1.1720000000000.browser-id");
+  assert.equal(event.user_data.fbc, "fb.1.1720000000000.click-id");
+  assert.match(event.user_data.em[0], /^[a-f0-9]{64}$/);
+  assert.match(event.user_data.ph[0], /^[a-f0-9]{64}$/);
+  assert.doesNotMatch(JSON.stringify(event), /lead@example\.com|501[\s-]?234[\s-]?567/i);
+  assert.equal(event.custom_data.form_type, "diagnosis");
+});
+
+test("never builds a Meta server event without explicit marketing consent", async () => {
+  const payload = normalizePayload({
+    email: "lead@example.com",
+    analyticsEventId: "lead-event-12345",
+    marketingConsent: false,
+    eventSourceUrl: "https://evil.example/private",
+    fbp: "not-an-fbp",
+    fbc: "not-an-fbc",
+  });
+  const event = await buildMetaConversionEvent(
+    payload,
+    new Request("https://okagency.pl/api/contact"),
+  );
+  assert.equal(event, null);
+  assert.equal(payload.eventSourceUrl, "");
+  assert.equal(payload.fbp, "");
+  assert.equal(payload.fbc, "");
+});
+
+test("scrubs contact data from an allowed CAPI source path", () => {
+  for (const eventSourceUrl of [
+    "https://okagency.pl/jan%2540example%252Ecom?utm_source=meta",
+    "https://www.okagency.pl/tel%252B48%252F501%252F234%252F567#result",
+  ]) {
+    const payload = normalizePayload({
+      email: "lead@example.com",
+      analyticsEventId: "lead-event-12345",
+      marketingConsent: true,
+      eventSourceUrl,
+    });
+    assert.match(payload.eventSourceUrl, /^https:\/\/(?:www\.)?okagency\.pl\/$/);
+    assert.doesNotMatch(payload.eventSourceUrl, /jan|example|501|234|567/i);
+  }
 });
 
 test("request-size budget accepts the largest valid Unicode form with full attribution", async () => {

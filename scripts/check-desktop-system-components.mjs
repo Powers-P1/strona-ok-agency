@@ -539,7 +539,7 @@ try {
     });
     await context.addInitScript(() => {
       localStorage.setItem("ok-consent", JSON.stringify({
-        version: 2,
+        version: 3,
         level: "denied",
         at: "2026-08-03T00:00:00.000Z",
       }));
@@ -589,7 +589,7 @@ try {
   });
   await mobileContext.addInitScript(() => {
     localStorage.setItem("ok-consent", JSON.stringify({
-      version: 2,
+      version: 3,
       level: "denied",
       at: "2026-08-03T00:00:00.000Z",
     }));

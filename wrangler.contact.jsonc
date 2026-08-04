@@ -18,7 +18,9 @@
   "vars": {
     "CONTACT_FROM": "formularz@ok-agency.pl",
     "CONTACT_TO": "hello@okagency.pl",
-    "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl"
+    "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl",
+    "META_PIXEL_ID": "1057817209974571",
+    "META_GRAPH_VERSION": "v25.0"
   },
   "send_email": [
     {

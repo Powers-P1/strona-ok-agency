@@ -24,6 +24,12 @@ const LIMITS = {
   fax: 200,
 };
 
+const META_LIMITS = Object.freeze({
+  eventSourceUrl: 1000,
+  fbp: 250,
+  fbc: 250,
+});
+
 const ATTRIBUTION_KEYS = Object.freeze([
   "utm_source",
   "utm_medium",
@@ -70,7 +76,120 @@ function normalizePayload(input) {
   payload.analyticsEventId = /^[A-Za-z0-9._:-]{8,100}$/.test(analyticsEventId)
     ? analyticsEventId
     : "";
+  payload.marketingConsent = input?.marketingConsent === true;
+  payload.eventSourceUrl = normalizeEventSourceUrl(
+    clean(input?.eventSourceUrl, META_LIMITS.eventSourceUrl),
+  );
+  payload.fbp = normalizeMetaBrowserId(clean(input?.fbp, META_LIMITS.fbp), "fbp");
+  payload.fbc = normalizeMetaBrowserId(clean(input?.fbc, META_LIMITS.fbc), "fbc");
   return payload;
+}
+
+function normalizeEventSourceUrl(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || !ALLOWED_ATTRIBUTION_HOSTS.has(url.hostname)) return "";
+    const pathname = containsPathContactData(url.pathname) ? "/" : url.pathname;
+    return `${url.origin}${pathname}`.slice(0, META_LIMITS.eventSourceUrl);
+  } catch {
+    return "";
+  }
+}
+
+function normalizeMetaBrowserId(value, type) {
+  if (!value) return "";
+  const pattern = type === "fbp"
+    ? /^fb\.\d\.\d{10,16}\.[A-Za-z0-9._-]{1,100}$/
+    : /^fb\.\d\.\d{10,16}\.[A-Za-z0-9._:-]{1,200}$/;
+  return pattern.test(value) ? value : "";
+}
+
+function normalizeMetaPhone(value) {
+  let digits = typeof value === "string" ? value.replace(/\D/g, "") : "";
+  if (digits.startsWith("00")) digits = digits.slice(2);
+  if (/^\d{9}$/.test(digits)) digits = `48${digits}`;
+  return /^\d{10,15}$/.test(digits) ? digits : "";
+}
+
+async function sha256(value) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)]
+    .map(byte => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function buildMetaConversionEvent(payload, request, now = Date.now()) {
+  if (!payload.marketingConsent || !payload.analyticsEventId) return null;
+  const email = payload.email.trim().toLowerCase();
+  const phone = normalizeMetaPhone(payload.phone);
+  const userData = {
+    em: [await sha256(email)],
+  };
+  if (phone) userData.ph = [await sha256(phone)];
+
+  const clientIp = clean(request.headers.get("CF-Connecting-IP"), 64);
+  const clientUserAgent = clean(request.headers.get("user-agent"), 512);
+  if (clientIp) userData.client_ip_address = clientIp;
+  if (clientUserAgent) userData.client_user_agent = clientUserAgent;
+  if (payload.fbp) userData.fbp = payload.fbp;
+  if (payload.fbc) userData.fbc = payload.fbc;
+
+  return {
+    event_name: "Contact",
+    event_time: Math.floor(now / 1000),
+    event_id: payload.analyticsEventId,
+    event_source_url: payload.eventSourceUrl || `${new URL(request.url).origin}/`,
+    action_source: "website",
+    user_data: userData,
+    custom_data: {
+      form_type: payload.topic.startsWith("Diagnoza:") ? "diagnosis" : "contact",
+    },
+  };
+}
+
+async function sendMetaConversion(payload, request, env) {
+  if (!payload.marketingConsent || !payload.analyticsEventId) return false;
+  if (
+    !/^\d{10,20}$/.test(env.META_PIXEL_ID || "")
+    || !/^v\d+\.\d+$/.test(env.META_GRAPH_VERSION || "")
+    || typeof env.META_CAPI_TOKEN !== "string"
+    || !env.META_CAPI_TOKEN
+  ) {
+    console.error(JSON.stringify({ event: "meta_capi_configuration_missing" }));
+    return false;
+  }
+
+  const event = await buildMetaConversionEvent(payload, request);
+  if (!event) return false;
+  const endpoint = new URL(
+    `https://graph.facebook.com/${env.META_GRAPH_VERSION}/${env.META_PIXEL_ID}/events`,
+  );
+  endpoint.searchParams.set("access_token", env.META_CAPI_TOKEN);
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      signal: AbortSignal.timeout(10_000),
+      body: JSON.stringify({
+        data: [event],
+        partner_agent: "okagency-direct-capi-1.0",
+      }),
+    });
+    if (!response.ok) {
+      console.error(JSON.stringify({
+        event: "meta_capi_send_failed",
+        status: response.status,
+      }));
+      return false;
+    }
+    console.log(JSON.stringify({ event: "meta_capi_sent" }));
+    return true;
+  } catch {
+    console.error(JSON.stringify({ event: "meta_capi_send_failed", status: 0 }));
+    return false;
+  }
 }
 
 function decodeForPrivacyCheck(value) {
@@ -395,7 +514,7 @@ function buildEmail(payload, from, to) {
   };
 }
 
-async function handleContact(request, env) {
+async function handleContact(request, env, ctx) {
   const origin = request.headers.get("origin");
   if (!origin || !ALLOWED_ORIGINS.has(origin)) {
     return json({ ok: false, error: "origin" }, 403);
@@ -457,11 +576,14 @@ async function handleContact(request, env) {
   }
 
   console.log(JSON.stringify({ event: "contact_email_sent" }));
+  const metaDelivery = sendMetaConversion(payload, request, env);
+  if (typeof ctx?.waitUntil === "function") ctx.waitUntil(metaDelivery);
+  else await metaDelivery;
   return json({ ok: true });
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (url.pathname !== "/api/contact") {
       return json({ ok: false, error: "not_found" }, 404);
@@ -473,14 +595,16 @@ export default {
         { allow: "POST" },
       );
     }
-    return handleContact(request, env);
+    return handleContact(request, env, ctx);
   },
 };
 
 export {
   MAX_BODY_BYTES,
+  buildMetaConversionEvent,
   buildEmail,
   normalizeAttribution,
   normalizePayload,
+  sendMetaConversion,
   readJsonBody,
 };

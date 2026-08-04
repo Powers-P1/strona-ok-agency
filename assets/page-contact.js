@@ -217,7 +217,10 @@
 
     const v = id => document.getElementById(id).value.trim();
     const submitButton = form.querySelector(".submit");
+    const email = v("f-email");
+    const phone = v("f-phone");
     const analyticsEventId = window.okAnalytics?.createMarketingEventId?.() || "";
+    const marketingContext = window.okAnalytics?.marketingContext?.() || { marketingConsent: false };
     submitButton.disabled = true;
     submitButton.setAttribute("aria-busy", "true");
 
@@ -227,8 +230,8 @@
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           name: v("f-name"),
-          email: v("f-email"),
-          phone: v("f-phone"),
+          email,
+          phone,
           company: v("f-company"),
           topic: fields.topic.value,
           message: v("f-message"),
@@ -236,6 +239,7 @@
           turnstileToken,
           attribution: window.okAnalytics?.attribution?.() || null,
           analyticsEventId,
+          ...marketingContext,
         }),
       });
 
@@ -245,7 +249,7 @@
       form.reset();
       resetTurnstile();
       showState(handoffState, handoffTitle);
-      window.okAnalytics?.generateLead("contact", analyticsEventId);
+      window.okAnalytics?.generateLead("contact", analyticsEventId, { email, phone });
     } catch {
       resetTurnstile();
       showState(fallbackState, fallbackTitle);

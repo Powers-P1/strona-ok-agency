@@ -1,6 +1,6 @@
 # Produkcja OK Agency — konfiguracja i utrzymanie
 
-Stan dokumentacji: 2026-08-03.
+Stan dokumentacji: 2026-08-04.
 
 Ten dokument opisuje produkcyjną konfigurację serwisu, podział
 odpowiedzialności między GitHub, Cloudflare i OVH oraz bezpieczne procedury
@@ -112,6 +112,8 @@ Szablon nagłówków znajduje się w [`_headers`](../_headers), a generator CSP 
 4. Worker weryfikuje token Turnstile po stronie serwera.
 5. Wiadomość jest wysyłana jako `formularz@ok-agency.pl` do
    `hello@okagency.pl`; adres użytkownika trafia do `Reply-To`.
+6. Po udanej wysyłce i wyłącznie przy zgodzie marketingowej Worker zleca
+   nieblokującą wysyłkę deduplikowanego zdarzenia `Contact` do Meta CAPI.
 
 Kod endpointu: [`worker/contact.js`](../worker/contact.js).
 
@@ -119,7 +121,7 @@ Istotne zabezpieczenia:
 
 - dozwolone origins: `https://okagency.pl` i `https://www.okagency.pl`;
 - tylko `POST /api/contact`;
-- maksymalny request: 16 KiB;
+- maksymalny request: 64 KiB;
 - maksymalna wiadomość: 5000 znaków;
 - honeypot `fax`;
 - Turnstile action: `contact`;
@@ -145,6 +147,8 @@ Jawne zmienne konfiguracyjne:
 | `CONTACT_FROM` | `formularz@ok-agency.pl` |
 | `CONTACT_TO` | `hello@okagency.pl` |
 | `TURNSTILE_HOSTNAMES` | `okagency.pl,www.okagency.pl` |
+| `META_PIXEL_ID` | `1057817209974571` |
+| `META_GRAPH_VERSION` | `v25.0` |
 
 Binding `SEND_EMAIL` jest ograniczony do:
 
@@ -154,6 +158,9 @@ Binding `SEND_EMAIL` jest ograniczony do:
 Worker nie ma publicznej domeny `workers.dev`. Observability i invocation logs
 są włączone z próbkowaniem 100%. Poprawna wysyłka zapisuje zdarzenie
 `contact_email_sent`, a błąd `contact_email_send_failed` bez danych klienta.
+Integracja CAPI loguje wyłącznie `meta_capi_sent`, `meta_capi_send_failed` z
+kodem HTTP albo `meta_capi_configuration_missing`; logi nie zawierają tokenu,
+e-maila, telefonu, skrótów ani treści formularza.
 
 ### Turnstile
 
@@ -178,6 +185,13 @@ Aktualizacja sekretu z CLI:
 ```powershell
 npx wrangler secret put TURNSTILE_SECRET --config wrangler.contact.jsonc
 ```
+
+Token bezpośredniej integracji Meta istnieje wyłącznie jako GitHub Actions
+Secret `META_CAPI_TOKEN`. Workflow `Contact Worker deploy` przekazuje go do
+Wranglera przez wejście `secrets` i tworzy lub aktualizuje zaszyfrowany sekret
+Workera przed wdrożeniem. Token nie może trafić do `wrangler.contact.jsonc`,
+logów, PR ani dokumentacji. Po rotacji trzeba zastąpić wartość w GitHub Secret
+i uruchomić workflow ręcznie; nie wymaga to zmiany kodu.
 
 ## 6. Poczta i ochrona domen
 
@@ -365,9 +379,19 @@ formularz działa bez atrybucji marketingowej. Nie należy zapisywać w tym
 mechanizmie pól formularza ani innych danych podanych przez użytkownika.
 
 Identyfikator zdarzenia nie jest atrybucją ani identyfikatorem osoby. Nie może
-powstać przy poziomie `denied` lub `analytics`. Samo przekazanie Meta `eventID`
-nie oznacza aktywnej integracji Conversions API; ewentualne CAPI wymagałoby
-osobnego, zgodnego źródła zdarzenia serwerowego używającego tego samego ID.
+powstać przy poziomie `denied` lub `analytics`. Po skutecznym przyjęciu
+formularza i wyłącznie przy zgodzie marketingowej Worker wysyła Meta CAPI
+standardowe zdarzenie `Contact` z tym samym `event_id`, którego Pixel używa jako
+`eventID`. Deduplikacja opiera się na parze nazwa zdarzenia + identyfikator.
+E-mail i opcjonalny telefon są normalizowane i haszowane SHA-256 w Workerze;
+do zdarzenia mogą również wejść IP, user-agent, `_fbp`, `_fbc` i bezpieczny URL
+źródłowy bez query/hash. Treść wiadomości, nazwa firmy, imię i odpowiedzi
+„Diagnozy” nie są wysyłane do CAPI. Błąd CAPI nie blokuje doręczenia zgłoszenia.
+
+Google Enhanced Conversions działa tylko dla skutecznie przyjętego formularza
+i tylko przy zgodzie marketingowej. Bezpośrednio przed zdarzeniem konwersji
+Google tag otrzymuje znormalizowany e-mail i opcjonalny telefon przez
+`user_data`; dane te nie trafiają do parametrów zdarzeń GA4.
 
 Po każdej zmianie analityki należy sprawdzić co najmniej pięć scenariuszy:
 
@@ -380,9 +404,10 @@ Po każdej zmianie analityki należy sprawdzić co najmniej pięć scenariuszy:
    Meta Pixel, brak atrybucji marketingowej i brak `analyticsEventId`;
 4. „Analityka i reklamy” — wszystkie cztery stany `granted`, pojedyncze
    zdarzenia w GA4 DebugView, Google Ads i Meta Test Events oraz atrybucja bez
-   pól formularza i innych PII; dla leada ten sam losowy identyfikator występuje
-   w żądaniu formularza, e-mailu, Meta `eventID` i Google Ads
-   `transaction_id`;
+   niezamierzonego PII; dla leada ten sam losowy identyfikator występuje w
+   żądaniu formularza, e-mailu, Meta Pixel `eventID`, Meta CAPI `event_id` i
+   Google Ads `transaction_id`; dane kontaktowe występują wyłącznie w
+   kontrolowanych polach Enhanced Conversions i jako SHA-256 w CAPI;
 5. obniżenie zakresu lub „Odrzuć” po wcześniejszej zgodzie — właściwe stany
    `denied`, wyczyszczona atrybucja po utracie zgody marketingowej i zero
    requestów do narzędzi objętych wycofanym zakresem po zastosowaniu decyzji.
@@ -390,10 +415,11 @@ Po każdej zmianie analityki należy sprawdzić co najmniej pięć scenariuszy:
 Retencja danych na poziomie użytkownika i zdarzenia w GA4 jest ustawiona na
 14 miesięcy. Decyzja o zgodzie wygasa po 180 dniach. Ustawienia retencji i
 udostępniania danych w Google Ads oraz Meta wymagają okresowego przeglądu.
-Enhanced Conversions, Meta Automatic Advanced Matching i ręczne przekazywanie
-danych kontaktowych do Google lub Meta pozostają wyłączone. Ich uruchomienie
-wymaga osobnej oceny prawnej, aktualizacji mechanizmu zgody, Polityki
-prywatności i testów braku niezamierzonego PII.
+Enhanced Conversions i bezpośrednie Meta Conversions API są aktywne zgodnie z
+powyższym kontraktem. Wersja polityki zgody `3` wymusza ponowny wybór po zmianie
+zakresu. Meta Automatic Advanced Matching pozostaje wyłączone, ponieważ jawna,
+serwerowa integracja przekazuje wyłącznie kontrolowany zestaw danych po udanym
+formularzu i nie skanuje automatycznie DOM.
 
 ## 10. GitHub i wdrożenia
 

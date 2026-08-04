@@ -68,6 +68,7 @@
     "social-media": "offer",
     kampanie: "offer",
     diagnoza: "offer",
+    "diagnoza-www": "offer",
     "o-nas": "about",
     proces: "process",
     faq: "faq",

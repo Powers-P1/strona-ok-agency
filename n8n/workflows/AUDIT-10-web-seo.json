@@ -1,0 +1,48 @@
+{
+  "id": "AUDIT10WebSeo001",
+  "name": "AUDIT-10 Web & SEO",
+  "nodes": [
+    {
+      "parameters": { "inputSource": "passthrough" },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-420, 0],
+      "id": "16586e39-4cea-4739-9c90-134536c98975",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://audit-runner:8080/scan",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-ok-timestamp", "value": "={{ $json.auth.timestamp }}" },
+            { "name": "x-ok-nonce", "value": "={{ $json.auth.nonce }}" },
+            { "name": "x-ok-signature", "value": "={{ $json.auth.signature }}" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ signedPayload: $json.signedPayload }) }}",
+        "options": { "timeout": 120000 }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-120, 0],
+      "id": "9319faad-f1cb-4d89-9280-0503adbc9aa3",
+      "name": "Scan public site safely"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [[{ "node": "Scan public site safely", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1", "callerPolicy": "workflowsFromSameOwner" },
+  "active": false,
+  "versionId": "c048bc9a-af9f-4e26-b7c1-d5e9c987fa70",
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

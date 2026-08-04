@@ -1,0 +1,95 @@
+{
+  "id": "AUDIT00Orchestr1",
+  "name": "AUDIT-00 Intake & Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "okagency-site-audit-intake",
+        "responseMode": "onReceived",
+        "responseCode": 202,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-760, 0],
+      "id": "c36e1fa5-36b1-47ec-864f-e39778b67a70",
+      "name": "Private audit webhook",
+      "webhookId": "cbd729a5-bb8a-486f-8588-b8b6ab92ab7b"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\nconst headers = input.headers || {};\nconst signedPayload = input.body?.signedPayload;\nconst auth = {\n  timestamp: String(headers['x-ok-timestamp'] || ''),\n  nonce: String(headers['x-ok-nonce'] || ''),\n  signature: String(headers['x-ok-signature'] || '')\n};\nif (typeof signedPayload !== 'string' || signedPayload.length < 40 || signedPayload.length > 4096) throw new Error('invalid-audit-envelope');\nif (!/^\\d{10}$/.test(auth.timestamp) || !/^[A-Za-z0-9_-]{16,128}$/.test(auth.nonce) || !/^[a-f0-9]{64}$/i.test(auth.signature)) throw new Error('invalid-audit-auth');\nreturn [{ json: { signedPayload, auth } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-520, 0],
+      "id": "3bf9d01a-f241-45a7-9194-90b4eed086bc",
+      "name": "Validate envelope"
+    },
+    {
+      "parameters": {
+        "workflowId": { "__rl": true, "value": "AUDIT10WebSeo001", "mode": "list", "cachedResultName": "AUDIT-10 Web & SEO" },
+        "workflowInputs": { "mappingMode": "passthrough", "value": {}, "matchingColumns": [], "schema": [], "attemptToConvertTypes": false, "convertFieldsToString": true },
+        "mode": "each",
+        "options": { "waitForSubWorkflow": true }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [-260, 0],
+      "id": "ce8ec4cb-e6e9-485a-aabd-2bbca38fd9e2",
+      "name": "Run Web & SEO"
+    },
+    {
+      "parameters": {
+        "workflowId": { "__rl": true, "value": "AUDIT20Convert01", "mode": "list", "cachedResultName": "AUDIT-20 Conversion" },
+        "workflowInputs": { "mappingMode": "passthrough", "value": {}, "matchingColumns": [], "schema": [], "attemptToConvertTypes": false, "convertFieldsToString": true },
+        "mode": "each",
+        "options": { "waitForSubWorkflow": true }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "id": "24b4ca32-5ac0-4927-8c7f-887c3921ce57",
+      "name": "Run Conversion"
+    },
+    {
+      "parameters": {
+        "workflowId": { "__rl": true, "value": "AUDIT30TrustSec1", "mode": "list", "cachedResultName": "AUDIT-30 Trust & Security" },
+        "workflowInputs": { "mappingMode": "passthrough", "value": {}, "matchingColumns": [], "schema": [], "attemptToConvertTypes": false, "convertFieldsToString": true },
+        "mode": "each",
+        "options": { "waitForSubWorkflow": true }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [260, 0],
+      "id": "230d3d1c-a2b9-4446-bb28-b6a3c063a604",
+      "name": "Run Trust & Security"
+    },
+    {
+      "parameters": {
+        "workflowId": { "__rl": true, "value": "AUDIT40Report01X", "mode": "list", "cachedResultName": "AUDIT-40 Score & Report" },
+        "workflowInputs": { "mappingMode": "passthrough", "value": {}, "matchingColumns": [], "schema": [], "attemptToConvertTypes": false, "convertFieldsToString": true },
+        "mode": "each",
+        "options": { "waitForSubWorkflow": true }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [520, 0],
+      "id": "2dc5cf59-d840-4f64-807c-e1815df2d619",
+      "name": "Run Score & Report"
+    }
+  ],
+  "connections": {
+    "Private audit webhook": { "main": [[{ "node": "Validate envelope", "type": "main", "index": 0 }]] },
+    "Validate envelope": { "main": [[{ "node": "Run Web & SEO", "type": "main", "index": 0 }]] },
+    "Run Web & SEO": { "main": [[{ "node": "Run Conversion", "type": "main", "index": 0 }]] },
+    "Run Conversion": { "main": [[{ "node": "Run Trust & Security", "type": "main", "index": 0 }]] },
+    "Run Trust & Security": { "main": [[{ "node": "Run Score & Report", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1", "errorWorkflow": "AUDIT99Errors001" },
+  "active": false,
+  "versionId": "00f9bc0c-cd0d-41e6-9714-3ab27fef69f1",
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

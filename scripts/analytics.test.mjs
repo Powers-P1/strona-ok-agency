@@ -351,6 +351,20 @@ test("marketing consent enables first-touch attribution and one Meta Contact eve
     email: "lead@example.com",
     phone_number: "+48501234567",
   });
+  const conversionIndex = runtime.commands().findIndex(command => command[0] === "event" && command[1] === "conversion");
+  const userDataClearIndex = runtime.commands().findIndex((command, index) => (
+    index > conversionIndex
+    && command[0] === "set"
+    && command[1] === "user_data"
+    && command[2]?.email === null
+    && command[2]?.phone_number === null
+  ));
+  assert.ok(conversionIndex > runtime.commands().indexOf(userData));
+  assert.ok(userDataClearIndex > conversionIndex);
+  runtime.window.okAnalytics.diagnosisStart();
+  const laterEvent = eventCommands(runtime).at(-1);
+  assert.equal(laterEvent[1], "diagnosis_start");
+  assert.doesNotMatch(JSON.stringify(laterEvent), /lead@example\.com|501234567/);
   assert.deepEqual(plain(runtime.window.okAnalytics.marketingContext()), {
     marketingConsent: true,
     eventSourceUrl: "https://okagency.pl/diagnoza?utm_source=google&utm_campaign=test&gclid=click-1",

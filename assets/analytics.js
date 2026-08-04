@@ -731,6 +731,12 @@
         send_to: `${GOOGLE_ADS_ID}/${GOOGLE_ADS_LEAD_LABEL}`,
         transaction_id: eventId,
       });
+      if (userData) {
+        window.gtag("set", "user_data", {
+          email: null,
+          phone_number: null,
+        });
+      }
     }
   };
 

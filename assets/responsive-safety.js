@@ -62,6 +62,7 @@
   const body = document.body;
   const observed = new Set();
   const layouts = [];
+  const layoutsByScene = new WeakMap();
   const artBounds = new WeakMap();
   let frame = 0;
   let needsRemeasure = false;
@@ -230,6 +231,16 @@
     return pending;
   };
 
+  const loadPlacementMap = layout => {
+    if (layout.placementMapRequested) return;
+    layout.placementMapRequested = true;
+    buildPlacementMap(layout.art.dataset.placementMask).then(map => {
+      layout.placementMap = map;
+      layout.placementMapReady = true;
+      schedule();
+    });
+  };
+
   const addLayout = (scene, contentSelector, artSelector, mode = "scene") => {
     if (!scene) return;
     const art = scene.querySelector(artSelector);
@@ -244,16 +255,32 @@
       backdrop: createBackdrop(art),
       placementMap: null,
       placementMapReady: false,
+      placementMapRequested: false,
       mode,
     };
     layouts.push(layout);
-    buildPlacementMap(art.dataset.placementMask).then(map => {
-      layout.placementMap = map;
-      layout.placementMapReady = true;
-      schedule();
-    });
+    layoutsByScene.set(scene, layout);
     observed.add(scene);
     observed.add(art);
+  };
+
+  const observePlacementMaps = () => {
+    if (!("IntersectionObserver" in window)) {
+      layouts.forEach(loadPlacementMap);
+      return;
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const layout = layoutsByScene.get(entry.target);
+        if (layout) loadPlacementMap(layout);
+        observer.unobserve(entry.target);
+      });
+    }, {
+      rootMargin: `${Math.ceil(window.innerHeight * .5)}px 0px`,
+    });
+    layouts.forEach(layout => observer.observe(layout.scene));
   };
 
   const visualContentGeometry = content => {
@@ -912,6 +939,7 @@
   };
 
   discover();
+  observePlacementMaps();
   publishViewportTypeScale();
 
   if ("ResizeObserver" in window) {

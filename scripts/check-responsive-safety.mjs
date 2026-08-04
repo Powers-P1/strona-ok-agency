@@ -60,6 +60,7 @@ if (/new ResizeObserver\(scheduleViewportMeasure\)/.test(script)) {
 
 for (const token of [
   "ResizeObserver",
+  "IntersectionObserver",
   "MutationObserver",
   "visualViewport",
   "visualContentGeometry",
@@ -220,6 +221,7 @@ requireText(
 );
 
 requireText(script, "placementMapReady", "JS nie czeka na mapę kolizji przed usunięciem awaryjnego kontrastu");
+requireText(script, "observePlacementMaps", "JS nie odracza map kolizji dla scen poza viewportem");
 requireText(
   script,
   'toggleAttribute("data-ok-safe-protection-ready", protectionReady)',

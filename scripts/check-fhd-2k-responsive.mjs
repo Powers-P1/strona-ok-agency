@@ -361,6 +361,28 @@ const auditBackdropFailureFallback = async (page, baseUrl) => {
   );
 };
 
+const auditDeferredPlacementMaps = async (page, baseUrl) => {
+  const requestedMaps = new Set();
+  await page.route(/placement-mask-.*\.png/, async route => {
+    requestedMaps.add(new URL(route.request().url()).pathname);
+    await route.continue();
+  });
+  await page.goto(new URL("/proces", baseUrl).href, { waitUntil: "domcontentloaded" });
+  await page.locator("#process-opening[data-ok-safe-protection-ready]").waitFor();
+  await frames(page, 4);
+
+  const availableMaps = await page.locator("[data-placement-mask]").count();
+  check(requestedMaps.size > 0, "deferred placement maps: opening map was not requested");
+  check(
+    requestedMaps.size <= 2,
+    `deferred placement maps: requested ${requestedMaps.size} maps before leaving the opening view`,
+  );
+  check(
+    requestedMaps.size < availableMaps,
+    `deferred placement maps: requested ${requestedMaps.size}/${availableMaps} maps on initial view`,
+  );
+};
+
 let browser;
 try {
   const baseUrl = await resolveBaseUrl();
@@ -411,6 +433,18 @@ try {
     } finally {
       await mobilePage.close();
       await mobileContext.close();
+    }
+
+    const placementContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
+    await placementContext.addInitScript(() => {
+      localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+    });
+    const placementPage = await placementContext.newPage();
+    try {
+      await auditDeferredPlacementMaps(placementPage, baseUrl);
+    } finally {
+      await placementPage.close();
+      await placementContext.close();
     }
   }
 

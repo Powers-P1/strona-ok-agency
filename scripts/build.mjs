@@ -25,6 +25,7 @@ const staticFiles = [
   "sitemap.xml",
   "llms.txt",
   "llms-full.txt",
+  "2382e47d9da34145abc8ae8f95f6c510.txt",
 ];
 
 for (const file of staticFiles) {

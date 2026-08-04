@@ -243,15 +243,32 @@ for (const path of assetFiles.filter(path => path.endsWith(".css"))) {
 }
 
 const robots = await readFile(join(root, "robots.txt"), "utf8");
-for (const rule of ["User-agent: OAI-SearchBot", "User-agent: ChatGPT-User", "User-agent: GPTBot", "Sitemap: https://okagency.pl/sitemap.xml"]) {
-  if (!robots.includes(rule)) failures.push(`robots.txt: brak „${rule}”`);
+if (!robots.includes("Sitemap: https://okagency.pl/sitemap.xml")) {
+  failures.push("robots.txt: brak odwołania do sitemap.xml");
 }
-if (!/User-agent:\s*GPTBot[\s\S]*?Disallow:\s*\/(?:\r?\n|$)/i.test(robots)) {
-  failures.push("robots.txt: GPTBot nie jest oddzielony od crawlera wyszukiwania");
+const robotSections = robots.split(/(?=^User-agent:)/m);
+const hasRobotPolicy = (bot, directive) => robotSections.some(section => {
+  const lines = section.split(/\r?\n/).map(line => line.trim());
+  return lines[0]?.toLowerCase() === `user-agent: ${bot}`.toLowerCase()
+    && lines.some(line => line.toLowerCase() === directive.toLowerCase());
+});
+for (const searchBot of [
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "Googlebot",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Claude-SearchBot",
+  "Claude-User",
+]) {
+  if (!hasRobotPolicy(searchBot, "Allow: /")) failures.push(`robots.txt: ${searchBot} nie ma Allow: /`);
+}
+for (const trainingBot of ["GPTBot", "ClaudeBot", "Google-Extended"]) {
+  if (!hasRobotPolicy(trainingBot, "Disallow: /")) failures.push(`robots.txt: ${trainingBot} nie ma Disallow: /`);
 }
 
 const buildScript = await readFile(join(root, "scripts", "build.mjs"), "utf8");
-for (const file of ["llms.txt", "llms-full.txt"]) {
+for (const file of ["llms.txt", "llms-full.txt", "2382e47d9da34145abc8ae8f95f6c510.txt"]) {
   if (!buildScript.includes(`"${file}"`)) failures.push(`build: ${file} nie jest kopiowany`);
 }
 

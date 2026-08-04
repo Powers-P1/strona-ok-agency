@@ -20,6 +20,7 @@
     "check:system-scale:webkit": "node scripts/check-system-scale.mjs --webkit --engine-smoke",
     "audit:system-exceptions": "node scripts/audit-system-exceptions.mjs --write",
     "check:system-exceptions": "node scripts/audit-system-exceptions.mjs --check",
+    "submit:indexnow": "node scripts/submit-indexnow.mjs",
     "check:asset-versions": "node scripts/sync-asset-versions.mjs --check",
     "sync:asset-versions": "node scripts/sync-asset-versions.mjs",
     "check:ui-system": "node scripts/check-ui-system.mjs",

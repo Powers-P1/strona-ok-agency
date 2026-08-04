@@ -1054,6 +1054,10 @@ const exercisePoint = async (
     closingIssues.forEach(message => (
       addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)
     ));
+    // The synthetic pointerleave above measures the closing frame without moving
+    // Playwright's physical pointer. Move it off the target before keyboard checks
+    // so Chromium cannot re-enter the same dot while focus is being transferred.
+    await page.mouse.move(1, 1);
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
     anchorMovementIssues(

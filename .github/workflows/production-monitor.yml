@@ -263,3 +263,24 @@ jobs:
       - name: Fail workflow when health check failed
         if: steps.health.outcome == 'failure'
         run: exit 1
+
+  artwork-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Check rendered production artwork protection
+        run: npm run check:production-art-safety
+      - name: Upload failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-art-safety-screenshots
+          path: .tmp/production-art-safety/*.png
+          if-no-files-found: ignore

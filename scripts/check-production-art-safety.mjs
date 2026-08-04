@@ -52,6 +52,17 @@ try {
         waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
+      if (response?.status() !== 200) {
+        const screenshot = resolve(
+          outputDir,
+          `${viewport.name}-${route.slice(1).replaceAll("/", "-") || "home"}-http.png`,
+        );
+        await page.screenshot({ path: screenshot, fullPage: true });
+        failures.push(`${viewport.name} ${route}: HTTP ${response?.status() ?? "no response"}`);
+        console.error(`FAIL ${viewport.name} ${route}; screenshot: ${screenshot}`);
+        await page.close();
+        continue;
+      }
       await page.waitForFunction(
         () => {
           const layers = [...document.querySelectorAll("[data-ok-safe-backdrop-layer]")];
@@ -94,7 +105,6 @@ try {
       });
 
       const routeFailures = [];
-      if (response?.status() !== 200) routeFailures.push(`HTTP ${response?.status() ?? "no response"}`);
       if (!result.cssHref) routeFailures.push("responsive-safety.css is not loaded");
       if (!result.layers.length) routeFailures.push("no tonal backdrop layers");
       if (result.horizontalOverflow > 1) routeFailures.push(`horizontal overflow ${result.horizontalOverflow}px`);

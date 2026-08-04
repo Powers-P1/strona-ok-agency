@@ -17,6 +17,13 @@
     }).flat(),
   ];
   const COPY_OUTWARD_OFFSETS = [0, 24, 48, 72];
+  const PLACEMENT_TIER_MINIMUM = Object.freeze({
+    energy: 220,
+    highlight: 96,
+    structure: 1,
+  });
+  const PLACEMENT_CANDIDATE_LIMIT = 48;
+  const PLACEMENT_CANDIDATE_SPACING = 24;
   const DEBUG_GEOMETRY = /(?:^|\b)hotspots(?:\b|$)/i.test(
     new URLSearchParams(location.search).get("audit") || "",
   );
@@ -48,7 +55,10 @@
   const debugOverlays = new Map();
   const debugSnapshots = new Map();
   const fixedAnchorLayouts = new Map();
-  const lastSolutions = new Map();
+  const annotationsByCallout = new WeakMap();
+  const lastAnchors = new WeakMap();
+  const placementCandidateCache = new WeakMap();
+  const placementMapRequests = new WeakMap();
   const cleanupCallbacks = [];
   let solveFrame = 0;
   let resizeObserver = null;
@@ -154,16 +164,6 @@
     inner.top >= outer.top &&
     inner.bottom <= outer.bottom;
 
-  const unionRect = (first, second) => {
-    if (!first) return second;
-    if (!second) return first;
-    const left = Math.min(first.left, second.left);
-    const top = Math.min(first.top, second.top);
-    const right = Math.max(first.right, second.right);
-    const bottom = Math.max(first.bottom, second.bottom);
-    return rect(left, top, right - left, bottom - top);
-  };
-
   const isBox = element => {
     if (!element || element.hidden) return false;
     const style = getComputedStyle(element);
@@ -207,6 +207,12 @@
     element.setAttribute(attribute, value);
   };
 
+  const setRuntimeOptionalAttribute = (element, attribute, value) => {
+    rememberRuntimeAttribute(element, attribute);
+    if (value === null || value === undefined) element.removeAttribute(attribute);
+    else element.setAttribute(attribute, value);
+  };
+
   const serviceWirePathFor = (adapter, annotation) => {
     const annotationId = annotation.callout.dataset.annotation;
     if (!annotationId) return null;
@@ -229,13 +235,18 @@
     preservedAnnotations.forEach(annotation => {
       preservedElements.add(annotation.callout);
       preservedElements.add(annotation.copy);
+      preservedAttributeElements.add(annotation.callout);
+      preservedAttributeElements.add(annotation.dot);
     });
     adapters.forEach(adapter => {
       if (adapter.kind !== "service") return;
       adapter.annotations.forEach(annotation => {
         if (!preservedAnnotations.has(annotation)) return;
         const path = serviceWirePathFor(adapter, annotation);
-        if (path) preservedAttributeElements.add(path);
+        if (path) {
+          preservedElements.add(path);
+          preservedAttributeElements.add(path);
+        }
       });
     });
     const retainedStyles = new Map();
@@ -333,6 +344,14 @@
     callout,
     dot: callout.querySelector(".annotation-dot"),
     copy: callout.querySelector(".annotation-copy"),
+    originalSemantics: {
+      anchorState: callout.getAttribute("data-ok-anchor-state"),
+      ariaHidden: callout.getAttribute("aria-hidden"),
+      inert: callout.getAttribute("inert"),
+      dotAriaHidden: callout.querySelector(".annotation-dot")?.getAttribute("aria-hidden") ?? null,
+      dotDisabled: callout.querySelector(".annotation-dot")?.getAttribute("disabled") ?? null,
+      dotTabIndex: callout.querySelector(".annotation-dot")?.getAttribute("tabindex") ?? null,
+    },
     baseFallback: kind === "service"
       ? originalServiceAnchor(callout)
       : originalAboutAnchor(callout),
@@ -360,6 +379,9 @@
       : [];
     if (art && inner && annotations.length) adapters.push({ scene, art, inner, annotations, kind: "about" });
   });
+  adapters.forEach(adapter => adapter.annotations.forEach(annotation => {
+    annotationsByCallout.set(annotation.callout, annotation);
+  }));
 
   const activeProfiles = artBounds => {
     if (innerHeight <= 800 && innerWidth > 640) return ["short", "compact", "base"];
@@ -369,26 +391,125 @@
     return ["base", "compact"];
   };
 
-  const annotationCandidates = (annotation, profiles, geometry) => {
-    const candidates = [];
+  const placementMapFor = adapter => {
+    const api = window.OKAgencyResponsiveSafety;
+    const map = api?.getPlacementMap?.(adapter.scene)
+      || api?.getPlacementMap?.(adapter.art)
+      || null;
+    if (map || typeof api?.requestPlacementMap !== "function") return map;
+    if (!placementMapRequests.has(adapter)) {
+      const pending = api.requestPlacementMap(adapter.scene)
+        .catch(() => null)
+        .finally(() => placementMapRequests.delete(adapter));
+      placementMapRequests.set(adapter, pending);
+    }
+    return null;
+  };
+
+  const authoredNaturalAnchors = (annotation, profiles, placementMap) => {
+    const anchors = [];
     profiles.forEach(profile => {
-      const natural = readAnchorPair(annotation.callout, profile)
+      const source = readAnchorPair(annotation.callout, profile)
         || (profile === "base" ? annotation.baseFallback : null);
-      if (!natural) return;
-      const candidate = {
-        profile,
-        x: geometry.left + geometry.width * (
-          natural.relativeX ?? natural.x / geometry.coordinateWidth
-        ),
-        y: geometry.top + geometry.height * (
-          natural.relativeY ?? natural.y / geometry.coordinateHeight
-        ),
-      };
-      if (!candidates.some(item => item.x === candidate.x && item.y === candidate.y)) {
-        candidates.push(candidate);
+      if (!source) return;
+      const x = source.relativeX === undefined
+        ? source.x
+        : source.relativeX * placementMap.width;
+      const y = source.relativeY === undefined
+        ? source.y
+        : source.relativeY * placementMap.height;
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+      if (!anchors.some(anchor => anchor.x === x && anchor.y === y)) {
+        anchors.push({ x, y, profile });
       }
     });
+    return anchors;
+  };
+
+  const placementTierOrder = art => (
+    art.dataset.placementEnergy === "none"
+      ? ["structure"]
+      : ["energy", "highlight", "structure"]
+  );
+
+  const naturalPlacementCandidates = (annotation, profiles, placementMap, art) => {
+    const cacheKey = `${profiles.join(",")}:${placementMap.width}x${placementMap.height}`;
+    const cached = placementCandidateCache.get(annotation);
+    if (cached?.map === placementMap && cached.key === cacheKey) return cached.candidates;
+
+    const anchors = authoredNaturalAnchors(annotation, profiles, placementMap);
+    const maximumDistance = Math.max(140, Math.min(placementMap.width, placementMap.height) * .3);
+    const maximumDistanceSquared = maximumDistance * maximumDistance;
+    const candidates = [];
+    const seen = new Set();
+    const append = (x, y, tier, profile, distanceSquared) => {
+      const key = `${Math.round(x)}:${Math.round(y)}`;
+      if (seen.has(key)) return false;
+      if (candidates.some(candidate => (
+        candidate.tier === tier
+        && Math.hypot(candidate.naturalX - x, candidate.naturalY - y)
+          < PLACEMENT_CANDIDATE_SPACING
+      ))) return false;
+      seen.add(key);
+      candidates.push({
+        naturalX: x,
+        naturalY: y,
+        tier,
+        profile,
+        authoredDistance: Math.sqrt(distanceSquared),
+      });
+      return true;
+    };
+
+    placementTierOrder(art).forEach(tier => {
+      const minimum = PLACEMENT_TIER_MINIMUM[tier];
+      const pool = placementMap.candidates?.[tier] || [];
+      let tierCount = 0;
+      anchors.forEach(anchor => {
+        if (tierCount >= PLACEMENT_CANDIDATE_LIMIT) return;
+        if (placementMap.tierAt(anchor.x, anchor.y) >= minimum) {
+          if (append(anchor.x, anchor.y, tier, anchor.profile, 0)) tierCount += 1;
+        }
+        const ranked = [];
+        for (const index of pool) {
+          const x = index % placementMap.width;
+          const y = Math.floor(index / placementMap.width);
+          const distanceSquared = (x - anchor.x) ** 2 + (y - anchor.y) ** 2;
+          if (distanceSquared <= maximumDistanceSquared) {
+            ranked.push({ x, y, distanceSquared });
+          }
+        }
+        ranked.sort((first, second) => first.distanceSquared - second.distanceSquared);
+        for (const candidate of ranked) {
+          if (tierCount >= PLACEMENT_CANDIDATE_LIMIT) break;
+          if (append(
+            candidate.x,
+            candidate.y,
+            tier,
+            anchor.profile,
+            candidate.distanceSquared,
+          )) tierCount += 1;
+        }
+      });
+    });
+
+    placementCandidateCache.set(annotation, { map: placementMap, key: cacheKey, candidates });
     return candidates;
+  };
+
+  const annotationCandidates = (annotation, profiles, geometry, placementMap, art) => {
+    const natural = naturalPlacementCandidates(annotation, profiles, placementMap, art);
+    const previous = lastAnchors.get(annotation);
+    const ordered = previous?.map === placementMap
+      ? [previous, ...natural.filter(candidate => (
+        candidate.naturalX !== previous.naturalX || candidate.naturalY !== previous.naturalY
+      ))]
+      : natural;
+    return ordered.map(candidate => ({
+      ...candidate,
+      x: geometry.left + geometry.width * candidate.naturalX / placementMap.width,
+      y: geometry.top + geometry.height * candidate.naturalY / placementMap.height,
+    }));
   };
 
   const artBoundsFor = (scene, art, geometry) => {
@@ -409,7 +530,9 @@
         masked: Boolean(safety.masked),
         maskShape: safety.maskShape || null,
         fullVisible,
-        interactiveVisible: unionRect(fullVisible, feather),
+        /* A visible ring must be entirely outside the safety feather. The
+         * feather still renders unchanged; it is simply not interactive art. */
+        interactiveVisible: fullVisible,
         protected: protectedRect,
       };
     }
@@ -628,6 +751,7 @@
     const openIndexes = [];
     const closedIndexes = [];
     adapter.annotations.forEach((annotation, index) => {
+      if (!points[index]) return;
       (isOpen(annotation) ? openIndexes : closedIndexes).push(index);
     });
     const visibleCopies = [];
@@ -637,9 +761,9 @@
       annotation.adapter = adapter;
       const width = annotation.copy.offsetWidth;
       const height = annotation.copy.offsetHeight;
-      if (!width || !height) return null;
+      if (!width || !height) continue;
       const open = isOpen(annotation);
-      const ringsToAvoid = rings;
+      const ringsToAvoid = rings.filter(Boolean);
       const position = open
         ? chooseCopyPosition(
           annotation,
@@ -659,7 +783,7 @@
           visibleCopies,
         )
         : measuredAnnotationGeometry(adapter, annotation).copy;
-      if (!position) return null;
+      if (!position) continue;
       copies[index] = position;
       if (open) visibleCopies.push(position.rect);
     }
@@ -673,9 +797,18 @@
     const sceneRect = adapter.scene.getBoundingClientRect();
     const obstacles = obstaclesFor(adapter, sceneRect);
     const fixedAnchorObstacles = fixedAnchorObstaclesFor(adapter, sceneRect);
+    const placementMap = placementMapFor(adapter);
+    if (!placementMap) {
+      return {
+        geometry,
+        points: adapter.annotations.map(() => null),
+        rings: adapter.annotations.map(() => null),
+        copies: adapter.annotations.map(() => null),
+        status: "pending",
+      };
+    }
     const candidates = adapter.annotations.map(annotation =>
-      annotationCandidates(annotation, profiles, geometry));
-    if (candidates.some(list => !list.length)) return null;
+      annotationCandidates(annotation, profiles, geometry, placementMap, adapter.art));
 
     /* Hotspots are authored in the artwork coordinate system, just like the
      * signals on the hero tree. Interaction may reflow a copy and its connector,
@@ -711,18 +844,9 @@
     ].join(":");
     let anchorLayout = fixedAnchorLayouts.get(adapter);
     if (anchorLayout?.key !== anchorLayoutKey) {
-      const points = new Array(adapter.annotations.length);
-      const rings = new Array(adapter.annotations.length);
-      let selected = null;
-      const select = index => {
-        if (selected) return;
-        if (index === adapter.annotations.length) {
-          selected = {
-            points: points.map(point => ({ ...point })),
-            rings: rings.map(ring => ({ ...ring })),
-          };
-          return;
-        }
+      const points = adapter.annotations.map(() => null);
+      const rings = adapter.annotations.map(() => null);
+      adapter.annotations.forEach((annotation, index) => {
         for (const point of candidates[index]) {
           const ring = ringFor(point);
           if (!ringFits(
@@ -731,30 +855,51 @@
             adapter,
             artBounds,
             fixedAnchorObstacles,
-            rings.slice(0, index),
+            rings.filter(Boolean),
           )) continue;
           points[index] = point;
           rings[index] = ring;
-          select(index + 1);
-          if (selected) return;
+          lastAnchors.set(annotation, { ...point, map: placementMap });
+          break;
         }
-      };
-      select(0);
-      if (!selected) return null;
-      anchorLayout = { key: anchorLayoutKey, ...selected };
+      });
+      anchorLayout = { key: anchorLayoutKey, points, rings };
       fixedAnchorLayouts.set(adapter, anchorLayout);
     }
     const { points, rings } = anchorLayout;
     const copies = placeCopies(adapter, points, rings, obstacles);
-    const solution = copies ? { geometry, points, rings, copies } : null;
+    points.forEach((point, index) => {
+      if (point && !copies[index]) {
+        points[index] = null;
+        rings[index] = null;
+      }
+    });
+    const placedCount = points.filter(Boolean).length;
+    const status = placedCount === adapter.annotations.length
+      ? "solved"
+      : placedCount
+        ? "partial"
+        : "hidden";
+    const solution = { geometry, points, rings, copies, status };
     if (DEBUG_GEOMETRY) {
       debugSnapshots.set(adapter.scene, {
         scene: adapter.scene.id || null,
-        status: solution ? "solved" : "fallback",
+        status,
         masked: artBounds.masked,
         profiles: [...profiles],
         ringConfigurations: 1,
-        copyFailures: copies ? 0 : 1,
+        copyFailures: copies.filter((copy, index) => points[index] && !copy).length,
+        selected: points.map((point, index) => ({
+          key: adapter.annotations[index].callout.dataset.annotation
+            || adapter.annotations[index].dot.getAttribute("aria-controls"),
+          state: point ? "placed" : "hidden",
+          naturalX: point ? point.naturalX : null,
+          naturalY: point ? point.naturalY : null,
+          tier: point ? point.tier : null,
+          value: point ? placementMap.tierAt(point.naturalX, point.naturalY) : null,
+          x: point ? Math.round(point.x * 10) / 10 : null,
+          y: point ? Math.round(point.y * 10) / 10 : null,
+        })),
         candidates: candidates.map((list, index) => list.map(point => ({
           profile: point.profile,
           x: Math.round(point.x * 10) / 10,
@@ -844,61 +989,50 @@
     setRuntimeStyle(annotation.callout, "--leader-angle", `${Math.atan2(lineY, lineX)}rad`);
   };
 
-  const applyMeasuredConnectorGeometry = (adapter, preservedCopies = new Set()) => {
-    if (adapter.kind === "service") {
-      const geometry = coverGeometry(adapter.scene, adapter.art);
-      serviceConnectorGeometry(adapter, geometry);
-      adapter.annotations.forEach(annotation => {
-        if (preservedCopies.has(annotation)) return;
-        const measured = measuredAnnotationGeometry(adapter, annotation);
-        updateServiceWire(adapter, annotation, measured.point, measured.copy, geometry);
-      });
-      return;
+  const setAnnotationPlacementState = (adapter, annotation, placed) => {
+    const { callout, copy, dot, originalSemantics } = annotation;
+    const wirePath = serviceWirePathFor(adapter, annotation);
+    if (!placed) {
+      window.OKAgencyAnnotations?.close?.(callout);
+      callout.classList.remove("is-open");
+      delete callout.dataset.preview;
+      callout.dataset.pinned = "false";
+      dot.setAttribute("aria-expanded", "false");
+      copy.setAttribute("aria-hidden", "true");
+      wirePath?.closest(".annotation-wire")?.classList.remove("is-open");
     }
 
-    adapter.annotations.forEach(annotation => {
-      if (preservedCopies.has(annotation)) return;
-      const measured = measuredAnnotationGeometry(adapter, annotation);
-      updateAboutLeader(annotation, measured.point, measured.copy);
-    });
-  };
-
-  const applyAuthoredCopySafety = (adapter, preservedCopies = new Set()) => {
-    const geometry = coverGeometry(adapter.scene, adapter.art);
-    const artBounds = artBoundsFor(adapter.scene, adapter.art, geometry);
-    const sceneRect = adapter.scene.getBoundingClientRect();
-    const obstacles = obstaclesFor(adapter, sceneRect);
-    const points = adapter.annotations.map(annotation => (
-      measuredAnnotationGeometry(adapter, annotation).point
-    ));
-    const rings = points.map(ringFor);
-    const copies = placeCopies(adapter, points, rings, obstacles);
-    if (!copies) return false;
-
-    if (adapter.kind === "service") {
-      serviceConnectorGeometry(adapter, geometry);
-      adapter.annotations.forEach((annotation, index) => {
-        if (preservedCopies.has(annotation)) return;
-        const copy = copies[index];
-        setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
-        setRuntimeStyle(annotation.callout, "--copy-right", "auto");
-        setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
-        updateServiceWire(adapter, annotation, points[index], copy, geometry);
-      });
-      return true;
-    }
-
-    adapter.annotations.forEach((annotation, index) => {
-      if (preservedCopies.has(annotation)) return;
-      const point = points[index];
-      const copy = copies[index];
-      setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
-      setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
-      setRuntimeStyle(annotation.copy, "right", "auto");
-      setRuntimeStyle(annotation.copy, "--copy-shift-y", "0px");
-      updateAboutLeader(annotation, point, copy);
-    });
-    return true;
+    setRuntimeOptionalAttribute(
+      callout,
+      "data-ok-anchor-state",
+      placed ? "placed" : "hidden",
+    );
+    setRuntimeOptionalAttribute(
+      callout,
+      "aria-hidden",
+      placed ? originalSemantics.ariaHidden : "true",
+    );
+    setRuntimeOptionalAttribute(
+      callout,
+      "inert",
+      placed ? originalSemantics.inert : "",
+    );
+    setRuntimeOptionalAttribute(
+      dot,
+      "aria-hidden",
+      placed ? originalSemantics.dotAriaHidden : "true",
+    );
+    setRuntimeOptionalAttribute(
+      dot,
+      "disabled",
+      placed ? originalSemantics.dotDisabled : "",
+    );
+    setRuntimeOptionalAttribute(
+      dot,
+      "tabindex",
+      placed ? originalSemantics.dotTabIndex : "-1",
+    );
+    if (wirePath) setRuntimeStyle(wirePath, "visibility", placed ? "visible" : "hidden");
   };
 
   const applyServiceSolution = (adapter, solution, preservedCopies = new Set()) => {
@@ -907,10 +1041,14 @@
     adapter.annotations.forEach((annotation, index) => {
       const point = solution.points[index];
       const copy = solution.copies[index];
+      if (preservedCopies.has(annotation)) return;
+      const placed = Boolean(point && copy);
+      setAnnotationPlacementState(adapter, annotation, placed);
+      setRuntimeStyle(annotation.callout, "visibility", placed ? "visible" : "hidden");
+      if (!placed) return;
       setRuntimeStyle(annotation.callout, "--dot-x", `${point.x}px`);
       setRuntimeStyle(annotation.callout, "--dot-y", `${point.y}px`);
       setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
-      if (preservedCopies.has(annotation)) return;
       setRuntimeStyle(annotation.callout, "--copy-left", `${copy.left}px`);
       setRuntimeStyle(annotation.callout, "--copy-right", "auto");
       setRuntimeStyle(annotation.callout, "--copy-top", `${copy.top}px`);
@@ -927,10 +1065,14 @@
     adapter.annotations.forEach((annotation, index) => {
       const point = solution.points[index];
       const copy = solution.copies[index];
+      if (preservedCopies.has(annotation)) return;
+      const placed = Boolean(point && copy);
+      setAnnotationPlacementState(adapter, annotation, placed);
+      setRuntimeStyle(annotation.callout, "visibility", placed ? "visible" : "hidden");
+      if (!placed) return;
       setRuntimeStyle(annotation.callout, "--x", `${point.x - innerLeft}px`);
       setRuntimeStyle(annotation.callout, "--y", `${point.y - innerTop}px`);
       setRuntimeStyle(annotation.callout, "--annotation-delay", `${index * -0.42}s`);
-      if (preservedCopies.has(annotation)) return;
       setRuntimeStyle(annotation.copy, "top", `${copy.top - point.y}px`);
       setRuntimeStyle(annotation.copy, "left", `${copy.left - point.x}px`);
       setRuntimeStyle(annotation.copy, "right", "auto");
@@ -959,19 +1101,19 @@
     const obstacles = obstaclesFor(adapter, adapter.scene.getBoundingClientRect());
     const overlay = document.createElement("div");
     overlay.className = "annotation-debug-overlay";
-    overlay.dataset.debugStatus = solution ? "solved" : "fallback";
+    overlay.dataset.debugStatus = solution?.status || "hidden";
     overlay.setAttribute("aria-hidden", "true");
 
     appendDebugBox(overlay, safety.fullVisible, "visible-art");
     appendDebugBox(overlay, safety.protected, "protected-content");
     obstacles.content.forEach(bounds => appendDebugBox(overlay, bounds, "content"));
     obstacles.fixed.forEach(bounds => appendDebugBox(overlay, bounds, "fixed-ui"));
-    solution?.rings.forEach(bounds => appendDebugBox(overlay, bounds, "ring"));
-    solution?.copies.forEach(copy => appendDebugBox(overlay, copy.rect, "copy"));
+    solution?.rings.filter(Boolean).forEach(bounds => appendDebugBox(overlay, bounds, "ring"));
+    solution?.copies.filter(Boolean).forEach(copy => appendDebugBox(overlay, copy.rect, "copy"));
 
     const label = document.createElement("span");
     label.className = "annotation-debug-label";
-    label.textContent = solution ? "HOTSPOTS: SOLVED" : "HOTSPOTS: AUTHORED FALLBACK";
+    label.textContent = `HOTSPOTS: ${(solution?.status || "hidden").toUpperCase()}`;
     overlay.append(label);
     adapter.scene.append(overlay);
     debugOverlays.set(adapter.scene, overlay);
@@ -993,41 +1135,9 @@
       return;
     }
 
-    const solutions = adapters.map(adapter => {
-      const sceneRect = adapter.scene.getBoundingClientRect();
-      const obstacles = obstaclesFor(adapter, sceneRect);
-      const obstacleKey = [...obstacles.content, ...obstacles.fixed]
-        .map(bounds => [bounds.left, bounds.top, bounds.width, bounds.height]
-          .map(value => Math.round(value))
-          .join(","))
-        .join(";");
-      const openKey = adapter.annotations
-        .map((annotation, index) => isOpen(annotation) ? index : null)
-        .filter(index => index !== null)
-        .join(",");
-      const layoutKey = [
-        `${adapter.scene.clientWidth}x${adapter.scene.clientHeight}`,
-        `${Math.round(sceneRect.left)},${Math.round(sceneRect.top)}`,
-        openKey,
-        obstacleKey,
-      ].join(":");
-      const solution = solveAdapter(adapter);
-      if (solution) {
-        lastSolutions.set(adapter, { layoutKey, solution });
-        return solution;
-      }
-      const previous = lastSolutions.get(adapter);
-      return previous?.layoutKey === layoutKey ? previous.solution : null;
-    });
+    const solutions = adapters.map(solveAdapter);
     adapters.forEach((adapter, index) => {
       const solution = solutions[index];
-      if (!solution) {
-        if (!applyAuthoredCopySafety(adapter, preservedCopies)) {
-          applyMeasuredConnectorGeometry(adapter, preservedCopies);
-        }
-        renderDebugOverlay(adapter, null);
-        return;
-      }
       if (adapter.kind === "service") applyServiceSolution(adapter, solution, preservedCopies);
       else applyAboutSolution(adapter, solution, preservedCopies);
       renderDebugOverlay(adapter, solution);
@@ -1044,14 +1154,27 @@
     cleanupCallbacks.push(() => target?.removeEventListener(type, listener, options));
   };
 
+  adapters.forEach(adapter => adapter.annotations.forEach(annotation => {
+    listen(annotation.copy, "transitionend", event => {
+      if (event.propertyName === "opacity" && !isOpen(annotation)) schedule();
+    });
+  }));
+
   listen(window, "load", schedule, { once: true });
   listen(window, "resize", schedule, { passive: true });
   listen(window, "orientationchange", schedule, { passive: true });
   listen(window.visualViewport, "resize", schedule, { passive: true });
   listen(window, "okagency:art-safety-change", schedule);
+  listen(window, "okagency:placement-map-change", schedule);
   listen(window, "okagency:annotationchange", event => {
-    /* Keep the last open copy coordinates while it fades out. Re-solving the
-     * closed state here made the card visibly jump during its exit transition. */
+    const annotation = annotationsByCallout.get(event.detail?.callout);
+    if (annotation && !event.detail?.open) {
+      /* Closing CSS includes a small translate. Freeze the outgoing card at
+       * its final open geometry; only opacity may change until transitionend. */
+      setRuntimeStyle(annotation.copy, "transform", "none");
+      schedule();
+      return;
+    }
     if (event.detail?.open) schedule();
   });
   listen(window, "okagency:motionchange", schedule);
@@ -1073,7 +1196,6 @@
     destroyed = true;
     if (solveFrame) cancelAnimationFrame(solveFrame);
     resizeObserver?.disconnect();
-    lastSolutions.clear();
     fixedAnchorLayouts.clear();
     cleanupCallbacks.splice(0).forEach(cleanup => cleanup());
     clearRuntime();

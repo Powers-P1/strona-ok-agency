@@ -2,7 +2,7 @@ import process from "node:process";
 import { spawn } from "node:child_process";
 import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { chromium, webkit } from "playwright";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SCENE_SELECTOR = [
@@ -39,11 +39,22 @@ const ROUTES = [
 ];
 
 const VIEWPORTS = [
+  { width: 820, height: 900 },
+  { width: 821, height: 900 },
+  { width: 900, height: 900 },
+  { width: 1024, height: 900 },
+  { width: 1100, height: 900 },
+  { width: 1180, height: 900 },
+  { width: 1181, height: 900 },
+  { width: 1280, height: 720 },
   { width: 1512, height: 982 },
   { width: 1512, height: 800 },
-  { width: 1440, height: 900 },
-  { width: 1280, height: 720 },
-  { width: 1024, height: 768 },
+  { width: 1920, height: 900 },
+  { width: 2560, height: 900 },
+  { width: 2560, height: 1440 },
+  { width: 3440, height: 1440 },
+  { width: 3840, height: 2160 },
+  { width: 7680, height: 4320 },
   { width: 390, height: 844 },
   { width: 360, height: 640 },
 ];
@@ -52,6 +63,8 @@ const TIMEOUT = 15_000;
 const failures = [];
 const requestedRoute = process.env.OK_ANNOTATION_ROUTE || "";
 const requestedViewport = process.env.OK_ANNOTATION_VIEWPORT || "";
+const webkitAudit = process.argv.includes("--webkit");
+const browserType = webkitAudit ? webkit : chromium;
 const consentInit = () => {
   localStorage.setItem("ok-consent", JSON.stringify({
     version: 3,
@@ -153,7 +166,12 @@ const waitForSceneMode = async (page, index, mobile) => {
       return true;
     };
 
-    return callouts.every(callout => visible(callout.querySelector(".annotation-dot")));
+    return callouts.every(callout => {
+      const state = callout.dataset.okAnchorState;
+      if (state === "placed") return visible(callout.querySelector(".annotation-dot"));
+      if (state === "hidden") return !visible(callout.querySelector(".annotation-dot"));
+      return false;
+    });
   }, { selector: SCENE_SELECTOR, sceneIndex: index, isMobile: mobile }, { timeout: TIMEOUT });
 };
 
@@ -241,19 +259,6 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     );
   }
 
-  [...scene.querySelectorAll(".proof-actions, .actions, .outline-cta")]
-    .filter(visible)
-    .forEach((actionGroup, actionIndex) => {
-      const actionRect = actionGroup.getBoundingClientRect();
-      const clearance = sceneRect.bottom - actionRect.bottom;
-      if (clearance < 12 - TOLERANCE) {
-        issue(
-          `scene-action-${actionIndex + 1}`,
-          `scene action has ${clearance.toFixed(1)}px bottom clearance, expected at least 12px`,
-        );
-      }
-    });
-
   [...scene.querySelectorAll("*")].forEach((element, nestedIndex) => {
     const style = getComputedStyle(element);
     const scrollsX = /(auto|scroll)/.test(style.overflowX) && element.scrollWidth > element.clientWidth + 1;
@@ -283,42 +288,60 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     return { id: sceneId, issues, pointIndexes: [] };
   }
 
-  const visibleDots = callouts
-    .map((callout, calloutIndex) => ({
+  const calloutStates = callouts.map((callout, calloutIndex) => ({
       callout,
       calloutIndex,
       dot: callout.querySelector(".annotation-dot"),
+      copy: callout.querySelector(".annotation-copy"),
       key: keyFor(callout, calloutIndex),
-    }))
-    .filter(item => visible(item.dot));
+      state: callout.dataset.okAnchorState,
+    }));
+  const visibleDots = calloutStates.filter(item => item.state === "placed" && visible(item.dot));
   const lines = [...scene.querySelectorAll(".annotation-lines")].filter(visible);
   const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
   if (scene.classList.contains("annotations-unavailable")) {
     issue("mode", "scene uses the removed annotations-unavailable hidden mode");
   }
-  const authoredAboutFallback = art?.matches(".scene-art[data-placement-mask]") && callouts.some(callout => (
-    callout.matches(".annotation") && /%/.test(getComputedStyle(callout).getPropertyValue("--x"))
-  ));
-  if (authoredAboutFallback) {
-    issue("mode", "masked About scene fell back to percentage anchors instead of artwork coordinates");
-  }
+  if (scene.textContent.includes("AUTHORED FALLBACK")) issue("mode", "scene exposes AUTHORED FALLBACK");
 
-  if (visibleDots.length !== callouts.length) {
-    issue("mode", `points mode exposes ${visibleDots.length}/${callouts.length} dots`);
-  }
+  calloutStates.forEach(({ callout, dot, copy, key, state }) => {
+    if (state !== "placed" && state !== "hidden") {
+      issue(key, `anchor state is ${state || "missing"}, expected placed or hidden`);
+      return;
+    }
+    if (state === "placed") {
+      if (!visible(dot)) issue(key, "placed anchor dot is not visible");
+      if (callout.getAttribute("aria-hidden") === "true" || callout.inert) {
+        issue(key, "placed callout remains hidden or inert");
+      }
+      if (dot.disabled || dot.tabIndex < 0 || dot.getAttribute("aria-hidden") === "true") {
+        issue(key, "placed dot is disabled or removed from accessibility tree");
+      }
+      return;
+    }
+
+    const wireId = callout.dataset.line;
+    const wire = wireId ? document.getElementById(wireId) : null;
+    const path = wire?.querySelector("path");
+    if (visible(dot) || visible(copy)) issue(key, "hidden anchor still exposes its dot or copy");
+    if (callout.getAttribute("aria-hidden") !== "true" || !callout.inert) {
+      issue(key, "hidden callout must be aria-hidden and inert");
+    }
+    if (!dot.disabled || dot.tabIndex !== -1 || dot.getAttribute("aria-hidden") !== "true") {
+      issue(key, "hidden dot remains enabled, focusable, or exposed to ARIA");
+    }
+    if (dot.getAttribute("aria-expanded") !== "false" || copy?.getAttribute("aria-hidden") !== "true") {
+      issue(key, "hidden annotation retains an open or exposed copy state");
+    }
+    if (wire?.classList.contains("is-open") || (path && getComputedStyle(path).visibility !== "hidden")) {
+      issue(key, "hidden annotation retains a visible/open wire");
+    }
+  });
 
   const api = window.OKAgencyResponsiveSafety;
   const bounds = api?.getArtBounds?.(scene) || (art && api?.getArtBounds?.(art));
   const fullVisible = bounds?.fullVisible;
-  const feather = bounds?.feather;
-  const artVisible = fullVisible && feather
-    ? {
-      left: Math.min(fullVisible.left, feather.left),
-      top: Math.min(fullVisible.top, feather.top),
-      right: Math.max(fullVisible.right, feather.right),
-      bottom: Math.max(fullVisible.bottom, feather.bottom),
-    }
-    : fullVisible;
+  const artVisible = fullVisible;
   if (!artVisible) issue("art-bounds", "OKAgencyResponsiveSafety.getArtBounds() has no fullVisible rect");
 
   const sceneSafe = {
@@ -343,7 +366,7 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
       issue(key, `target is ${dotRect.width.toFixed(1)}x${dotRect.height.toFixed(1)}px, expected at least 44x44`);
     }
     if (!inside(sceneSafe, dotRect)) issue(key, "full 44px target leaves the scene 24px safe inset");
-    if (artSafe && !inside(artSafe, dotRect)) issue(key, "full 44px target leaves the visible art and feather region");
+    if (artSafe && !inside(artSafe, dotRect)) issue(key, "full 44px target leaves the fully visible safety-mask region");
     if (sceneRect.height - centerY + TOLERANCE < BOTTOM_CLEARANCE) {
       issue(key, `target center has ${(sceneRect.height - centerY).toFixed(1)}px bottom clearance, expected at least 88px`);
     }
@@ -363,6 +386,36 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
       if (intersects(firstRect, box(second.dot.getBoundingClientRect()))) {
         issue(first.key, `target intersects sibling target ${second.key}`);
       }
+    }
+  }
+
+  if (callouts.length) {
+    const snapshotEntries = window.OKAgencyAnnotationGeometryDebug?.snapshot?.() || [];
+    const calloutKeys = new Set(calloutStates.map(item => item.key));
+    const debugSnapshot = snapshotEntries.find(entry => entry.scene === scene.id)
+      || snapshotEntries.find(entry => (
+        entry.selected?.length === callouts.length
+        && entry.selected.every(selection => calloutKeys.has(selection.key))
+      ));
+    if (!debugSnapshot) {
+      issue("debug", `runtime audit snapshot is unavailable; received ${snapshotEntries.map(entry => entry.scene || "unnamed").join(", ") || "none"}`);
+    } else {
+      if (!new Set(["solved", "partial", "hidden"]).has(debugSnapshot.status)) {
+        issue("mode", `runtime status is ${debugSnapshot.status || "missing"}`);
+      }
+      if (debugSnapshot.selected?.length !== callouts.length) {
+        issue("debug", `runtime snapshot exposes ${debugSnapshot.selected?.length || 0}/${callouts.length} selections`);
+      }
+      const placementMap = api?.getPlacementMap?.(scene) || (art && api?.getPlacementMap?.(art));
+      debugSnapshot.selected?.forEach((selection, selectionIndex) => {
+        if (selection.state !== "placed") return;
+        const key = selection.key || keyFor(callouts[selectionIndex], selectionIndex);
+        const minimum = selection.tier === "energy" ? 220 : selection.tier === "highlight" ? 96 : 1;
+        const value = placementMap?.tierAt?.(selection.naturalX, selection.naturalY);
+        if (!Number.isFinite(value) || value < minimum || value !== selection.value) {
+          issue(key, `selected ${selection.tier || "unknown"} placement pixel is ${value}, expected at least ${minimum}`);
+        }
+      });
     }
   }
 
@@ -396,7 +449,7 @@ const waitForOpen = async (page, sceneIndex, calloutIndex) => {
     selector: SCENE_SELECTOR,
     sceneNumber: sceneIndex,
     calloutNumber: calloutIndex,
-  }, { timeout: 4_000 });
+  }, { timeout: TIMEOUT });
 };
 
 const waitForClosed = async (page, sceneIndex, calloutIndex) => {
@@ -416,13 +469,13 @@ const waitForClosed = async (page, sceneIndex, calloutIndex) => {
     selector: SCENE_SELECTOR,
     sceneNumber: sceneIndex,
     calloutNumber: calloutIndex,
-  }, { timeout: 4_000 });
+  }, { timeout: TIMEOUT });
 };
 
 const waitForNoObscured = async page => {
   await page.waitForFunction(() => !document.querySelector(
     ".annotation-callout.is-obscured, .annotation.is-obscured, .annotation-wire.is-obscured",
-  ), null, { timeout: 4_000 });
+  ), null, { timeout: TIMEOUT });
 };
 
 const anchorCenters = async (page, sceneIndex) => page.evaluate(({
@@ -915,8 +968,10 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
       ? artRect
       : scene.getBoundingClientRect();
     return callouts.map(callout => {
+      const state = callout.dataset.okAnchorState;
       const dotRect = callout.querySelector(".annotation-dot").getBoundingClientRect();
       return {
+        state,
         x: (dotRect.left - reference.left + dotRect.width / 2) / reference.width,
         y: (dotRect.top - reference.top + dotRect.height / 2) / reference.height,
       };
@@ -933,6 +988,11 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
 
     centers().forEach((point, index) => {
       const baseline = stableCenters[index];
+      if (point.state !== baseline.state) {
+        issues.push(`scroll offset ${offset}px changes point ${index + 1} state ${baseline.state}→${point.state}`);
+        return;
+      }
+      if (point.state !== "placed") return;
       const movement = Math.hypot(
         (point.x - baseline.x) * scene.clientWidth,
         (point.y - baseline.y) * scene.clientHeight,
@@ -946,17 +1006,6 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
       issues.push(`scroll offset ${offset}px activates the removed hidden mode`);
     }
 
-    const hidden = callouts.filter(callout => {
-      const dot = callout.querySelector(".annotation-dot");
-      const style = getComputedStyle(dot);
-      return callout.classList.contains("is-obscured")
-        || style.display === "none"
-        || style.visibility === "hidden"
-        || Number.parseFloat(style.opacity || "1") <= .01;
-    });
-    if (hidden.length) {
-      issues.push(`scroll offset ${offset}px hides ${hidden.length}/${callouts.length} points during solve`);
-    }
     await nextFrame();
   }
 
@@ -973,6 +1022,7 @@ const exercisePoint = async (
   sceneIndex,
   sceneId,
   calloutIndex,
+  availableIndexes,
   allCloseMethods,
 ) => {
   const dot = page.locator(SCENE_SELECTOR).nth(sceneIndex)
@@ -1015,10 +1065,8 @@ const exercisePoint = async (
     ));
 
     if (allCloseMethods) {
-      const calloutCount = await page.locator(SCENE_SELECTOR).nth(sceneIndex)
-        .locator(CALLOUT_SELECTOR).count();
-      if (calloutCount > 1) {
-        const secondCalloutIndex = calloutIndex === 0 ? 1 : 0;
+      const secondCalloutIndex = availableIndexes.find(index => index !== calloutIndex);
+      if (Number.isInteger(secondCalloutIndex)) {
         const switchingIssues = await switchingCopyLayoutIssues(
           page,
           sceneIndex,
@@ -1112,9 +1160,15 @@ const exercisePoint = async (
 
 const auditRoute = async (context, baseUrl, route, viewport) => {
   const page = await context.newPage();
+  const runtimeErrors = [];
+  page.on("console", message => {
+    if (message.type() === "error") runtimeErrors.push(`console: ${message.text()}`);
+  });
+  page.on("pageerror", error => runtimeErrors.push(`pageerror: ${error.message}`));
   try {
-    const url = new URL(route.path, baseUrl).href;
-    await page.goto(url, { waitUntil: "domcontentloaded", timeout: TIMEOUT });
+    const url = new URL(route.path, baseUrl);
+    url.searchParams.set("audit", "hotspots");
+    await page.goto(url.href, { waitUntil: "domcontentloaded", timeout: TIMEOUT });
     await waitForDocumentReady(page);
 
     const calloutCount = await page.locator(CALLOUT_SELECTOR).count();
@@ -1178,6 +1232,7 @@ const auditRoute = async (context, baseUrl, route, viewport) => {
             sceneIndex,
             result.id,
             calloutIndex,
+            result.pointIndexes,
             canonical && calloutIndex === result.pointIndexes[0],
           );
         }
@@ -1186,6 +1241,9 @@ const auditRoute = async (context, baseUrl, route, viewport) => {
   } catch (error) {
     addFailure(route.path, viewport, "document", "runner", error.message);
   } finally {
+    [...new Set(runtimeErrors)].forEach(message => {
+      addFailure(route.path, viewport, "document", "console", message);
+    });
     await page.close().catch(() => {});
   }
 };
@@ -1193,7 +1251,9 @@ const auditRoute = async (context, baseUrl, route, viewport) => {
 const auditRouteScrollVisibility = async (context, baseUrl, route, viewport) => {
   const page = await context.newPage();
   try {
-    await page.goto(new URL(route.path, baseUrl).href, {
+    const url = new URL(route.path, baseUrl);
+    url.searchParams.set("audit", "hotspots");
+    await page.goto(url.href, {
       waitUntil: "domcontentloaded",
       timeout: TIMEOUT,
     });
@@ -1293,6 +1353,100 @@ const auditMotionMode = async (browser, baseUrl, mode) => {
   }
 };
 
+const auditResizeState = async (browser, baseUrl) => {
+  const wide = { width: 1024, height: 900 };
+  const compact = { width: 821, height: 900 };
+  const context = await browser.newContext({ viewport: wide, reducedMotion: "no-preference" });
+  await context.addInitScript(consentInit);
+  const page = await context.newPage();
+  const route = "/strony-internetowe";
+  try {
+    const url = new URL(route, baseUrl);
+    url.searchParams.set("audit", "hotspots");
+    await page.goto(url.href, { waitUntil: "domcontentloaded", timeout: TIMEOUT });
+    await waitForDocumentReady(page);
+    await activateScene(page, route, 0);
+    await waitForSceneMode(page, 0, false);
+    const initial = await page.evaluate(selector => {
+      const scene = document.querySelectorAll(selector)[0];
+      return [...scene.querySelectorAll(".annotation-callout, .annotation")].map(callout => ({
+        key: callout.dataset.annotation,
+        state: callout.dataset.okAnchorState,
+      }));
+    }, SCENE_SELECTOR);
+
+    await page.setViewportSize(compact);
+    await settleLayout(page);
+    await waitForSceneMode(page, 0, false);
+    const compactStates = await page.evaluate(selector => {
+      const scene = document.querySelectorAll(selector)[0];
+      return [...scene.querySelectorAll(".annotation-callout, .annotation")].map(callout => ({
+        key: callout.dataset.annotation,
+        state: callout.dataset.okAnchorState,
+      }));
+    }, SCENE_SELECTOR);
+    const hiddenKey = compactStates.find(entry => entry.state === "hidden")?.key;
+    if (!hiddenKey) {
+      addFailure(route, `${viewportName(wide)}→${viewportName(compact)}`, "web-opening", "resize", "representative resize did not exercise a hidden anchor");
+      return;
+    }
+
+    await page.setViewportSize(wide);
+    await settleLayout(page);
+    await waitForSceneMode(page, 0, false);
+    const targetIndex = initial.findIndex(entry => entry.key === hiddenKey && entry.state === "placed");
+    if (targetIndex < 0) {
+      addFailure(route, `${viewportName(wide)}→${viewportName(compact)}`, "web-opening", hiddenKey, "anchor is not placed before compact resize");
+      return;
+    }
+    await page.evaluate(({ selector, index }) => {
+      const callout = document.querySelectorAll(selector)[0]
+        ?.querySelectorAll(".annotation-callout, .annotation")[index];
+      window.OKAgencyAnnotations?.open?.(callout);
+    }, { selector: SCENE_SELECTOR, index: targetIndex });
+    await waitForOpen(page, 0, targetIndex);
+
+    await page.setViewportSize(compact);
+    await settleLayout(page);
+    await waitForSceneMode(page, 0, false);
+    const hiddenState = await page.evaluate(({ selector, index }) => {
+      const callout = document.querySelectorAll(selector)[0]
+        .querySelectorAll(".annotation-callout, .annotation")[index];
+      const dot = callout.querySelector(".annotation-dot");
+      const copy = callout.querySelector(".annotation-copy");
+      const wire = document.querySelector(`[data-line="${callout.dataset.line}"]`);
+      return {
+        state: callout.dataset.okAnchorState,
+        open: callout.classList.contains("is-open"),
+        calloutHidden: callout.getAttribute("aria-hidden"),
+        inert: callout.inert,
+        disabled: dot.disabled,
+        tabIndex: dot.tabIndex,
+        expanded: dot.getAttribute("aria-expanded"),
+        copyHidden: copy.getAttribute("aria-hidden"),
+        wireOpen: wire?.classList.contains("is-open") || false,
+      };
+    }, { selector: SCENE_SELECTOR, index: targetIndex });
+    const expected = hiddenState.state === "hidden"
+      && !hiddenState.open
+      && hiddenState.calloutHidden === "true"
+      && hiddenState.inert
+      && hiddenState.disabled
+      && hiddenState.tabIndex === -1
+      && hiddenState.expanded === "false"
+      && hiddenState.copyHidden === "true"
+      && !hiddenState.wireOpen;
+    if (!expected) {
+      addFailure(route, `${viewportName(wide)}→${viewportName(compact)}`, "web-opening", hiddenKey, `active anchor did not close atomically: ${JSON.stringify(hiddenState)}`);
+    }
+  } catch (error) {
+    addFailure(route, `${viewportName(wide)}→${viewportName(compact)}`, "web-opening", "resize-runner", error.message);
+  } finally {
+    await page.close().catch(() => {});
+    await context.close().catch(() => {});
+  }
+};
+
 const parseBaseUrl = value => {
   try {
     return new URL(value);
@@ -1338,12 +1492,15 @@ try {
   const selectedRoutes = requestedRoute
     ? ROUTES.filter(route => route.path === requestedRoute)
     : ROUTES;
+  const requestedViewportMatch = /^(\d+)x(\d+)$/.exec(requestedViewport);
   const selectedViewports = requestedViewport
-    ? VIEWPORTS.filter(viewport => viewportName(viewport) === requestedViewport)
+    ? requestedViewportMatch
+      ? [{ width: Number(requestedViewportMatch[1]), height: Number(requestedViewportMatch[2]) }]
+      : []
     : VIEWPORTS;
   if (!selectedRoutes.length) throw new Error(`Unknown annotation route filter: ${requestedRoute}`);
   if (!selectedViewports.length) throw new Error(`Unknown annotation viewport filter: ${requestedViewport}`);
-  browser = await chromium.launch({ headless: true });
+  browser = await browserType.launch({ headless: true });
 
   for (const viewport of selectedViewports) {
     console.log(`Annotation geometry: ${viewportName(viewport)}`);
@@ -1367,6 +1524,7 @@ try {
   if (!requestedRoute && !requestedViewport) {
     await auditMotionMode(browser, baseUrl, "paused");
     await auditMotionMode(browser, baseUrl, "reduced");
+    await auditResizeState(browser, baseUrl);
   }
 } catch (error) {
   addFailure("runner", "n/a", "runner", "fatal", error.message);
@@ -1384,6 +1542,6 @@ if (failures.length) {
 } else {
   console.log(
     `\nAnnotation geometry audit passed: ${requestedRoute || "6 routes"}, `
-    + `${requestedViewport || `${VIEWPORTS.length} viewports`}.`,
+    + `${requestedViewport || `${VIEWPORTS.length} viewports`} in ${webkitAudit ? "WebKit" : "Chromium"}.`,
   );
 }

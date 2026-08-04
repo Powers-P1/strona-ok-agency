@@ -64,7 +64,7 @@ const assignSeparatedCandidates = entries => {
 try {
   for (const route of selectedRoutes) {
     const page = await context.newPage();
-    await page.goto(`${BASE_URL}${route}?audit=annotation-placement`, {
+    await page.goto(`${BASE_URL}${route}?audit=hotspots`, {
       waitUntil: "domcontentloaded",
     });
     await page.evaluate(async sceneSelector => {
@@ -266,14 +266,36 @@ try {
     });
 
     routeResult.forEach(result => {
-      if (result.maskProblem || !result.centerPasses) failures.push({ route, ...result });
-      const centerAccepted = result.requiredTier
-        ? result.center?.tier === result.requiredTier
-        : Boolean(result.center?.tier);
-      const acceptedTier = centerAccepted
-        ? result.center.tier
-        : (result.nearest?.distance <= CENTER_TOLERANCE ? result.nearest.tier : null);
-      if (acceptedTier) tierCounts[acceptedTier] += 1;
+      if (result.maskProblem) failures.push({ route, ...result });
+    });
+    await page.waitForFunction(() => (
+      window.OKAgencyAnnotationGeometryDebug?.snapshot?.().some(entry => (
+        entry.status !== "pending" && entry.selected?.length
+      ))
+    ));
+    const runtimeResults = await page.evaluate(() => (
+      window.OKAgencyAnnotationGeometryDebug.snapshot().flatMap(entry => (
+        (entry.selected || []).map(selection => ({
+          scene: entry.scene,
+          status: entry.status,
+          ...selection,
+        }))
+      ))
+    ));
+    runtimeResults.forEach(result => {
+      if (result.state === "hidden") return;
+      const minimum = result.tier === "energy" ? 220 : result.tier === "highlight" ? 96 : 1;
+      if (!Number.isFinite(result.value) || result.value < minimum) {
+        failures.push({
+          route,
+          scene: result.scene,
+          key: result.key,
+          profile: "runtime",
+          runtimeProblem: `selected ${result.tier || "unknown"} pixel ${result.value}, expected at least ${minimum}`,
+        });
+        return;
+      }
+      tierCounts[result.tier] += 1;
     });
     const groups = new Map();
     routeResult
@@ -316,6 +338,10 @@ if (failures.length) {
   failures.forEach(failure => {
     if (failure.maskProblem) {
       console.error(`- ${failure.route} #${failure.scene}: ${failure.maskProblem}`);
+      return;
+    }
+    if (failure.runtimeProblem) {
+      console.error(`- ${failure.route} #${failure.scene} ${failure.key}: ${failure.runtimeProblem}`);
       return;
     }
     const nearest = failure.nearest

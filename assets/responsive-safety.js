@@ -63,6 +63,7 @@
   const observed = new Set();
   const layouts = [];
   const layoutsByScene = new WeakMap();
+  const layoutsByArt = new WeakMap();
   const artBounds = new WeakMap();
   let frame = 0;
   let needsRemeasure = false;
@@ -195,6 +196,58 @@
       image.decoding = "async";
       image.src = url;
       image.addEventListener("load", () => {
+        const sourceCanvas = document.createElement("canvas");
+        sourceCanvas.width = image.naturalWidth;
+        sourceCanvas.height = image.naturalHeight;
+        const sourceContext = sourceCanvas.getContext("2d", { willReadFrequently: true });
+        if (!sourceContext) {
+          resolve(null);
+          return;
+        }
+        sourceContext.drawImage(image, 0, 0);
+        const sourcePixels = sourceContext.getImageData(
+          0,
+          0,
+          image.naturalWidth,
+          image.naturalHeight,
+        ).data;
+        const tierPixels = new Uint8Array(image.naturalWidth * image.naturalHeight);
+        for (let index = 0; index < tierPixels.length; index += 1) {
+          tierPixels[index] = sourcePixels[index * 4];
+        }
+
+        /* Candidate centers are extracted once from the authored placement map.
+         * The runtime solver only ranks these immutable image-space points; it
+         * never resamples artwork color during resize, scroll or interaction. */
+        const candidateStride = 4;
+        const candidateLists = {
+          energy: [],
+          highlight: [],
+          structure: [],
+        };
+        for (let blockY = 0; blockY < image.naturalHeight; blockY += candidateStride) {
+          for (let blockX = 0; blockX < image.naturalWidth; blockX += candidateStride) {
+            let bestIndex = -1;
+            let bestTier = 0;
+            const maximumY = Math.min(image.naturalHeight, blockY + candidateStride);
+            const maximumX = Math.min(image.naturalWidth, blockX + candidateStride);
+            for (let y = blockY; y < maximumY; y += 1) {
+              for (let x = blockX; x < maximumX; x += 1) {
+                const index = y * image.naturalWidth + x;
+                const tier = tierPixels[index];
+                if (tier > bestTier) {
+                  bestTier = tier;
+                  bestIndex = index;
+                }
+              }
+            }
+            if (bestIndex < 0 || bestTier === 0) continue;
+            candidateLists.structure.push(bestIndex);
+            if (bestTier >= 96) candidateLists.highlight.push(bestIndex);
+            if (bestTier >= 220) candidateLists.energy.push(bestIndex);
+          }
+        }
+
         const columns = Math.max(1, Math.ceil(image.naturalWidth / 8));
         const rows = Math.max(1, Math.ceil(image.naturalHeight / 8));
         const canvas = document.createElement("canvas");
@@ -224,6 +277,16 @@
           columns,
           rows,
           integral,
+          tierAt: (x, y) => {
+            const column = Math.min(image.naturalWidth - 1, Math.max(0, Math.round(x)));
+            const row = Math.min(image.naturalHeight - 1, Math.max(0, Math.round(y)));
+            return tierPixels[row * image.naturalWidth + column];
+          },
+          candidates: Object.freeze({
+            energy: Uint32Array.from(candidateLists.energy),
+            highlight: Uint32Array.from(candidateLists.highlight),
+            structure: Uint32Array.from(candidateLists.structure),
+          }),
         }));
       }, { once: true });
       image.addEventListener("error", () => resolve(null), { once: true });
@@ -233,13 +296,18 @@
   };
 
   const loadPlacementMap = layout => {
-    if (layout.placementMapRequested) return;
+    if (layout.placementMapRequested) return layout.placementMapPromise;
     layout.placementMapRequested = true;
-    buildPlacementMap(layout.art.dataset.placementMask).then(map => {
+    layout.placementMapPromise = buildPlacementMap(layout.art.dataset.placementMask).then(map => {
       layout.placementMap = map;
       layout.placementMapReady = true;
       schedule();
+      window.dispatchEvent(new CustomEvent("okagency:placement-map-change", {
+        detail: { scene: layout.scene, art: layout.art, ready: Boolean(map) },
+      }));
+      return map;
     });
+    return layout.placementMapPromise;
   };
 
   const loadApproachingPlacementMap = layout => {
@@ -267,12 +335,14 @@
       art,
       backdrop: createBackdrop(art),
       placementMap: null,
+      placementMapPromise: null,
       placementMapReady: false,
       placementMapRequested: false,
       mode,
     };
     layouts.push(layout);
     layoutsByScene.set(scene, layout);
+    layoutsByArt.set(art, layout);
     observed.add(scene);
     observed.add(art);
   };
@@ -1024,6 +1094,14 @@
   window.OKAgencyResponsiveSafety = Object.freeze({
     getHomeHeroLayout,
     getArtBounds: sceneOrArt => artBounds.get(sceneOrArt) || null,
+    getPlacementMap: sceneOrArt => {
+      const layout = layoutsByScene.get(sceneOrArt) || layoutsByArt.get(sceneOrArt);
+      return layout?.placementMap || null;
+    },
+    requestPlacementMap: sceneOrArt => {
+      const layout = layoutsByScene.get(sceneOrArt) || layoutsByArt.get(sceneOrArt);
+      return layout ? loadPlacementMap(layout) : Promise.resolve(null);
+    },
     refresh: schedule,
     snapshot: () => ({
       tallPortrait: root.hasAttribute("data-ok-tall-portrait"),

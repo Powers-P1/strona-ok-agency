@@ -183,7 +183,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("stabilny, wersjonowany moduł geometrii anotacji", failures);
 }
 
-// One deterministic group solver owns fixed artwork anchors and copy safety.
+// One deterministic solver owns placement-map anchors, independent hidden state and copy safety.
 {
   const failures = [];
   const path = "assets/art-coordinate-system.js";
@@ -192,20 +192,19 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
     [/getArtBounds/, "publicznego kontraktu bezpiecznego obszaru"],
     [/okagency:art-safety-change/, "reakcji na zmianę maski"],
     [/okagency:annotationchange/, "reakcji na zmianę anotacji"],
-    [/const select = index =>/, "deterministycznego wyboru autorskich kotwic"],
+    [/naturalPlacementCandidates/, "deterministycznego wyboru kandydatów placement map"],
     [/fixedAnchorLayouts/, "cache stałych kotwic niezależnego od interakcji"],
-    [/\["short", "compact", "base"\]/, "kolejności profili short → compact → base"],
+    [/placementTierOrder/, "hierarchii energy → highlight → structure"],
+    [/lastAnchors/, "preferowania poprzedniej poprawnej kotwicy"],
     [/contains\(artBounds\.interactiveVisible, ring\)/, "twardego odrzucenia poza widocznym artworkiem i feather"],
     [/obstacles\.content\.some\(obstacle => intersects\(ring, obstacle\)\)/, "twardego odrzucenia kolizji punktu z treścią"],
     [/visibleCopies\.some\(sibling => intersects\(copyRect, sibling\)\)/, "odrzucenia kolizji otwartych dymków"],
-    [/lastSolutions/, "ostatniego poprawnego układu bez ukrywania grupy"],
+    [/setAnnotationPlacementState/, "atomowego stanu placement/hidden pojedynczej anotacji"],
     [/const preservedCopies = exitingAnnotations\(\)/, "migawki zamykanych dymków"],
     [/preservedAttributeElements\.add\(path\)/, "ochrony linii zamykanego dymka"],
     [/retainedAttributes\.set\(element, attributes\)/, "zachowania runtime SVG podczas wyjścia dymka"],
     [/applyServiceSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka w scenach usług"],
     [/applyAboutSolution\(adapter, solution, preservedCopies\)/, "ochrony wyjścia dymka na O nas"],
-    [/applyAuthoredCopySafety\(adapter, preservedCopies\)/, "ochrony wyjścia dymka w authored fallback"],
-    [/applyMeasuredConnectorGeometry\(adapter, preservedCopies\)/, "ochrony wyjścia dymka w measured fallback"],
     [/innerWidth <= 640/, "zachowania centralnego kontraktu mobile"],
     [/annotation-debug-overlay/, "debug overlay dla audytu kotwic"],
   ]) {
@@ -223,10 +222,13 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   if (/tablet-annotations|uses-annotation-summary|Punkty na ilustracji/.test(source)) {
     failures.push(`${path}: usunięte podsumowanie ilustracji nie może wrócić`);
   }
-  if (/annotations-unavailable|hideAnnotations|is-obscured/.test(source)) {
-    failures.push(`${path}: solver nie może ukrywać punktów po solve ani otwarciu dymka`);
+  if (/applyAuthoredCopySafety|applyMeasuredConnectorGeometry|AUTHORED FALLBACK/.test(source)) {
+    failures.push(`${path}: usunięty authored/measured fallback nie może wrócić`);
   }
-  addCheck("deterministyczny solver geometrii i ciągła widoczność", failures);
+  if (/annotations-unavailable|hideAnnotations|is-obscured/.test(source)) {
+    failures.push(`${path}: solver nie może wrócić do grupowego ukrywania sceny`);
+  }
+  addCheck("deterministyczny solver geometrii i niezależny stan hidden", failures);
 }
 
 // Source anchors and rendered points follow energy → highlight → object hierarchy.

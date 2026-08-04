@@ -21,6 +21,20 @@
   --ok-body-copy: var(--ok-type-content, clamp(15px, 1.55vh, 48px));
 }
 
+/* Shared disclosure integrity. Route sheets own colour and scene placement;
+ * this late system layer owns text resilience for every proof/accordion row. */
+:is(.campaign-page, .social-page, .web-service, .process-page) .proof-label,
+.about-page .scene .accordion-label {
+  min-width: 0;
+}
+
+:is(.campaign-page, .social-page, .web-service, .process-page)
+  :is(.proof-label strong, .proof-label small, .proof-detail p),
+.about-page .scene
+  :is(.accordion-label strong, .accordion-label small, .accordion-detail p) {
+  overflow-wrap: anywhere;
+}
+
 html {
   max-width: 100%;
   overflow-x: clip;
@@ -374,6 +388,25 @@ canvas {
     width: min(var(--ok-rail-section, 700px), calc(100vw - (2 * var(--ok-canvas-inset))));
   }
 
+}
+
+/* Standard and large canvases give short disclosure groups a roomier rhythm.
+ * The label owns the extra natural space so every trigger keeps the shared
+ * system min-height used across routes. Content can still grow when it wraps.
+ * Denser groups and compact viewport profiles retain the shared token scale. */
+@media (min-width: 1025px) and (min-height: 821px) {
+  :is(.campaign-page, .social-page, .web-service, .process-page)
+    .proof-list:not(:has(> :nth-child(4 of .proof-item:not(.proof-context-item))))
+    .proof-label,
+  .about-page .scene
+    .accordion:not(:has(> :nth-child(4))) .accordion-label {
+    min-height: calc(
+      max(var(--ok-size-interactive-row), clamp(64px, 7svh, 92px))
+      - var(--ok-space-interactive-inset)
+      - var(--ok-space-interactive-inset)
+    );
+    align-content: center;
+  }
 }
 
 /* The route's compact profile owns vertical composition in short desktop

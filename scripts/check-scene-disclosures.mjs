@@ -126,6 +126,21 @@ const layoutIssues = (scene, expectedScrollTop, {
     return bounds.width > 0 && bounds.height > 0
       && style.display !== "none" && style.visibility !== "hidden";
   };
+  if (innerWidth >= 1025 && innerHeight >= 821) {
+    [...element.querySelectorAll(".proof-list, .accordion")]
+      .filter(visible)
+      .forEach(group => {
+        const triggers = [...group.querySelectorAll(".proof-trigger, .accordion-trigger")]
+          .filter(visible);
+        if (triggers.length > 3) return;
+        triggers.forEach((trigger, index) => {
+          const height = trigger.getBoundingClientRect().height;
+          if (height < 64) {
+            issues.push(`disclosure row ${index + 1} is only ${height.toFixed(1)}px high`);
+          }
+        });
+      });
+  }
   if (shouldCheckActions) {
     const requiredClearance = innerWidth >= 821 ? 18 : 0;
     [...element.querySelectorAll(actionSelector)].filter(visible).forEach((action, index) => {

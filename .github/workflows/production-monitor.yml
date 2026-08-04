@@ -68,8 +68,11 @@ jobs:
             exit 1
           fi
           printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: OAI-SearchBot' \
-            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: ClaudeBot' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: Claude-SearchBot' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: Claude-User' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: Perplexity-User' \
             && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: GPTBot' \
+            && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'User-agent: ClaudeBot' \
             && printf '%s\n' "$robots_txt" | grep --fixed-strings --line-regexp --quiet 'Sitemap: https://okagency.pl/sitemap.xml' \
             && echo "OK: repository-managed robots.txt without Cloudflare overlay" \
             || { echo "FAIL: robots.txt policy is incomplete"; exit 1; }

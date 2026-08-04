@@ -300,12 +300,17 @@ SEO:
 - funkcja Cloudflare **Managed robots.txt** w AI Crawl Control → Signals jest
   wyłączona, dlatego Cloudflare nie dokleja własnych dyrektyw ani
   `Content-Signal` przed plikiem z repo;
-- `OAI-SearchBot`, `ChatGPT-User`, `Googlebot`, `PerplexityBot` i `ClaudeBot`
-  mogą indeksować lub pobierać publiczne treści do odpowiedzi z cytowaniem;
-- `GPTBot` i `Google-Extended` mają `Disallow: /`, ponieważ trening modeli nie
-  jest wymagany do prezentowania strony w wynikach lub odpowiedziach AI;
+- `OAI-SearchBot`, `ChatGPT-User`, `Googlebot`, `PerplexityBot`,
+  `Perplexity-User`, `Claude-SearchBot` i `Claude-User` mogą indeksować lub
+  pobierać publiczne treści do odpowiedzi z cytowaniem;
+- `GPTBot`, `ClaudeBot` i `Google-Extended` mają `Disallow: /`, ponieważ trening
+  modeli nie jest wymagany do prezentowania strony w wynikach lub odpowiedziach
+  AI;
 - `llms.txt` i `llms-full.txt` są kopiowane do artefaktu produkcyjnego jako
   dodatkowy, niewiążący opis serwisu dla systemów, które obsługują ten format;
+- plik `2382e47d9da34145abc8ae8f95f6c510.txt` potwierdza własność domeny dla
+  protokołu IndexNow; po publikacji zmian uruchom `npm run submit:indexnow`, aby
+  zgłosić wszystkie adresy z `sitemap.xml` do współpracujących wyszukiwarek;
 - `ok-agency.pages.dev` nie publikuje duplikatu treści;
 - `security.txt` znajduje się w
   [`.well-known/security.txt`](../.well-known/security.txt).

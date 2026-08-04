@@ -383,6 +383,33 @@ const auditDeferredPlacementMaps = async (page, baseUrl) => {
   );
 };
 
+const auditDeferredDiagnosisMaps = async (page, baseUrl) => {
+  const requestedMaps = new Set();
+  await page.route(/placement-mask-.*\.png/, async route => {
+    requestedMaps.add(new URL(route.request().url()).pathname);
+    await route.continue();
+  });
+  await page.goto(new URL("/diagnoza", baseUrl).href, { waitUntil: "domcontentloaded" });
+  await page.locator("#diagnosis-opening[data-ok-safe-protection-ready]").waitFor();
+  await frames(page, 4);
+
+  const availableMaps = await page.locator("[data-placement-mask]").count();
+  check(availableMaps === 3, `deferred diagnosis maps: found ${availableMaps} placement maps`);
+  check(
+    requestedMaps.size === 1,
+    `deferred diagnosis maps: requested ${requestedMaps.size}/${availableMaps} maps before starting diagnosis`,
+  );
+
+  await page.locator("[data-start-diagnosis]").click();
+  await page.waitForFunction(() => (
+    document.querySelector("#diagnosis-map")?.hasAttribute("data-ok-safe-protection-ready")
+  ));
+  check(
+    requestedMaps.size === 2,
+    `deferred diagnosis maps: requested ${requestedMaps.size}/${availableMaps} maps after opening the map`,
+  );
+};
+
 let browser;
 try {
   const baseUrl = await resolveBaseUrl();
@@ -444,6 +471,12 @@ try {
       await auditDeferredPlacementMaps(placementPage, baseUrl);
     } finally {
       await placementPage.close();
+    }
+    const diagnosisPage = await placementContext.newPage();
+    try {
+      await auditDeferredDiagnosisMaps(diagnosisPage, baseUrl);
+    } finally {
+      await diagnosisPage.close();
       await placementContext.close();
     }
   }

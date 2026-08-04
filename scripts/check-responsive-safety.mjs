@@ -222,6 +222,8 @@ requireText(
 
 requireText(script, "placementMapReady", "JS nie czeka na mapę kolizji przed usunięciem awaryjnego kontrastu");
 requireText(script, "observePlacementMaps", "JS nie odracza map kolizji dla scen poza viewportem");
+requireText(script, "!rendered(entry.target)", "JS pobiera mapy nieaktywnych, nakładających się scen");
+requireText(script, '"okagency:scene-activate"', "JS nie reaguje na aktywację nakładającej się sceny");
 requireText(
   script,
   'toggleAttribute("data-ok-safe-protection-ready", protectionReady)',

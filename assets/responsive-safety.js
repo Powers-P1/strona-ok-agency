@@ -70,6 +70,7 @@
   let sceneAnchorFrame = 0;
   let currentSceneAnchor = null;
   let pendingSceneAnchor = null;
+  let placementMapObserver = null;
   let viewportSize = { width: window.innerWidth, height: window.innerHeight };
 
   const selectors = {
@@ -241,6 +242,18 @@
     });
   };
 
+  const loadApproachingPlacementMap = layout => {
+    if (layout.placementMapRequested || !rendered(layout.scene)) return;
+    const rect = layout.scene.getBoundingClientRect();
+    const preloadMargin = window.innerHeight * .5;
+    if (
+      rect.bottom < -preloadMargin
+      || rect.top > window.innerHeight + preloadMargin
+    ) return;
+    loadPlacementMap(layout);
+    placementMapObserver?.unobserve(layout.scene);
+  };
+
   const addLayout = (scene, contentSelector, artSelector, mode = "scene") => {
     if (!scene) return;
     const art = scene.querySelector(artSelector);
@@ -270,17 +283,17 @@
       return;
     }
 
-    const observer = new IntersectionObserver(entries => {
+    placementMapObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+        if (!entry.isIntersecting || !rendered(entry.target)) return;
         const layout = layoutsByScene.get(entry.target);
         if (layout) loadPlacementMap(layout);
-        observer.unobserve(entry.target);
+        placementMapObserver.unobserve(entry.target);
       });
     }, {
       rootMargin: `${Math.ceil(window.innerHeight * .5)}px 0px`,
     });
-    layouts.forEach(layout => observer.observe(layout.scene));
+    layouts.forEach(layout => placementMapObserver.observe(layout.scene));
   };
 
   const visualContentGeometry = content => {
@@ -605,6 +618,8 @@
   };
 
   const measureLayout = layout => {
+    loadApproachingPlacementMap(layout);
+
     const protectionReady = Boolean(
       layout.placementMapReady
       && layout.backdrop?.dataset.okSafeBackdropReady === "true",
@@ -955,11 +970,23 @@
     });
   }
 
-  const mutationObserver = new MutationObserver(schedule);
+  const mutationObserver = new MutationObserver(() => {
+    layouts.forEach(loadApproachingPlacementMap);
+    schedule();
+  });
   mutationObserver.observe(body, {
     subtree: true,
     attributes: true,
     attributeFilter: ["aria-hidden", "class", "hidden", "inert"],
+  });
+
+  window.addEventListener("okagency:scene-activate", event => {
+    const scene = event.detail?.scene;
+    const layout = scene ? layoutsByScene.get(scene) : null;
+    if (!layout) return;
+    loadPlacementMap(layout);
+    placementMapObserver?.unobserve(scene);
+    schedule();
   });
 
   window.addEventListener("resize", scheduleViewportMeasure, { passive: true });

@@ -18,7 +18,7 @@ export const ASSET_VERSIONS = Object.freeze({
   "assets/service-interactions.js": "20260802-6",
   "assets/services/about/styles.css": "20260804-1",
   "assets/services/campaign/styles.css": "20260803-2",
-  "assets/services/diagnosis/script.js": "20260804-2",
+  "assets/services/diagnosis/script.js": "20260804-3",
   "assets/services/diagnosis/styles.css": "20260803-5",
   "assets/services/process/styles.css": "20260803-2",
   "assets/services/social/styles.css": "20260803-2",

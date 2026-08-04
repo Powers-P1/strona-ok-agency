@@ -27,6 +27,13 @@ const MOBILE_DISPLAY_CASES = [
 const MASK_FAMILY_CASES = [
   { route: "/strony-internetowe", selector: "#web-architecture", name: "Web architecture" },
   { route: "/kampanie", selector: "#campaign-opening", name: "Campaign opening" },
+  {
+    route: "/kampanie",
+    selector: "#campaign-proof",
+    name: "Campaign proof transformed",
+    viewport: { width: 1920, height: 1080 },
+    transformed: true,
+  },
   { route: "/social-media", selector: "#social-opening", name: "Social opening" },
   { route: "/proces", selector: "#process-delivery", name: "Process delivery" },
   { route: "/o-nas", selector: "#about-model", name: "About model" },
@@ -167,19 +174,26 @@ const readMaskMetrics = async scene => scene.evaluate(async element => {
       if (rects.length) rects.forEach(include);
       else include(target.getBoundingClientRect());
     });
+  const maskImage = art ? getComputedStyle(art).maskImage : "none";
   return {
     version: bounds?.version,
     masked: bounds?.masked,
     shape: bounds?.maskShape,
     revealSide: bounds?.revealSide,
+    art: bounds?.art,
     protected: bounds?.protected,
     feather: bounds?.feather,
     fullVisible: bounds?.fullVisible,
     actual,
     state: art?.dataset.okSafeArt,
     datasetShape: art?.dataset.okSafeShape,
-    maskImage: art ? getComputedStyle(art).maskImage : "none",
+    maskImage,
+    maskPixelStops: [...maskImage.matchAll(/(-?\d+(?:\.\d+)?)px/g)]
+      .map(match => Number(match[1])),
+    transform: art ? getComputedStyle(art).transform : "none",
+    localSize: art ? { width: art.offsetWidth, height: art.offsetHeight } : null,
     sceneHeight: sceneRect.height,
+    viewportWidth: innerWidth,
     viewportHeight: innerHeight,
   };
 });
@@ -204,6 +218,32 @@ const assertUnmaskedContract = (mask, label) => {
   check(mask.maskImage === "none", `${label}: roomy composition still has a computed mask`);
 };
 
+const assertTransformedMaskCoordinates = (mask, label) => {
+  check(mask.transform !== "none", `${label}: artwork is not transformed`);
+  check(mask.maskPixelStops.length >= 3, `${label}: mask pixel stops are unavailable`);
+  if (mask.maskPixelStops.length < 3 || !mask.localSize || !mask.art) return;
+
+  const stops = mask.maskPixelStops.slice(-2).sort((first, second) => first - second);
+  const horizontal = ["left", "right"].includes(mask.revealSide);
+  const scale = horizontal
+    ? mask.art.width / mask.localSize.width
+    : mask.art.height / mask.localSize.height;
+  const origin = horizontal ? mask.art.left : mask.art.top;
+  const sceneLimit = horizontal ? mask.viewportWidth : mask.viewportHeight;
+  const expectedStart = Math.max(0, origin + stops[0] * scale);
+  const expectedEnd = Math.min(sceneLimit, origin + stops[1] * scale);
+  const actualStart = horizontal ? mask.feather.left : mask.feather.top;
+  const actualEnd = horizontal ? mask.feather.right : mask.feather.bottom;
+  check(
+    Math.abs(actualStart - expectedStart) <= EPSILON,
+    `${label}: transformed feather start ${actualStart}px differs from ${expectedStart}px`,
+  );
+  check(
+    Math.abs(actualEnd - expectedEnd) <= EPSILON,
+    `${label}: transformed feather end ${actualEnd}px differs from ${expectedEnd}px`,
+  );
+};
+
 const auditMaskFamily = async (page, baseUrl, maskCase) => {
   const label = `${maskCase.name} mask family`;
   if (WEBKIT_SMOKE) console.log(`WebKit mask: ${maskCase.name}`);
@@ -214,7 +254,9 @@ const auditMaskFamily = async (page, baseUrl, maskCase) => {
   const scene = page.locator(maskCase.selector);
   await scene.evaluate(element => element.scrollIntoView({ block: "start", behavior: "auto" }));
   await frames(page, 4);
-  assertMaskContract(await readMaskMetrics(scene), label, { full: true });
+  const mask = await readMaskMetrics(scene);
+  assertMaskContract(mask, label, { full: true });
+  if (maskCase.transformed) assertTransformedMaskCoordinates(mask, label);
 };
 
 const auditWebSystem = async (page, baseUrl, viewport, navScale) => {

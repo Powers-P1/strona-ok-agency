@@ -443,43 +443,55 @@
    * that owns the artwork. One continuous feather keeps every branch attached;
    * no per-line boxes or local holes are painted behind the copy.
    */
-  const buildDirectionalFeather = ({ artRect, contentRect, gap }) => {
+  const buildDirectionalFeather = ({ artRect, contentRect, gap, localWidth, localHeight }) => {
     const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
+    const width = localWidth || artRect.width;
+    const height = localHeight || artRect.height;
+    const scaleX = artRect.width / width;
+    const scaleY = artRect.height / height;
+    const localContent = {
+      left: (contentRect.left - artRect.left) / scaleX,
+      right: (contentRect.right - artRect.left) / scaleX,
+      top: (contentRect.top - artRect.top) / scaleY,
+      bottom: (contentRect.bottom - artRect.top) / scaleY,
+    };
     const spaces = {
-      left: Math.max(0, contentRect.left - artRect.left),
-      right: Math.max(0, artRect.right - contentRect.right),
-      top: Math.max(0, contentRect.top - artRect.top),
-      bottom: Math.max(0, artRect.bottom - contentRect.bottom),
+      left: Math.max(0, localContent.left),
+      right: Math.max(0, width - localContent.right),
+      top: Math.max(0, localContent.top),
+      bottom: Math.max(0, height - localContent.bottom),
     };
     const allowedSides = ["left", "right", "top", "bottom"];
     const revealSide = allowedSides.reduce(
       (best, side) => spaces[side] > spaces[best] ? side : best,
       allowedSides[0],
     );
-    const horizontalFeather = Math.max(96, Math.min(280, artRect.width * .18));
-    const verticalFeather = Math.max(84, Math.min(240, artRect.height * .15));
+    const horizontalFeather = Math.max(96 / scaleX, Math.min(280 / scaleX, width * .18));
+    const verticalFeather = Math.max(84 / scaleY, Math.min(240 / scaleY, height * .15));
+    const horizontalGap = gap / scaleX;
+    const verticalGap = gap / scaleY;
     let image = "";
     let cut = 0;
     let reveal = 0;
     let axis = "x";
 
     if (revealSide === "right") {
-      cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
-      reveal = clamp(cut + horizontalFeather, artRect.width);
+      cut = clamp(localContent.right + horizontalGap * .35, width);
+      reveal = clamp(cut + horizontalFeather, width);
       image = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
     } else if (revealSide === "left") {
-      cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
-      reveal = clamp(cut - horizontalFeather, artRect.width);
+      cut = clamp(localContent.left - horizontalGap * .35, width);
+      reveal = clamp(cut - horizontalFeather, width);
       image = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
     } else if (revealSide === "bottom") {
       axis = "y";
-      cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
-      reveal = clamp(cut + verticalFeather, artRect.height);
+      cut = clamp(localContent.bottom + verticalGap * .35, height);
+      reveal = clamp(cut + verticalFeather, height);
       image = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
     } else {
       axis = "y";
-      cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
-      reveal = clamp(cut - verticalFeather, artRect.height);
+      cut = clamp(localContent.top - verticalGap * .35, height);
+      reveal = clamp(cut - verticalFeather, height);
       image = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
     }
 
@@ -490,6 +502,8 @@
       cut,
       reveal,
       revealSide,
+      scaleX,
+      scaleY,
     });
   };
 
@@ -511,26 +525,30 @@
       const horizontal = mask.axis === "x";
       const featherStart = Math.min(mask.cut, mask.reveal);
       const featherEnd = Math.max(mask.cut, mask.reveal);
+      const featherScale = horizontal ? mask.scaleX : mask.scaleY;
+      const scaledFeatherStart = featherStart * featherScale;
+      const scaledFeatherEnd = featherEnd * featherScale;
+      const scaledReveal = mask.reveal * featherScale;
       const featherBounds = horizontal
         ? rectFromEdges(
-            art.left + featherStart,
+            art.left + scaledFeatherStart,
             art.top,
-            art.left + featherEnd,
+            art.left + scaledFeatherEnd,
             art.bottom,
           )
         : rectFromEdges(
             art.left,
-            art.top + featherStart,
+            art.top + scaledFeatherStart,
             art.right,
-            art.top + featherEnd,
+            art.top + scaledFeatherEnd,
           );
       const visibleBounds = mask.revealSide === "right"
-        ? rectFromEdges(art.left + mask.reveal, art.top, art.right, art.bottom)
+        ? rectFromEdges(art.left + scaledReveal, art.top, art.right, art.bottom)
         : mask.revealSide === "left"
-          ? rectFromEdges(art.left, art.top, art.left + mask.reveal, art.bottom)
+          ? rectFromEdges(art.left, art.top, art.left + scaledReveal, art.bottom)
           : mask.revealSide === "bottom"
-            ? rectFromEdges(art.left, art.top + mask.reveal, art.right, art.bottom)
-            : rectFromEdges(art.left, art.top, art.right, art.top + mask.reveal);
+            ? rectFromEdges(art.left, art.top + scaledReveal, art.right, art.bottom)
+            : rectFromEdges(art.left, art.top, art.right, art.top + scaledReveal);
 
       fullVisible = intersectRect(visibleBounds, scene);
       feather = intersectRect(featherBounds, scene);
@@ -765,6 +783,8 @@
       artRect,
       contentRect,
       gap,
+      localWidth: layout.art.offsetWidth,
+      localHeight: layout.art.offsetHeight,
     });
     if (!directionalFeather) {
       clearArtMask(layout, sceneRect, artRect);

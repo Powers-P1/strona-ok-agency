@@ -148,6 +148,7 @@ requireText(script, 'layout.scene.dataset.okSafeMask || "auto"', "JS nie ma dekl
 requireText(script, 'artMaskMode === "always"', "JS nie obsługuje wymuszonej ochrony scen wskazanych przez projekt");
 requireText(script, 'artMaskMode === "never"', "JS nie obsługuje jawnego wyłączenia maski");
 requireText(script, "--ok-safe-mask-image", "JS nie generuje płynnej maski grafiki");
+requireText(script, "localWidth: layout.art.offsetWidth", "JS nie liczy maski w lokalnych współrzędnych grafiki");
 requireText(script, 'shape: "directional-feather"', "JS nie publikuje ciągłego featheru PR49");
 requireText(script, "const compact = viewportWidth <= 1180", "JS nie ogranicza automatycznej maski do ciasnych kompozycji");
 requireText(script, "pendingSceneAnchor", "JS nie zachowuje aktywnej sceny podczas resize");

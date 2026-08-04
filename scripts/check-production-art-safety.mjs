@@ -45,11 +45,19 @@ try {
       page.on("pageerror", error => runtimeErrors.push(`page: ${error.message}`));
 
       const response = await page.goto(`${baseUrl}${route}`, {
-        waitUntil: "networkidle",
+        // Production pages intentionally keep loading deferred artwork and
+        // third-party-safe resources. DOM readiness plus the explicit
+        // backdrop predicate below is the contract under test; networkidle
+        // makes the monitor depend on unrelated request timing.
+        waitUntil: "domcontentloaded",
         timeout: 45_000,
       });
       await page.waitForFunction(
-        () => document.querySelectorAll("[data-ok-safe-backdrop-layer]").length > 0,
+        () => {
+          const layers = [...document.querySelectorAll("[data-ok-safe-backdrop-layer]")];
+          return layers.length > 0
+            && layers.every(layer => layer.hasAttribute("data-ok-safe-backdrop-ready"));
+        },
         { timeout: 20_000 },
       );
       await page.waitForTimeout(300);

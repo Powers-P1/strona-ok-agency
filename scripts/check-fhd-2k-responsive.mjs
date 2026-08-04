@@ -367,7 +367,7 @@ try {
     const context = await browser.newContext({ viewport, reducedMotion: "reduce" });
     await context.addInitScript(() => {
       localStorage.setItem("ok-consent", JSON.stringify({
-        version: 2,
+        version: 3,
         level: "denied",
         at: new Date().toISOString(),
       }));
@@ -395,7 +395,7 @@ try {
   if (!WEBKIT_SMOKE) {
     const mobileContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
     await mobileContext.addInitScript(() => {
-      localStorage.setItem("ok-consent", JSON.stringify({ version: 2, level: "denied", at: new Date().toISOString() }));
+      localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
     });
     const mobilePage = await mobileContext.newPage();
     try {
@@ -427,7 +427,7 @@ try {
     reducedMotion: "reduce",
   });
   await resizeContext.addInitScript(() => {
-    localStorage.setItem("ok-consent", JSON.stringify({ version: 2, level: "denied", at: new Date().toISOString() }));
+    localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
   });
   const resizePage = await resizeContext.newPage();
   try {

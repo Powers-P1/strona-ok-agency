@@ -647,7 +647,13 @@ test("control and zero-width separators cannot hide contact data in paths or cam
     const touch = runtime.window.okAnalytics.attribution().first_touch;
     assert.equal(touch.landing_page, "https://okagency.pl/?gclid=click-ab123456789xyz");
     assert.equal(touch.utm_content, undefined);
-    assert.doesNotMatch(JSON.stringify(touch), /501|tel|jan|example/i);
+    const { captured_at: capturedAt, ...safeTouch } = touch;
+    assert.match(capturedAt, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+    assert.deepEqual(plain(safeTouch), {
+      landing_page: "https://okagency.pl/?gclid=click-ab123456789xyz",
+      referrer: "",
+      gclid: "click-ab123456789xyz",
+    });
   }
 });
 

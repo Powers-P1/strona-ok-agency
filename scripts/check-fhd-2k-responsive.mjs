@@ -162,116 +162,78 @@ const readMaskMetrics = async scene => scene.evaluate(async element => {
       if (rects.length) rects.forEach(include);
       else include(target.getBoundingClientRect());
     });
-  const contains = (outer, inner) => outer
-    && outer.left <= inner.left && outer.top <= inner.top
-    && outer.right >= inner.right && outer.bottom >= inner.bottom;
-
-  let decoded = false;
-  let centerAlpha = null;
-  let outsideAlpha = null;
-  const inlineMask = art?.style.getPropertyValue("--ok-safe-mask-image") || "";
-  const dataUrl = inlineMask.match(/url\(["']?(.+?)["']?\)$/)?.[1] || "";
-  if (dataUrl && bounds?.art?.width && bounds?.art?.height && bounds?.protected) {
-    const image = new Image();
-    const loaded = new Promise((resolve, reject) => {
-      image.onload = resolve;
-      image.onerror = () => reject(new Error("SVG mask image failed to load"));
-    });
-    image.src = dataUrl;
-    await Promise.race([
-      loaded,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("SVG mask image load timed out")), 5000)),
-    ]);
-    const scale = Math.min(1, 1024 / bounds.art.width, 1024 / bounds.art.height);
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.max(1, Math.round(bounds.art.width * scale));
-    canvas.height = Math.max(1, Math.round(bounds.art.height * scale));
-    const context = canvas.getContext("2d", { willReadFrequently: true });
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const alphaAt = point => {
-      const x = Math.max(0, Math.min(canvas.width - 1, Math.round((point.x - bounds.art.left) * scale)));
-      const y = Math.max(0, Math.min(canvas.height - 1, Math.round((point.y - bounds.art.top) * scale)));
-      return context.getImageData(x, y, 1, 1).data[3];
-    };
-    const center = {
-      x: bounds.protected.left + bounds.protected.width * .5,
-      y: bounds.protected.top + bounds.protected.height * .5,
-    };
-    const visible = bounds.fullVisible;
-    const inset = Math.min(12, visible.width * .02, visible.height * .02);
-    const corners = [
-      { x: visible.left + inset, y: visible.top + inset },
-      { x: visible.right - inset, y: visible.top + inset },
-      { x: visible.left + inset, y: visible.bottom - inset },
-      { x: visible.right - inset, y: visible.bottom - inset },
-    ];
-    corners.sort((first, second) => (
-      Math.hypot(second.x - center.x, second.y - center.y)
-      - Math.hypot(first.x - center.x, first.y - center.y)
-    ));
-    centerAlpha = alphaAt(center);
-    outsideAlpha = alphaAt(corners[0]);
-    decoded = true;
-  }
+  const revealSide = bounds?.revealSide;
+  const feather = bounds?.feather;
+  const artBounds = bounds?.art;
+  const directionalGap = revealSide === "right"
+    ? feather?.left - actual.right
+    : revealSide === "left"
+      ? actual.left - feather?.right
+      : revealSide === "bottom"
+        ? feather?.top - actual.bottom
+        : actual.top - feather?.bottom;
+  const featherSpansArtwork = revealSide === "left" || revealSide === "right"
+    ? Math.abs(feather?.top - artBounds?.top) <= 2
+      && Math.abs(feather?.bottom - artBounds?.bottom) <= 2
+    : Math.abs(feather?.left - artBounds?.left) <= 2
+      && Math.abs(feather?.right - artBounds?.right) <= 2;
 
   return {
     version: bounds?.version,
+    masked: bounds?.masked,
     shape: bounds?.maskShape,
+    revealSide,
     protected: bounds?.protected,
-    feather: bounds?.feather,
+    feather,
     fullVisible: bounds?.fullVisible,
     actual,
-    protectedContainsActual: contains(bounds?.protected, actual),
-    featherContainsProtected: contains(bounds?.feather, bounds?.protected),
-    margin: bounds?.protected ? {
-      left: actual.left - bounds.protected.left,
-      top: actual.top - bounds.protected.top,
-      right: bounds.protected.right - actual.right,
-      bottom: bounds.protected.bottom - actual.bottom,
-    } : null,
+    directionalGap,
+    featherSpansArtwork,
     state: art?.dataset.okSafeArt,
     datasetShape: art?.dataset.okSafeShape,
     maskImage: art ? getComputedStyle(art).maskImage : "none",
-    decoded,
-    centerAlpha,
-    outsideAlpha,
     sceneHeight: sceneRect.height,
     viewportHeight: innerHeight,
-    areaRatio: bounds?.protected && bounds?.fullVisible
-      ? (bounds.protected.width * bounds.protected.height)
-        / (bounds.fullVisible.width * bounds.fullVisible.height)
-      : 1,
   };
 });
 
 const assertMaskContract = (mask, label, { full = false } = {}) => {
   check(mask.version === 2, `${label}: art bounds API version is ${mask.version}, expected 2`);
-  check(mask.shape === "local-hole", `${label}: art mask shape is ${mask.shape}`);
-  check(mask.state === "active" && mask.datasetShape === "local-hole", `${label}: local art mask is not active`);
-  check(mask.maskImage !== "none", `${label}: computed mask image is none`);
-  check(mask.decoded, `${label}: SVG mask data URL did not decode`);
-  check(mask.centerAlpha !== null && mask.centerAlpha <= 16, `${label}: protected center alpha is ${mask.centerAlpha}`);
-  check(mask.outsideAlpha !== null && mask.outsideAlpha >= 239, `${label}: outside artwork alpha is ${mask.outsideAlpha}`);
+  check(mask.masked && mask.shape === "directional-feather", `${label}: art mask shape is ${mask.shape}`);
+  check(mask.state === "active" && mask.datasetShape === "directional-feather", `${label}: directional art mask is not active`);
+  check(mask.maskImage.startsWith("linear-gradient("), `${label}: mask is not a CSS linear gradient`);
+  check(!mask.maskImage.includes("data:image"), `${label}: rectangular SVG mask returned`);
+  check(mask.protected === null, `${label}: rectangular protected field returned`);
+  check(["left", "right", "top", "bottom"].includes(mask.revealSide), `${label}: invalid reveal side ${mask.revealSide}`);
+  check(mask.directionalGap >= -EPSILON, `${label}: feather begins ${Math.abs(mask.directionalGap).toFixed(1)}px inside rendered copy`);
+  check(mask.featherSpansArtwork, `${label}: feather does not span the artwork perpendicular axis`);
+  const featherDepth = ["left", "right"].includes(mask.revealSide)
+    ? mask.feather?.width
+    : mask.feather?.height;
+  check(featherDepth >= 94, `${label}: feather is only ${featherDepth}px deep`);
+  check(mask.fullVisible?.width > 0 && mask.fullVisible?.height > 0, `${label}: fully visible artwork region is empty`);
   if (!full) return;
-  check(mask.protectedContainsActual, `${label}: protected bounds do not contain the rendered text bbox`);
-  check(mask.featherContainsProtected, `${label}: feather does not contain protected bounds`);
-  Object.entries(mask.margin || {}).forEach(([side, value]) => {
-    check(value >= 17, `${label}: protected ${side} margin is only ${value.toFixed(1)}px`);
-  });
-  check(mask.areaRatio < .65, `${label}: local mask erases ${(mask.areaRatio * 100).toFixed(1)}% of the artwork envelope`);
   check(Math.abs(mask.sceneHeight - mask.viewportHeight) <= EPSILON, `${label}: scene is not 100svh`);
+};
+
+const assertUnmaskedContract = (mask, label) => {
+  check(mask.version === 2, `${label}: art bounds API version is ${mask.version}, expected 2`);
+  check(!mask.masked && mask.shape === null, `${label}: roomy composition unexpectedly uses ${mask.shape}`);
+  check(mask.state === "idle", `${label}: roomy artwork state is ${mask.state}`);
+  check(mask.maskImage === "none", `${label}: roomy composition still has a computed mask`);
 };
 
 const auditMaskFamily = async (page, baseUrl, maskCase) => {
   const label = `${maskCase.name} mask family`;
   if (WEBKIT_SMOKE) console.log(`WebKit mask: ${maskCase.name}`);
+  await page.setViewportSize({ width: 1113, height: 728 });
   await page.goto(new URL(maskCase.route, baseUrl).href, { waitUntil: "domcontentloaded" });
   await waitForStablePage(page);
   await page.waitForFunction(() => window.OKAgencyResponsiveSafety?.getArtBounds);
   const scene = page.locator(maskCase.selector);
   await scene.evaluate(element => element.scrollIntoView({ block: "start", behavior: "auto" }));
   await frames(page, 4);
-  assertMaskContract(await readMaskMetrics(scene), label);
+  assertMaskContract(await readMaskMetrics(scene), label, { full: true });
 };
 
 const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
@@ -328,7 +290,7 @@ const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
   const scene = page.locator("#web-architecture");
   await scene.evaluate(element => element.scrollIntoView({ block: "start", behavior: "auto" }));
   await frames(page, 4);
-  assertMaskContract(await readMaskMetrics(scene), label, { full: true });
+  assertUnmaskedContract(await readMaskMetrics(scene), label);
 };
 
 const auditResize = async (page, baseUrl, {
@@ -358,7 +320,7 @@ const auditResize = async (page, baseUrl, {
       scrollY,
       top: element.getBoundingClientRect().top,
       height: element.getBoundingClientRect().height,
-      protected: bounds?.protected || null,
+      feather: bounds?.feather || null,
       maskImage: art ? getComputedStyle(art).maskImage : null,
     };
   }, expectMask);
@@ -372,7 +334,7 @@ const auditResize = async (page, baseUrl, {
       scrollY,
       top: element.getBoundingClientRect().top,
       height: element.getBoundingClientRect().height,
-      protected: bounds?.protected || null,
+      feather: bounds?.feather || null,
       maskImage: art ? getComputedStyle(art).maskImage : null,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     };
@@ -387,8 +349,8 @@ const auditResize = async (page, baseUrl, {
   if (expectMask) {
     check(before.maskImage !== after.maskImage, `${label}: mask image did not react to resize`);
     check(
-      JSON.stringify(before.protected) !== JSON.stringify(after.protected),
-      `${label}: protected bbox did not react to resize`,
+      JSON.stringify(before.feather) !== JSON.stringify(after.feather),
+      `${label}: directional feather did not react to resize`,
     );
   }
 };
@@ -474,8 +436,8 @@ try {
     }
     if (!WEBKIT_SMOKE) {
       await auditResize(resizePage, baseUrl, {
-        route: "/strony-internetowe",
-        sceneSelector: "#web-architecture",
+        route: "/kampanie",
+        sceneSelector: "#campaign-opening",
         from: { width: 2560, height: 1440 },
         to: { width: 1920, height: 1080 },
         expectMask: true,

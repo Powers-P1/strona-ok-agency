@@ -1567,26 +1567,26 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/responsive-safety.js | 109 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
 | assets/responsive-safety.js | 118 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
 | assets/responsive-safety.js | 119 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |
-| assets/responsive-safety.js | 280 | .style.removeProperty("--ok-safe-mask-image") |
-| assets/responsive-safety.js | 302 | .style.removeProperty("--ok-safe-content-max-height") |
-| assets/responsive-safety.js | 321 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 322 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 351 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 361 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 409 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 425 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 432 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 433 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 444 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 446 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 453 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 455 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 487 | .style.setProperty("--ok-safe-mask-image", maskImage) |
-| assets/responsive-safety.js | 511 | .style.removeProperty("--ok-safe-card-height") |
-| assets/responsive-safety.js | 519 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
-| assets/responsive-safety.js | 535 | .style.removeProperty("--ok-safe-card-height") |
-| assets/responsive-safety.js | 544 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
-| assets/responsive-safety.js | 667 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 297 | .style.removeProperty("--ok-safe-mask-image") |
+| assets/responsive-safety.js | 319 | .style.removeProperty("--ok-safe-content-max-height") |
+| assets/responsive-safety.js | 338 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 339 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 368 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 378 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 432 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 448 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 455 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 456 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 467 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 469 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 476 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 478 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 520 | .style.setProperty("--ok-safe-mask-image", maskImage) |
+| assets/responsive-safety.js | 545 | .style.removeProperty("--ok-safe-card-height") |
+| assets/responsive-safety.js | 553 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
+| assets/responsive-safety.js | 569 | .style.removeProperty("--ok-safe-card-height") |
+| assets/responsive-safety.js | 578 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
+| assets/responsive-safety.js | 701 | .style.removeProperty("--ok-safe-required-height") |
 | assets/service-interactions.js | 209 | .style.scrollBehavior = "auto" |
 | assets/service-interactions.js | 211 | .style.scrollBehavior = previousBehavior |
 | assets/tree-energy.js | 2045 | .style.width = \`${cssWidth}px\` |

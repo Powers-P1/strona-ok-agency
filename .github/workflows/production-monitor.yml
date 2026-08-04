@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  checks: read
   issues: write
 
 jobs:
@@ -275,8 +276,25 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - name: Resolve the current production deployment
+        id: deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          deployment_id="$(
+            gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/check-runs" \
+              --jq '[.check_runs[] | select(.name == "Cloudflare Pages" and .conclusion == "success")] | sort_by(.completed_at) | last | .external_id'
+          )"
+          test -n "$deployment_id" && test "$deployment_id" != "null"
+          deployment_url="https://${deployment_id%%-*}.ok-agency.pages.dev"
+          curl --fail --silent --show-error --max-time 20 "$deployment_url/strony-internetowe" >/dev/null
+          echo "base_url=$deployment_url" >> "$GITHUB_OUTPUT"
       - name: Check rendered production artwork protection
         run: npm run check:production-art-safety
+        env:
+          OK_AGENCY_BASE_URL: ${{ steps.deployment.outputs.base_url }}
       - name: Upload failure screenshots
         if: failure()
         uses: actions/upload-artifact@v4

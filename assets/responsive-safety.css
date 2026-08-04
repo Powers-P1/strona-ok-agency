@@ -134,6 +134,31 @@ body.home-page {
   text-wrap: balance;
 }
 
+/*
+  The protected artwork reveals a separate empty atelier plate, matching the
+  PR49 hero contract. Both layers keep the route's crop and transform; only
+  the upper, semantic artwork receives the collision feather.
+*/
+[data-ok-safe-backdrop-layer] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: var(--art-opacity, 1);
+  pointer-events: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+[data-ok-safe-backdrop-layer] {
+  z-index: -3;
+}
+
+[data-ok-safe-backdrop-kind="scene"] {
+  z-index: 0;
+}
+
 [data-ok-safe-art="active"] {
   -webkit-mask-image: var(--ok-safe-mask-image);
   mask-image: var(--ok-safe-mask-image);
@@ -141,6 +166,41 @@ body.home-page {
   mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
+}
+
+/*
+  Compact scenes now get contrast from the tonal plate, so the legacy opaque
+  copy cards and full-frame wash are no longer needed. Annotation controls
+  leave with the desktop composition instead of floating above a hidden limb.
+*/
+@media (max-width: 820px) {
+  html.ok-scene-page :is(
+    .annotation-lines,
+    .annotation-callout,
+    .annotation
+  ) {
+    display: none;
+  }
+
+  [data-ok-safe-scene] :is(
+    .opening-copy,
+    .proof-content,
+    .process-editorial-content,
+    .copy-panel
+  ) {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  body :is(
+    .campaign-frame,
+    .social-frame,
+    .process-frame,
+    .diagnosis-frame
+  )[data-ok-safe-scene]::before {
+    background: none;
+  }
 }
 
 /* The focused home state hides the measured intro and owns its own panel. */

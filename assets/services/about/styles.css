@@ -208,9 +208,9 @@ body[data-theme="dark"] .wordmark img {
     linear-gradient(0deg, rgba(3, 15, 27, .33), transparent 31%);
 }
 
-/* The semantic scene image is the only artwork layer. A duplicate background
- * would remain visible underneath the shared safety mask and create a ghosted
- * tree edge at compact desktop widths. */
+/* Responsive safety may add an empty atelier plate below this semantic image.
+ * It contains no duplicate tree, so the collision feather cannot ghost the
+ * artwork edge. */
 
 .scene-inner {
   position: absolute;

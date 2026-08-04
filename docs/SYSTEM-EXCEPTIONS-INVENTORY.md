@@ -8,7 +8,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 - deklaracje typografii w lokalnych arkuszach tras: **952**
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **283**
 - inline `style` w HTML: **28**
-- mutacje stylu z JS: **45**
+- mutacje stylu z JS: **48**
 
 ### Największe źródła `!important`
 
@@ -106,9 +106,9 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-menu.css | 681 | *, *::before, *::after | — | route-debt |
 | assets/page-menu.css | 682 | *, *::before, *::after | — | route-debt |
 | assets/page-menu.css | 683 | *, *::before, *::after | — | route-debt |
-| assets/responsive-safety.css | 148 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
-| assets/responsive-safety.css | 149 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
-| assets/responsive-safety.css | 273 | [data-ok-safe-art] | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/responsive-safety.css | 208 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
+| assets/responsive-safety.css | 209 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
+| assets/responsive-safety.css | 333 | [data-ok-safe-art] | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/scene-viewport.css | 28 | :is( .campaign-frame, .social-frame, .process-frame, .about-page .scene ) | — | shared-contract |
 | assets/scene-viewport.css | 29 | :is( .campaign-frame, .social-frame, .process-frame, .about-page .scene ) | — | shared-contract |
 | assets/scene-viewport.css | 30 | :is( .campaign-frame, .social-frame, .process-frame, .about-page .scene ) | — | shared-contract |
@@ -1323,9 +1323,9 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/about/styles.css | 185 | .scene-art | height | 100% | — |
 | assets/services/about/styles.css | 193 | .scene::before | position | absolute | — |
 | assets/services/about/styles.css | 194 | .scene::before | z-index | 2 | — |
-| assets/services/about/styles.css | 216 | /* The semantic scene image is the only artwork layer. A duplicate background * would remain visible underneath the shared safety mask and create a ghosted * tree edge at compact desktop widths. */ .scene-inner | position | absolute | — |
-| assets/services/about/styles.css | 217 | /* The semantic scene image is the only artwork layer. A duplicate background * would remain visible underneath the shared safety mask and create a ghosted * tree edge at compact desktop widths. */ .scene-inner | z-index | 3 | — |
-| assets/services/about/styles.css | 219 | /* The semantic scene image is the only artwork layer. A duplicate background * would remain visible underneath the shared safety mask and create a ghosted * tree edge at compact desktop widths. */ .scene-inner | overflow | visible | — |
+| assets/services/about/styles.css | 216 | /* Responsive safety may add an empty atelier plate below this semantic image. * It contains no duplicate tree, so the collision feather cannot ghost the * artwork edge. */ .scene-inner | position | absolute | — |
+| assets/services/about/styles.css | 217 | /* Responsive safety may add an empty atelier plate below this semantic image. * It contains no duplicate tree, so the collision feather cannot ghost the * artwork edge. */ .scene-inner | z-index | 3 | — |
+| assets/services/about/styles.css | 219 | /* Responsive safety may add an empty atelier plate below this semantic image. * It contains no duplicate tree, so the collision feather cannot ghost the * artwork edge. */ .scene-inner | overflow | visible | — |
 | assets/services/about/styles.css | 582 | .scene-02 h2 | font-size | clamp(54px, 4.25vw, 72px) | — |
 | assets/services/about/styles.css | 590 | .scene-03 h2 | font-size | clamp(54px, 4.35vw, 74px) | — |
 | assets/services/about/styles.css | 611 | .scene-04 h2 | font-size | clamp(48px, 3.85vw, 66px) | — |
@@ -1564,29 +1564,32 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.js | 18 | .style.translate = \`${(-cx * 10).toFixed(2)}px ${(-cy * 8).toFixed(2)}px\` |
 | assets/page-contact.js | 180 | .style.position = "fixed" |
 | assets/page-contact.js | 181 | .style.opacity = "0" |
-| assets/responsive-safety.js | 109 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
-| assets/responsive-safety.js | 118 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
-| assets/responsive-safety.js | 119 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |
-| assets/responsive-safety.js | 297 | .style.removeProperty("--ok-safe-mask-image") |
-| assets/responsive-safety.js | 319 | .style.removeProperty("--ok-safe-content-max-height") |
-| assets/responsive-safety.js | 338 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 339 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 368 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 378 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 432 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 448 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 455 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 456 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 467 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 469 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 476 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 478 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 520 | .style.setProperty("--ok-safe-mask-image", maskImage) |
-| assets/responsive-safety.js | 545 | .style.removeProperty("--ok-safe-card-height") |
-| assets/responsive-safety.js | 553 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
-| assets/responsive-safety.js | 569 | .style.removeProperty("--ok-safe-card-height") |
-| assets/responsive-safety.js | 578 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
-| assets/responsive-safety.js | 701 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 114 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
+| assets/responsive-safety.js | 123 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
+| assets/responsive-safety.js | 124 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |
+| assets/responsive-safety.js | 181 | .style.objectPosition = style.objectPosition |
+| assets/responsive-safety.js | 182 | .style.transform = style.transform |
+| assets/responsive-safety.js | 183 | .style.transformOrigin = style.transformOrigin |
+| assets/responsive-safety.js | 524 | .style.removeProperty("--ok-safe-mask-image") |
+| assets/responsive-safety.js | 546 | .style.removeProperty("--ok-safe-content-max-height") |
+| assets/responsive-safety.js | 565 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 566 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 595 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 605 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 659 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 675 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 682 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 683 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 700 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 702 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 709 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 711 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 724 | .style.setProperty("--ok-safe-mask-image", directionalFeather.image) |
+| assets/responsive-safety.js | 744 | .style.removeProperty("--ok-safe-card-height") |
+| assets/responsive-safety.js | 752 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
+| assets/responsive-safety.js | 768 | .style.removeProperty("--ok-safe-card-height") |
+| assets/responsive-safety.js | 777 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
+| assets/responsive-safety.js | 900 | .style.removeProperty("--ok-safe-required-height") |
 | assets/service-interactions.js | 209 | .style.scrollBehavior = "auto" |
 | assets/service-interactions.js | 211 | .style.scrollBehavior = previousBehavior |
 | assets/tree-energy.js | 2045 | .style.width = \`${cssWidth}px\` |

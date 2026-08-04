@@ -62,7 +62,7 @@ for (const token of [
   "ResizeObserver",
   "MutationObserver",
   "visualViewport",
-  "visualContentRect",
+  "visualContentGeometry",
   "stableContentRect",
   "document.fonts?.ready.then(() => requestAnimationFrame(schedule))",
   "data-ok-tall-portrait",
@@ -142,7 +142,7 @@ requireText(script, 'layout.scene.dataset.okSafeMask || "auto"', "JS nie ma dekl
 requireText(script, 'artMaskMode === "always"', "JS nie obsługuje wymuszonej ochrony scen wskazanych przez projekt");
 requireText(script, 'artMaskMode === "never"', "JS nie obsługuje jawnego wyłączenia maski");
 requireText(script, "--ok-safe-mask-image", "JS nie generuje płynnej maski grafiki");
-requireText(script, 'layout.art.dataset.okSafeShape = "directional-feather"', "JS nie publikuje kierunkowego featheru");
+requireText(script, 'shape: "directional-feather"', "JS nie publikuje ciągłego featheru PR49");
 requireText(script, "const compact = viewportWidth <= 1180", "JS nie ogranicza automatycznej maski do ciasnych kompozycji");
 requireText(script, "pendingSceneAnchor", "JS nie zachowuje aktywnej sceny podczas resize");
 requireText(script, "restoreSceneAnchor", "JS nie odtwarza względnego offsetu aktywnej sceny");
@@ -205,13 +205,13 @@ requireText(script, "element.getClientRects().length > 0", "JS traktuje dzieci u
 
 requireText(
   htmlFiles[pages.indexOf("kampanie.html")],
-  'id="campaign-opening" aria-labelledby="opening-title" data-ok-safe-mask="always"',
-  "Kampanie nie korzystają ze wspólnej wymuszonej ochrony otwarcia",
+  'data-ok-safe-backdrop="light"',
+  "Kampanie nie deklarują tonalnej płyty sceny",
 );
 requireText(
   htmlFiles[pages.indexOf("proces.html")],
-  'id="process-discovery" data-stage-bg="#ead9cb" data-ok-safe-mask="always"',
-  "Proces nie korzysta ze wspólnej wymuszonej ochrony odkrycia",
+  'data-ok-safe-backdrop="dark"',
+  "Proces nie deklaruje ciemnej tonalnej płyty sceny",
 );
 
 requireText(script, "const artBounds = new WeakMap()", "JS does not index scene/art safety bounds in a WeakMap");
@@ -220,9 +220,9 @@ requireText(script, "artBounds.set(layout.scene, record)", "JS does not publish 
 requireText(script, "artBounds.set(layout.art, record)", "JS does not publish safety bounds under the artwork key");
 requireText(script, 'coordinateSpace: "scene-css-px"', "JS does not declare scene-relative CSS pixel coordinates");
 requireText(script, "masked: Boolean(mask)", "JS does not distinguish masked and unmasked artwork");
-requireText(script, 'maskShape: mask ? "directional-feather" : null', "JS does not publish the directional mask shape");
+requireText(script, "maskShape: mask?.shape", "JS does not publish the directional mask shape");
 requireText(script, "revealSide: mask?.revealSide ?? null", "JS does not publish the visible artwork side");
-requireText(script, "protected: null", "JS reintroduced a rectangular protected field");
+requireText(script, "protected: protectedArea", "JS does not preserve the shared artwork bounds contract");
 requireText(script, "if (artBoundsChanged)", "JS does not consolidate bounds events per measurement cycle");
 requireText(script, 'new CustomEvent("okagency:art-safety-change"', "JS does not emit the artwork safety change event");
 requireText(script, "detail: { version: 2 }", "artwork safety event does not expose contract version 2");
@@ -230,19 +230,21 @@ requireText(script, "Object.values(value).forEach(deepFreeze)", "artwork bounds 
 requireText(script, "const record = deepFreeze({", "public artwork bounds record is not deep-frozen");
 
 for (const maskToken of [
-  'const allowedSides = ["left", "right", "top", "bottom"]',
-  "const horizontalFeather = Math.max(96, Math.min(240",
-  "const verticalFeather = Math.max(96, Math.min(240",
-  "linear-gradient(to right, transparent 0",
-  "linear-gradient(to bottom, transparent 0",
-  'layout.art.dataset.okSafeShape = "directional-feather"',
-  'layout.art.style.setProperty("--ok-safe-mask-image", maskImage);',
+  "buildPlacementMap",
+  "placementIntersects",
+  "buildDirectionalFeather",
+  'shape: "directional-feather"',
+  "linear-gradient(to right",
+  "hasArtworkCollision",
+  'layout.art.dataset.okSafeReveal = directionalFeather.revealSide',
+  'layout.art.dataset.okSafeShape = directionalFeather.shape',
+  'layout.art.style.setProperty("--ok-safe-mask-image", directionalFeather.image);',
 ]) {
-  requireText(script, maskToken, `responsive-safety.js: directional mask contract changed: ${maskToken}`);
+  requireText(script, maskToken, `responsive-safety.js: PR49 feather contract changed: ${maskToken}`);
 }
 
-if (/local-hole|svgMask|encodeURIComponent\(svgMask\)/.test(script)) {
-  failures.push("responsive safety przywróciła prostokątny otwór SVG zamiast płynnego featheru z PR #82");
+if (/buildTonalTextFlowMask|destination-out|local-hole|svgMask|encodeURIComponent\(svgMask\)/.test(script)) {
+  failures.push("responsive safety przywróciła lokalne otwory zamiast jednego featheru PR49");
 }
 
 if (/makeScrollRegion|dataset\.okSafeScroll\s*=/.test(script)) {

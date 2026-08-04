@@ -87,6 +87,11 @@
       ".result-content",
     ].join(","),
   };
+  const backdropSources = Object.freeze({
+    light: "assets/editorial-atelier-backdrop-v2-1672.webp",
+    dark: "assets/editorial-atelier-backdrop-dark-v1.webp",
+  });
+  const placementMapCache = new Map();
 
   const typeRoles = Object.freeze({
     "content": [14, .0155, 48],
@@ -130,6 +135,101 @@
       && element.getClientRects().length > 0;
   };
 
+  const createBackdrop = art => {
+    const tone = art.dataset.okSafeBackdrop;
+    const source = backdropSources[tone];
+    if (!source) return null;
+
+    const backdrop = art.cloneNode(false);
+    [
+      "id",
+      "src",
+      "srcset",
+      "sizes",
+      "fetchpriority",
+      "data-placement-mask",
+      "data-placement-energy",
+      "data-ok-safe-art",
+      "data-ok-safe-backdrop",
+    ].forEach(attribute => backdrop.removeAttribute(attribute));
+    backdrop.classList.remove("campaign-art", "scene-art");
+    backdrop.classList.add("ok-safe-art-backdrop");
+    backdrop.dataset.okSafeBackdropKind = art.classList.contains("scene-art") ? "scene" : "campaign";
+    backdrop.dataset.okSafeBackdropLayer = tone;
+    backdrop.alt = "";
+    backdrop.setAttribute("aria-hidden", "true");
+    backdrop.setAttribute("role", "presentation");
+    backdrop.decoding = "async";
+    backdrop.loading = "eager";
+    art.after(backdrop);
+
+    const markReady = () => {
+      if (!backdrop.naturalWidth) return;
+      backdrop.dataset.okSafeBackdropReady = "true";
+      schedule();
+    };
+    backdrop.addEventListener("load", markReady, { once: true });
+    backdrop.addEventListener("error", schedule, { once: true });
+
+    backdrop.src = new URL(source, document.baseURI).href;
+    return backdrop;
+  };
+
+  const syncBackdropGeometry = layout => {
+    if (!layout.backdrop) return;
+    const style = getComputedStyle(layout.art);
+    layout.backdrop.style.objectPosition = style.objectPosition;
+    layout.backdrop.style.transform = style.transform;
+    layout.backdrop.style.transformOrigin = style.transformOrigin;
+  };
+
+  const buildPlacementMap = source => {
+    if (!source) return Promise.resolve(null);
+    const url = new URL(source, document.baseURI).href;
+    if (placementMapCache.has(url)) return placementMapCache.get(url);
+
+    const pending = new Promise(resolve => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = url;
+      image.addEventListener("load", () => {
+        const columns = Math.max(1, Math.ceil(image.naturalWidth / 8));
+        const rows = Math.max(1, Math.ceil(image.naturalHeight / 8));
+        const canvas = document.createElement("canvas");
+        canvas.width = columns;
+        canvas.height = rows;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) {
+          resolve(null);
+          return;
+        }
+        context.drawImage(image, 0, 0, columns, rows);
+        const pixels = context.getImageData(0, 0, columns, rows).data;
+        const stride = columns + 1;
+        const integral = new Uint32Array(stride * (rows + 1));
+
+        for (let y = 0; y < rows; y += 1) {
+          let rowSum = 0;
+          for (let x = 0; x < columns; x += 1) {
+            rowSum += pixels[(y * columns + x) * 4] >= 4 ? 1 : 0;
+            integral[(y + 1) * stride + x + 1] = integral[y * stride + x + 1] + rowSum;
+          }
+        }
+
+        resolve(Object.freeze({
+          width: image.naturalWidth,
+          height: image.naturalHeight,
+          columns,
+          rows,
+          integral,
+        }));
+      }, { once: true });
+      image.addEventListener("error", () => resolve(null), { once: true });
+    });
+    placementMapCache.set(url, pending);
+    return pending;
+  };
+
   const addLayout = (scene, contentSelector, artSelector, mode = "scene") => {
     if (!scene) return;
     const art = scene.querySelector(artSelector);
@@ -137,15 +237,25 @@
 
     scene.dataset.okSafeScene = "";
     art.dataset.okSafeArt = "idle";
-    layouts.push({ scene, contentSelector, art, mode });
+    const layout = {
+      scene,
+      contentSelector,
+      art,
+      backdrop: createBackdrop(art),
+      placementMap: null,
+      mode,
+    };
+    layouts.push(layout);
+    buildPlacementMap(art.dataset.placementMask).then(map => {
+      layout.placementMap = map;
+      schedule();
+    });
     observed.add(scene);
     observed.add(art);
   };
 
-  const visualContentRect = content => {
-    const elements = [...content.querySelectorAll(
-      "h1,h2,h3,p,button,a,li,summary,label,input,select,textarea",
-    )].filter(rendered);
+  const visualContentGeometry = content => {
+    const rects = [];
     const bounds = {
       top: Number.POSITIVE_INFINITY,
       right: Number.NEGATIVE_INFINITY,
@@ -154,30 +264,40 @@
     };
     const includeRect = rect => {
       if (!rect?.width || !rect?.height) return;
+      rects.push({
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
       bounds.top = Math.min(bounds.top, rect.top);
       bounds.right = Math.max(bounds.right, rect.right);
       bounds.bottom = Math.max(bounds.bottom, rect.bottom);
       bounds.left = Math.min(bounds.left, rect.left);
     };
 
-    elements.forEach(element => {
-      if (element.matches("input,select,textarea")) {
-        includeRect(element.getBoundingClientRect());
-        return;
+    const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+    let textNode = walker.nextNode();
+    while (textNode) {
+      const element = textNode.parentElement;
+      if (textNode.textContent.trim() && rendered(element)) {
+        const range = document.createRange();
+        range.selectNodeContents(textNode);
+        [...range.getClientRects()].forEach(includeRect);
+        range.detach?.();
       }
+      textNode = walker.nextNode();
+    }
 
-      const range = document.createRange();
-      range.selectNodeContents(element);
-      const textRects = [...range.getClientRects()].filter(rect => rect.width && rect.height);
-      if (textRects.length) {
-        textRects.forEach(includeRect);
-      } else {
-        includeRect(element.getBoundingClientRect());
-      }
-      range.detach?.();
+    [...content.querySelectorAll("input,select,textarea")].filter(rendered).forEach(element => {
+      includeRect(element.getBoundingClientRect());
     });
 
-    return Number.isFinite(bounds.top) ? bounds : stableContentRect(content);
+    if (Number.isFinite(bounds.top)) return { bounds, rects };
+    const fallback = stableContentRect(content);
+    return { bounds: fallback, rects: [fallback] };
   };
 
   const stableContentRect = content => {
@@ -188,6 +308,57 @@
       bottom: rect.bottom,
       left: rect.left,
     };
+  };
+
+  const objectPositionPart = (value, axis) => {
+    const parts = String(value || "").trim().split(/\s+/);
+    const token = parts[axis] || parts[0] || "50%";
+    const keywords = {
+      left: 0,
+      top: 0,
+      center: .5,
+      right: 1,
+      bottom: 1,
+    };
+    if (token in keywords) return keywords[token];
+    const percentage = token.match(/^(-?\d+(?:\.\d+)?)%$/);
+    return percentage ? Number(percentage[1]) / 100 : .5;
+  };
+
+  const placementIntersects = (layout, contentRect, padding) => {
+    const map = layout.placementMap;
+    if (!map) return null;
+
+    const artRect = layout.art.getBoundingClientRect();
+    if (!artRect.width || !artRect.height) return false;
+    const style = getComputedStyle(layout.art);
+    const scale = style.objectFit === "contain"
+      ? Math.min(artRect.width / map.width, artRect.height / map.height)
+      : style.objectFit === "fill"
+        ? null
+        : Math.max(artRect.width / map.width, artRect.height / map.height);
+    const renderedWidth = scale === null ? artRect.width : map.width * scale;
+    const renderedHeight = scale === null ? artRect.height : map.height * scale;
+    const scaleX = renderedWidth / map.width;
+    const scaleY = renderedHeight / map.height;
+    const offsetX = (artRect.width - renderedWidth) * objectPositionPart(style.objectPosition, 0);
+    const offsetY = (artRect.height - renderedHeight) * objectPositionPart(style.objectPosition, 1);
+    const naturalLeft = (contentRect.left - padding - artRect.left - offsetX) / scaleX;
+    const naturalTop = (contentRect.top - padding - artRect.top - offsetY) / scaleY;
+    const naturalRight = (contentRect.right + padding - artRect.left - offsetX) / scaleX;
+    const naturalBottom = (contentRect.bottom + padding - artRect.top - offsetY) / scaleY;
+    const left = Math.max(0, Math.min(map.columns, Math.floor(naturalLeft / map.width * map.columns)));
+    const top = Math.max(0, Math.min(map.rows, Math.floor(naturalTop / map.height * map.rows)));
+    const right = Math.max(left, Math.min(map.columns, Math.ceil(naturalRight / map.width * map.columns)));
+    const bottom = Math.max(top, Math.min(map.rows, Math.ceil(naturalBottom / map.height * map.rows)));
+    if (right <= left || bottom <= top) return false;
+
+    const stride = map.columns + 1;
+    const occupied = map.integral[bottom * stride + right]
+      - map.integral[top * stride + right]
+      - map.integral[bottom * stride + left]
+      + map.integral[top * stride + left];
+    return occupied > 0;
   };
 
   const contentBottomWithin = (content, scene) => {
@@ -225,6 +396,61 @@
     return rectFromEdges(left, top, right, bottom);
   };
 
+  /*
+   * PR #49 contract: the complete photographic plate fades toward the side
+   * that owns the artwork. One continuous feather keeps every branch attached;
+   * no per-line boxes or local holes are painted behind the copy.
+   */
+  const buildDirectionalFeather = ({ artRect, contentRect, gap }) => {
+    const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
+    const spaces = {
+      left: Math.max(0, contentRect.left - artRect.left),
+      right: Math.max(0, artRect.right - contentRect.right),
+      top: Math.max(0, contentRect.top - artRect.top),
+      bottom: Math.max(0, artRect.bottom - contentRect.bottom),
+    };
+    const allowedSides = ["left", "right", "top", "bottom"];
+    const revealSide = allowedSides.reduce(
+      (best, side) => spaces[side] > spaces[best] ? side : best,
+      allowedSides[0],
+    );
+    const horizontalFeather = Math.max(96, Math.min(280, artRect.width * .18));
+    const verticalFeather = Math.max(84, Math.min(240, artRect.height * .15));
+    let image = "";
+    let cut = 0;
+    let reveal = 0;
+    let axis = "x";
+
+    if (revealSide === "right") {
+      cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
+      reveal = clamp(cut + horizontalFeather, artRect.width);
+      image = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
+    } else if (revealSide === "left") {
+      cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
+      reveal = clamp(cut - horizontalFeather, artRect.width);
+      image = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
+    } else if (revealSide === "bottom") {
+      axis = "y";
+      cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
+      reveal = clamp(cut + verticalFeather, artRect.height);
+      image = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
+    } else {
+      axis = "y";
+      cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
+      reveal = clamp(cut - verticalFeather, artRect.height);
+      image = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
+    }
+
+    return Object.freeze({
+      image,
+      shape: "directional-feather",
+      axis,
+      cut,
+      reveal,
+      revealSide,
+    });
+  };
+
   const sameArtBounds = (first, second) => JSON.stringify(first) === JSON.stringify(second);
 
   const publishArtBounds = (layout, sceneRect, artRect, mask = null) => {
@@ -236,6 +462,7 @@
     );
     const scene = rectFromEdges(0, 0, sceneRect.width, sceneRect.height);
     let fullVisible = intersectRect(art, scene);
+    let protectedArea = null;
     let feather = null;
 
     if (mask) {
@@ -271,11 +498,11 @@
       version: 2,
       coordinateSpace: "scene-css-px",
       masked: Boolean(mask),
-      maskShape: mask ? "directional-feather" : null,
+      maskShape: mask?.shape ?? (mask ? "directional-feather" : null),
       revealSide: mask?.revealSide ?? null,
       art,
       fullVisible,
-      protected: null,
+      protected: protectedArea,
       feather,
     });
     const previous = artBounds.get(layout.scene) || artBounds.get(layout.art);
@@ -379,10 +606,10 @@
     }
 
     const sceneRect = layout.scene.getBoundingClientRect();
+    syncBackdropGeometry(layout);
     const artRect = layout.art.getBoundingClientRect();
-    const contentBounds = layout.mode === "grow"
-      ? stableContentRect(content)
-      : visualContentRect(content);
+    const contentGeometry = layout.mode === "grow" ? null : visualContentGeometry(content);
+    const contentBounds = contentGeometry?.bounds ?? stableContentRect(content);
     const contentRect = {
       ...contentBounds,
       width: contentBounds.right - contentBounds.left,
@@ -461,8 +688,14 @@
     const artMaskMode = layout.scene.dataset.okSafeMask || "auto";
     const forceArtMask = artMaskMode === "always";
     const suppressArtMask = artMaskMode === "never";
+    const placementCollision = isHome
+      ? false
+      : placementIntersects(layout, contentRect, Math.max(12, gap * .35));
+    const hasArtworkCollision = forceArtMask || (placementCollision ?? compact);
+    const backdropReady = isHome
+      || layout.backdrop?.dataset.okSafeBackdropReady === "true";
 
-    if (suppressArtMask || (!compact && !forceArtMask && !isHome)) {
+    if (suppressArtMask || !hasArtworkCollision || !backdropReady) {
       if (layout.mode === "grow") {
         layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
       } else {
@@ -478,55 +711,21 @@
       layout.scene.style.removeProperty("--ok-safe-required-height");
     }
 
-    const clamp = (value, maximum) => Math.max(0, Math.min(maximum, value));
-    const spaces = {
-      left: Math.max(0, contentRect.left - artRect.left),
-      right: Math.max(0, artRect.right - contentRect.right),
-      top: Math.max(0, contentRect.top - artRect.top),
-      bottom: Math.max(0, artRect.bottom - contentRect.bottom),
-    };
-    const allowedSides = ["left", "right", "top", "bottom"];
-    const revealSide = allowedSides.reduce(
-      (best, side) => spaces[side] > spaces[best] ? side : best,
-      allowedSides[0],
-    );
-    const horizontalFeather = Math.max(96, Math.min(240, artRect.width * .18));
-    const verticalFeather = Math.max(96, Math.min(240, artRect.height * .18));
-    let maskImage = "";
-    let cut = 0;
-    let reveal = 0;
-    let axis = "x";
-
-    if (revealSide === "right") {
-      cut = clamp(contentRect.right - artRect.left + gap * .35, artRect.width);
-      reveal = clamp(cut + horizontalFeather, artRect.width);
-      maskImage = `linear-gradient(to right, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
-    } else if (revealSide === "left") {
-      cut = clamp(contentRect.left - artRect.left - gap * .35, artRect.width);
-      reveal = clamp(cut - horizontalFeather, artRect.width);
-      maskImage = `linear-gradient(to right, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
-    } else if (revealSide === "bottom") {
-      axis = "y";
-      cut = clamp(contentRect.bottom - artRect.top + gap * .35, artRect.height);
-      reveal = clamp(cut + verticalFeather, artRect.height);
-      maskImage = `linear-gradient(to bottom, transparent 0, transparent ${cut}px, #000 ${reveal}px, #000 100%)`;
-    } else {
-      axis = "y";
-      cut = clamp(contentRect.top - artRect.top - gap * .35, artRect.height);
-      reveal = clamp(cut - verticalFeather, artRect.height);
-      maskImage = `linear-gradient(to bottom, #000 0, #000 ${reveal}px, transparent ${cut}px, transparent 100%)`;
+    const directionalFeather = buildDirectionalFeather({
+      artRect,
+      contentRect,
+      gap,
+    });
+    if (!directionalFeather) {
+      clearArtMask(layout, sceneRect, artRect);
+      return;
     }
 
-    layout.art.style.setProperty("--ok-safe-mask-image", maskImage);
-    layout.art.dataset.okSafeReveal = revealSide;
-    layout.art.dataset.okSafeShape = "directional-feather";
+    layout.art.style.setProperty("--ok-safe-mask-image", directionalFeather.image);
+    layout.art.dataset.okSafeReveal = directionalFeather.revealSide;
+    layout.art.dataset.okSafeShape = directionalFeather.shape;
     layout.art.dataset.okSafeArt = "active";
-    publishArtBounds(layout, sceneRect, artRect, {
-      axis,
-      cut,
-      reveal,
-      revealSide,
-    });
+    publishArtBounds(layout, sceneRect, artRect, directionalFeather);
   };
 
   const measureCards = () => {

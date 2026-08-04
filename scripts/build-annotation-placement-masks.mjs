@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import process from "node:process";
@@ -19,6 +20,7 @@ const SCENE_SELECTOR = [
   ".diagnosis-frame",
   ".about-page .scene",
 ].join(",");
+const missingOnly = process.argv.includes("--missing");
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1512, height: 982 } });
@@ -33,7 +35,7 @@ try {
     const artwork = await page.evaluate(sceneSelector => (
       [...document.querySelectorAll(sceneSelector)].flatMap(scene => {
         const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
-        if (!art?.dataset.placementMask || !scene.querySelector(".annotation-callout, .annotation")) {
+        if (!art?.dataset.placementMask) {
           return [];
         }
         return [{
@@ -48,6 +50,8 @@ try {
 
     for (const item of artwork) {
       if (generated.has(item.mask)) continue;
+      const outputPath = resolve(process.cwd(), item.mask);
+      if (missingOnly && existsSync(outputPath)) continue;
       const dataUrl = await page.evaluate(async ({ sourcePath, hasAuthoredEnergy, width, height }) => {
         const image = new Image();
         image.decoding = "async";
@@ -305,7 +309,6 @@ try {
         height: item.height,
       });
 
-      const outputPath = resolve(process.cwd(), item.mask);
       await mkdir(dirname(outputPath), { recursive: true });
       await writeFile(outputPath, Buffer.from(dataUrl.split(",")[1], "base64"));
       generated.add(item.mask);

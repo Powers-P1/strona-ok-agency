@@ -268,10 +268,15 @@ const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
   );
   navScale.push({ viewport, ...componentMetrics.nav });
 
-  const scene = page.locator("#web-architecture");
+  const scene = page.locator("#web-opening");
   await scene.evaluate(element => element.scrollIntoView({ block: "start", behavior: "auto" }));
   await frames(page, 4);
-  assertUnmaskedContract(await readMaskMetrics(scene), label);
+  const openingMask = await readMaskMetrics(scene);
+  if (viewport.width >= 7680) {
+    assertMaskContract(openingMask, `${label}, scaled artwork collision`);
+  } else {
+    assertUnmaskedContract(openingMask, label);
+  }
 };
 
 const auditResize = async (page, baseUrl, {

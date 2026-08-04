@@ -274,6 +274,22 @@ test("never builds a Meta server event without explicit marketing consent", asyn
   assert.equal(payload.fbc, "");
 });
 
+test("scrubs contact data from an allowed CAPI source path", () => {
+  for (const eventSourceUrl of [
+    "https://okagency.pl/jan%2540example%252Ecom?utm_source=meta",
+    "https://www.okagency.pl/tel%252B48%252F501%252F234%252F567#result",
+  ]) {
+    const payload = normalizePayload({
+      email: "lead@example.com",
+      analyticsEventId: "lead-event-12345",
+      marketingConsent: true,
+      eventSourceUrl,
+    });
+    assert.match(payload.eventSourceUrl, /^https:\/\/(?:www\.)?okagency\.pl\/$/);
+    assert.doesNotMatch(payload.eventSourceUrl, /jan|example|501|234|567/i);
+  }
+});
+
 test("request-size budget accepts the largest valid Unicode form with full attribution", async () => {
   const unicode = "😀";
   const maxTouch = {

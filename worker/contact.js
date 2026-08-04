@@ -90,7 +90,8 @@ function normalizeEventSourceUrl(value) {
   try {
     const url = new URL(value);
     if (url.protocol !== "https:" || !ALLOWED_ATTRIBUTION_HOSTS.has(url.hostname)) return "";
-    return `${url.origin}${url.pathname}`.slice(0, META_LIMITS.eventSourceUrl);
+    const pathname = containsPathContactData(url.pathname) ? "/" : url.pathname;
+    return `${url.origin}${pathname}`.slice(0, META_LIMITS.eventSourceUrl);
   } catch {
     return "";
   }

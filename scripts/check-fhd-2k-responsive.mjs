@@ -341,6 +341,26 @@ const auditResize = async (page, baseUrl, {
   }
 };
 
+const auditBackdropFailureFallback = async (page, baseUrl) => {
+  await page.route(/editorial-atelier-backdrop-.*\.webp/, route => route.abort());
+  await page.goto(new URL("/social-media", baseUrl).href, { waitUntil: "domcontentloaded" });
+  await page.locator("#social-opening[data-ok-safe-scene]").waitFor();
+  await frames(page, 4);
+
+  const fallback = await page.locator("#social-opening").evaluate(scene => ({
+    protectionReady: scene.hasAttribute("data-ok-safe-protection-ready"),
+    artState: scene.querySelector(".campaign-art")?.dataset.okSafeArt,
+    copyBackground: getComputedStyle(scene.querySelector(".opening-copy")).backgroundColor,
+  }));
+  check(!fallback.protectionReady, "mobile backdrop failure: protection was marked ready");
+  check(fallback.artState === "idle", `mobile backdrop failure: artwork state is ${fallback.artState}`);
+  check(
+    fallback.copyBackground !== "rgba(0, 0, 0, 0)"
+      && fallback.copyBackground !== "transparent",
+    `mobile backdrop failure: fallback copy background is ${fallback.copyBackground}`,
+  );
+};
+
 let browser;
 try {
   const baseUrl = await resolveBaseUrl();
@@ -392,6 +412,18 @@ try {
       await mobilePage.close();
       await mobileContext.close();
     }
+  }
+
+  const fallbackContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
+  await fallbackContext.addInitScript(() => {
+    localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+  });
+  const fallbackPage = await fallbackContext.newPage();
+  try {
+    await auditBackdropFailureFallback(fallbackPage, baseUrl);
+  } finally {
+    await fallbackPage.close();
+    await fallbackContext.close();
   }
 
   navScale.slice(1).forEach((entry, index) => {

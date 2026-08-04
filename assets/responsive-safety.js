@@ -243,11 +243,13 @@
       art,
       backdrop: createBackdrop(art),
       placementMap: null,
+      placementMapReady: false,
       mode,
     };
     layouts.push(layout);
     buildPlacementMap(art.dataset.placementMask).then(map => {
       layout.placementMap = map;
+      layout.placementMapReady = true;
       schedule();
     });
     observed.add(scene);
@@ -576,6 +578,12 @@
   };
 
   const measureLayout = layout => {
+    const protectionReady = Boolean(
+      layout.placementMapReady
+      && layout.backdrop?.dataset.okSafeBackdropReady === "true",
+    );
+    layout.scene.toggleAttribute("data-ok-safe-protection-ready", protectionReady);
+
     const candidates = [...layout.scene.querySelectorAll(layout.contentSelector)];
     const content = candidates.find(rendered);
     candidates.filter(candidate => candidate !== content).forEach(candidate => {

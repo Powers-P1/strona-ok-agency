@@ -182,7 +182,7 @@ body.home-page {
     display: none;
   }
 
-  [data-ok-safe-scene] :is(
+  [data-ok-safe-scene][data-ok-safe-protection-ready] :is(
     .opening-copy,
     .proof-content,
     .process-editorial-content,
@@ -198,7 +198,7 @@ body.home-page {
     .social-frame,
     .process-frame,
     .diagnosis-frame
-  )[data-ok-safe-scene]::before {
+  )[data-ok-safe-scene][data-ok-safe-protection-ready]::before {
     background: none;
   }
 }

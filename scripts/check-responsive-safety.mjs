@@ -105,6 +105,11 @@ for (const selector of [
 }
 
 requireText(css, '[data-ok-safe-art="active"]', "CSS nie ma aktywnej osłony grafiki");
+requireText(
+  css,
+  '[data-ok-safe-scene][data-ok-safe-protection-ready]',
+  "CSS usuwa awaryjny kontrast zanim tonalne tło i mapa kolizji są gotowe",
+);
 requireText(css, ".home-page .hero", "CSS nie ma reflow hero");
 requireText(css, "mask-image: var(--ok-safe-mask-image)", "CSS nie korzysta z dynamicznego featheru");
 requireText(
@@ -214,6 +219,12 @@ requireText(
   "Proces nie deklaruje ciemnej tonalnej płyty sceny",
 );
 
+requireText(script, "placementMapReady", "JS nie czeka na mapę kolizji przed usunięciem awaryjnego kontrastu");
+requireText(
+  script,
+  'toggleAttribute("data-ok-safe-protection-ready", protectionReady)',
+  "JS nie publikuje gotowości tonalnej ochrony dla bezpiecznego fallbacku",
+);
 requireText(script, "const artBounds = new WeakMap()", "JS does not index scene/art safety bounds in a WeakMap");
 requireText(script, "getArtBounds: sceneOrArt => artBounds.get(sceneOrArt) || null", "public responsive safety API does not expose getArtBounds(sceneOrArt)");
 requireText(script, "artBounds.set(layout.scene, record)", "JS does not publish safety bounds under the scene key");

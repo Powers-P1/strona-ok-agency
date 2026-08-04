@@ -28,6 +28,7 @@
     "check:annotation-energy": "node scripts/check-annotation-energy.mjs",
     "check:annotation-geometry": "node scripts/check-annotation-geometry.mjs",
     "check:scene-disclosures": "node scripts/check-scene-disclosures.mjs",
+    "check:production-art-safety": "node scripts/check-production-art-safety.mjs",
     "check:pages-functions": "wrangler pages functions build functions --outfile dist/pages-worker.js",
     "check:worker": "wrangler deploy --config wrangler.contact.jsonc --dry-run --outdir dist/worker-dry-run",
     "prebuild": "npm run check:links && npm run check:quality",

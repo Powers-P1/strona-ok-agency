@@ -109,10 +109,10 @@ Ustabilizować desktopowy system punktów/anotacji na wszystkich obsługiwanych 
 - [x] Sprawdzić brak nowych `!important`, duplikatów i tymczasowych plików.
 - [x] Uruchomić pełne quality/link/build dopiero po zielonych testach różnicowych.
 - [x] Zaktualizować wersje assetów centralnie.
-- [ ] Commit, push, PR, CI, merge i Cloudflare Pages.
-- [ ] Produkcyjny smoke na domenie.
-- [ ] Przekazać stabilny hash agentowi mobile i uzyskać niezależny QA 360/390.
-- [ ] Posprzątać task-local serwery, procesy i artefakty.
+- [x] Commit, push, PR, CI, merge i Cloudflare Pages.
+- [x] Produkcyjny smoke na domenie.
+- [x] Przekazać stabilny hash agentowi mobile i uzyskać niezależny QA 360/390.
+- [x] Posprzątać task-local serwery, procesy i artefakty.
 
 ## Rejestr wykonania i ponownego odczytu
 
@@ -132,6 +132,8 @@ Po każdym kroku ten dokument jest aktualizowany i w całości ponownie odczytyw
 | 2026-08-04 | 6 / CI retry | Pierwszy runner PR #107 zakończył pełną geometrię jednym timeoutem `O nas / 1512×982 / callout-leading` po sztucznym limicie 4 s. Identyczny przypadek lokalnie PASS 3/3, bez błędu runtime. Timeout otwarcia/zamknięcia testu ujednolicono z istniejącym `TIMEOUT=15s`; test nadal wymaga pełnego stanu open/closed i po patchu targeted PASS. Produkcyjny CSS/JS bez zmian. | wykonany przed ponownym push/CI |
 | 2026-08-04 | 6 / Pages Node 24 | PR #107 scalony jako `39b6558`, pełny GitHub CI PASS. Pierwszy produkcyjny Pages build zatrzymał istniejący test analytics, ponieważ regex `/501|…/` objął timestamp `captured_at=…41.501Z`. Hotfix porównuje dokładny bezpieczny kształt danych po wydzieleniu timestampu. Analytics 33/33 PASS na lokalnym Node 22 i zgodnym z Pages Node 24; brak zmian produkcyjnego CSS/JS/HTML. | wykonany przed hotfix PR |
 | 2026-08-04 | 6 / stabilizacja testu interakcji | Dwa linuxowe runnery zatrzymały się wyłącznie na `O nas / 1512×982 / callout-leading`, podczas gdy runtime i ten przypadek lokalnie przechodziły. Przyczyna: test wysyłał syntetyczny `pointerleave`, ale fizyczny kursor Playwright pozostawał nad ringiem; Chromium mógł ponownie wysłać wejście podczas przejmowania focusu i otworzyć zamykany dymek. Po pomiarze klatki zamknięcia test przesuwa teraz fizyczny kursor poza target. Produkcyjny przypadek 1512×982 PASS 5/5; brak zmian runtime CSS/JS/HTML. | wykonany przed test-only PR |
+| 2026-08-04 | 6 / produkcja i mobile | Main `986ec53`, Pages `85e8ac7c-3cdd-4f2a-8af4-f442d05874c9` SUCCESS i HTTP 200. Produkcja: placement 37 energy + 9 structure, geometria O nas 1024×900/2560×900 oraz WWW 821×900 PASS. Niezależny mobile QA: 12 kombinacji 360×640/390×844 × 6 tras, 0 dotów/linii/kart/summary, 0 overflow/nested scroll, maski i menu PASS, konsola czysta. Task-local PID 203532/port 7154 zatrzymany, karty i viewport QA zresetowane, brak osieroconych helperów. | wykonany przed finalnym CI/merge |
+| 2026-08-04 | 6 / zakończenie | PR #109 pełny CI `30948896905` SUCCESS, w tym wcześniej niestabilna geometria 1512×982. PR scalony jako `c2150df`; końcowy Pages production deployment `c33411eb-b891-48fc-ba9f-c3e1d699b07b` SUCCESS. Wszystkie pozycje planu odznaczone; runtime produkcyjny pozostaje w wersjach `art-coordinate-system.js?v=20260804-1` i `responsive-safety.js?v=20260804-18`. | wykonany po publikacji |
 
 ### Dowód baseline
 

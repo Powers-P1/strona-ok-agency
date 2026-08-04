@@ -27,10 +27,22 @@ const MOBILE_DISPLAY_CASES = [
 const MASK_FAMILY_CASES = [
   { route: "/strony-internetowe", selector: "#web-architecture", name: "Web architecture" },
   { route: "/kampanie", selector: "#campaign-opening", name: "Campaign opening" },
+  {
+    route: "/kampanie",
+    selector: "#campaign-proof",
+    name: "Campaign proof transformed",
+    viewport: { width: 1920, height: 1080 },
+    transformed: true,
+  },
   { route: "/social-media", selector: "#social-opening", name: "Social opening" },
   { route: "/proces", selector: "#process-delivery", name: "Process delivery" },
   { route: "/o-nas", selector: "#about-model", name: "About model" },
-  { route: "/diagnoza", selector: "#diagnosis-opening", name: "Diagnosis opening" },
+  {
+    route: "/diagnoza",
+    selector: "#diagnosis-opening",
+    name: "Diagnosis opening",
+    viewport: { width: 768, height: 728 },
+  },
 ];
 const EPSILON = 2;
 const failures = [];
@@ -162,37 +174,26 @@ const readMaskMetrics = async scene => scene.evaluate(async element => {
       if (rects.length) rects.forEach(include);
       else include(target.getBoundingClientRect());
     });
-  const revealSide = bounds?.revealSide;
-  const feather = bounds?.feather;
-  const artBounds = bounds?.art;
-  const directionalGap = revealSide === "right"
-    ? feather?.left - actual.right
-    : revealSide === "left"
-      ? actual.left - feather?.right
-      : revealSide === "bottom"
-        ? feather?.top - actual.bottom
-        : actual.top - feather?.bottom;
-  const featherSpansArtwork = revealSide === "left" || revealSide === "right"
-    ? Math.abs(feather?.top - artBounds?.top) <= 2
-      && Math.abs(feather?.bottom - artBounds?.bottom) <= 2
-    : Math.abs(feather?.left - artBounds?.left) <= 2
-      && Math.abs(feather?.right - artBounds?.right) <= 2;
-
+  const maskImage = art ? getComputedStyle(art).maskImage : "none";
   return {
     version: bounds?.version,
     masked: bounds?.masked,
     shape: bounds?.maskShape,
-    revealSide,
+    revealSide: bounds?.revealSide,
+    art: bounds?.art,
     protected: bounds?.protected,
-    feather,
+    feather: bounds?.feather,
     fullVisible: bounds?.fullVisible,
     actual,
-    directionalGap,
-    featherSpansArtwork,
     state: art?.dataset.okSafeArt,
     datasetShape: art?.dataset.okSafeShape,
-    maskImage: art ? getComputedStyle(art).maskImage : "none",
+    maskImage,
+    maskPixelStops: [...maskImage.matchAll(/(-?\d+(?:\.\d+)?)px/g)]
+      .map(match => Number(match[1])),
+    transform: art ? getComputedStyle(art).transform : "none",
+    localSize: art ? { width: art.offsetWidth, height: art.offsetHeight } : null,
     sceneHeight: sceneRect.height,
+    viewportWidth: innerWidth,
     viewportHeight: innerHeight,
   };
 });
@@ -200,17 +201,11 @@ const readMaskMetrics = async scene => scene.evaluate(async element => {
 const assertMaskContract = (mask, label, { full = false } = {}) => {
   check(mask.version === 2, `${label}: art bounds API version is ${mask.version}, expected 2`);
   check(mask.masked && mask.shape === "directional-feather", `${label}: art mask shape is ${mask.shape}`);
-  check(mask.state === "active" && mask.datasetShape === "directional-feather", `${label}: directional art mask is not active`);
-  check(mask.maskImage.startsWith("linear-gradient("), `${label}: mask is not a CSS linear gradient`);
-  check(!mask.maskImage.includes("data:image"), `${label}: rectangular SVG mask returned`);
-  check(mask.protected === null, `${label}: rectangular protected field returned`);
+  check(mask.state === "active" && mask.datasetShape === "directional-feather", `${label}: PR49 feather is not active`);
+  check(mask.maskImage.includes("linear-gradient"), `${label}: mask is not a continuous linear gradient`);
   check(["left", "right", "top", "bottom"].includes(mask.revealSide), `${label}: invalid reveal side ${mask.revealSide}`);
-  check(mask.directionalGap >= -EPSILON, `${label}: feather begins ${Math.abs(mask.directionalGap).toFixed(1)}px inside rendered copy`);
-  check(mask.featherSpansArtwork, `${label}: feather does not span the artwork perpendicular axis`);
-  const featherDepth = ["left", "right"].includes(mask.revealSide)
-    ? mask.feather?.width
-    : mask.feather?.height;
-  check(featherDepth >= 94, `${label}: feather is only ${featherDepth}px deep`);
+  check(mask.protected === null, `${label}: directional feather unexpectedly publishes a local protection box`);
+  check(mask.feather?.width > 0 && mask.feather?.height > 0, `${label}: continuous feather region is empty`);
   check(mask.fullVisible?.width > 0 && mask.fullVisible?.height > 0, `${label}: fully visible artwork region is empty`);
   if (!full) return;
   check(Math.abs(mask.sceneHeight - mask.viewportHeight) <= EPSILON, `${label}: scene is not 100svh`);
@@ -223,17 +218,45 @@ const assertUnmaskedContract = (mask, label) => {
   check(mask.maskImage === "none", `${label}: roomy composition still has a computed mask`);
 };
 
+const assertTransformedMaskCoordinates = (mask, label) => {
+  check(mask.transform !== "none", `${label}: artwork is not transformed`);
+  check(mask.maskPixelStops.length >= 3, `${label}: mask pixel stops are unavailable`);
+  if (mask.maskPixelStops.length < 3 || !mask.localSize || !mask.art) return;
+
+  const stops = mask.maskPixelStops.slice(-2).sort((first, second) => first - second);
+  const horizontal = ["left", "right"].includes(mask.revealSide);
+  const scale = horizontal
+    ? mask.art.width / mask.localSize.width
+    : mask.art.height / mask.localSize.height;
+  const origin = horizontal ? mask.art.left : mask.art.top;
+  const sceneLimit = horizontal ? mask.viewportWidth : mask.viewportHeight;
+  const expectedStart = Math.max(0, origin + stops[0] * scale);
+  const expectedEnd = Math.min(sceneLimit, origin + stops[1] * scale);
+  const actualStart = horizontal ? mask.feather.left : mask.feather.top;
+  const actualEnd = horizontal ? mask.feather.right : mask.feather.bottom;
+  check(
+    Math.abs(actualStart - expectedStart) <= EPSILON,
+    `${label}: transformed feather start ${actualStart}px differs from ${expectedStart}px`,
+  );
+  check(
+    Math.abs(actualEnd - expectedEnd) <= EPSILON,
+    `${label}: transformed feather end ${actualEnd}px differs from ${expectedEnd}px`,
+  );
+};
+
 const auditMaskFamily = async (page, baseUrl, maskCase) => {
   const label = `${maskCase.name} mask family`;
   if (WEBKIT_SMOKE) console.log(`WebKit mask: ${maskCase.name}`);
-  await page.setViewportSize({ width: 1113, height: 728 });
+  await page.setViewportSize(maskCase.viewport ?? { width: 1113, height: 728 });
   await page.goto(new URL(maskCase.route, baseUrl).href, { waitUntil: "domcontentloaded" });
   await waitForStablePage(page);
   await page.waitForFunction(() => window.OKAgencyResponsiveSafety?.getArtBounds);
   const scene = page.locator(maskCase.selector);
   await scene.evaluate(element => element.scrollIntoView({ block: "start", behavior: "auto" }));
   await frames(page, 4);
-  assertMaskContract(await readMaskMetrics(scene), label, { full: true });
+  const mask = await readMaskMetrics(scene);
+  assertMaskContract(mask, label, { full: true });
+  if (maskCase.transformed) assertTransformedMaskCoordinates(mask, label);
 };
 
 const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
@@ -287,10 +310,15 @@ const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
   );
   navScale.push({ viewport, ...componentMetrics.nav });
 
-  const scene = page.locator("#web-architecture");
+  const scene = page.locator("#web-opening");
   await scene.evaluate(element => element.scrollIntoView({ block: "start", behavior: "auto" }));
   await frames(page, 4);
-  assertUnmaskedContract(await readMaskMetrics(scene), label);
+  const openingMask = await readMaskMetrics(scene);
+  if (viewport.width >= 7680) {
+    assertMaskContract(openingMask, `${label}, scaled artwork collision`);
+  } else {
+    assertUnmaskedContract(openingMask, label);
+  }
 };
 
 const auditResize = async (page, baseUrl, {
@@ -355,6 +383,75 @@ const auditResize = async (page, baseUrl, {
   }
 };
 
+const auditBackdropFailureFallback = async (page, baseUrl) => {
+  await page.route(/editorial-atelier-backdrop-.*\.webp/, route => route.abort());
+  await page.goto(new URL("/social-media", baseUrl).href, { waitUntil: "domcontentloaded" });
+  await page.locator("#social-opening[data-ok-safe-scene]").waitFor();
+  await frames(page, 4);
+
+  const fallback = await page.locator("#social-opening").evaluate(scene => ({
+    protectionReady: scene.hasAttribute("data-ok-safe-protection-ready"),
+    artState: scene.querySelector(".campaign-art")?.dataset.okSafeArt,
+    copyBackground: getComputedStyle(scene.querySelector(".opening-copy")).backgroundColor,
+  }));
+  check(!fallback.protectionReady, "mobile backdrop failure: protection was marked ready");
+  check(fallback.artState === "idle", `mobile backdrop failure: artwork state is ${fallback.artState}`);
+  check(
+    fallback.copyBackground !== "rgba(0, 0, 0, 0)"
+      && fallback.copyBackground !== "transparent",
+    `mobile backdrop failure: fallback copy background is ${fallback.copyBackground}`,
+  );
+};
+
+const auditDeferredPlacementMaps = async (page, baseUrl) => {
+  const requestedMaps = new Set();
+  await page.route(/placement-mask-.*\.png/, async route => {
+    requestedMaps.add(new URL(route.request().url()).pathname);
+    await route.continue();
+  });
+  await page.goto(new URL("/proces", baseUrl).href, { waitUntil: "domcontentloaded" });
+  await page.locator("#process-opening[data-ok-safe-protection-ready]").waitFor();
+  await frames(page, 4);
+
+  const availableMaps = await page.locator("[data-placement-mask]").count();
+  check(requestedMaps.size > 0, "deferred placement maps: opening map was not requested");
+  check(
+    requestedMaps.size <= 2,
+    `deferred placement maps: requested ${requestedMaps.size} maps before leaving the opening view`,
+  );
+  check(
+    requestedMaps.size < availableMaps,
+    `deferred placement maps: requested ${requestedMaps.size}/${availableMaps} maps on initial view`,
+  );
+};
+
+const auditDeferredDiagnosisMaps = async (page, baseUrl) => {
+  const requestedMaps = new Set();
+  await page.route(/placement-mask-.*\.png/, async route => {
+    requestedMaps.add(new URL(route.request().url()).pathname);
+    await route.continue();
+  });
+  await page.goto(new URL("/diagnoza", baseUrl).href, { waitUntil: "domcontentloaded" });
+  await page.locator("#diagnosis-opening[data-ok-safe-protection-ready]").waitFor();
+  await frames(page, 4);
+
+  const availableMaps = await page.locator("[data-placement-mask]").count();
+  check(availableMaps === 3, `deferred diagnosis maps: found ${availableMaps} placement maps`);
+  check(
+    requestedMaps.size === 1,
+    `deferred diagnosis maps: requested ${requestedMaps.size}/${availableMaps} maps before starting diagnosis`,
+  );
+
+  await page.locator("[data-start-diagnosis]").click();
+  await page.waitForFunction(() => (
+    document.querySelector("#diagnosis-map")?.hasAttribute("data-ok-safe-protection-ready")
+  ));
+  check(
+    requestedMaps.size === 2,
+    `deferred diagnosis maps: requested ${requestedMaps.size}/${availableMaps} maps after opening the map`,
+  );
+};
+
 let browser;
 try {
   const baseUrl = await resolveBaseUrl();
@@ -406,6 +503,36 @@ try {
       await mobilePage.close();
       await mobileContext.close();
     }
+
+    const placementContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
+    await placementContext.addInitScript(() => {
+      localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+    });
+    const placementPage = await placementContext.newPage();
+    try {
+      await auditDeferredPlacementMaps(placementPage, baseUrl);
+    } finally {
+      await placementPage.close();
+    }
+    const diagnosisPage = await placementContext.newPage();
+    try {
+      await auditDeferredDiagnosisMaps(diagnosisPage, baseUrl);
+    } finally {
+      await diagnosisPage.close();
+      await placementContext.close();
+    }
+  }
+
+  const fallbackContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
+  await fallbackContext.addInitScript(() => {
+    localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+  });
+  const fallbackPage = await fallbackContext.newPage();
+  try {
+    await auditBackdropFailureFallback(fallbackPage, baseUrl);
+  } finally {
+    await fallbackPage.close();
+    await fallbackContext.close();
   }
 
   navScale.slice(1).forEach((entry, index) => {

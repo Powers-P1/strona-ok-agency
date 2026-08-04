@@ -191,6 +191,9 @@
       frame.setAttribute("aria-hidden", String(!active));
       frame.inert = !active;
     });
+    window.dispatchEvent(new CustomEvent("okagency:scene-activate", {
+      detail: { scene: next },
+    }));
 
     if (themeColor) themeColor.content = name === "map" ? "#071a2c" : "#ead9cb";
     scrollTo({ top: tool.offsetTop, behavior: "auto" });

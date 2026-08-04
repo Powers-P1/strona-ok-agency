@@ -4,11 +4,11 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 ## Podsumowanie
 
-- `!important`: **217**
+- `!important`: **265**
 - deklaracje typografii w lokalnych arkuszach tras: **952**
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **283**
-- inline `style` w HTML: **28**
-- mutacje stylu z JS: **45**
+- inline `style` w HTML: **78**
+- mutacje stylu z JS: **58**
 
 ### Największe źródła `!important`
 
@@ -21,9 +21,19 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/diagnosis/styles.css | 13 |
 | assets/page-home.css | 12 |
 | assets/scene-viewport.css | 6 |
+| mockups/o-nas/index.html | 6 |
+| 05-editorial-atelier/index.html | 5 |
 | assets/page-contact.css | 5 |
 | assets/services/about/styles.css | 5 |
+| mockups/kontakt/01-form-desktop/index.html | 5 |
+| mockups/kontakt/02-form-mobile/index.html | 5 |
+| mockups/kontakt/03-validation/index.html | 5 |
+| mockups/kontakt/04-email-handoff/index.html | 5 |
+| mockups/kontakt/05-email-fallback/index.html | 5 |
+| 05-editorial-atelier/assets/tree-map-editor.js | 4 |
 | assets/site-footer.css | 4 |
+| mockups/diagnoza/assets/mockup.css | 4 |
+| mockups/footer-legal/assets/mockups.css | 4 |
 | assets/legal-pages.css | 3 |
 | assets/page-menu.css | 3 |
 | assets/responsive-safety.css | 3 |
@@ -54,6 +64,15 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Linia | Selektor | Kontekst | Klasyfikacja |
 | --- | --- | --- | --- | --- |
+| 05-editorial-atelier/assets/tree-map-editor.js | 19 | (code) | — | other |
+| 05-editorial-atelier/assets/tree-map-editor.js | 20 | (code) | — | other |
+| 05-editorial-atelier/assets/tree-map-editor.js | 21 | (code) | — | other |
+| 05-editorial-atelier/assets/tree-map-editor.js | 24 | (code) | — | other |
+| 05-editorial-atelier/index.html | 816 | (code) | — | other |
+| 05-editorial-atelier/index.html | 817 | (code) | — | other |
+| 05-editorial-atelier/index.html | 818 | (code) | — | other |
+| 05-editorial-atelier/index.html | 819 | (code) | — | other |
+| 05-editorial-atelier/index.html | 823 | (code) | — | other |
 | assets/annotation-system.css | 102 | .annotation-dot | — | shared-contract |
 | assets/annotation-system.css | 103 | .annotation-dot | — | shared-contract |
 | assets/annotation-system.css | 104 | .annotation-dot | — | shared-contract |
@@ -271,6 +290,45 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/story-standard.css | 98 | .proof-detail, .accordion-detail | — | shared-contract |
 | assets/story-standard.css | 131 | .campaign-frame, .social-frame, .process-frame, .about-page .scene, .about-page .scene-art, .campaign-art, .proof-bloom | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/story-standard.css | 132 | .campaign-frame, .social-frame, .process-frame, .about-page .scene, .about-page .scene-art, .campaign-art, .proof-bloom | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/diagnoza/assets/mockup.css | 855 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/diagnoza/assets/mockup.css | 856 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/diagnoza/assets/mockup.css | 857 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/diagnoza/assets/mockup.css | 858 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/footer-legal/assets/mockups.css | 954 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/footer-legal/assets/mockups.css | 955 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/footer-legal/assets/mockups.css | 956 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/footer-legal/assets/mockups.css | 957 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| mockups/kontakt/01-form-desktop/index.html | 466 | (code) | — | other |
+| mockups/kontakt/01-form-desktop/index.html | 466 | (code) | — | other |
+| mockups/kontakt/01-form-desktop/index.html | 524 | (code) | — | other |
+| mockups/kontakt/01-form-desktop/index.html | 525 | (code) | — | other |
+| mockups/kontakt/01-form-desktop/index.html | 526 | (code) | — | other |
+| mockups/kontakt/02-form-mobile/index.html | 466 | (code) | — | other |
+| mockups/kontakt/02-form-mobile/index.html | 466 | (code) | — | other |
+| mockups/kontakt/02-form-mobile/index.html | 524 | (code) | — | other |
+| mockups/kontakt/02-form-mobile/index.html | 525 | (code) | — | other |
+| mockups/kontakt/02-form-mobile/index.html | 526 | (code) | — | other |
+| mockups/kontakt/03-validation/index.html | 466 | (code) | — | other |
+| mockups/kontakt/03-validation/index.html | 466 | (code) | — | other |
+| mockups/kontakt/03-validation/index.html | 524 | (code) | — | other |
+| mockups/kontakt/03-validation/index.html | 525 | (code) | — | other |
+| mockups/kontakt/03-validation/index.html | 526 | (code) | — | other |
+| mockups/kontakt/04-email-handoff/index.html | 466 | (code) | — | other |
+| mockups/kontakt/04-email-handoff/index.html | 466 | (code) | — | other |
+| mockups/kontakt/04-email-handoff/index.html | 524 | (code) | — | other |
+| mockups/kontakt/04-email-handoff/index.html | 525 | (code) | — | other |
+| mockups/kontakt/04-email-handoff/index.html | 526 | (code) | — | other |
+| mockups/kontakt/05-email-fallback/index.html | 466 | (code) | — | other |
+| mockups/kontakt/05-email-fallback/index.html | 466 | (code) | — | other |
+| mockups/kontakt/05-email-fallback/index.html | 524 | (code) | — | other |
+| mockups/kontakt/05-email-fallback/index.html | 525 | (code) | — | other |
+| mockups/kontakt/05-email-fallback/index.html | 526 | (code) | — | other |
+| mockups/o-nas/index.html | 397 | (code) | — | other |
+| mockups/o-nas/index.html | 1867 | (code) | — | other |
+| mockups/o-nas/index.html | 1972 | (code) | — | other |
+| mockups/o-nas/index.html | 1973 | (code) | — | other |
+| mockups/o-nas/index.html | 1974 | (code) | — | other |
+| mockups/o-nas/index.html | 1975 | (code) | — | other |
 
 ## Każda lokalna deklaracja typografii
 
@@ -1537,6 +1595,56 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | menu.html | 118 | --i:1 |
 | menu.html | 132 | --i:2 |
 | menu.html | 146 | --i:3 |
+| mockups/kontakt/01-form-desktop/index.html | 845 | --i:0 |
+| mockups/kontakt/01-form-desktop/index.html | 847 | --i:1 |
+| mockups/kontakt/01-form-desktop/index.html | 850 | --d:0s |
+| mockups/kontakt/01-form-desktop/index.html | 851 | --d:.09s |
+| mockups/kontakt/01-form-desktop/index.html | 854 | --i:2 |
+| mockups/kontakt/01-form-desktop/index.html | 856 | --i:3 |
+| mockups/kontakt/01-form-desktop/index.html | 871 | --i:4 |
+| mockups/kontakt/01-form-desktop/index.html | 883 | --i:5 |
+| mockups/kontakt/02-form-mobile/index.html | 841 | --i:0 |
+| mockups/kontakt/02-form-mobile/index.html | 843 | --i:1 |
+| mockups/kontakt/02-form-mobile/index.html | 846 | --d:0s |
+| mockups/kontakt/02-form-mobile/index.html | 847 | --d:.09s |
+| mockups/kontakt/02-form-mobile/index.html | 850 | --i:2 |
+| mockups/kontakt/02-form-mobile/index.html | 852 | --i:3 |
+| mockups/kontakt/02-form-mobile/index.html | 867 | --i:4 |
+| mockups/kontakt/02-form-mobile/index.html | 875 | --i:5 |
+| mockups/kontakt/03-validation/index.html | 841 | --i:0 |
+| mockups/kontakt/03-validation/index.html | 843 | --i:1 |
+| mockups/kontakt/03-validation/index.html | 846 | --d:0s |
+| mockups/kontakt/03-validation/index.html | 847 | --d:.09s |
+| mockups/kontakt/03-validation/index.html | 850 | --i:2 |
+| mockups/kontakt/03-validation/index.html | 852 | --i:3 |
+| mockups/kontakt/03-validation/index.html | 867 | --i:4 |
+| mockups/kontakt/03-validation/index.html | 875 | --i:5 |
+| mockups/kontakt/04-email-handoff/index.html | 841 | --i:0 |
+| mockups/kontakt/04-email-handoff/index.html | 843 | --i:1 |
+| mockups/kontakt/04-email-handoff/index.html | 846 | --d:0s |
+| mockups/kontakt/04-email-handoff/index.html | 847 | --d:.09s |
+| mockups/kontakt/04-email-handoff/index.html | 850 | --i:2 |
+| mockups/kontakt/04-email-handoff/index.html | 852 | --i:3 |
+| mockups/kontakt/04-email-handoff/index.html | 867 | --i:4 |
+| mockups/kontakt/05-email-fallback/index.html | 841 | --i:0 |
+| mockups/kontakt/05-email-fallback/index.html | 843 | --i:1 |
+| mockups/kontakt/05-email-fallback/index.html | 846 | --d:0s |
+| mockups/kontakt/05-email-fallback/index.html | 847 | --d:.09s |
+| mockups/kontakt/05-email-fallback/index.html | 850 | --i:2 |
+| mockups/kontakt/05-email-fallback/index.html | 852 | --i:3 |
+| mockups/kontakt/05-email-fallback/index.html | 867 | --i:4 |
+| mockups/o-nas/index.html | 2034 | --x: 70%; --y: 62%; |
+| mockups/o-nas/index.html | 2038 | --x: 87%; --y: 75%; |
+| mockups/o-nas/index.html | 2042 | --x: 84%; --y: 35%; |
+| mockups/o-nas/index.html | 2046 | --x: 73%; --y: 80%; |
+| mockups/o-nas/index.html | 2097 | --x: 33%; --y: 72%; --leader: 48px; |
+| mockups/o-nas/index.html | 2101 | --x: 32.5%; --y: 35%; --leader: 32px; --copy-w: 195px; |
+| mockups/o-nas/index.html | 2105 | --x: 37%; --y: 76%; --leader: 38px; |
+| mockups/o-nas/index.html | 2109 | --x: 49%; --y: 73%; |
+| mockups/o-nas/index.html | 2153 | --x: 74%; --y: 62%; |
+| mockups/o-nas/index.html | 2157 | --x: 84%; --y: 37%; |
+| mockups/o-nas/index.html | 2161 | --x: 90%; --y: 73%; |
+| mockups/o-nas/index.html | 2165 | --x: 79%; --y: 80%; |
 | o-nas.html | 127 | --x: 70%; --y: 62%; |
 | o-nas.html | 131 | --x: 87%; --y: 75%; |
 | o-nas.html | 135 | --x: 84%; --y: 35%; |
@@ -1554,6 +1662,19 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Linia | Operacja |
 | --- | --- | --- |
+| 05-editorial-atelier/assets/tree-energy.js | 1893 | .style.width = \`${cssWidth}px\` |
+| 05-editorial-atelier/assets/tree-energy.js | 1894 | .style.height = \`${cssHeight}px\` |
+| 05-editorial-atelier/assets/tree-energy.js | 1906 | .style.width = \`${stoneCssWidth}px\` |
+| 05-editorial-atelier/assets/tree-energy.js | 1907 | .style.height = \`${stoneCssHeight}px\` |
+| 05-editorial-atelier/assets/tree-energy.js | 2074 | .style.setProperty("--px", "0px") |
+| 05-editorial-atelier/assets/tree-energy.js | 2075 | .style.setProperty("--py", "0px") |
+| 05-editorial-atelier/assets/tree-energy.js | 2116 | .style.setProperty("--px", \`${x}px\`) |
+| 05-editorial-atelier/assets/tree-energy.js | 2117 | .style.setProperty("--py", \`${y}px\`) |
+| 05-editorial-atelier/assets/tree-energy.js | 2122 | .style.setProperty("--px", "0px") |
+| 05-editorial-atelier/assets/tree-energy.js | 2123 | .style.setProperty("--py", "0px") |
+| 05-editorial-atelier/assets/tree-map-editor.js | 756 | .style.width = \`${width}px\` |
+| 05-editorial-atelier/assets/tree-map-editor.js | 757 | .style.height = \`${height}px\` |
+| 05-editorial-atelier/assets/tree-map-editor.js | 1339 | .style.cursor = "grabbing" |
 | assets/art-coordinate-system.js | 191 | .style.setProperty(property, value) |
 | assets/art-coordinate-system.js | 248 | .style.setProperty(property, value, priority) |
 | assets/art-coordinate-system.js | 249 | .style.removeProperty(property) |

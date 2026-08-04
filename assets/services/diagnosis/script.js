@@ -448,6 +448,7 @@
       leadSubmit.setAttribute("aria-busy", "true");
       setLeadStatus("Wysyłamy…", "");
       const analyticsEventId = window.okAnalytics?.createMarketingEventId?.() || "";
+      const marketingContext = window.okAnalytics?.marketingContext?.() || { marketingConsent: false };
 
       try {
         const response = await fetch("/api/contact", {
@@ -464,6 +465,7 @@
             turnstileToken,
             attribution: window.okAnalytics?.attribution?.() || null,
             analyticsEventId,
+            ...marketingContext,
           }),
         });
 
@@ -475,7 +477,7 @@
         resetLeadTurnstile();
         setLeadStatus("Dziękujemy — odezwiemy się z konkretem.", "success");
         leadForm.querySelectorAll("input, button").forEach(element => { element.disabled = true; });
-        window.okAnalytics?.generateLead("diagnosis", analyticsEventId);
+        window.okAnalytics?.generateLead("diagnosis", analyticsEventId, { email });
       } catch {
         resetLeadTurnstile();
         setLeadStatus("Nie udało się wysłać. Napisz na hello@okagency.pl albo spróbuj z formularza kontaktowego.", "error");

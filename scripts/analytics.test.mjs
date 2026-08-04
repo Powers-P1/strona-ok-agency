@@ -13,7 +13,7 @@ const diagnosisSource = await readFile(
 );
 
 const consentValue = (level, at = new Date().toISOString()) => JSON.stringify({
-  version: 2,
+  version: 3,
   level,
   at,
 });
@@ -126,6 +126,7 @@ function loadAnalytics({
   sessionStorage = createStorage(),
   existingIds = ["contact-form", "diagnosis-outcome"],
   replaceStateMode = "available",
+  cookie = "",
 } = {}) {
   let activeReplaceStateMode = replaceStateMode;
   const head = new FakeElement("head");
@@ -137,6 +138,7 @@ function loadAnalytics({
     head,
     readyState: "complete",
     referrer,
+    cookie,
     createElement: tagName => new FakeElement(tagName),
     getElementById(id) {
       return existingIds.includes(id) ? { id } : null;
@@ -266,7 +268,7 @@ test("analytics-only grants GA4 but keeps Ads, Meta and marketing attribution di
   runtime.button("Tylko analityka").click();
 
   const stored = JSON.parse(runtime.localStorage.value("ok-consent"));
-  assert.equal(stored.version, 2);
+  assert.equal(stored.version, 3);
   assert.equal(stored.level, "analytics");
   const update = runtime.commands().findLast(command => command[0] === "consent" && command[1] === "update");
   assert.equal(update[2].analytics_storage, "granted");
@@ -313,6 +315,7 @@ test("marketing consent enables first-touch attribution and one Meta Contact eve
     url: "https://okagency.pl/diagnoza?utm_source=google&utm_campaign=test&gclid=click-1&email=pii@example.com",
     referrer: "https://search.example/private/user@example.com?q=secret",
     localStorage,
+    cookie: "_fbp=fb.1.1720000000000.browser-id; _fbc=fb.1.1720000000000.click-id",
   });
 
   assert.ok(runtime.commands().some(command => command[0] === "config" && command[1] === "AW-18361103115"));
@@ -327,7 +330,11 @@ test("marketing consent enables first-touch attribution and one Meta Contact eve
 
   runtime.window.okAnalytics.diagnosisStart();
   runtime.window.okAnalytics.diagnosisComplete("website");
-  runtime.window.okAnalytics.generateLead("diagnosis", "lead-event-12345");
+  runtime.window.okAnalytics.generateLead(
+    "diagnosis",
+    "lead-event-12345",
+    { email: " Lead@Example.COM ", phone: "501 234 567" },
+  );
 
   for (const name of ["page_view", "diagnosis_start", "diagnosis_complete", "generate_lead"]) {
     assert.ok(eventNames(runtime).includes(name), `missing GA4 event ${name}`);
@@ -339,6 +346,37 @@ test("marketing consent enables first-touch attribution and one Meta Contact eve
   assert.equal(contact[3].eventID, "lead-event-12345");
   const conversion = eventCommands(runtime).find(command => command[1] === "conversion");
   assert.equal(conversion[2].transaction_id, "lead-event-12345");
+  const userData = runtime.commands().find(command => command[0] === "set" && command[1] === "user_data");
+  assert.deepEqual(userData[2], {
+    email: "lead@example.com",
+    phone_number: "+48501234567",
+  });
+  assert.deepEqual(plain(runtime.window.okAnalytics.marketingContext()), {
+    marketingConsent: true,
+    eventSourceUrl: "https://okagency.pl/diagnoza?utm_source=google&utm_campaign=test&gclid=click-1",
+    fbp: "fb.1.1720000000000.browser-id",
+    fbc: "fb.1.1720000000000.click-id",
+  });
+});
+
+test("enhanced conversion contact data never leaves analytics-only mode", () => {
+  const runtime = loadAnalytics({
+    localStorage: createStorage({ "ok-consent": consentValue("analytics") }),
+    cookie: "_fbp=fb.1.1720000000000.browser-id",
+  });
+  runtime.window.okAnalytics.generateLead(
+    "contact",
+    "lead-event-12345",
+    { email: "lead@example.com", phone: "+48 501 234 567" },
+  );
+  assert.equal(
+    runtime.commands().some(command => command[0] === "set" && command[1] === "user_data"),
+    false,
+  );
+  assert.deepEqual(plain(runtime.window.okAnalytics.marketingContext()), {
+    marketingConsent: false,
+  });
+  assert.doesNotMatch(JSON.stringify(runtime.commands()), /lead@example\.com|501234567/);
 });
 
 test("revoke immediately blocks future Meta, Ads and GA4 custom events and clears attribution", () => {

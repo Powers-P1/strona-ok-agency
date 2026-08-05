@@ -65,6 +65,24 @@ assert.match(serialized, /x-ok-signature/i);
 assert.doesNotMatch(serialized, /0x4AAAAA[A-Za-z0-9_-]{20,}/, "Sekret Turnstile nie może trafić do workflowów");
 assert.doesNotMatch(serialized, /sk-[A-Za-z0-9_-]{16,}/, "Klucz dostawcy AI nie może trafić do workflowów");
 
+const trustWorkflow = workflows.find(workflow => workflow.name === "AUDIT-30 Trust & Security");
+const trustValidationCode = trustWorkflow.nodes.find(node => node.name === "Validate trust and privacy")?.parameters?.jsCode;
+assert.equal(typeof trustValidationCode, "string", "Brak walidatora etapu trust-security");
+const runTrustValidation = new Function("$input", trustValidationCode);
+const trustFixture = {
+  completionToken: "workflow-token-outside-report",
+  report: {
+    schemaVersion: "2.0",
+    categories: { trust: { score: 80 }, security: { score: 85 } },
+    checks: [{ observation: "Strona Password Manager opisuje authorization i sposób użycia API key." }],
+  },
+};
+assert.doesNotThrow(() => runTrustValidation({ first: () => ({ json: structuredClone(trustFixture) }) }));
+assert.throws(
+  () => runTrustValidation({ first: () => ({ json: { ...structuredClone(trustFixture), report: { ...structuredClone(trustFixture.report), rawHtml: "<html>" } } }) }),
+  /sensitive-data-in-report/,
+);
+
 const operations = await read("docs/SITE-AUDIT-OPERATIONS.md");
 for (const binding of ["TURNSTILE_SECRET", "WORKER_N8N_HMAC_SECRET", "N8N_CALLBACK_HMAC_SECRET", "N8N_WEBHOOK_URL", "CF_ACCESS_CLIENT_ID", "CF_ACCESS_CLIENT_SECRET"]) {
   assert.match(operations, new RegExp(`\\b${binding}\\b`), `Brak ${binding} w instrukcji operacyjnej`);

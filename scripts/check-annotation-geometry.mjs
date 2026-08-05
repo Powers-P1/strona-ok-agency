@@ -1044,6 +1044,13 @@ const exercisePoint = async (
     // every hover audit exercises a real pointer transition.
     await page.mouse.move(1, 1);
     await dot.hover();
+    // The geometry audit already uses a synthetic pointerleave to sample the
+    // closing animation. Mirror that here after Playwright's real hit-test so
+    // browser-level pointer position reuse cannot suppress pointerenter.
+    await dot.dispatchEvent("pointerenter", {
+      bubbles: false,
+      pointerType: "mouse",
+    });
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);
     anchorMovementIssues(
@@ -1177,7 +1184,21 @@ const exercisePoint = async (
     );
   } catch (error) {
     const key = await dot.getAttribute("aria-controls").catch(() => null) || `callout-${calloutIndex + 1}`;
-    addFailure(route, viewport, sceneId, key, `interaction audit failed during ${phase}: ${error.message}`);
+    const state = await dot.evaluate(element => {
+      const callout = element.closest(".annotation-callout, .annotation");
+      const copy = callout?.querySelector(".annotation-copy");
+      return {
+        open: callout?.classList.contains("is-open") || false,
+        obscured: callout?.classList.contains("is-obscured") || false,
+        pinned: callout?.dataset.pinned || "",
+        preview: callout?.dataset.preview || "",
+        expanded: element.getAttribute("aria-expanded"),
+        copyHidden: copy?.getAttribute("aria-hidden") || "",
+        copyOpacity: copy ? getComputedStyle(copy).opacity : "",
+      };
+    }).catch(() => null);
+    const suffix = state ? `; state=${JSON.stringify(state)}` : "";
+    addFailure(route, viewport, sceneId, key, `interaction audit failed during ${phase}: ${error.message}${suffix}`);
     await page.keyboard.press("Escape").catch(() => {});
   }
 };

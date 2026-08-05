@@ -45,13 +45,14 @@
       ]
     }
   </script>
-  <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260804-1">
+  <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
+  <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
+  <link rel="stylesheet" href="/assets/content-system.css?v=20260805-1">
+  <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="/assets/site-navigation.css?v=20260803-5">
   <link rel="stylesheet" href="/assets/responsive-foundation.v20260730-8.css?v=20260804-5">
-  <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
-  <link rel="stylesheet" href="/assets/design-tokens.css?v=20260803-8">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260803-3">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
   <script src="/assets/motion-control.js?v=20260729-4"></script>
   <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
@@ -87,9 +88,9 @@
   <main id="audyt-www" class="audit-main" data-site-audit>
     <section class="audit-hero" aria-labelledby="audit-title">
       <div class="audit-hero__copy">
-        <p class="audit-kicker">Rozszerzona diagnostyka · publiczne dane · bez logowania</p>
-        <h1 id="audit-title">Co naprawdę blokuje<br><em>Twoją stronę?</em></h1>
-        <p class="audit-lead">Sprawdzimy pięć obszarów i oddamy Ci kolejność działania. Bez obowiązkowego e-maila, bez ukrytego skanowania i bez sprzedażowego wyniku.</p>
+        <p class="kicker">Rozszerzona diagnostyka · publiczne dane · bez logowania</p>
+        <h1 class="page-title" id="audit-title">Co naprawdę blokuje<br><span class="accent">Twoją stronę?</span></h1>
+        <p class="lead">Sprawdzimy pięć obszarów i oddamy Ci kolejność działania. Bez obowiązkowego e-maila, bez ukrytego skanowania i bez sprzedażowego wyniku.</p>
         <ul class="audit-scope" aria-label="Zakres audytu">
           <li>Wydajność mobilna</li>
           <li>SEO i struktura</li>
@@ -100,26 +101,27 @@
       </div>
 
       <div class="audit-card">
-        <form class="audit-form" data-audit-form novalidate>
-          <label class="audit-field" for="audit-domain">
-            <span>Adres strony</span>
+        <form class="form audit-form" data-audit-form novalidate>
+          <div class="field field--wide">
+            <label for="audit-domain">Adres strony</label>
             <input id="audit-domain" name="domain" type="text" inputmode="url" autocomplete="url" placeholder="twojafirma.pl" maxlength="512" required aria-describedby="audit-domain-hint">
-          </label>
+          </div>
           <p class="audit-hint" id="audit-domain-hint">Podaj domenę lub pełny adres zaczynający się od https://.</p>
 
-          <label class="audit-consent">
+          <label class="consent">
             <input type="checkbox" name="authorization" required>
+            <span class="box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2.5 8.5l3.5 3.5 7-8"/></svg></span>
             <span>Oświadczam, że jestem właścicielem wskazanej domeny albo mam upoważnienie do zlecenia jej pasywnej analizy.</span>
           </label>
           <p class="audit-legal-note">Test pobiera wyłącznie publiczne zasoby HTTP/HTTPS. Nie loguje się, nie wykonuje brute force, skanowania portów ani prób wykorzystania podatności. Szczegóły opisuje <a href="/polityka-prywatnosci#rozszerzona-diagnostyka">polityka prywatności</a>.</p>
 
-          <div class="audit-submit-row">
+          <div class="form-foot audit-submit-row">
             <div class="cf-turnstile" id="site-audit-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="site_audit" data-size="flexible"></div>
-            <button class="audit-submit" type="submit">
-              <span>Uruchom pasywny audyt</span><i aria-hidden="true">→</i>
+            <button class="submit" type="submit">
+              <span>Uruchom pasywny audyt</span><span class="arr" aria-hidden="true">→</span>
             </button>
           </div>
-          <p class="audit-status" data-audit-form-status role="status" aria-live="polite"></p>
+          <p class="form-status" data-audit-form-status role="status" aria-live="polite"></p>
         </form>
       </div>
     </section>
@@ -127,8 +129,8 @@
     <section class="audit-progress" data-audit-progress hidden aria-labelledby="audit-progress-title" aria-busy="true">
       <div class="audit-progress__signal" aria-hidden="true"><span></span></div>
       <div>
-        <p class="audit-kicker">Audyt w toku</p>
-        <h2 id="audit-progress-title" tabindex="-1">Łączymy sygnały w jeden obraz.</h2>
+        <p class="kicker">Audyt w toku</p>
+        <h2 class="section-title" id="audit-progress-title" tabindex="-1">Łączymy sygnały w jeden obraz.</h2>
         <p data-audit-progress-copy>Sprawdzamy publiczną odpowiedź strony, strukturę dokumentu i najważniejsze sygnały.</p>
         <p class="audit-progress__domain" data-audit-progress-domain></p>
       </div>
@@ -137,8 +139,8 @@
     <section class="audit-report" data-audit-report hidden aria-labelledby="audit-report-title">
       <header class="audit-report__header">
         <div>
-          <p class="audit-kicker">Wynik rozszerzonej diagnostyki</p>
-          <h2 id="audit-report-title" tabindex="-1">Najpierw fundament.</h2>
+          <p class="kicker">Wynik rozszerzonej diagnostyki</p>
+          <h2 class="section-title" id="audit-report-title" tabindex="-1">Najpierw fundament.</h2>
           <p data-audit-summary></p>
           <p class="audit-report__meta"><span data-audit-origin></span><span data-audit-confidence></span></p>
         </div>
@@ -151,12 +153,12 @@
 
       <div class="audit-report__columns">
         <section aria-labelledby="audit-priorities-title">
-          <p class="audit-kicker">Kolejność działania</p>
+          <p class="kicker">Kolejność działania</p>
           <h3 id="audit-priorities-title">Najważniejsze priorytety</h3>
           <ol class="audit-priorities" data-audit-priorities></ol>
         </section>
         <section aria-labelledby="audit-strengths-title">
-          <p class="audit-kicker">To już działa</p>
+          <p class="kicker">To już działa</p>
           <h3 id="audit-strengths-title">Mocne strony</h3>
           <ul class="audit-strengths" data-audit-strengths></ul>
         </section>
@@ -168,14 +170,14 @@
       </details>
 
       <div class="audit-report__actions">
-        <a class="audit-submit" href="/kontakt?context=web&amp;source=site-audit"><span>Omów wynik z OK Agency</span><i aria-hidden="true">→</i></a>
-        <button class="audit-secondary" type="button" data-audit-new>Sprawdź inną domenę</button>
+        <a class="submit" href="/kontakt?context=web&amp;source=site-audit"><span>Omów wynik z OK Agency</span><span class="arr" aria-hidden="true">→</span></a>
+        <button class="secondary-action" type="button" data-audit-new>Sprawdź inną domenę</button>
       </div>
     </section>
 
-    <section class="audit-method" aria-labelledby="audit-method-title">
-      <p class="audit-kicker">Co sprawdzamy — i czego nie robimy</p>
-      <h2 id="audit-method-title">Pasywnie, konkretnie, bez udawania pentestu.</h2>
+    <section class="audit-method theme-dark" aria-labelledby="audit-method-title">
+      <p class="kicker">Co sprawdzamy — i czego nie robimy</p>
+      <h2 class="section-title" id="audit-method-title">Pasywnie, konkretnie, bez udawania pentestu.</h2>
       <div class="audit-method__grid">
         <article><span>01</span><h3>Publiczna odpowiedź</h3><p>Status, przekierowania, HTTPS, czas odpowiedzi i podstawowe nagłówki.</p></article>
         <article><span>02</span><h3>Struktura strony</h3><p>Tytuł, opis, canonical, nagłówki, viewport, dane strukturalne i dostępność formularzy oraz obrazów.</p></article>
@@ -186,7 +188,7 @@
   </main>
 
   <div data-site-footer></div>
-  <script src="/assets/services/site-audit/script.js?v=20260804-1"></script>
+  <script src="/assets/services/site-audit/script.js?v=20260805-1"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onSiteAuditTurnstileLoad&amp;render=explicit" defer></script>
   <script src="/assets/site-footer.js?v=20260801-2"></script>
   <script src="/assets/navigation.js?v=20260803-1"></script>

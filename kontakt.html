@@ -45,14 +45,15 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="prefetch" href="/menu">
   <script src="assets/js-enabled.js"></script>
-  <link rel="stylesheet" href="assets/page-contact.css?v=20260802-1">
+  <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
+  <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
+  <link rel="stylesheet" href="/assets/content-system.css?v=20260805-1">
+  <link rel="stylesheet" href="assets/page-contact.css?v=20260805-1">
   <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260803-5">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260804-5">
-  <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
-  <link rel="stylesheet" href="/assets/design-tokens.css?v=20260803-8">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260803-3">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
   <script src="/assets/motion-control.js?v=20260729-4"></script>
   <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
@@ -60,7 +61,7 @@
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
 <body class="contact-page">
-  <a class="skip" href="#main">Przejdź do treści</a>
+  <a class="skip-link" href="#main">Przejdź do treści</a>
 
   <header class="site-header" data-ok-global-nav data-ok-nav-state="docked">
     <a class="brand" href="/" aria-label="OK Agency — strona główna">
@@ -126,7 +127,7 @@
         </div>
       </aside>
 
-      <form class="form form--contact" id="contact-form" style="--i:5" novalidate>
+      <form class="form form--compact form--contact" id="contact-form" style="--i:5" novalidate>
         <p class="validation-summary" id="validation-summary" role="alert" aria-live="assertive" tabindex="-1" hidden></p>
         <div class="field">
           <label for="f-name">Imię i nazwisko <span class="req" aria-hidden="true">*</span></label>
@@ -198,21 +199,21 @@
       </form>
 
       <section class="flow-state" id="handoff-state" style="--i:5" aria-labelledby="handoff-title" aria-live="polite" hidden>
-        <h2 id="handoff-title" tabindex="-1">Dziękujemy za wiadomość</h2>
+        <h2 class="section-title" id="handoff-title" tabindex="-1">Dziękujemy za wiadomość</h2>
         <p>Formularz został wysłany. Odpowiemy zwykle w ciągu 1 dnia roboczego.</p>
         <a class="state-email" href="mailto:hello@okagency.pl">hello@okagency.pl</a>
         <div class="state-actions">
-          <button class="state-link" type="button" data-return-to-form>&larr;&nbsp; Wyślij kolejną wiadomość</button>
+          <button class="state-link secondary-action" type="button" data-return-to-form>&larr;&nbsp; Wyślij kolejną wiadomość</button>
         </div>
       </section>
 
       <section class="flow-state" id="fallback-state" style="--i:5" aria-labelledby="fallback-title" hidden>
-        <h2 id="fallback-title" tabindex="-1">Nie udało się wysłać formularza</h2>
+        <h2 class="section-title" id="fallback-title" tabindex="-1">Nie udało się wysłać formularza</h2>
         <p>Spróbuj ponownie za chwilę albo napisz bezpośrednio na hello@okagency.pl. Dane z formularza nadal są tutaj.</p>
         <a class="state-email" href="mailto:hello@okagency.pl">hello@okagency.pl</a>
         <div class="state-actions">
           <button class="copy-address" id="copy-address" type="button">Kopiuj adres</button>
-          <button class="state-link" type="button" data-return-to-form>&larr;&nbsp; Wróć do formularza</button>
+          <button class="state-link secondary-action" type="button" data-return-to-form>&larr;&nbsp; Wróć do formularza</button>
           <p class="copy-feedback" id="copy-feedback" aria-live="polite"></p>
         </div>
       </section>

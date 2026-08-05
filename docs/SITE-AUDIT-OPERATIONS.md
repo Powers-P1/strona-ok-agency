@@ -83,7 +83,7 @@ Caddy musi redagować `Cf-Access-Client-Id`, `Cf-Access-Client-Secret` i `X-Ok-S
 7. Wdrożyć Worker, uruchomić test przeglądarkowy i dopiero potem opublikować link w nawigacji.
 8. Przez pierwszą dobę obserwować Queue, DLQ, odsetek raportów częściowych, czas realizacji i błędy callbacku.
 
-Pilot kontraktu `1.0` po finalnej rotacji sekretów zakończył się 2026-08-04 statusem `partial`, wynikiem 79/100, pięcioma kategoriami, poprawnym callbackiem i zapisem raportu w D1. Przed publikacją kontraktu `2.0` należy wykonać nowy pilot siedmiu kategorii; brak `PAGESPEED_API_KEY` nie blokuje pozostałych kontroli, ale obniża poziom pewności raportu.
+Pilot kontraktu `2.0` na kontrolowanej domenie OK Agency zakończył się 2026-08-05 statusem `partial`, wynikiem 94/100 i pokryciem 83%. Raport miał siedem kategorii oraz 56 kontroli, a callback zapisał w D1 wersje `RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.0` i `schemaVersion=2.0`. Interfejs produkcyjny wyrenderował pełny raport, a generator PDF załadował moduł i oba lokalne fonty oraz potwierdził pobranie. Status `partial` jest dozwolonym wynikiem audytu: brak opcjonalnego `PAGESPEED_API_KEY` lub niedostępność pojedynczego sygnału zewnętrznego nie blokują pozostałych kontroli, lecz obniżają poziom pewności raportu.
 
 ## Monitoring i reakcja
 

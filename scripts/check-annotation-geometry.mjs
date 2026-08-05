@@ -1030,13 +1030,27 @@ const exercisePoint = async (
 ) => {
   const dot = page.locator(SCENE_SELECTOR).nth(sceneIndex)
     .locator(CALLOUT_SELECTOR).nth(calloutIndex).locator(".annotation-dot");
+  let phase = "setup";
 
   try {
     await page.keyboard.press("Escape");
     await dot.scrollIntoViewIfNeeded();
     await settleLayout(page);
     const stableAnchors = await anchorCenters(page, sceneIndex);
+    phase = "hover/open";
+    // Chromium keeps the physical pointer position between pages. If the next
+    // audited dot lands at the same coordinates, locator.hover() has no move to
+    // perform and no pointerenter event is emitted. Start outside the artwork so
+    // every hover audit exercises a real pointer transition.
+    await page.mouse.move(1, 1);
     await dot.hover();
+    // The geometry audit already uses a synthetic pointerleave to sample the
+    // closing animation. Mirror that here after Playwright's real hit-test so
+    // browser-level pointer position reuse cannot suppress pointerenter.
+    await dot.dispatchEvent("pointerenter", {
+      bubbles: false,
+      pointerType: "mouse",
+    });
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);
     anchorMovementIssues(
@@ -1060,6 +1074,7 @@ const exercisePoint = async (
     // The synthetic pointerleave above measures the closing frame without moving
     // Playwright's physical pointer. Move it off the target before keyboard checks
     // so Chromium cannot re-enter the same dot while focus is being transferred.
+    phase = "hover/close";
     await page.mouse.move(1, 1);
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
@@ -1095,6 +1110,7 @@ const exercisePoint = async (
     // Keep the key event bound to the audited control. A layout refresh can
     // legitimately move focus between frames on slower CI runners; locator.press
     // restores focus and still exercises the browser's real keyboard activation.
+    phase = "Enter/open";
     await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
     await settleLayout(page);
@@ -1107,6 +1123,7 @@ const exercisePoint = async (
     );
 
     if (!allCloseMethods) {
+      phase = "Escape/close";
       await page.keyboard.press("Escape");
       await waitForClosed(page, sceneIndex, calloutIndex);
       await waitForNoObscured(page);
@@ -1120,6 +1137,7 @@ const exercisePoint = async (
       return;
     }
 
+    phase = "Space/close";
     await dot.press("Space");
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
@@ -1131,8 +1149,10 @@ const exercisePoint = async (
       "Space/close",
     );
 
+    phase = "Enter/open before Escape";
     await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
+    phase = "Escape/close";
     await page.keyboard.press("Escape");
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
@@ -1144,8 +1164,10 @@ const exercisePoint = async (
       "Escape/close",
     );
 
+    phase = "Enter/open before outside pointerdown";
     await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
+    phase = "outside pointerdown/close";
     await page.locator("body").dispatchEvent("pointerdown", {
       bubbles: true,
       button: 0,
@@ -1162,7 +1184,21 @@ const exercisePoint = async (
     );
   } catch (error) {
     const key = await dot.getAttribute("aria-controls").catch(() => null) || `callout-${calloutIndex + 1}`;
-    addFailure(route, viewport, sceneId, key, `interaction audit failed: ${error.message}`);
+    const state = await dot.evaluate(element => {
+      const callout = element.closest(".annotation-callout, .annotation");
+      const copy = callout?.querySelector(".annotation-copy");
+      return {
+        open: callout?.classList.contains("is-open") || false,
+        obscured: callout?.classList.contains("is-obscured") || false,
+        pinned: callout?.dataset.pinned || "",
+        preview: callout?.dataset.preview || "",
+        expanded: element.getAttribute("aria-expanded"),
+        copyHidden: copy?.getAttribute("aria-hidden") || "",
+        copyOpacity: copy ? getComputedStyle(copy).opacity : "",
+      };
+    }).catch(() => null);
+    const suffix = state ? `; state=${JSON.stringify(state)}` : "";
+    addFailure(route, viewport, sceneId, key, `interaction audit failed during ${phase}: ${error.message}${suffix}`);
     await page.keyboard.press("Escape").catch(() => {});
   }
 };

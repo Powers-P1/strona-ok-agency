@@ -426,5 +426,17 @@ export function validateReport(report) {
   if (!Array.isArray(report.limitations) || report.limitations.length > 12 || report.limitations.some(value => typeof value !== "string" || value.length > 500)) {
     throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowe ograniczenia.");
   }
+  const diagnosticStatuses = new Set(["ok", "partial", "unavailable", "disabled"]);
+  if (!Array.isArray(report.diagnostics) || report.diagnostics.length > 40 || report.diagnostics.some(item =>
+    !item || typeof item !== "object" ||
+    !/^[a-z0-9_]{2,64}$/.test(item.collector || "") ||
+    !diagnosticStatuses.has(item.status) ||
+    !/^[a-z0-9_]{2,64}$/.test(item.code || "") ||
+    typeof item.retryable !== "boolean" ||
+    !Number.isInteger(item.attempts) || item.attempts < 0 || item.attempts > 3 ||
+    !Number.isInteger(item.durationMs) || item.durationMs < 0 || item.durationMs > 180_000 ||
+    (item.httpStatus !== null && (!Number.isInteger(item.httpStatus) || item.httpStatus < 100 || item.httpStatus > 599)))) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłową diagnostykę kolektorów.");
+  }
   return encoded;
 }

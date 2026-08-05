@@ -1,4 +1,5 @@
 import { REPORT_CATEGORY_KEYS, REPORT_SCHEMA_VERSION } from "../../../worker/site-audit-core.js";
+import { codeFromError, dedupeDiagnostics, isRetryableDiagnostic, makeDiagnostic } from "./collector-diagnostics.js";
 import { hasHeadingLevelSkip, inspectHtml } from "./html-inspector.js";
 
 const CATEGORY_WEIGHTS = Object.freeze({
@@ -70,14 +71,32 @@ function categorySummary(checks, key) {
   };
 }
 
-function pageSpeedCheck(checks, id, category, title, value, sourceKey, good = 80, warning = 50) {
+function pageSpeedUnavailableObservation(pagespeed) {
+  const code = pagespeed?.diagnostic?.code;
+  const messages = {
+    disabled: "Pomiar Lighthouse jest wyłączony w konfiguracji usługi.",
+    missing_api_key: "Pomiar Lighthouse jest niedostępny z powodu niepełnej konfiguracji usługi.",
+    invalid_api_key: "Pomiar Lighthouse jest niedostępny z powodu błędnej konfiguracji dostępu do usługi.",
+    access_denied: "Usługa PageSpeed Insights odrzuciła dostęp do pomiaru.",
+    quota_exceeded: "Pomiar Lighthouse jest chwilowo niedostępny z powodu wykorzystania limitu usługi.",
+    fetch_timeout: "Pomiar Lighthouse przekroczył bezpieczny limit czasu.",
+    network_error: "Nie udało się połączyć z usługą PageSpeed Insights.",
+    upstream_unavailable: "Usługa PageSpeed Insights jest chwilowo niedostępna.",
+    response_too_large: "Odpowiedź PageSpeed Insights przekroczyła bezpieczny limit rozmiaru.",
+    invalid_response: "PageSpeed Insights zwrócił odpowiedź, której nie udało się wiarygodnie odczytać.",
+    incomplete_result: "PageSpeed Insights nie zwrócił wszystkich wymaganych kategorii Lighthouse.",
+  };
+  return messages[code] || "PageSpeed Insights nie zwrócił wiarygodnego wyniku dla tej kontroli.";
+}
+
+function pageSpeedCheck(checks, id, category, title, value, sourceKey, unavailableObservation, good = 80, warning = 50) {
   checks.push(makeCheck({
     id,
     category,
     status: thresholdStatus(value, good, warning, false),
     severity: "high",
     title,
-    observation: Number.isFinite(value) ? `Wynik Lighthouse: ${value}/100.` : "PageSpeed Insights nie zwrócił wyniku dla tej kontroli.",
+    observation: Number.isFinite(value) ? `Wynik Lighthouse: ${value}/100.` : unavailableObservation,
     recommendation: Number.isFinite(value) && value < good ? "Przejrzyj szczegółowe zalecenia Lighthouse i zacznij od elementów o największym wpływie." : "",
     source: sourceKey,
     weight: 2,
@@ -88,6 +107,19 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   const inspection = inspectHtml(snapshot.body, snapshot.url);
   const dns = technicalProfile.dns || {};
   const resources = technicalProfile.resources || {};
+  const pageSpeedObservation = pageSpeedUnavailableObservation(pagespeed);
+  const pageSpeedComplete = Boolean(pagespeed) && (pagespeed.status === undefined || pagespeed.status === "ok");
+  const diagnostics = dedupeDiagnostics([
+    ...(pagespeed?.diagnostic ? [pagespeed.diagnostic] : []),
+    ...(technicalProfile.diagnostics || []),
+  ]);
+  const unavailableDiagnostics = (...collectors) => diagnostics.filter(item =>
+    item.status === "unavailable" && collectors.includes(item.collector));
+  const hasUnavailableDiagnostic = (...collectors) => unavailableDiagnostics(...collectors).length > 0;
+  const unavailableObservation = (label, ...collectors) => {
+    const codes = [...new Set(unavailableDiagnostics(...collectors).map(item => item.code))];
+    return `Nie udało się wiarygodnie sprawdzić ${label}${codes.length ? ` (kod: ${codes.join(", ")})` : ""}.`;
+  };
   const text = inspection.text.toLowerCase();
   const textMatches = expression => [...text.matchAll(expression)].length;
   const htmlMatches = expression => [...snapshot.body.matchAll(expression)].length;
@@ -98,14 +130,14 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   const checks = [];
   const htmlBytes = Buffer.byteLength(snapshot.body);
 
-  pageSpeedCheck(checks, "performance_lighthouse", "performance", "Mobilna wydajność Lighthouse", pagespeed?.performanceScore, "Google PageSpeed Insights");
+  pageSpeedCheck(checks, "performance_lighthouse", "performance", "Mobilna wydajność Lighthouse", pagespeed?.performanceScore, "Google PageSpeed Insights", pageSpeedObservation);
   checks.push(makeCheck({
     id: "performance_lcp",
     category: "performance",
     status: thresholdStatus(pagespeed?.metrics?.lcpMs, 2_500, 4_000),
     severity: "high",
     title: "Largest Contentful Paint",
-    observation: Number.isFinite(pagespeed?.metrics?.lcpMs) ? `LCP: ${Math.round(pagespeed.metrics.lcpMs)} ms.` : "Brak wiarygodnego pomiaru LCP.",
+    observation: Number.isFinite(pagespeed?.metrics?.lcpMs) ? `LCP: ${Math.round(pagespeed.metrics.lcpMs)} ms.` : pageSpeedObservation,
     recommendation: "Ogranicz ciężar elementu nad linią zgięcia, zoptymalizuj obraz główny i zasoby blokujące renderowanie.",
     source: "Google PageSpeed Insights",
     weight: 2,
@@ -116,7 +148,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
     status: thresholdStatus(pagespeed?.metrics?.cls, 0.1, 0.25),
     severity: "medium",
     title: "Cumulative Layout Shift",
-    observation: Number.isFinite(pagespeed?.metrics?.cls) ? `CLS: ${pagespeed.metrics.cls.toFixed(3)}.` : "Brak wiarygodnego pomiaru CLS.",
+    observation: Number.isFinite(pagespeed?.metrics?.cls) ? `CLS: ${pagespeed.metrics.cls.toFixed(3)}.` : pageSpeedObservation,
     recommendation: "Rezerwuj miejsce na obrazy, fonty i elementy dynamiczne, aby układ nie przesuwał się podczas ładowania.",
     source: "Google PageSpeed Insights",
   }));
@@ -126,7 +158,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
     status: thresholdStatus(pagespeed?.metrics?.tbtMs, 200, 600),
     severity: "medium",
     title: "Total Blocking Time",
-    observation: Number.isFinite(pagespeed?.metrics?.tbtMs) ? `TBT: ${Math.round(pagespeed.metrics.tbtMs)} ms.` : "Brak wiarygodnego pomiaru TBT.",
+    observation: Number.isFinite(pagespeed?.metrics?.tbtMs) ? `TBT: ${Math.round(pagespeed.metrics.tbtMs)} ms.` : pageSpeedObservation,
     recommendation: "Podziel długie zadania JavaScript, usuń nieużywany kod i opóźnij skrypty drugorzędne.",
     source: "Google PageSpeed Insights",
   }));
@@ -151,7 +183,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
     source: "Dokument HTML strony głównej",
   }));
 
-  pageSpeedCheck(checks, "seo_lighthouse", "seo", "Podstawowe SEO Lighthouse", pagespeed?.seoScore, "Google PageSpeed Insights");
+  pageSpeedCheck(checks, "seo_lighthouse", "seo", "Podstawowe SEO Lighthouse", pagespeed?.seoScore, "Google PageSpeed Insights", pageSpeedObservation);
   checks.push(makeCheck({
     id: "seo_title",
     category: "seo",
@@ -201,9 +233,10 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
     source: "Meta robots strony głównej",
     weight: 2,
   }));
-  checks.push(makeCheck({ id: "seo_robots", category: "seo", status: resources.robots?.available ? "pass" : "warning", severity: "low", title: "Plik robots.txt", observation: resources.robots?.available ? `robots.txt odpowiada statusem ${resources.robots.status}.` : `Nie udało się potwierdzić dostępnego robots.txt${resources.robots?.status ? ` (status ${resources.robots.status})` : ""}.`, recommendation: "Opublikuj prosty robots.txt i wskaż w nim mapę witryny.", source: "Publiczny zasób /robots.txt" }));
+  checks.push(makeCheck({ id: "seo_robots", category: "seo", status: resources.robots?.available ? "pass" : resources.robots?.error ? "unknown" : "warning", severity: "low", title: "Plik robots.txt", observation: resources.robots?.available ? `robots.txt odpowiada statusem ${resources.robots.status}.` : resources.robots?.error ? unavailableObservation("robots.txt", "robots", "public_resources") : `Nie potwierdzono dostępnego robots.txt${resources.robots?.status ? ` (status ${resources.robots.status})` : ""}.`, recommendation: "Opublikuj prosty robots.txt i wskaż w nim mapę witryny.", source: "Publiczny zasób /robots.txt" }));
   const availableSitemaps = (resources.sitemaps || []).filter(item => item.available);
-  checks.push(makeCheck({ id: "seo_sitemap", category: "seo", status: availableSitemaps.length ? "pass" : "warning", severity: "medium", title: "Mapa witryny", observation: availableSitemaps.length ? `Znaleziono ${availableSitemaps.length} map; zadeklarowano ${availableSitemaps.reduce((sum, item) => sum + item.urlCount, 0)} adresów.` : "Nie potwierdzono dostępnej mapy XML.", recommendation: "Opublikuj sitemap.xml i wskaż ją w robots.txt oraz Google Search Console.", source: "robots.txt i sitemap.xml" }));
+  const sitemapUnavailable = !availableSitemaps.length && hasUnavailableDiagnostic("sitemap", "public_resources");
+  checks.push(makeCheck({ id: "seo_sitemap", category: "seo", status: availableSitemaps.length ? "pass" : sitemapUnavailable ? "unknown" : "warning", severity: "medium", title: "Mapa witryny", observation: availableSitemaps.length ? `Znaleziono ${availableSitemaps.length} map; zadeklarowano ${availableSitemaps.reduce((sum, item) => sum + item.urlCount, 0)} adresów.` : sitemapUnavailable ? unavailableObservation("mapy XML", "sitemap", "public_resources") : "Nie potwierdzono dostępnej mapy XML.", recommendation: "Opublikuj sitemap.xml i wskaż ją w robots.txt oraz Google Search Console.", source: "robots.txt i sitemap.xml" }));
   checks.push(makeCheck({ id: "seo_structured_data", category: "seo", status: inspection.structuredDataCount === 0 ? "warning" : inspection.structuredDataValidCount === inspection.structuredDataCount ? "pass" : "warning", severity: "low", title: "Dane strukturalne", observation: inspection.structuredDataCount ? `${inspection.structuredDataValidCount}/${inspection.structuredDataCount} bloków JSON-LD ma poprawny JSON; typy: ${list(inspection.structuredDataTypes)}.` : "Nie znaleziono danych JSON-LD.", recommendation: "Dodaj tylko dane strukturalne zgodne z rzeczywistą treścią i zweryfikuj ich składnię.", source: "HTML strony głównej" }));
   checks.push(makeCheck({ id: "seo_social_metadata", category: "seo", status: inspection.openGraphCount >= 4 && inspection.twitterCardCount >= 1 ? "pass" : "warning", severity: "low", title: "Metadane udostępniania", observation: `Open Graph: ${inspection.openGraphCount} pól; Twitter/X: ${inspection.twitterCardCount} pól.`, recommendation: "Uzupełnij tytuł, opis, obraz i adres dla Open Graph oraz kart społecznościowych.", source: "HTML strony głównej" }));
   const crawledPages = resources.crawledPages || [];
@@ -221,7 +254,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   const sampledTitles = crawledPages.map(page => page.title?.trim()).filter(Boolean);
   checks.push(makeCheck({ id: "seo_sample_title_uniqueness", category: "seo", status: sampledTitles.length < 2 ? "not_applicable" : new Set(sampledTitles).size === sampledTitles.length ? "pass" : "warning", severity: "low", title: "Unikalność tytułów w próbce", observation: sampledTitles.length < 2 ? "Za mała próbka, aby porównać tytuły." : `${new Set(sampledTitles).size}/${sampledTitles.length} tytułów w próbce jest unikalnych.`, recommendation: "Nadaj każdej indeksowanej podstronie własny tytuł odpowiadający jej tematowi.", source: "Ograniczony crawl podstron" }));
 
-  pageSpeedCheck(checks, "accessibility_lighthouse", "accessibility", "Dostępność Lighthouse", pagespeed?.accessibilityScore, "Google PageSpeed Insights");
+  pageSpeedCheck(checks, "accessibility_lighthouse", "accessibility", "Dostępność Lighthouse", pagespeed?.accessibilityScore, "Google PageSpeed Insights", pageSpeedObservation);
   const altRatio = inspection.imageCount === 0 ? null : inspection.imageAltCount / inspection.imageCount;
   checks.push(makeCheck({ id: "accessibility_image_alt", category: "accessibility", status: altRatio === null ? "not_applicable" : altRatio === 1 ? "pass" : altRatio >= 0.8 ? "warning" : "fail", severity: "medium", title: "Atrybuty alt obrazów", observation: altRatio === null ? "Strona główna nie zawiera obrazów HTML." : `${inspection.imageAltCount}/${inspection.imageCount} obrazów ma atrybut alt.`, recommendation: "Dodaj sensowne teksty alternatywne, a obrazy dekoracyjne oznacz pustym alt.", source: "HTML strony głównej" }));
   const labelRatio = inspection.inputCount === 0 ? null : Math.min(1, inspection.labelCount / inspection.inputCount);
@@ -232,30 +265,39 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
 
   const ipv4 = dns.addresses?.ipv4 || [];
   const ipv6 = dns.addresses?.ipv6 || [];
-  checks.push(makeCheck({ id: "technical_dns_resolution", category: "technical", status: ipv4.length || ipv6.length ? "pass" : "fail", severity: "high", title: "Rozwiązywanie domeny", observation: `A: ${list(ipv4)}; AAAA: ${list(ipv6)}.`, recommendation: "Skonfiguruj co najmniej jeden publiczny rekord A lub AAAA prowadzący do właściwej usługi.", source: "Publiczny DNS", weight: 2 }));
-  checks.push(makeCheck({ id: "technical_ipv6", category: "technical", status: ipv6.length ? "pass" : "warning", severity: "low", title: "Obsługa IPv6", observation: ipv6.length ? `Rekordy AAAA: ${list(ipv6)}.` : "Nie znaleziono rekordu AAAA.", recommendation: "Rozważ IPv6, jeżeli hosting i warstwa bezpieczeństwa obsługują go w pełnym zakresie.", source: "Publiczny DNS" }));
+  const addressResolutionUnavailable = hasUnavailableDiagnostic("dns_target_ipv4", "dns_target_ipv6", "dns_profile");
+  checks.push(makeCheck({ id: "technical_dns_resolution", category: "technical", status: ipv4.length || ipv6.length ? "pass" : addressResolutionUnavailable ? "unknown" : "fail", severity: "high", title: "Rozwiązywanie domeny", observation: ipv4.length || ipv6.length ? `A: ${list(ipv4)}; AAAA: ${list(ipv6)}.` : addressResolutionUnavailable ? unavailableObservation("rekordów A i AAAA", "dns_target_ipv4", "dns_target_ipv6", "dns_profile") : "Nie znaleziono publicznego rekordu A ani AAAA.", recommendation: "Skonfiguruj co najmniej jeden publiczny rekord A lub AAAA prowadzący do właściwej usługi.", source: "Publiczny DNS", weight: 2 }));
+  const ipv6Unavailable = hasUnavailableDiagnostic("dns_target_ipv6", "dns_profile");
+  checks.push(makeCheck({ id: "technical_ipv6", category: "technical", status: ipv6.length ? "pass" : ipv6Unavailable ? "unknown" : "warning", severity: "low", title: "Obsługa IPv6", observation: ipv6.length ? `Rekordy AAAA: ${list(ipv6)}.` : ipv6Unavailable ? unavailableObservation("rekordu AAAA", "dns_target_ipv6", "dns_profile") : "Nie znaleziono rekordu AAAA.", recommendation: "Rozważ IPv6, jeżeli hosting i warstwa bezpieczeństwa obsługują go w pełnym zakresie.", source: "Publiczny DNS" }));
   const dnssec = dns.dnssec || {};
-  const dnssecStatus = dnssec.dsPresent ? dnssec.validatedAnswer ? "pass" : "fail" : "warning";
-  checks.push(makeCheck({ id: "technical_dnssec", category: "technical", status: dnssecStatus, severity: dnssec.dsPresent && !dnssec.validatedAnswer ? "high" : "low", title: "DNSSEC", observation: dnssec.dsPresent ? `Rekord DS jest obecny; walidacja odpowiedzi: ${dnssec.validatedAnswer ? "poprawna" : "niepotwierdzona"}.` : "Nie znaleziono rekordu DS dla strefy.", recommendation: dnssec.dsPresent ? "Sprawdź łańcuch zaufania DS/DNSKEY u operatora DNS i rejestratora." : "Rozważ włączenie DNSSEC i zsynchronizowanie rekordu DS u rejestratora.", source: "Cloudflare DNS-over-HTTPS i rekord DS", weight: 2 }));
-  checks.push(makeCheck({ id: "technical_caa", category: "technical", status: dns.caa?.length ? "pass" : "warning", severity: "low", title: "Rekordy CAA", observation: dns.caa?.length ? dns.caa.map(record => `${record.tag}=${record.value}`).join(", ") : "Nie znaleziono rekordów CAA.", recommendation: "Rozważ ograniczenie wystawców certyfikatów rekordami CAA, jeżeli proces ich odnawiania jest pod kontrolą.", source: "Publiczny DNS" }));
-  checks.push(makeCheck({ id: "technical_nameservers", category: "technical", status: !dns.nameservers?.length ? "fail" : dns.nameservers.length >= 2 ? "pass" : "warning", severity: "medium", title: "Serwery nazw", observation: `NS: ${list(dns.nameservers)}.`, recommendation: "Zapewnij co najmniej dwa niezależnie dostępne serwery nazw.", source: "Publiczny DNS" }));
+  const dnssecUnavailable = hasUnavailableDiagnostic("dnssec_answer", "dnssec_ds", "dns_profile");
+  const dnssecStatus = dnssecUnavailable ? "unknown" : dnssec.dsPresent ? dnssec.validatedAnswer ? "pass" : "fail" : "warning";
+  checks.push(makeCheck({ id: "technical_dnssec", category: "technical", status: dnssecStatus, severity: dnssec.dsPresent && !dnssec.validatedAnswer ? "high" : "low", title: "DNSSEC", observation: dnssecUnavailable ? unavailableObservation("DNSSEC", "dnssec_answer", "dnssec_ds", "dns_profile") : dnssec.dsPresent ? `Rekord DS jest obecny; walidacja odpowiedzi: ${dnssec.validatedAnswer ? "poprawna" : "niepotwierdzona"}.` : "Nie znaleziono rekordu DS dla strefy.", recommendation: dnssec.dsPresent ? "Sprawdź łańcuch zaufania DS/DNSKEY u operatora DNS i rejestratora." : "Rozważ włączenie DNSSEC i zsynchronizowanie rekordu DS u rejestratora.", source: "Cloudflare DNS-over-HTTPS i rekord DS", weight: 2 }));
+  const caaUnavailable = hasUnavailableDiagnostic("dns_caa", "dns_profile");
+  checks.push(makeCheck({ id: "technical_caa", category: "technical", status: dns.caa?.length ? "pass" : caaUnavailable ? "unknown" : "warning", severity: "low", title: "Rekordy CAA", observation: dns.caa?.length ? dns.caa.map(record => `${record.tag}=${record.value}`).join(", ") : caaUnavailable ? unavailableObservation("rekordów CAA", "dns_caa", "dns_profile") : "Nie znaleziono rekordów CAA.", recommendation: "Rozważ ograniczenie wystawców certyfikatów rekordami CAA, jeżeli proces ich odnawiania jest pod kontrolą.", source: "Publiczny DNS" }));
+  const nameserversUnavailable = hasUnavailableDiagnostic("dns_nameservers", "dns_profile");
+  checks.push(makeCheck({ id: "technical_nameservers", category: "technical", status: nameserversUnavailable ? "unknown" : !dns.nameservers?.length ? "fail" : dns.nameservers.length >= 2 ? "pass" : "warning", severity: "medium", title: "Serwery nazw", observation: nameserversUnavailable ? unavailableObservation("serwerów nazw", "dns_nameservers", "dns_profile") : `NS: ${list(dns.nameservers)}.`, recommendation: "Zapewnij co najmniej dwa niezależnie dostępne serwery nazw.", source: "Publiczny DNS" }));
   const ttlValues = dns.addresses?.ttl || [];
   checks.push(makeCheck({ id: "technical_dns_ttl", category: "technical", status: !ttlValues.length ? "unknown" : Math.min(...ttlValues) >= 300 && Math.max(...ttlValues) <= 86_400 ? "pass" : "warning", severity: "low", title: "TTL rekordów adresowych", observation: ttlValues.length ? `Zaobserwowane TTL: ${ttlValues.join(", ")} s.` : "Resolver nie zwrócił informacji TTL.", recommendation: "Unikaj skrajnie krótkich TTL bez potrzeby operacyjnej i bardzo długich TTL przed planowanymi migracjami.", source: "Publiczny DNS" }));
   const alternateRelevant = Boolean(dns.alternateHostname);
   const alternateResolves = Boolean(dns.alternateAddresses?.ipv4?.length || dns.alternateAddresses?.ipv6?.length);
   const alternateConverges = resources.alternateProbe?.ok && new URL(resources.alternateProbe.finalUrl).origin === new URL(snapshot.url).origin;
-  checks.push(makeCheck({ id: "technical_apex_www", category: "technical", status: !alternateRelevant ? "not_applicable" : !alternateResolves ? "warning" : alternateConverges ? "pass" : "warning", severity: "medium", title: "Spójność domeny głównej i www", observation: !alternateRelevant ? "Badany host nie jest domeną główną ani standardowym wariantem www." : !alternateResolves ? `${dns.alternateHostname} nie ma publicznego rekordu adresowego.` : `Wariant ${dns.alternateHostname} ${alternateConverges ? "prowadzi do tego samego hosta końcowego" : "nie prowadzi jednoznacznie do tego samego hosta końcowego"}.`, recommendation: "Wybierz jeden host kanoniczny i przekieruj drugi wariant pojedynczym przekierowaniem trwałym.", source: "DNS i pasywny pomiar HTTP" }));
+  const alternateUnavailable = hasUnavailableDiagnostic("dns_alternate_ipv4", "dns_alternate_ipv6", "alternate_host");
+  checks.push(makeCheck({ id: "technical_apex_www", category: "technical", status: !alternateRelevant ? "not_applicable" : alternateUnavailable && !alternateResolves ? "unknown" : !alternateResolves ? "warning" : alternateConverges ? "pass" : "warning", severity: "medium", title: "Spójność domeny głównej i www", observation: !alternateRelevant ? "Badany host nie jest domeną główną ani standardowym wariantem www." : alternateUnavailable && !alternateResolves ? unavailableObservation("wariantu domeny głównej i www", "dns_alternate_ipv4", "dns_alternate_ipv6", "alternate_host") : !alternateResolves ? `${dns.alternateHostname} nie ma publicznego rekordu adresowego.` : `Wariant ${dns.alternateHostname} ${alternateConverges ? "prowadzi do tego samego hosta końcowego" : "nie prowadzi jednoznacznie do tego samego hosta końcowego"}.`, recommendation: "Wybierz jeden host kanoniczny i przekieruj drugi wariant pojedynczym przekierowaniem trwałym.", source: "DNS i pasywny pomiar HTTP" }));
   const mailEnabled = Boolean(dns.mx?.length);
-  checks.push(makeCheck({ id: "technical_spf", category: "technical", status: !mailEnabled ? "not_applicable" : dns.spf?.length ? "pass" : "warning", severity: "medium", title: "SPF domeny pocztowej", observation: !mailEnabled ? "Nie wykryto rekordów MX; kontrola poczty nie ma zastosowania." : dns.spf?.length ? `SPF: ${list(dns.spf)}.` : "Domena ma MX, ale nie znaleziono rekordu SPF.", recommendation: "Opublikuj jeden poprawny rekord SPF obejmujący rzeczywistych nadawców poczty.", source: "Rekordy MX i TXT strefy" }));
-  checks.push(makeCheck({ id: "technical_dmarc", category: "technical", status: !mailEnabled ? "not_applicable" : dns.dmarc?.length ? "pass" : "warning", severity: "medium", title: "DMARC domeny pocztowej", observation: !mailEnabled ? "Nie wykryto rekordów MX; kontrola poczty nie ma zastosowania." : dns.dmarc?.length ? `DMARC: ${list(dns.dmarc)}.` : "Domena ma MX, ale nie znaleziono rekordu DMARC.", recommendation: "Dodaj DMARC, rozpocznij od monitoringu raportów i zaostrzaj politykę po potwierdzeniu poprawnego SPF/DKIM.", source: "Rekord TXT _dmarc" }));
+  const mailDetectionUnavailable = hasUnavailableDiagnostic("dns_mx", "dns_profile");
+  const spfUnavailable = hasUnavailableDiagnostic("dns_txt", "dns_profile") || mailDetectionUnavailable;
+  const dmarcUnavailable = hasUnavailableDiagnostic("dns_dmarc", "dns_profile") || mailDetectionUnavailable;
+  checks.push(makeCheck({ id: "technical_spf", category: "technical", status: spfUnavailable ? "unknown" : !mailEnabled ? "not_applicable" : dns.spf?.length ? "pass" : "warning", severity: "medium", title: "SPF domeny pocztowej", observation: spfUnavailable ? unavailableObservation("rekordów MX lub SPF", "dns_mx", "dns_txt", "dns_profile") : !mailEnabled ? "Nie wykryto rekordów MX; kontrola poczty nie ma zastosowania." : dns.spf?.length ? `SPF: ${list(dns.spf)}.` : "Domena ma MX, ale nie znaleziono rekordu SPF.", recommendation: "Opublikuj jeden poprawny rekord SPF obejmujący rzeczywistych nadawców poczty.", source: "Rekordy MX i TXT strefy" }));
+  checks.push(makeCheck({ id: "technical_dmarc", category: "technical", status: dmarcUnavailable ? "unknown" : !mailEnabled ? "not_applicable" : dns.dmarc?.length ? "pass" : "warning", severity: "medium", title: "DMARC domeny pocztowej", observation: dmarcUnavailable ? unavailableObservation("rekordów MX lub DMARC", "dns_mx", "dns_dmarc", "dns_profile") : !mailEnabled ? "Nie wykryto rekordów MX; kontrola poczty nie ma zastosowania." : dns.dmarc?.length ? `DMARC: ${list(dns.dmarc)}.` : "Domena ma MX, ale nie znaleziono rekordu DMARC.", recommendation: "Dodaj DMARC, rozpocznij od monitoringu raportów i zaostrzaj politykę po potwierdzeniu poprawnego SPF/DKIM.", source: "Rekord TXT _dmarc" }));
   checks.push(makeCheck({ id: "technical_dkim", category: "technical", status: "not_applicable", severity: "info", title: "DKIM", observation: mailEnabled ? "Automatyczna kontrola DKIM wymaga znajomości selektora i nie jest wiarygodna przez zgadywanie nazw." : "Nie wykryto rekordów MX.", recommendation: "Zweryfikuj selektor DKIM u dostawcy poczty; audyt celowo nie zgaduje selektorów.", source: "Granica pasywnego audytu" }));
 
   const finalUrl = new URL(snapshot.url);
   const isHttps = finalUrl.protocol === "https:";
-  pageSpeedCheck(checks, "security_lighthouse", "security", "Dobre praktyki Lighthouse", pagespeed?.bestPracticesScore, "Google PageSpeed Insights", 80, 50);
+  pageSpeedCheck(checks, "security_lighthouse", "security", "Dobre praktyki Lighthouse", pagespeed?.bestPracticesScore, "Google PageSpeed Insights", pageSpeedObservation, 80, 50);
   checks.push(makeCheck({ id: "security_https", category: "security", status: isHttps ? "pass" : "fail", severity: "high", title: "HTTPS strony końcowej", observation: `Adres końcowy: ${snapshot.url}`, recommendation: "Udostępniaj całą stronę przez HTTPS i przekieruj ruch HTTP.", source: "Pasywny pomiar HTTP", weight: 2 }));
   const httpProbe = resources.httpProbe;
-  checks.push(makeCheck({ id: "security_http_redirect", category: "security", status: !httpProbe || httpProbe.error ? "unknown" : new URL(httpProbe.finalUrl).protocol === "https:" ? "pass" : "fail", severity: "high", title: "Przekierowanie HTTP do HTTPS", observation: !httpProbe || httpProbe.error ? "Nie udało się wiarygodnie sprawdzić wariantu HTTP." : `HTTP kończy się pod adresem ${httpProbe.finalUrl}; przekierowania: ${httpProbe.redirects.length}.`, recommendation: "Skieruj każdy wariant HTTP bezpośrednio do kanonicznego adresu HTTPS.", source: "Pasywny pomiar wariantu HTTP", weight: 2 }));
+  checks.push(makeCheck({ id: "security_http_redirect", category: "security", status: !httpProbe || httpProbe.error ? "unknown" : new URL(httpProbe.finalUrl).protocol === "https:" ? "pass" : "fail", severity: "high", title: "Przekierowanie HTTP do HTTPS", observation: !httpProbe || httpProbe.error ? unavailableObservation("przekierowania HTTP do HTTPS", "http_redirect", "public_resources") : `HTTP kończy się pod adresem ${httpProbe.finalUrl}; przekierowania: ${httpProbe.redirects.length}.`, recommendation: "Skieruj każdy wariant HTTP bezpośrednio do kanonicznego adresu HTTPS.", source: "Pasywny pomiar wariantu HTTP", weight: 2 }));
   const validTo = snapshot.tls?.validTo ? Date.parse(snapshot.tls.validTo) : NaN;
   const daysToExpiry = Number.isFinite(validTo) ? Math.floor((validTo - Date.now()) / 86_400_000) : null;
   checks.push(makeCheck({ id: "security_certificate", category: "security", status: !isHttps ? "not_applicable" : daysToExpiry === null ? "unknown" : daysToExpiry < 7 ? "fail" : daysToExpiry < 30 ? "warning" : "pass", severity: "high", title: "Ważność certyfikatu TLS", observation: daysToExpiry === null ? "Nie odczytano terminu ważności certyfikatu." : `Certyfikat jest ważny jeszcze około ${daysToExpiry} dni; wystawca: ${snapshot.tls?.issuer || "nieustalony"}.`, recommendation: "Skonfiguruj automatyczne odnawianie i alarm przed wygaśnięciem certyfikatu.", source: "Publiczne połączenie TLS", weight: 2 }));
@@ -301,7 +343,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   const relevantChecks = checks.filter(check => check.status !== "not_applicable");
   const knownChecks = relevantChecks.filter(check => check.status !== "unknown");
   const coverage = relevantChecks.length ? knownChecks.length / relevantChecks.length : 0;
-  const confidence = coverage >= 0.85 && pagespeed ? "high" : coverage >= 0.65 ? "medium" : "low";
+  const confidence = coverage >= 0.85 && pageSpeedComplete ? "high" : coverage >= 0.65 ? "medium" : "low";
   const priorities = checks
     .filter(check => check.status === "fail" || check.status === "warning")
     .sort((left, right) => SEVERITY_ORDER[left.severity] - SEVERITY_ORDER[right.severity]
@@ -334,6 +376,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
     priorities,
     strengths,
     checks,
+    diagnostics,
     measurements: {
       responseMs: snapshot.durationMs,
       htmlBytes,
@@ -360,7 +403,12 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
     },
     limitations: [
       "Audyt analizuje publicznie dostępne zasoby bez logowania i nie jest testem penetracyjnym.",
-      ...(pagespeed ? ["PageSpeed jest pomiarem laboratoryjnym z konkretnego momentu i może naturalnie różnić się między uruchomieniami."] : ["PageSpeed nie zwrócił pełnego pomiaru; kontrole zależne od Lighthouse oznaczono jako nieweryfikowalne."]),
+      ...(pageSpeedComplete
+        ? ["PageSpeed jest pomiarem laboratoryjnym z konkretnego momentu i może naturalnie różnić się między uruchomieniami."]
+        : [`Kontrole Lighthouse są częściowe lub nieweryfikowalne. ${pageSpeedObservation}`]),
+      ...(diagnostics.some(item => item.collector !== "pagespeed" && item.status === "unavailable")
+        ? [truncate(`Część pomocniczych kolektorów była niedostępna: ${[...new Set(diagnostics.filter(item => item.collector !== "pagespeed" && item.status === "unavailable").map(item => item.collector))].slice(0, 8).join(", ")}. Przyczyny zapisano w diagnostyce raportu.`, 500)]
+        : []),
       `Crawl jest celowo ograniczony do maksymalnie ${resources.crawlLimit || 0} publicznych podstron tego samego hosta i respektuje robots.txt.`,
       "DKIM nie jest zgadywany, ponieważ wiarygodna kontrola wymaga znajomości selektora używanego przez dostawcę poczty.",
       "Heurystyki konwersji i zaufania wskazują sygnały, ale nie zastępują badań z użytkownikami, danych analitycznych ani oceny prawnej.",
@@ -369,37 +417,146 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   };
 }
 
-export async function fetchPageSpeed(origin, { apiKey = "", enabled = true, fetchImpl = fetch } = {}) {
-  if (!enabled) return null;
+function emptyPageSpeedResult(status, code, {
+  attempts = 0,
+  durationMs = 0,
+  retryable = false,
+  httpStatus = null,
+} = {}) {
+  return {
+    status,
+    performanceScore: null,
+    accessibilityScore: null,
+    seoScore: null,
+    bestPracticesScore: null,
+    metrics: null,
+    diagnostic: makeDiagnostic({
+      collector: "pagespeed",
+      status,
+      code,
+      retryable,
+      attempts,
+      durationMs,
+      httpStatus,
+    }),
+  };
+}
+
+async function readBoundedJson(response, maxBytes) {
+  const declaredLength = Number(response.headers.get("content-length") || 0);
+  if (declaredLength > maxBytes) throw Object.assign(new Error("response_too_large"), { code: "response_too_large" });
+  const buffer = await response.arrayBuffer();
+  if (buffer.byteLength > maxBytes) throw Object.assign(new Error("response_too_large"), { code: "response_too_large" });
+  try {
+    return JSON.parse(Buffer.from(buffer).toString("utf8"));
+  } catch {
+    throw Object.assign(new Error("invalid_response"), { code: "invalid_response" });
+  }
+}
+
+function pageSpeedHttpErrorCode(response, data) {
+  if (response.status === 429) return "quota_exceeded";
+  if (response.status === 401) return "invalid_api_key";
+  if (response.status === 403) {
+    const detail = `${data?.error?.status || ""} ${data?.error?.message || ""}`.toLowerCase();
+    return detail.includes("api key") || detail.includes("api_key") ? "invalid_api_key" : "access_denied";
+  }
+  if (response.status >= 500) return "upstream_unavailable";
+  return "http_error";
+}
+
+export async function fetchPageSpeed(origin, {
+  apiKey = "",
+  enabled = true,
+  fetchImpl = fetch,
+  timeoutMs = 90_000,
+  maxAttempts = 2,
+  retryDelayMs = 250,
+  sleepImpl = delay => new Promise(resolve => setTimeout(resolve, delay)),
+} = {}) {
+  if (!enabled) return emptyPageSpeedResult("disabled", "disabled");
+  if (!String(apiKey).trim()) return emptyPageSpeedResult("unavailable", "missing_api_key");
   const endpoint = new URL("https://www.googleapis.com/pagespeedonline/v5/runPagespeed");
   endpoint.searchParams.set("url", origin);
   endpoint.searchParams.set("strategy", "mobile");
   for (const category of ["performance", "accessibility", "seo", "best-practices"]) endpoint.searchParams.append("category", category);
-  if (apiKey) endpoint.searchParams.set("key", apiKey);
-  try {
-    const response = await fetchImpl(endpoint, { signal: AbortSignal.timeout(90_000) });
-    if (!response.ok) return null;
-    const declaredLength = Number(response.headers.get("content-length") || 0);
-    if (declaredLength > 15_000_000) return null;
-    const buffer = await response.arrayBuffer();
-    if (buffer.byteLength > 15_000_000) return null;
-    const data = JSON.parse(Buffer.from(buffer).toString("utf8"));
-    const categories = data.lighthouseResult?.categories || {};
-    const audits = data.lighthouseResult?.audits || {};
-    const score = key => Number.isFinite(categories[key]?.score) ? Math.round(categories[key].score * 100) : null;
-    return {
-      performanceScore: score("performance"),
-      accessibilityScore: score("accessibility"),
-      seoScore: score("seo"),
-      bestPracticesScore: score("best-practices"),
-      metrics: {
-        lcpMs: audits["largest-contentful-paint"]?.numericValue ?? null,
-        cls: audits["cumulative-layout-shift"]?.numericValue ?? null,
-        tbtMs: audits["total-blocking-time"]?.numericValue ?? null,
-        speedIndexMs: audits["speed-index"]?.numericValue ?? null,
-      },
-    };
-  } catch {
-    return null;
+  endpoint.searchParams.set("key", String(apiKey).trim());
+  const startedAt = Date.now();
+  let attempts = 0;
+  let lastFailure = emptyPageSpeedResult("unavailable", "network_error");
+
+  while (attempts < Math.max(1, Math.min(3, maxAttempts))) {
+    attempts += 1;
+    const elapsed = Date.now() - startedAt;
+    const remainingMs = timeoutMs - elapsed;
+    if (remainingMs <= 0) {
+      return emptyPageSpeedResult("unavailable", "fetch_timeout", { attempts, durationMs: elapsed, retryable: true });
+    }
+    try {
+      const response = await fetchImpl(endpoint, { signal: AbortSignal.timeout(remainingMs) });
+      if (!response.ok) {
+        let errorBody = null;
+        try {
+          errorBody = await readBoundedJson(response, 65_536);
+        } catch {
+          // Status HTTP remains authoritative when an error body is absent or malformed.
+        }
+        const code = pageSpeedHttpErrorCode(response, errorBody);
+        const retryable = response.status >= 500;
+        lastFailure = emptyPageSpeedResult("unavailable", code, {
+          attempts,
+          durationMs: Date.now() - startedAt,
+          retryable,
+          httpStatus: response.status,
+        });
+        if (!retryable || attempts >= maxAttempts || Date.now() - startedAt + retryDelayMs >= timeoutMs) return lastFailure;
+        await sleepImpl(retryDelayMs);
+        continue;
+      }
+
+      const data = await readBoundedJson(response, 15_000_000);
+      const categories = data.lighthouseResult?.categories || {};
+      const audits = data.lighthouseResult?.audits || {};
+      const score = key => Number.isFinite(categories[key]?.score) ? Math.round(categories[key].score * 100) : null;
+      const result = {
+        performanceScore: score("performance"),
+        accessibilityScore: score("accessibility"),
+        seoScore: score("seo"),
+        bestPracticesScore: score("best-practices"),
+      };
+      const scoreCount = Object.values(result).filter(Number.isFinite).length;
+      const status = scoreCount === 4 ? "ok" : scoreCount > 0 ? "partial" : "unavailable";
+      const code = scoreCount === 4 ? "ok" : "incomplete_result";
+      return {
+        status,
+        ...result,
+        metrics: scoreCount > 0 ? {
+          lcpMs: audits["largest-contentful-paint"]?.numericValue ?? null,
+          cls: audits["cumulative-layout-shift"]?.numericValue ?? null,
+          tbtMs: audits["total-blocking-time"]?.numericValue ?? null,
+          speedIndexMs: audits["speed-index"]?.numericValue ?? null,
+        } : null,
+        diagnostic: makeDiagnostic({
+          collector: "pagespeed",
+          status,
+          code,
+          retryable: false,
+          attempts,
+          durationMs: Date.now() - startedAt,
+          httpStatus: response.status,
+        }),
+      };
+    } catch (error) {
+      const code = codeFromError(error, "network_error");
+      const retryable = isRetryableDiagnostic(code);
+      lastFailure = emptyPageSpeedResult("unavailable", code, {
+        attempts,
+        durationMs: Date.now() - startedAt,
+        retryable,
+      });
+      if (!retryable || attempts >= maxAttempts || Date.now() - startedAt + retryDelayMs >= timeoutMs) return lastFailure;
+      await sleepImpl(retryDelayMs);
+    }
   }
+  return lastFailure;
 }

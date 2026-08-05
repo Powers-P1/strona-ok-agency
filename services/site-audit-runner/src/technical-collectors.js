@@ -1,16 +1,29 @@
 import dns from "node:dns/promises";
 import robotsParser from "robots-parser";
+import { CollectorError, codeFromError, dedupeDiagnostics, isRetryableDiagnostic, makeDiagnostic } from "./collector-diagnostics.js";
 import { inspectHtml } from "./html-inspector.js";
 import { AUDIT_USER_AGENT, safeFetch } from "./safe-fetch.js";
 
 const DNS_JSON_ENDPOINT = "https://cloudflare-dns.com/dns-query";
 const MAX_CRAWL_PAGES = 8;
 const HEAD_INCONCLUSIVE_STATUSES = new Set([403, 404, 405, 501]);
+const DNS_ABSENCE_CODES = new Set(["enodata", "enotfound", "notfound", "nodata"]);
 
-async function optional(operation, fallback) {
+async function optional(operation, fallback, { diagnostics = null, collector = "dns", absenceCodes = DNS_ABSENCE_CODES } = {}) {
+  const startedAt = Date.now();
   try {
     return await operation();
-  } catch {
+  } catch (error) {
+    const code = codeFromError(error, "resolver_failed");
+    if (diagnostics && !absenceCodes.has(code)) {
+      diagnostics.push(makeDiagnostic({
+        collector,
+        status: "unavailable",
+        code,
+        retryable: isRetryableDiagnostic(code),
+        durationMs: Date.now() - startedAt,
+      }));
+    }
     return fallback;
   }
 }
@@ -27,11 +40,11 @@ function normalizeTxt(records) {
   return unique((records || []).map(parts => Array.isArray(parts) ? parts.join("") : String(parts || "")).filter(Boolean));
 }
 
-async function findZoneApex(hostname, resolver) {
+async function findZoneApex(hostname, resolver, diagnostics) {
   const labels = hostname.split(".");
   for (let index = 0; index < labels.length - 1; index += 1) {
     const candidate = labels.slice(index).join(".");
-    const soa = await optional(() => resolver.resolveSoa(candidate), null);
+    const soa = await optional(() => resolver.resolveSoa(candidate), null, { diagnostics, collector: "dns_soa" });
     if (soa) return { hostname: candidate, soa };
   }
   return { hostname, soa: null };
@@ -46,12 +59,27 @@ async function queryDnsJson(name, type, fetchImpl) {
     headers: { accept: "application/dns-json" },
     signal: AbortSignal.timeout(8_000),
   });
-  if (!response.ok) return null;
+  if (!response.ok) {
+    throw new CollectorError(response.status >= 500 ? "upstream_unavailable" : response.status === 429 ? "quota_exceeded" : "http_error", {
+      retryable: response.status >= 500,
+      httpStatus: response.status,
+    });
+  }
   const declaredLength = Number(response.headers.get("content-length") || 0);
-  if (declaredLength > 65_536) return null;
+  if (declaredLength > 65_536) throw new CollectorError("response_too_large");
   const buffer = await response.arrayBuffer();
-  if (buffer.byteLength > 65_536) return null;
-  const body = JSON.parse(Buffer.from(buffer).toString("utf8"));
+  if (buffer.byteLength > 65_536) throw new CollectorError("response_too_large");
+  let body;
+  try {
+    body = JSON.parse(Buffer.from(buffer).toString("utf8"));
+  } catch {
+    throw new CollectorError("invalid_response");
+  }
+  if (![0, 3].includes(Number(body.Status))) {
+    throw new CollectorError(Number(body.Status) === 2 ? "resolver_servfail" : "invalid_response", {
+      retryable: Number(body.Status) === 2,
+    });
+  }
   return {
     status: Number(body.Status),
     authenticatedData: body.AD === true,
@@ -59,10 +87,10 @@ async function queryDnsJson(name, type, fetchImpl) {
   };
 }
 
-async function resolveHostAddresses(hostname, resolver) {
+async function resolveHostAddresses(hostname, resolver, diagnostics, collectorPrefix) {
   const [ipv4, ipv6] = await Promise.all([
-    optional(() => resolver.resolve4(hostname, { ttl: true }), []),
-    optional(() => resolver.resolve6(hostname, { ttl: true }), []),
+    optional(() => resolver.resolve4(hostname, { ttl: true }), [], { diagnostics, collector: `${collectorPrefix}_ipv4` }),
+    optional(() => resolver.resolve6(hostname, { ttl: true }), [], { diagnostics, collector: `${collectorPrefix}_ipv6` }),
   ]);
   return {
     ipv4: normalizeAddressRecords(ipv4),
@@ -72,22 +100,23 @@ async function resolveHostAddresses(hostname, resolver) {
 }
 
 export async function collectDnsProfile(hostname, { resolver = dns, fetchImpl = fetch } = {}) {
-  const zone = await findZoneApex(hostname, resolver);
+  const diagnostics = [];
+  const zone = await findZoneApex(hostname, resolver, diagnostics);
   const alternateHostname = hostname === zone.hostname
     ? `www.${zone.hostname}`
     : hostname === `www.${zone.hostname}` ? zone.hostname : null;
 
   const [addresses, cnames, nameservers, caa, mx, zoneTxt, dmarcTxt, dnssecAnswer, dsAnswer, alternateAddresses] = await Promise.all([
-    resolveHostAddresses(hostname, resolver),
-    optional(() => resolver.resolveCname(hostname), []),
-    optional(() => resolver.resolveNs(zone.hostname), []),
-    optional(() => resolver.resolveCaa(zone.hostname), []),
-    optional(() => resolver.resolveMx(zone.hostname), []),
-    optional(() => resolver.resolveTxt(zone.hostname), []),
-    optional(() => resolver.resolveTxt(`_dmarc.${zone.hostname}`), []),
-    optional(() => queryDnsJson(hostname, "A", fetchImpl), null),
-    optional(() => queryDnsJson(zone.hostname, "DS", fetchImpl), null),
-    alternateHostname ? resolveHostAddresses(alternateHostname, resolver) : Promise.resolve(null),
+    resolveHostAddresses(hostname, resolver, diagnostics, "dns_target"),
+    optional(() => resolver.resolveCname(hostname), [], { diagnostics, collector: "dns_cname" }),
+    optional(() => resolver.resolveNs(zone.hostname), [], { diagnostics, collector: "dns_nameservers" }),
+    optional(() => resolver.resolveCaa(zone.hostname), [], { diagnostics, collector: "dns_caa" }),
+    optional(() => resolver.resolveMx(zone.hostname), [], { diagnostics, collector: "dns_mx" }),
+    optional(() => resolver.resolveTxt(zone.hostname), [], { diagnostics, collector: "dns_txt" }),
+    optional(() => resolver.resolveTxt(`_dmarc.${zone.hostname}`), [], { diagnostics, collector: "dns_dmarc" }),
+    optional(() => queryDnsJson(hostname, "A", fetchImpl), null, { diagnostics, collector: "dnssec_answer", absenceCodes: new Set() }),
+    optional(() => queryDnsJson(zone.hostname, "DS", fetchImpl), null, { diagnostics, collector: "dnssec_ds", absenceCodes: new Set() }),
+    alternateHostname ? resolveHostAddresses(alternateHostname, resolver, diagnostics, "dns_alternate") : Promise.resolve(null),
   ]);
 
   const txt = normalizeTxt(zoneTxt);
@@ -118,10 +147,12 @@ export async function collectDnsProfile(hostname, { resolver = dns, fetchImpl = 
     },
     alternateHostname,
     alternateAddresses,
+    diagnostics: dedupeDiagnostics(diagnostics),
   };
 }
 
 export async function probeUrl(url, { fetcher = safeFetch, ...options } = {}) {
+  const startedAt = Date.now();
   try {
     let result = await fetcher(url, { ...options, method: "HEAD", maxBytes: 65_536 });
     if (HEAD_INCONCLUSIVE_STATUSES.has(result.status)) {
@@ -135,9 +166,10 @@ export async function probeUrl(url, { fetcher = safeFetch, ...options } = {}) {
       headers: result.headers,
       tls: result.tls,
       httpVersion: result.httpVersion,
+      durationMs: result.durationMs ?? Date.now() - startedAt,
     };
   } catch (error) {
-    return { ok: false, status: 0, error: error?.code || "fetch_failed", redirects: [] };
+    return { ok: false, status: 0, error: codeFromError(error, "fetch_failed"), redirects: [], durationMs: Date.now() - startedAt };
   }
 }
 
@@ -194,7 +226,8 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
     ? probeUrl(`https://${dnsProfile.alternateHostname}/`, { resolver, timeoutMs: 8_000 })
     : Promise.resolve(null);
 
-  let robots = { status: 0, available: false, body: "", sitemapUrls: [] };
+  let robots = { status: 0, available: false, body: "", sitemapUrls: [], durationMs: 0 };
+  const robotsStartedAt = Date.now();
   try {
     const response = await safeFetch(robotsUrl, {
       resolver,
@@ -208,9 +241,11 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
       available: response.status >= 200 && response.status < 300,
       body: response.status >= 200 && response.status < 300 ? response.body : "",
       sitemapUrls: [...response.body.matchAll(/^\s*sitemap\s*:\s*(\S+)\s*$/gim)].map(match => match[1]).slice(0, 8),
+      durationMs: response.durationMs ?? Date.now() - robotsStartedAt,
     };
   } catch (error) {
-    robots.error = error?.code || "fetch_failed";
+    robots.error = codeFromError(error, "fetch_failed");
+    robots.durationMs = Date.now() - robotsStartedAt;
   }
 
   const sitemapCandidates = unique([...robots.sitemapUrls, standardSitemapUrl]).filter(value => {
@@ -218,6 +253,7 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
   }).slice(0, 3);
   const sitemapResults = [];
   for (const sitemapValue of sitemapCandidates) {
+    const sitemapStartedAt = Date.now();
     try {
       const sitemapUrl = new URL(sitemapValue, origin).href;
       const response = await safeFetch(sitemapUrl, {
@@ -232,9 +268,10 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
         status: response.status,
         available: response.status >= 200 && response.status < 300,
         locations: response.status >= 200 && response.status < 300 ? sitemapLocations(response.body, sitemapUrl) : [],
+        durationMs: response.durationMs ?? Date.now() - sitemapStartedAt,
       });
     } catch (error) {
-      sitemapResults.push({ url: sitemapValue, status: 0, available: false, error: error?.code || "fetch_failed", locations: [] });
+      sitemapResults.push({ url: sitemapValue, status: 0, available: false, error: codeFromError(error, "fetch_failed"), locations: [], durationMs: Date.now() - sitemapStartedAt });
     }
   }
 
@@ -247,6 +284,7 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
   const robotsRules = robots.available ? robotsParser(robotsUrl, robots.body) : null;
   const allowedCandidates = candidates.filter(url => robotsRules?.isAllowed(url, AUDIT_USER_AGENT) !== false).slice(0, MAX_CRAWL_PAGES);
   const pages = await mapWithConcurrency(allowedCandidates, 2, async url => {
+    const pageStartedAt = Date.now();
     try {
       const response = await safeFetch(url, {
         resolver,
@@ -267,32 +305,101 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
         title: inspection?.title || "",
         h1Count: inspection?.h1Count ?? null,
         noindex: inspection ? /\bnoindex\b/i.test(inspection.robotsMeta) : null,
+        durationMs: response.durationMs ?? Date.now() - pageStartedAt,
       };
     } catch (error) {
-      return { url, status: 0, error: error?.code || "fetch_failed" };
+      return { url, status: 0, error: codeFromError(error, "fetch_failed"), durationMs: Date.now() - pageStartedAt };
     }
   });
 
   const [httpProbe, alternateProbe] = await Promise.all([httpProbePromise, alternateProbePromise]);
+  const diagnostics = [];
+  const recordFailure = (collector, value) => {
+    if (!value?.error) return;
+    diagnostics.push(makeDiagnostic({
+      collector,
+      status: "unavailable",
+      code: value.error,
+      retryable: isRetryableDiagnostic(value.error),
+      durationMs: value.durationMs || 0,
+    }));
+  };
+  recordFailure("http_redirect", httpProbe);
+  recordFailure("alternate_host", alternateProbe);
+  recordFailure("robots", robots);
+  for (const sitemap of sitemapResults) recordFailure("sitemap", sitemap);
+  for (const page of pages) recordFailure("crawl_page", page);
   return {
     httpProbe,
     alternateProbe,
-    robots: { status: robots.status, available: robots.available, error: robots.error || null },
+    robots: { status: robots.status, available: robots.available, error: robots.error || null, durationMs: robots.durationMs || 0 },
     sitemaps: sitemapResults.map(result => ({
       url: result.url,
       status: result.status,
       available: result.available,
       urlCount: result.locations.length,
       error: result.error || null,
+      durationMs: result.durationMs || 0,
     })),
     crawledPages: pages,
     crawlLimit: MAX_CRAWL_PAGES,
+    diagnostics: dedupeDiagnostics(diagnostics),
   };
 }
 
 export async function collectTechnicalProfile(snapshot, options = {}) {
   const hostname = new URL(snapshot.url).hostname;
-  const dnsProfile = await collectDnsProfile(hostname, options);
-  const resources = await collectPublicResources(snapshot, dnsProfile, options);
-  return { dns: dnsProfile, resources };
+  const diagnostics = [];
+  let dnsProfile;
+  try {
+    dnsProfile = await collectDnsProfile(hostname, options);
+    diagnostics.push(...(dnsProfile.diagnostics || []));
+  } catch (error) {
+    const code = codeFromError(error, "dns_profile_failed");
+    diagnostics.push(makeDiagnostic({
+      collector: "dns_profile",
+      status: "unavailable",
+      code,
+      retryable: isRetryableDiagnostic(code),
+    }));
+    dnsProfile = {
+      hostname,
+      zone: hostname,
+      addresses: { ipv4: [], ipv6: [], ttl: [] },
+      cname: [],
+      nameservers: [],
+      caa: [],
+      mx: [],
+      spf: [],
+      dmarc: [],
+      dnssec: { dsPresent: false, validatedAnswer: false, dsRecords: [] },
+      alternateHostname: null,
+      alternateAddresses: null,
+      diagnostics: [],
+    };
+  }
+
+  let resources;
+  try {
+    resources = await collectPublicResources(snapshot, dnsProfile, options);
+    diagnostics.push(...(resources.diagnostics || []));
+  } catch (error) {
+    const code = codeFromError(error, "public_resources_failed");
+    diagnostics.push(makeDiagnostic({
+      collector: "public_resources",
+      status: "unavailable",
+      code,
+      retryable: isRetryableDiagnostic(code),
+    }));
+    resources = {
+      httpProbe: null,
+      alternateProbe: null,
+      robots: { status: 0, available: false, error: code },
+      sitemaps: [],
+      crawledPages: [],
+      crawlLimit: MAX_CRAWL_PAGES,
+      diagnostics: [],
+    };
+  }
+  return { dns: dnsProfile, resources, diagnostics: dedupeDiagnostics(diagnostics) };
 }

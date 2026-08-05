@@ -475,10 +475,16 @@ const waitForClosed = async (page, sceneIndex, calloutIndex) => {
   }, { timeout: TIMEOUT });
 };
 
-const waitForNoObscured = async page => {
-  await page.waitForFunction(() => !document.querySelector(
-    ".annotation-callout.is-obscured, .annotation.is-obscured, .annotation-wire.is-obscured",
-  ), null, { timeout: TIMEOUT });
+const waitForNoObscured = async (page, sceneIndex) => {
+  await page.waitForFunction(({ selector, sceneNumber }) => {
+    const scene = document.querySelectorAll(selector)[sceneNumber];
+    return Boolean(scene && !scene.querySelector(
+      ".annotation-callout.is-obscured, .annotation.is-obscured, .annotation-wire.is-obscured",
+    ));
+  }, {
+    selector: SCENE_SELECTOR,
+    sceneNumber: sceneIndex,
+  }, { timeout: TIMEOUT });
 };
 
 const anchorCenters = async (page, sceneIndex) => page.evaluate(({
@@ -1030,12 +1036,14 @@ const exercisePoint = async (
 ) => {
   const dot = page.locator(SCENE_SELECTOR).nth(sceneIndex)
     .locator(CALLOUT_SELECTOR).nth(calloutIndex).locator(".annotation-dot");
+  let phase = "setup";
 
   try {
     await page.keyboard.press("Escape");
     await dot.scrollIntoViewIfNeeded();
     await settleLayout(page);
     const stableAnchors = await anchorCenters(page, sceneIndex);
+    phase = "hover/open";
     await dot.hover();
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);
@@ -1060,9 +1068,10 @@ const exercisePoint = async (
     // The synthetic pointerleave above measures the closing frame without moving
     // Playwright's physical pointer. Move it off the target before keyboard checks
     // so Chromium cannot re-enter the same dot while focus is being transferred.
+    phase = "hover/close";
     await page.mouse.move(1, 1);
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page);
+    await waitForNoObscured(page, sceneIndex);
     anchorMovementIssues(
       stableAnchors,
       await anchorCenters(page, sceneIndex),
@@ -1095,6 +1104,7 @@ const exercisePoint = async (
     // Keep the key event bound to the audited control. A layout refresh can
     // legitimately move focus between frames on slower CI runners; locator.press
     // restores focus and still exercises the browser's real keyboard activation.
+    phase = "Enter/open";
     await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
     await settleLayout(page);
@@ -1107,9 +1117,10 @@ const exercisePoint = async (
     );
 
     if (!allCloseMethods) {
+      phase = "Escape/close";
       await page.keyboard.press("Escape");
       await waitForClosed(page, sceneIndex, calloutIndex);
-      await waitForNoObscured(page);
+      await waitForNoObscured(page, sceneIndex);
       recordInteractionIssues(
         route,
         viewport,
@@ -1120,9 +1131,10 @@ const exercisePoint = async (
       return;
     }
 
+    phase = "Space/close";
     await dot.press("Space");
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page);
+    await waitForNoObscured(page, sceneIndex);
     recordInteractionIssues(
       route,
       viewport,
@@ -1131,11 +1143,13 @@ const exercisePoint = async (
       "Space/close",
     );
 
+    phase = "Enter/open before Escape";
     await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
+    phase = "Escape/close";
     await page.keyboard.press("Escape");
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page);
+    await waitForNoObscured(page, sceneIndex);
     recordInteractionIssues(
       route,
       viewport,
@@ -1144,15 +1158,17 @@ const exercisePoint = async (
       "Escape/close",
     );
 
+    phase = "Enter/open before outside pointerdown";
     await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
+    phase = "outside pointerdown/close";
     await page.locator("body").dispatchEvent("pointerdown", {
       bubbles: true,
       button: 0,
       pointerType: "mouse",
     });
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page);
+    await waitForNoObscured(page, sceneIndex);
     recordInteractionIssues(
       route,
       viewport,
@@ -1162,7 +1178,7 @@ const exercisePoint = async (
     );
   } catch (error) {
     const key = await dot.getAttribute("aria-controls").catch(() => null) || `callout-${calloutIndex + 1}`;
-    addFailure(route, viewport, sceneId, key, `interaction audit failed: ${error.message}`);
+    addFailure(route, viewport, sceneId, key, `interaction audit failed during ${phase}: ${error.message}`);
     await page.keyboard.press("Escape").catch(() => {});
   }
 };

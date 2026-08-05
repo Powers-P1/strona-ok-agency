@@ -1044,6 +1044,11 @@ const exercisePoint = async (
     await settleLayout(page);
     const stableAnchors = await anchorCenters(page, sceneIndex);
     phase = "hover/open";
+    // Chromium keeps the physical pointer position between pages. If the next
+    // audited dot lands at the same coordinates, locator.hover() has no move to
+    // perform and no pointerenter event is emitted. Start outside the artwork so
+    // every hover audit exercises a real pointer transition.
+    await page.mouse.move(1, 1);
     await dot.hover();
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);

@@ -7,6 +7,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = resolve(root, "docs/SYSTEM-EXCEPTIONS-INVENTORY.md");
 const shouldWrite = process.argv.includes("--write");
 const shouldCheck = process.argv.includes("--check");
+const normalizeEol = value => value.replace(/\r\n/g, "\n");
 const ignoredSourceRoots = Object.freeze([
   ".git/",
   ".wrangler/",
@@ -270,8 +271,8 @@ if (shouldWrite) {
 } else if (shouldCheck) {
   const current = await readFile(outputPath, "utf8").catch(() => "");
   assert.equal(
-    current,
-    report,
+    normalizeEol(current),
+    normalizeEol(report),
     "SYSTEM-EXCEPTIONS-INVENTORY.md jest nieaktualny. Uruchom: npm run audit:system-exceptions",
   );
   console.log("OK: inwentarz wyjątków systemowych jest kompletny i aktualny.");

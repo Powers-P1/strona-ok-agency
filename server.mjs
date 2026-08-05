@@ -30,7 +30,9 @@ const types = {
   ".avif": "image/avif",
   ".svg": "image/svg+xml",
   ".ico": "image/x-icon",
-  ".woff2": "font/woff2"
+  ".woff2": "font/woff2",
+  ".ttf": "font/ttf",
+  ".pdf": "application/pdf"
 };
 
 createServer(async (req, res) => {

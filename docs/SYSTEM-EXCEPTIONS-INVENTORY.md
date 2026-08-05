@@ -5,7 +5,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 ## Podsumowanie
 
 - `!important`: **218**
-- deklaracje typografii w lokalnych arkuszach tras: **991**
+- deklaracje typografii w lokalnych arkuszach tras: **1001**
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **283**
 - inline `style` w HTML: **28**
 - mutacje stylu z JS: **48**
@@ -47,7 +47,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-home.css | 72 |
 | assets/legal-pages.css | 67 |
 | assets/page-menu.css | 67 |
-| assets/services/site-audit/styles.css | 42 |
+| assets/services/site-audit/styles.css | 52 |
 | assets/page-contact.css | 39 |
 | assets/page-faq.css | 39 |
 | assets/content-system.css | 32 |
@@ -1071,16 +1071,26 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/site-audit/styles.css | 243 | .audit-priorities li::before | font-size | var(--ok-type-label) | — | semantic-token |
 | assets/services/site-audit/styles.css | 244 | .audit-priorities li::before | font-weight | 700 | — | local-type-exception |
 | assets/services/site-audit/styles.css | 251 | .audit-priorities p | font-size | var(--ok-type-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 256 | .audit-strengths li | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 265 | .audit-limitations summary | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 266 | .audit-limitations ul | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 288 | .audit-method article > span | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 289 | .audit-method article > span | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 290 | .audit-method article > span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 295 | .audit-method h3 | font-family | var(--ok-font-display) | — | semantic-token |
-| assets/services/site-audit/styles.css | 296 | .audit-method h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
-| assets/services/site-audit/styles.css | 297 | .audit-method h3 | font-weight | 600 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 303 | .audit-method article p, .audit-method__boundary | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 258 | .audit-strengths li | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 267 | .audit-limitations summary | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 268 | .audit-limitations ul | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 280 | .audit-details__intro | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 303 | .audit-check-group summary strong | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 304 | .audit-check-group summary strong | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 305 | .audit-check-group summary strong | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 310 | .audit-check-group summary span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 311 | .audit-check-group summary span | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 339 | .audit-check > div span, .audit-check small | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 340 | .audit-check > div span, .audit-check small | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 346 | .audit-check p | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 347 | .audit-check p | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 371 | .audit-method article > span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 372 | .audit-method article > span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 373 | .audit-method article > span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 378 | .audit-method h3 | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 379 | .audit-method h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 380 | .audit-method h3 | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 386 | .audit-method article p, .audit-method__boundary | line-height | var(--ok-leading-content) | — | semantic-token |
 | assets/services/social/styles.css | 28 | body | font-family | var(--ok-font-body) | — | semantic-token |
 | assets/services/social/styles.css | 155 | .site-header nav a | font-weight | 650 | — | local-type-exception |
 | assets/services/social/styles.css | 156 | .site-header nav a | letter-spacing | .08em | — | local-type-exception |

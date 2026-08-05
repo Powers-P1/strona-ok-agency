@@ -9,5 +9,9 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "parse5": "^7.3.0",
+    "robots-parser": "^3.0.1"
   }
 }

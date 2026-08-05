@@ -1,5 +1,16 @@
 export const AUDIT_ACTION = "site_audit";
-export const NOTICE_VERSION = "site-audit-v1-2026-08-04";
+export const NOTICE_VERSION = "site-audit-v2-2026-08-05";
+export const REPORT_SCHEMA_VERSION = "2.0";
+export const REPORT_CATEGORY_KEYS = Object.freeze([
+  "performance",
+  "seo",
+  "accessibility",
+  "technical",
+  "security",
+  "conversion",
+  "trust",
+]);
+export const REPORT_CHECK_STATUSES = Object.freeze(["pass", "warning", "fail", "unknown", "not_applicable"]);
 export const MAX_REQUEST_BYTES = 8_192;
 export const MAX_CALLBACK_BYTES = 131_072;
 export const MAX_REPORT_BYTES = 102_400;
@@ -347,15 +358,73 @@ export function validateReport(report) {
   if (encoder.encode(encoded).byteLength > MAX_REPORT_BYTES) {
     throw new ApiError(413, "report_too_large", "Raport przekracza dozwolony rozmiar.");
   }
-  if (report.schemaVersion !== "1.0" || typeof report.summary !== "string" || report.summary.length > 1000) {
+  if (report.schemaVersion !== REPORT_SCHEMA_VERSION || typeof report.summary !== "string" || report.summary.length > 1000) {
     throw new ApiError(400, "invalid_report", "Raport ma nieprawidłowy format.");
   }
-  const categories = ["performance", "seo", "accessibility", "conversion", "trust"];
-  for (const key of categories) {
-    const score = report.categories?.[key]?.score;
-    if (!Number.isInteger(score) || score < 0 || score > 100) {
+  if (!Number.isInteger(report.overallScore) || report.overallScore < 0 || report.overallScore > 100) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowy wynik.");
+  }
+  if (!new Set(["high", "medium", "low"]).has(report.confidence)) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowy poziom pewności.");
+  }
+  if (!Number.isInteger(report.coverage) || report.coverage < 0 || report.coverage > 100 || typeof report.partial !== "boolean") {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowe pokrycie pomiaru.");
+  }
+  if (typeof report.rulesetVersion !== "string" || report.rulesetVersion.length > 80 ||
+      typeof report.scannerVersion !== "string" || report.scannerVersion.length > 40 ||
+      typeof report.generatedAt !== "string" || !Number.isFinite(Date.parse(report.generatedAt))) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowe metadane.");
+  }
+  const allowedStatuses = new Set(REPORT_CHECK_STATUSES);
+  if (!report.categories || Object.keys(report.categories).length !== REPORT_CATEGORY_KEYS.length ||
+      Object.keys(report.categories).some(key => !REPORT_CATEGORY_KEYS.includes(key))) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowy zestaw kategorii.");
+  }
+  for (const key of REPORT_CATEGORY_KEYS) {
+    const category = report.categories?.[key];
+    const score = category?.score;
+    if ((!Number.isInteger(score) && score !== null) || (Number.isInteger(score) && (score < 0 || score > 100))) {
       throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowy wynik.");
     }
+    if (!allowedStatuses.has(category?.status) || !Number.isInteger(category?.checked) || !Number.isInteger(category?.total) ||
+        category.checked < 0 || category.total < 0 || category.checked > category.total) {
+      throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłową kategorię.");
+    }
+  }
+  if (!Array.isArray(report.checks) || report.checks.length === 0 || report.checks.length > 120) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłową listę kontroli.");
+  }
+  const ids = new Set();
+  const allowedSeverities = new Set(["high", "medium", "low", "info"]);
+  for (const check of report.checks) {
+    if (!check || typeof check !== "object" || !/^[a-z0-9_]{3,80}$/.test(check.id || "") || ids.has(check.id)) {
+      throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłową kontrolę.");
+    }
+    ids.add(check.id);
+    if (!REPORT_CATEGORY_KEYS.includes(check.category) || !allowedStatuses.has(check.status) || !allowedSeverities.has(check.severity)) {
+      throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłową kontrolę.");
+    }
+    if (!Number.isFinite(check.weight) || check.weight <= 0 || check.weight > 10) {
+      throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłową wagę kontroli.");
+    }
+    for (const [field, maxLength] of [["title", 180], ["observation", 1200], ["recommendation", 1200], ["source", 160]]) {
+      if (typeof check[field] !== "string" || check[field].length > maxLength) {
+        throw new ApiError(400, "invalid_report", "Raport zawiera zbyt długą kontrolę.");
+      }
+    }
+  }
+  if (!Array.isArray(report.priorities) || report.priorities.length > 5 || report.priorities.some(item => {
+    const source = report.checks.find(check => check.id === item?.id);
+    return !source || item.title !== source.title || item.observation !== source.observation ||
+      item.recommendation !== source.recommendation || item.status !== source.status || item.category !== source.category;
+  })) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowe priorytety.");
+  }
+  if (!Array.isArray(report.strengths) || report.strengths.length > 8 || report.strengths.some(value => typeof value !== "string" || value.length > 300)) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowe mocne strony.");
+  }
+  if (!Array.isArray(report.limitations) || report.limitations.length > 12 || report.limitations.some(value => typeof value !== "string" || value.length > 500)) {
+    throw new ApiError(400, "invalid_report", "Raport zawiera nieprawidłowe ograniczenia.");
   }
   return encoded;
 }

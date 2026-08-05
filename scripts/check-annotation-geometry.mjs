@@ -146,6 +146,9 @@ const waitForSceneMode = async (page, index, mobile) => {
   await page.waitForFunction(({ selector, sceneIndex, isMobile }) => {
     const scene = document.querySelectorAll(selector)[sceneIndex];
     if (!scene) return false;
+    if (scene.matches("[inert]") || scene.closest("[inert]") || scene.getAttribute("aria-hidden") === "true") {
+      return false;
+    }
     const callouts = [...scene.querySelectorAll(".annotation-callout, .annotation")];
     if (!callouts.length || isMobile) return true;
     if (scene.querySelector(".is-obscured")) return false;
@@ -1089,8 +1092,10 @@ const exercisePoint = async (
       }
     }
 
-    await dot.focus();
-    await page.keyboard.press("Enter");
+    // Keep the key event bound to the audited control. A layout refresh can
+    // legitimately move focus between frames on slower CI runners; locator.press
+    // restores focus and still exercises the browser's real keyboard activation.
+    await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
     await settleLayout(page);
     recordInteractionIssues(
@@ -1115,7 +1120,7 @@ const exercisePoint = async (
       return;
     }
 
-    await page.keyboard.press("Space");
+    await dot.press("Space");
     await waitForClosed(page, sceneIndex, calloutIndex);
     await waitForNoObscured(page);
     recordInteractionIssues(
@@ -1126,7 +1131,7 @@ const exercisePoint = async (
       "Space/close",
     );
 
-    await page.keyboard.press("Enter");
+    await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.keyboard.press("Escape");
     await waitForClosed(page, sceneIndex, calloutIndex);
@@ -1139,7 +1144,7 @@ const exercisePoint = async (
       "Escape/close",
     );
 
-    await page.keyboard.press("Enter");
+    await dot.press("Enter");
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.locator("body").dispatchEvent("pointerdown", {
       bubbles: true,

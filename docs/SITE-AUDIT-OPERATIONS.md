@@ -2,7 +2,9 @@
 
 ## Zakres i granice
 
-Usługa wykonuje wyłącznie pasywną analizę publicznych zasobów HTTP/HTTPS domeny wskazanej przez użytkownika. Nie loguje się, nie skanuje portów, nie zgaduje haseł, nie omija zabezpieczeń i nie wykonuje prób eksploatacji. Przed uruchomieniem użytkownik potwierdza własność domeny albo upoważnienie; zapisujemy wersję informacji i czas akceptacji.
+Usługa wykonuje wyłącznie pasywną analizę publicznych rekordów DNS i zasobów HTTP/HTTPS domeny wskazanej przez użytkownika. Nie loguje się, nie skanuje portów, nie zgaduje haseł, nie omija zabezpieczeń i nie wykonuje prób eksploatacji. Przed uruchomieniem użytkownik potwierdza własność domeny albo upoważnienie; zapisujemy wersję informacji i czas akceptacji.
+
+Kontrakt raportu `2.0` obejmuje siedem kategorii: wydajność, SEO i indeksowanie, dostępność, domenę i DNS, HTTPS i bezpieczeństwo, konwersję i UX oraz zaufanie i treść. Runner sprawdza A/AAAA, NS, CAA, MX, SPF, DMARC i DNSSEC, certyfikat TLS, przekierowania, nagłówki bezpieczeństwa, robots.txt, do 3 map XML oraz maksymalnie 8 publicznych podstron tego samego hosta. Crawl ma współbieżność 2, respektuje robots.txt, odrzuca prywatne i zastrzeżone adresy po każdym rozwiązaniu DNS oraz przekierowaniu i stosuje limity czasu i rozmiaru odpowiedzi.
 
 Limity startowe:
 
@@ -19,9 +21,10 @@ Limity są przechowywane w tabeli `service_config`, więc można je zmienić bez
 2. Worker weryfikuje Origin, JSON, zgodę, Turnstile, nazwę domeny i publiczne rekordy DNS.
 3. D1 transakcyjnie egzekwuje limity, zapisuje zadanie oraz skrót losowego tokenu odczytu.
 4. Queue dostarcza zadanie do Workera, który podpisuje je HMAC i wysyła do prywatnego webhooka n8n.
-5. n8n orkiestruje deterministyczny runner: Web/SEO, konwersja, zaufanie i bezpieczeństwo, a następnie raport.
+5. n8n orkiestruje deterministyczny runner: Web/SEO, DNS i zasoby techniczne, konwersja, zaufanie i bezpieczeństwo, a następnie raport w schemacie `2.0`.
 6. Runner podpisuje callback do Workera. Worker sprawdza czas, nonce, HMAC, token ukończenia i schemat raportu.
 7. Przeglądarka odpytuje `GET /api/site-audits/:id` z losowym tokenem Bearer przechowywanym tylko w `sessionStorage`.
+8. Na żądanie użytkownika przeglądarka składa pełny, przeszukiwalny PDF lokalnie z odebranego raportu i lokalnych fontów Archivo oraz Barlow Condensed. Pobranie nie uruchamia osobnego backendu i nie przekazuje wyniku dodatkowej usłudze.
 
 ## Zasoby Cloudflare
 
@@ -55,7 +58,7 @@ Zmienne Workera:
 - `CALLBACK_BASE_URL=https://okagency-site-audit-api.oli-struska.workers.dev`;
 - `CALLBACK_HOSTNAME=okagency-site-audit-api.oli-struska.workers.dev`;
 - `TURNSTILE_HOSTNAMES=okagency.pl,www.okagency.pl`;
-- wersje rulesetu i skanera.
+- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.0`.
 
 Sekrety n8n/runnera muszą mieć te same wartości HMAC. Opcjonalny `PAGESPEED_API_KEY` trafia wyłącznie do magazynu sekretów środowiska runnera. Brak klucza nie zatrzymuje audytu — raport jest oznaczany jako częściowy.
 
@@ -80,7 +83,7 @@ Caddy musi redagować `Cf-Access-Client-Id`, `Cf-Access-Client-Secret` i `X-Ok-S
 7. Wdrożyć Worker, uruchomić test przeglądarkowy i dopiero potem opublikować link w nawigacji.
 8. Przez pierwszą dobę obserwować Queue, DLQ, odsetek raportów częściowych, czas realizacji i błędy callbacku.
 
-Pilot produkcyjny po finalnej rotacji sekretów zakończył się 2026-08-04 statusem `partial`, wynikiem 79/100, pięcioma kategoriami, poprawnym callbackiem i zapisem raportu w D1. Status częściowy wynika z celowo pustego `PAGESPEED_API_KEY` i nie blokuje pozostałych kontroli.
+Pilot kontraktu `1.0` po finalnej rotacji sekretów zakończył się 2026-08-04 statusem `partial`, wynikiem 79/100, pięcioma kategoriami, poprawnym callbackiem i zapisem raportu w D1. Przed publikacją kontraktu `2.0` należy wykonać nowy pilot siedmiu kategorii; brak `PAGESPEED_API_KEY` nie blokuje pozostałych kontroli, ale obniża poziom pewności raportu.
 
 ## Monitoring i reakcja
 
@@ -88,6 +91,7 @@ Pilot produkcyjny po finalnej rotacji sekretów zakończył się 2026-08-04 stat
 - Nie logować domen wraz z tokenem odczytu, treści HTML, sekretów, pełnego IP ani pełnych podpisanych payloadów.
 - Zadanie `running` przekraczające timeout ma zostać oznaczone jako `failed`; cron usuwa dane po retencji.
 - Przy awarii PageSpeed pozostawić usługę aktywną jako częściową. Przy błędzie DNS/SSRF nie obchodzić blokady ręcznie.
+- Monitorować czas i rozmiar odpowiedzi kolektora DNS/crawla; nie podnosić limitów ani liczby podstron bez ponownej analizy ryzyka SSRF, obciążenia domen docelowych i zasobów VPS.
 
 ## Rollback
 

@@ -622,9 +622,11 @@ Produkcja rozszerzonej diagnostyki składa się z Workera `okagency-site-audit-a
 
 Kod wdrożenia znajduje się w [`deploy/n8n`](../deploy/n8n), a na serwerze w `/opt/okagency-audit`. Compose uruchamia PostgreSQL 16, n8n 1.123.65, izolowany audit runner i Caddy; obrazy bazowe są przypięte po digest. n8n słucha wyłącznie na `127.0.0.1:5678`, runner nie ma publicznego portu, a Caddy publikuje tylko `/healthz` i dokładny webhook intake. Pozostałe ścieżki zwracają `404`.
 
-SSH dopuszcza wyłącznie klucz użytkownika `ubuntu`; logowanie hasłem i root są wyłączone. Aktywne są UFW, fail2ban, unattended-upgrades i 1 GB swapu. Dedykowany klucz operatorski znajduje się poza repozytorium w `C:\Users\dkaro\.ssh\okagency_n8n_vps_ed25519`; jego odcisk to `SHA256:EZ2VIjmDV3cq0KHxlZGGwpfTBry0pTbq4wMx32gwB0E`.
+SSH dopuszcza wyłącznie klucz użytkownika `ubuntu`; logowanie hasłem i root są wyłączone. Aktywne są UFW, fail2ban, unattended-upgrades i 1 GB swapu. Dedykowany klucz operatorski znajduje się poza repozytorium w `C:\Users\dkaro\.ssh\okagency_n8n_vps_ed25519`; jego odcisk to `SHA256:EZ2VIjmDV3cq0KHxlZGGwpfTBry0pTbq4wMx32gwB0E`. Zweryfikowany odcisk klucza hosta ED25519 VPS to `SHA256:kAN8gPdbYsJ17ttl00vhjiWlEElFWvY/1wEwBqmXvRY`.
 
 Worker wysyła webhook przez Caddy z dodatkową parą losowych nagłówków bramki i podpisem HMAC. Caddy redaguje identyfikator bramki, jej sekret oraz podpis z access logów. Callback omija Bot Fight Mode strefy przez callback-only host `okagency-site-audit-api.oli-struska.workers.dev`; kod udostępnia tam wyłącznie podpisany endpoint callbacku, a każdy inny request otrzymuje `404`.
+
+Kontrakt raportu `2.0` (`RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.0`) obejmuje siedem kategorii. Runner zbiera publiczne A/AAAA, NS, CAA, MX, SPF, DMARC i sygnał DNSSEC, parametry TLS i nagłówki HTTP, robots.txt, maksymalnie 3 mapy XML oraz próbkę do 8 podstron tego samego hosta przy współbieżności 2. Każde połączenie i przekierowanie przechodzi kontrolę SSRF oraz limit czasu i rozmiaru. Raport PDF jest generowany dopiero po kliknięciu, lokalnie w przeglądarce, z tych samych fontów i ról kolorystycznych co serwis; nie istnieje osobny endpoint PDF ani wysyłka e-mail.
 
 Codzienny backup PostgreSQL wykonuje `okagency-audit-backup.timer` około 03:20 czasu Warszawy. Pliki custom-format mają uprawnienia tylko dla roota, trafiają do `/var/backups/okagency-audit` i są utrzymywane przez 7 dni. Timer należy kontrolować poleceniami:
 
@@ -641,4 +643,4 @@ sudo docker exec -i okagency-site-audit-postgres-1 pg_restore --list < backup.du
 sudo docker exec -i okagency-site-audit-postgres-1 pg_restore -U n8n -d n8n --clean --if-exists < backup.dump
 ```
 
-Pełny pilot po wdrożeniu i finalnej rotacji sekretów zakończył się 2026-08-04 statusem `partial`, wynikiem 79/100, pięcioma kategoriami i poprawnym callbackiem do D1. `partial` jest oczekiwane bez opcjonalnego `PAGESPEED_API_KEY`. Publiczne limity pozostają: 100 nowych audytów dziennie globalnie, 3 na domenę, deduplikacja 24 godziny i retencja raportu 7 dni.
+Pełny pilot kontraktu `1.0` po wdrożeniu i finalnej rotacji sekretów zakończył się 2026-08-04 statusem `partial`, wynikiem 79/100, pięcioma kategoriami i poprawnym callbackiem do D1. Po wdrożeniu kontraktu `2.0` wymagany jest nowy pilot siedmiu kategorii i kontrola lokalnego PDF. Brak opcjonalnego `PAGESPEED_API_KEY` obniża pewność raportu, ale nie zatrzymuje pozostałych kontroli. Publiczne limity pozostają: 100 nowych audytów dziennie globalnie, 3 na domenę, deduplikacja 24 godziny i retencja raportu 7 dni.

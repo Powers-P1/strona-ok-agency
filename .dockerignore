@@ -1,0 +1,9 @@
+.git
+.github
+.wrangler
+dist
+node_modules
+services/site-audit-runner/node_modules
+tmp
+output
+*.log

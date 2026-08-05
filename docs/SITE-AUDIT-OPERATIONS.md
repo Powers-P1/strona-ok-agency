@@ -85,6 +85,8 @@ Caddy musi redagować `Cf-Access-Client-Id`, `Cf-Access-Client-Secret` i `X-Ok-S
 
 Pilot kontraktu `2.0` na kontrolowanej domenie OK Agency zakończył się 2026-08-05 statusem `partial`, wynikiem 94/100 i pokryciem 83%. Raport miał siedem kategorii oraz 56 kontroli, a callback zapisał w D1 wersje `RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.0` i `schemaVersion=2.0`. Ten pilot ujawnił brak wymaganego klucza PageSpeed. Od `SCANNER_VERSION=2.0.1` runner nie wykonuje anonimowych wywołań, rozróżnia limity, błędy konfiguracji, timeouty, błędy sieciowe i odpowiedzi 5xx oraz zapisuje diagnostykę kolektorów bez domeny i sekretów.
 
+Końcowy pilot `SCANNER_VERSION=2.0.2` zakończył się statusem `completed`, wynikiem 87/100 i pokryciem 100%. D1 potwierdziło `unknown_count=0`, brak niedostępnych kolektorów, PageSpeed HTTP 200 oraz wyniki Lighthouse 65/100/100/100. Certyfikat i protokół TLS są odczytywane przed odłączeniem gniazda; kontrola produkcyjna zwróciła TLS 1.3 i ważny certyfikat.
+
 ## Monitoring i reakcja
 
 - Alert: wiadomość w DLQ, powtarzający się `callback_failed`, wzrost zadań `failed`, brak ukończeń przez 15 minut przy aktywnej kolejce.

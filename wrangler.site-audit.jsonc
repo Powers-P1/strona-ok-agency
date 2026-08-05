@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "okagency-site-audit-api",
   "main": "./worker/site-audit.js",
-  "compatibility_date": "2026-08-04",
+  "compatibility_date": "2026-08-05",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "preview_urls": false,
@@ -49,8 +49,8 @@
     "TURNSTILE_HOSTNAMES": "okagency.pl,www.okagency.pl",
     "CALLBACK_BASE_URL": "https://okagency-site-audit-api.oli-struska.workers.dev",
     "CALLBACK_HOSTNAME": "okagency-site-audit-api.oli-struska.workers.dev",
-    "RULESET_VERSION": "2026.08.1",
-    "SCANNER_VERSION": "1.0.0"
+    "RULESET_VERSION": "2026.08.2",
+    "SCANNER_VERSION": "2.0.0"
   },
   "observability": {
     "enabled": true,

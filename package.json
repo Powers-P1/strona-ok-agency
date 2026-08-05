@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "description": "Wielostronicowy serwis OK Agency publikowany pod okagency.pl.",
   "scripts": {
-    "dev": "node server.mjs",
+    "dev": "npm run build:site-audit-pdf && node server.mjs",
+    "build:site-audit-pdf": "node scripts/build-site-audit-pdf.mjs",
+    "check:site-audit-pdf": "node scripts/check-site-audit-pdf.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:quality": "npm run check:asset-versions && node scripts/check-site-quality.mjs && node scripts/check-diagnosis.mjs && node scripts/check-about-navigation.mjs && node scripts/check-home-hero.mjs && node scripts/check-responsive-safety.mjs && node scripts/check-global-navigation.mjs && node scripts/check-motion-system.mjs && npm run check:analytics && npm run check:ui-system && npm run check:system-exceptions",
     "check:analytics": "node --test scripts/analytics.test.mjs worker/contact.test.mjs",
@@ -32,7 +34,7 @@
     "check:pages-functions": "wrangler pages functions build functions --outfile dist/pages-worker.js",
     "check:worker": "wrangler deploy --config wrangler.contact.jsonc --dry-run --outdir dist/worker-dry-run",
     "check:worker:audit": "wrangler deploy --config wrangler.site-audit.jsonc --dry-run --outdir dist/site-audit-worker-dry-run",
-    "check:site-audit": "node scripts/check-site-audit.mjs && node --test worker/site-audit.test.mjs services/site-audit-runner/test/*.test.mjs && npm run check:worker:audit",
+    "check:site-audit": "npm run build:site-audit-pdf && npm run check:site-audit-pdf && node scripts/check-site-audit.mjs && node --test worker/site-audit.test.mjs services/site-audit-runner/test/*.test.mjs && npm run check:worker:audit",
     "prebuild": "npm run check:links && npm run check:quality && npm run check:site-audit",
     "build": "node scripts/build.mjs"
   },
@@ -40,7 +42,10 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "axe-core": "^4.12.1",
+    "esbuild": "^0.25.9",
+    "pdf-lib": "^1.17.1",
     "playwright": "^1.60.0",
     "wrangler": "^4.115.0"
   }

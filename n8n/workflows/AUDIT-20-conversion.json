@@ -12,7 +12,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nconst conversion = item?.report?.categories?.conversion;\nif (!item.jobId || !item.completionToken || !Number.isInteger(conversion?.score)) {\n  throw new Error('invalid-conversion-stage-input');\n}\nif (conversion.score < 0 || conversion.score > 100) {\n  throw new Error('invalid-conversion-score');\n}\nitem.auditStages = [...(item.auditStages || []), 'conversion'];\nreturn [{ json: item }];"
+        "jsCode": "const item = $input.first().json;\nconst conversion = item?.report?.categories?.conversion;\nif (!item.jobId || !item.completionToken || item?.report?.schemaVersion !== '2.0' || !Number.isInteger(conversion?.score)) {\n  throw new Error('invalid-conversion-stage-input');\n}\nif (conversion.score < 0 || conversion.score > 100) {\n  throw new Error('invalid-conversion-score');\n}\nitem.auditStages = [...(item.auditStages || []), 'conversion'];\nreturn [{ json: item }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

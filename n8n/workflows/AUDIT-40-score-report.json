@@ -12,7 +12,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const item = $input.first().json;\nconst required = ['performance', 'seo', 'accessibility', 'conversion', 'trust'];\nif (item?.report?.schemaVersion !== '1.0' || !required.every(key => Number.isInteger(item.report.categories?.[key]?.score))) {\n  throw new Error('invalid-final-report');\n}\nitem.report.priorities = (item.report.priorities || []).slice(0, 5);\nitem.report.strengths = (item.report.strengths || []).slice(0, 5);\nreturn [{ json: item }];"
+        "jsCode": "const item = $input.first().json;\nconst required = ['performance', 'seo', 'accessibility', 'technical', 'security', 'conversion', 'trust'];\nif (item?.report?.schemaVersion !== '2.0' || !required.every(key => Number.isInteger(item.report.categories?.[key]?.score)) || !Array.isArray(item.report.checks)) {\n  throw new Error('invalid-final-report');\n}\nif (item.report.checks.length > 120 || item.report.checks.some(check => !required.includes(check?.category))) {\n  throw new Error('invalid-final-checks');\n}\nitem.report.priorities = (item.report.priorities || []).slice(0, 5);\nitem.report.strengths = (item.report.strengths || []).slice(0, 8);\nreturn [{ json: item }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

@@ -4,6 +4,7 @@ import { handleRequest } from "./site-audit.js";
 import {
   ApiError,
   NOTICE_VERSION,
+  REPORT_CATEGORY_KEYS,
   constantTimeEqualHex,
   hmacHex,
   isPublicIp,
@@ -92,13 +93,46 @@ test("podpis HMAC ma tolerancję czasu i porównanie stałoczasowe", async () =>
 });
 
 test("raport ma ścisły schemat wyników", () => {
+  const check = {
+    id: "seo_title",
+    category: "seo",
+    status: "warning",
+    severity: "medium",
+    title: "Tytuł dokumentu",
+    observation: "Tytuł wymaga dopracowania.",
+    recommendation: "Uzupełnij tytuł.",
+    source: "HTML",
+    weight: 1,
+  };
   const report = {
-    schemaVersion: "1.0",
+    schemaVersion: "2.0",
+    rulesetVersion: "2026.08.2",
+    scannerVersion: "2.0.0",
+    generatedAt: "2026-08-05T10:00:00.000Z",
+    origin: "https://example.com",
+    finalUrl: "https://example.com/",
     summary: "Test",
-    categories: Object.fromEntries(["performance", "seo", "accessibility", "conversion", "trust"].map(key => [key, { score: 80 }])),
+    overallScore: 80,
+    confidence: "medium",
+    coverage: 90,
+    categories: Object.fromEntries(REPORT_CATEGORY_KEYS.map(key => [key, {
+      score: 80,
+      status: "warning",
+      checked: key === "seo" ? 1 : 0,
+      total: key === "seo" ? 1 : 0,
+    }])),
+    priorities: [check],
+    strengths: [],
+    checks: [check],
+    measurements: {},
+    limitations: ["Pasywny pomiar."],
+    partial: true,
   };
   assert.equal(validateReport(report), JSON.stringify(report));
   report.categories.seo.score = 101;
+  assert.throws(() => validateReport(report), ApiError);
+  report.categories.seo.score = 80;
+  report.priorities[0] = { ...check, observation: "Podmieniona obserwacja." };
   assert.throws(() => validateReport(report), ApiError);
 });
 

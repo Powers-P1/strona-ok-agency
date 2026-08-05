@@ -13,6 +13,7 @@ export class ScanError extends Error {
 }
 
 const BLOCKED_SUFFIXES = [".internal", ".invalid", ".lan", ".local", ".localhost", ".onion", ".test"];
+export const AUDIT_USER_AGENT = "OKAgencyPassiveAudit/2.0 (+https://okagency.pl/diagnoza-www)";
 
 export function validateTargetUrl(value) {
   let url;
@@ -59,7 +60,7 @@ function requestPinned(url, address, options) {
       hostname: url.hostname,
       port: url.port || undefined,
       path: `${url.pathname}${url.search}`,
-      method: "GET",
+      method: options.method,
       servername: url.hostname,
       rejectUnauthorized: true,
       lookup: (_hostname, lookupOptions, callback) => {
@@ -69,7 +70,7 @@ function requestPinned(url, address, options) {
       headers: {
         accept: options.accept,
         "accept-encoding": "identity",
-        "user-agent": "OKAgencyPassiveAudit/1.0 (+https://okagency.pl/diagnoza-www)",
+        "user-agent": AUDIT_USER_AGENT,
         host: url.host,
       },
     }, response => {
@@ -88,12 +89,17 @@ function requestPinned(url, address, options) {
         resolve({
           status: response.statusCode || 0,
           headers: response.headers,
-          body: Buffer.concat(chunks).toString("utf8"),
+          body: options.method === "HEAD" ? "" : Buffer.concat(chunks).toString("utf8"),
           remoteAddress: address,
+          httpVersion: response.httpVersion || null,
           tls: url.protocol === "https:" ? {
             protocol: response.socket?.getProtocol?.() || null,
+            validFrom: certificate?.valid_from || null,
             validTo: certificate?.valid_to || null,
             issuer: certificate?.issuer?.O || certificate?.issuer?.CN || null,
+            subject: certificate?.subject?.CN || null,
+            subjectAltName: certificate?.subjectaltname || null,
+            fingerprint256: certificate?.fingerprint256 || null,
           } : null,
         });
       });
@@ -109,14 +115,26 @@ export async function safeFetch(input, {
   maxBytes = 1_048_576,
   timeoutMs = 12_000,
   accept = "text/html,application/xhtml+xml;q=0.9,text/plain;q=0.5",
+  method = "GET",
   resolver = dns,
 } = {}) {
+  if (!new Set(["GET", "HEAD"]).has(method)) throw new ScanError("invalid_method", "Niedozwolona metoda pobierania.");
   let url = validateTargetUrl(input);
   const redirects = [];
   const startedAt = Date.now();
   for (let hop = 0; hop <= maxRedirects; hop += 1) {
     const addresses = await resolveAndVet(url.hostname, resolver);
-    const response = await requestPinned(url, addresses[0], { maxBytes, timeoutMs, accept });
+    let response = null;
+    let lastError = null;
+    for (const address of addresses.slice(0, 2)) {
+      try {
+        response = await requestPinned(url, address, { maxBytes, timeoutMs, accept, method });
+        break;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (!response) throw lastError || new ScanError("fetch_failed", "Nie udało się pobrać strony.", true);
     const location = response.headers.location;
     if ([301, 302, 303, 307, 308].includes(response.status) && location) {
       if (hop === maxRedirects) throw new ScanError("too_many_redirects", "Strona ma zbyt wiele przekierowań.");

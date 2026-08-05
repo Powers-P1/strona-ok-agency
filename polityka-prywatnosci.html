@@ -94,9 +94,9 @@
       </div>
 
       <section class="privacy-status" aria-labelledby="privacy-status-title">
-        <p class="privacy-status__label">Status dokumentu <span>wersja 2.1</span></p>
+        <p class="privacy-status__label">Status dokumentu <span>wersja 2.2</span></p>
         <h2 id="privacy-status-title">Aktualna konfiguracja produkcyjna</h2>
-        <p>Stan na 4 sierpnia 2026 r. Dokument obejmuje Cloudflare Pages, Workers, D1, Queues, Email Routing, Turnstile i Web Analytics, skrzynkę OVHcloud Zimbra, formularze, „Diagnozę” i rozszerzoną diagnostykę strony WWW oraz narzędzia Google Analytics, Google Ads i Meta uruchamiane zgodnie z wyborem użytkownika.</p>
+        <p>Stan na 5 sierpnia 2026 r. Dokument obejmuje Cloudflare Pages, Workers, D1, Queues, Email Routing, Turnstile i Web Analytics, skrzynkę OVHcloud Zimbra, formularze, „Diagnozę” i rozszerzoną diagnostykę strony WWW oraz narzędzia Google Analytics, Google Ads i Meta uruchamiane zgodnie z wyborem użytkownika.</p>
       </section>
     </section>
 
@@ -177,9 +177,10 @@
 <section class="policy-section" id="rozszerzona-diagnostyka" aria-labelledby="rozszerzona-diagnostyka-title">
   <h2 id="rozszerzona-diagnostyka-title"><span>05A /</span>Rozszerzona diagnostyka strony WWW</h2>
   <p>Audyt uruchamia wyłącznie osoba, która wpisze domenę, przejdzie zabezpieczenie Turnstile i zaznaczy oświadczenie, że jest właścicielem domeny albo ma upoważnienie do zlecenia jej analizy. Zaznaczenie nie jest domyślne. Wraz z zadaniem zapisywane są wersja tej informacji oraz czas akceptacji.</p>
-  <p>Analiza ma charakter pasywny. Pobiera publicznie dostępne odpowiedzi HTTP lub HTTPS, podąża za zweryfikowanymi publicznymi przekierowaniami i ocenia między innymi wydajność, strukturę dokumentu, podstawowe sygnały SEO, dostępności, konwersji i zaufania. Nie loguje się, nie zgaduje haseł, nie skanuje portów, nie omija zabezpieczeń i nie podejmuje prób wykorzystania podatności.</p>
+  <p>Analiza ma charakter pasywny. Odczytuje publiczne rekordy DNS, zestawia zwykłe połączenia HTTP lub HTTPS, podąża za zweryfikowanymi publicznymi przekierowaniami oraz pobiera robots.txt, mapy witryny i ograniczoną próbkę publicznych podstron tego samego hosta z poszanowaniem robots.txt. Ocenia siedem obszarów: wydajność, SEO i indeksowanie, dostępność, domenę i DNS, HTTPS i bezpieczeństwo, konwersję oraz zaufanie i treść. Nie loguje się, nie zgaduje haseł, nie skanuje portów, nie omija zabezpieczeń i nie podejmuje prób wykorzystania podatności.</p>
   <p>Po przyjęciu zgłoszenia Cloudflare Worker zapisuje w bazie D1 zadanie i kieruje je przez Cloudflare Queues do chronionego webhooka n8n. Analizę wykonuje odizolowany runner działający na serwerze kontrolowanym przez OK Agency. Jeżeli zostanie włączony pomiar PageSpeed, adres badanej strony może zostać przekazany do Google PageSpeed Insights API. Wynik wraca podpisanym wywołaniem do Cloudflare i jest udostępniany w przeglądarce za pomocą losowego tokenu dostępu.</p>
   <p>Token dostępu do wyniku i identyfikator zadania są przechowywane w <code>sessionStorage</code>, aby można było wznowić oczekiwanie po odświeżeniu strony. Nie są cookie ani kontem użytkownika i co do zasady znikają po zamknięciu sesji przeglądarki. Nie należy ich udostępniać, ponieważ osoba posiadająca token może odczytać wynik do końca okresu retencji.</p>
+  <p>Pełny raport można pobrać jako plik PDF bez podawania adresu e-mail. Plik jest składany lokalnie w przeglądarce z wyniku już wyświetlonego użytkownikowi; ta czynność nie wysyła domeny ani treści raportu do dodatkowego dostawcy. Pobrany plik jest przechowywany na urządzeniu użytkownika zgodnie z ustawieniami jego przeglądarki i systemu.</p>
   <p>Celem przetwarzania jest wykonanie audytu uruchomionego na żądanie użytkownika, zapewnienie bezpieczeństwa, egzekwowanie limitów i diagnozowanie błędów. W zależności od kontekstu podstawą jest art. 6 ust. 1 lit. b RODO, gdy żądanie zmierza do podjęcia działań przed zawarciem umowy, albo art. 6 ust. 1 lit. f RODO — prawnie uzasadniony interes Administratora polegający na udostępnieniu i ochronie narzędzia diagnostycznego. Wynik jest informacyjny, nie stanowi pentestu, oferty ani decyzji wywołującej skutki prawne.</p>
 </section>
 <section class="policy-section" id="narzedzia" aria-labelledby="narzedzia-title">

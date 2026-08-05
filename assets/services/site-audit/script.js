@@ -1,15 +1,29 @@
 (() => {
   "use strict";
 
-  const NOTICE_VERSION = "site-audit-v1-2026-08-04";
-  const STORAGE_KEY = "ok-site-audit-job-v1";
+  const NOTICE_VERSION = "site-audit-v2-2026-08-05";
+  const STORAGE_KEY = "ok-site-audit-job-v2";
   const POLL_DELAYS = [2000, 3000, 5000, 8000, 10000];
   const CATEGORY_LABELS = {
     performance: "Wydajność",
-    seo: "SEO",
+    seo: "SEO i indeksowanie",
     accessibility: "Dostępność",
-    conversion: "Konwersja",
-    trust: "Zaufanie",
+    technical: "Domena i DNS",
+    security: "HTTPS i bezpieczeństwo",
+    conversion: "Konwersja i UX",
+    trust: "Zaufanie i treść",
+  };
+  const STATUS_LABELS = {
+    pass: "Zaliczone",
+    warning: "Do sprawdzenia",
+    fail: "Problem",
+    unknown: "Nieweryfikowalne",
+    not_applicable: "Nie dotyczy",
+  };
+  const CONFIDENCE_LABELS = {
+    high: "Pełny pomiar",
+    medium: "Pomiar częściowy",
+    low: "Ograniczony pomiar",
   };
 
   const root = document.querySelector("[data-site-audit]");
@@ -26,15 +40,24 @@
   const progressDomain = root.querySelector("[data-audit-progress-domain]");
   const reportSection = root.querySelector("[data-audit-report]");
   const reportTitle = root.querySelector("#audit-report-title");
+  const downloadButton = root.querySelector("[data-audit-download]");
+  const downloadStatus = root.querySelector("[data-audit-download-status]");
   let turnstileWidgetId = null;
   let turnstileToken = "";
   let polling = false;
   let pollGeneration = 0;
+  let currentReport = null;
 
   function setStatus(message, state = "") {
     if (!formStatus) return;
     formStatus.textContent = message;
     formStatus.dataset.state = state;
+  }
+
+  function setDownloadStatus(message, state = "") {
+    if (!downloadStatus) return;
+    downloadStatus.textContent = message;
+    downloadStatus.dataset.state = state;
   }
 
   function setBusy(busy) {
@@ -69,7 +92,7 @@
   };
 
   function saveJob(job) {
-    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(job)); } catch { /* prywatny tryb może blokować storage */ }
+    try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(job)); } catch { /* Prywatny tryb może blokować storage. */ }
   }
 
   function readJob() {
@@ -91,12 +114,13 @@
   }
 
   function showProgress(origin, status = "queued") {
+    currentReport = null;
     reportSection.hidden = true;
     progress.hidden = false;
     progress.setAttribute("aria-busy", "true");
     progressDomain.textContent = origin || "";
     if (status === "running") {
-      progressCopy.textContent = "Analizujemy strukturę, ścieżkę do kontaktu, sygnały zaufania i pomiar mobilny.";
+      progressCopy.textContent = "Sprawdzamy DNS, HTTPS, strukturę, ograniczoną próbkę podstron i mobilny pomiar PageSpeed.";
     } else {
       progressCopy.textContent = "Zadanie czeka w bezpiecznej kolejce. Zwykle trwa to od kilkunastu sekund do około dwóch minut.";
     }
@@ -110,12 +134,13 @@
   function categoryCard(key, category) {
     const article = document.createElement("article");
     article.className = "audit-category";
+    article.dataset.status = category?.status || "unknown";
     const label = document.createElement("span");
     label.textContent = CATEGORY_LABELS[key] || key;
     const score = document.createElement("strong");
     score.textContent = String(category?.score ?? "—");
     const suffix = document.createElement("small");
-    suffix.textContent = "/ 100";
+    suffix.textContent = category?.score === null ? STATUS_LABELS[category?.status] || "Brak danych" : `/ 100 · ${STATUS_LABELS[category?.status] || ""}`;
     article.append(label, score, suffix);
     return article;
   }
@@ -125,11 +150,12 @@
     const title = document.createElement("strong");
     title.textContent = finding?.title || "Element do poprawy";
     const detail = document.createElement("p");
-    detail.textContent = finding?.detail || "";
+    detail.textContent = finding?.observation || finding?.detail || "";
     const recommendation = document.createElement("p");
     recommendation.className = "audit-priority__action";
     recommendation.textContent = finding?.recommendation || "";
-    item.append(title, detail, recommendation);
+    item.append(title, detail);
+    if (recommendation.textContent) item.append(recommendation);
     return item;
   }
 
@@ -139,26 +165,75 @@
     return item;
   }
 
+  function checkItem(check) {
+    const item = document.createElement("li");
+    item.className = "audit-check";
+    item.dataset.status = check?.status || "unknown";
+    const header = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = check?.title || "Kontrola";
+    const status = document.createElement("span");
+    status.textContent = STATUS_LABELS[check?.status] || "Nieznany status";
+    header.append(title, status);
+    const observation = document.createElement("p");
+    observation.textContent = check?.observation || "";
+    const source = document.createElement("small");
+    source.textContent = check?.source ? `Źródło: ${check.source}` : "";
+    item.append(header, observation);
+    if (check?.recommendation && new Set(["fail", "warning", "unknown"]).has(check.status)) {
+      const recommendation = document.createElement("p");
+      recommendation.className = "audit-check__recommendation";
+      recommendation.textContent = check.recommendation;
+      item.append(recommendation);
+    }
+    if (source.textContent) item.append(source);
+    return item;
+  }
+
+  function checkGroup(key, report, open = false) {
+    const category = report.categories[key];
+    const details = document.createElement("details");
+    details.className = "audit-check-group";
+    details.open = open;
+    const summary = document.createElement("summary");
+    const label = document.createElement("strong");
+    label.textContent = CATEGORY_LABELS[key] || key;
+    const meta = document.createElement("span");
+    meta.textContent = `${category?.score ?? "—"}/100 · ${category?.checked ?? 0}/${category?.total ?? 0} sprawdzonych`;
+    summary.append(label, meta);
+    const checks = document.createElement("ul");
+    checks.className = "audit-checks";
+    const categoryChecks = (report.checks || []).filter(check => check.category === key);
+    addListItems(checks, categoryChecks, checkItem);
+    details.append(summary, checks);
+    return details;
+  }
+
   function renderReport(job) {
     const report = job.report;
-    if (!report?.categories) return showFailure("Raport ma nieprawidłowy format. Uruchom audyt ponownie.");
+    if (report?.schemaVersion !== "2.0" || !report?.categories || !Array.isArray(report.checks)) {
+      return showFailure("Raport ma nieprawidłowy format. Uruchom audyt ponownie.");
+    }
+    currentReport = report;
     progress.hidden = true;
     progress.setAttribute("aria-busy", "false");
     reportSection.hidden = false;
     root.querySelector("[data-audit-summary]").textContent = report.summary || "";
     root.querySelector("[data-audit-origin]").textContent = report.origin || job.origin || "";
-    root.querySelector("[data-audit-confidence]").textContent = report.confidence === "high" ? "Pełny pomiar" : "Pomiar częściowy";
+    root.querySelector("[data-audit-confidence]").textContent = `${CONFIDENCE_LABELS[report.confidence] || "Pomiar częściowy"} · pokrycie ${report.coverage ?? "—"}%`;
     root.querySelector("[data-audit-overall]").textContent = String(report.overallScore ?? "—");
 
-    const categories = root.querySelector("[data-audit-categories]");
-    categories.replaceChildren(...Object.keys(CATEGORY_LABELS).map(key => categoryCard(key, report.categories[key])));
+    const categoryKeys = Object.keys(CATEGORY_LABELS);
+    const firstIssueKey = categoryKeys.find(key => new Set(["fail", "warning"]).has(report.categories[key]?.status));
+    root.querySelector("[data-audit-categories]").replaceChildren(...categoryKeys.map(key => categoryCard(key, report.categories[key])));
+    root.querySelector("[data-audit-check-groups]").replaceChildren(...categoryKeys.map(key => checkGroup(key, report, key === firstIssueKey)));
     addListItems(root.querySelector("[data-audit-priorities]"), report.priorities || [], priorityItem);
     addListItems(root.querySelector("[data-audit-strengths]"), report.strengths || [], textItem);
     addListItems(root.querySelector("[data-audit-limitations]"), report.limitations || [], textItem);
 
     if (!(report.priorities || []).length) {
       const empty = document.createElement("li");
-      empty.textContent = "Nie wykryliśmy krytycznego problemu w zakresie tego pasywnego testu.";
+      empty.textContent = "Nie wykryliśmy istotnego problemu w zakresie tego pasywnego testu.";
       root.querySelector("[data-audit-priorities]").append(empty);
     }
     if (!(report.strengths || []).length) {
@@ -166,12 +241,14 @@
       empty.textContent = "Audyt nie zebrał wystarczających danych, aby wskazać mocne strony.";
       root.querySelector("[data-audit-strengths]").append(empty);
     }
+    setDownloadStatus("");
     reportTitle.focus({ preventScroll: true });
     reportSection.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
     setBusy(false);
   }
 
   function showFailure(message) {
+    currentReport = null;
     progress.hidden = true;
     progress.setAttribute("aria-busy", "false");
     setBusy(false);
@@ -179,7 +256,7 @@
     form?.scrollIntoView({ block: "center" });
   }
 
-  async function requestJson(url, options, timeoutMs = 15_000) {
+  async function requestJson(url, options = {}, timeoutMs = 15_000) {
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -286,14 +363,34 @@
     }
   });
 
+  downloadButton?.addEventListener("click", async () => {
+    if (!currentReport || !root.dataset.auditPdfModule) return;
+    downloadButton.disabled = true;
+    downloadButton.setAttribute("aria-busy", "true");
+    setDownloadStatus("Przygotowujemy raport PDF…");
+    try {
+      const pdf = await import(root.dataset.auditPdfModule);
+      await pdf.downloadAuditPdf(currentReport);
+      setDownloadStatus("Raport PDF został pobrany.", "success");
+    } catch (error) {
+      console.error("site_audit_pdf_failed", error);
+      setDownloadStatus("Nie udało się przygotować PDF. Spróbuj ponownie.", "error");
+    } finally {
+      downloadButton.disabled = false;
+      downloadButton.removeAttribute("aria-busy");
+    }
+  });
+
   root.querySelector("[data-audit-new]")?.addEventListener("click", () => {
     pollGeneration += 1;
     polling = false;
+    currentReport = null;
     clearJob();
     reportSection.hidden = true;
     progress.hidden = true;
     setBusy(false);
     setStatus("");
+    setDownloadStatus("");
     domainInput.value = "";
     consentInput.checked = false;
     resetTurnstile();

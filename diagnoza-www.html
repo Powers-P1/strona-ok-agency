@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ead9cb">
-  <meta name="description" content="Bezpłatny, pasywny audyt strony WWW: sprawdź wydajność, SEO, dostępność, konwersję i zaufanie, a potem poznaj pięć najważniejszych priorytetów.">
+  <meta name="description" content="Bezpłatny, pasywny audyt strony WWW: sprawdź wydajność, SEO, dostępność, DNS, HTTPS, bezpieczeństwo, konwersję i zaufanie, a potem pobierz pełny raport PDF.">
   <title>Bezpłatny audyt strony WWW | OK Agency</title>
   <link rel="canonical" href="https://okagency.pl/diagnoza-www">
   <meta property="og:title" content="Bezpłatny audyt strony WWW | OK Agency">
-  <meta property="og:description" content="Wpisz domenę i otrzymaj uporządkowany raport: wydajność, SEO, dostępność, konwersja i zaufanie.">
+  <meta property="og:description" content="Wpisz domenę i otrzymaj uporządkowany raport z siedmiu obszarów, w tym DNS, HTTPS, SEO i dostępności.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://okagency.pl/diagnoza-www">
   <meta property="og:image" content="https://okagency.pl/assets/ok-agency-social.webp">
@@ -17,7 +17,7 @@
   <meta property="og:image:alt" content="OK Agency — Ładnie to za mało">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Bezpłatny audyt strony WWW | OK Agency">
-  <meta name="twitter:description" content="Pięć obszarów strony, konkretne priorytety i wynik od razu na ekranie.">
+  <meta name="twitter:description" content="Siedem obszarów strony, konkretne priorytety i pełny raport PDF bez podawania e-maila.">
   <meta name="twitter:image" content="https://okagency.pl/assets/ok-agency-social.webp">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <script type="application/ld+json">
@@ -48,7 +48,7 @@
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/content-system.css?v=20260805-1">
-  <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260805-1">
+  <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260805-2">
   <link rel="stylesheet" href="/assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="/assets/site-navigation.css?v=20260803-5">
   <link rel="stylesheet" href="/assets/responsive-foundation.v20260730-8.css?v=20260804-5">
@@ -85,16 +85,18 @@
   </header>
   <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
-  <main id="audyt-www" class="audit-main" data-site-audit>
+  <main id="audyt-www" class="audit-main" data-site-audit data-audit-pdf-module="/assets/generated/site-audit-pdf.js?v=20260805-1">
     <section class="audit-hero" aria-labelledby="audit-title">
       <div class="audit-hero__copy">
         <p class="kicker">Rozszerzona diagnostyka · publiczne dane · bez logowania</p>
         <h1 class="page-title" id="audit-title">Co naprawdę blokuje<br><span class="accent">Twoją stronę?</span></h1>
-        <p class="lead">Sprawdzimy pięć obszarów i oddamy Ci kolejność działania. Bez obowiązkowego e-maila, bez ukrytego skanowania i bez sprzedażowego wyniku.</p>
+        <p class="lead">Sprawdzimy siedem obszarów i oddamy Ci kolejność działania. Bez obowiązkowego e-maila, bez ukrytego skanowania i bez sprzedażowego wyniku.</p>
         <ul class="audit-scope" aria-label="Zakres audytu">
           <li>Wydajność mobilna</li>
           <li>SEO i struktura</li>
           <li>Dostępność</li>
+          <li>Domena i DNS</li>
+          <li>HTTPS i bezpieczeństwo</li>
           <li>Konwersja</li>
           <li>Zaufanie</li>
         </ul>
@@ -131,7 +133,7 @@
       <div>
         <p class="kicker">Audyt w toku</p>
         <h2 class="section-title" id="audit-progress-title" tabindex="-1">Łączymy sygnały w jeden obraz.</h2>
-        <p data-audit-progress-copy>Sprawdzamy publiczną odpowiedź strony, strukturę dokumentu i najważniejsze sygnały.</p>
+        <p data-audit-progress-copy>Sprawdzamy DNS, HTTPS, publiczną odpowiedź strony, strukturę dokumentu i próbkę podstron.</p>
         <p class="audit-progress__domain" data-audit-progress-domain></p>
       </div>
     </section>
@@ -164,31 +166,40 @@
         </section>
       </div>
 
+      <section class="audit-details" aria-labelledby="audit-details-title">
+        <p class="kicker">Pełna diagnostyka</p>
+        <h3 id="audit-details-title">Wyniki wszystkich sprawdzeń</h3>
+        <p class="audit-details__intro">Każdy wynik opisuje obserwację, jej znaczenie i zalecane następne działanie. Brak danych nie obniża punktacji.</p>
+        <div class="audit-check-groups" data-audit-check-groups></div>
+      </section>
+
       <details class="audit-limitations">
         <summary>Zakres i ograniczenia wyniku</summary>
         <ul data-audit-limitations></ul>
       </details>
 
       <div class="audit-report__actions">
+        <button class="submit" type="button" data-audit-download><span>Pobierz pełny raport PDF</span><span class="arr" aria-hidden="true">↓</span></button>
         <a class="submit" href="/kontakt?context=web&amp;source=site-audit"><span>Omów wynik z OK Agency</span><span class="arr" aria-hidden="true">→</span></a>
         <button class="secondary-action" type="button" data-audit-new>Sprawdź inną domenę</button>
       </div>
+      <p class="form-status audit-download-status" data-audit-download-status role="status" aria-live="polite"></p>
     </section>
 
     <section class="audit-method theme-dark" aria-labelledby="audit-method-title">
       <p class="kicker">Co sprawdzamy — i czego nie robimy</p>
       <h2 class="section-title" id="audit-method-title">Pasywnie, konkretnie, bez udawania pentestu.</h2>
       <div class="audit-method__grid">
-        <article><span>01</span><h3>Publiczna odpowiedź</h3><p>Status, przekierowania, HTTPS, czas odpowiedzi i podstawowe nagłówki.</p></article>
-        <article><span>02</span><h3>Struktura strony</h3><p>Tytuł, opis, canonical, nagłówki, viewport, dane strukturalne i dostępność formularzy oraz obrazów.</p></article>
-        <article><span>03</span><h3>Droga do decyzji</h3><p>Oferta, wezwania do działania, kontakt, formularze i sygnały zaufania.</p></article>
+        <article><span>01</span><h3>Warstwa techniczna</h3><p>DNS, DNSSEC, rekordy pocztowe, certyfikat TLS, przekierowania, HTTPS i nagłówki bezpieczeństwa.</p></article>
+        <article><span>02</span><h3>Struktura i indeksowanie</h3><p>Robots.txt, sitemap, próbka podstron, tytuły, canonical, dane strukturalne, wydajność i dostępność.</p></article>
+        <article><span>03</span><h3>Droga do decyzji</h3><p>Oferta, wezwania do działania, kontakt, formularze, treść i publiczne sygnały zaufania.</p></article>
       </div>
       <p class="audit-method__boundary">Nie skanujemy portów, nie próbujemy haseł, nie omijamy zabezpieczeń i nie badamy obszarów wymagających zalogowania.</p>
     </section>
   </main>
 
   <div data-site-footer></div>
-  <script src="/assets/services/site-audit/script.js?v=20260805-1"></script>
+  <script src="/assets/services/site-audit/script.js?v=20260805-2"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onSiteAuditTurnstileLoad&amp;render=explicit" defer></script>
   <script src="/assets/site-footer.js?v=20260801-2"></script>
   <script src="/assets/navigation.js?v=20260803-1"></script>

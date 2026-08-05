@@ -1,7 +1,9 @@
 import { createServer } from "node:http";
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { REPORT_SCHEMA_VERSION } from "../../../worker/site-audit-core.js";
 import { analyzeSnapshot, fetchPageSpeed } from "./analyze.js";
 import { ScanError, safeFetch } from "./safe-fetch.js";
+import { collectTechnicalProfile } from "./technical-collectors.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const MAX_BODY_BYTES = 131_072;
@@ -75,7 +77,9 @@ function decodeTask(signedPayload) {
   } catch {
     throw new ScanError("invalid_task", "Nieprawidłowe zadanie.");
   }
-  if (!/^[0-9a-f-]{36}$/.test(task.jobId || "") || typeof task.origin !== "string" || typeof task.callbackUrl !== "string") {
+  if (!/^[0-9a-f-]{36}$/.test(task.jobId || "") || typeof task.origin !== "string" || typeof task.callbackUrl !== "string" ||
+      typeof task.rulesetVersion !== "string" || task.rulesetVersion.length > 80 ||
+      typeof task.scannerVersion !== "string" || task.scannerVersion.length > 40) {
     throw new ScanError("invalid_task", "Nieprawidłowe zadanie.");
   }
   const callback = new URL(task.callbackUrl);
@@ -145,11 +149,18 @@ async function handleScan(request, response, body) {
       throw new ScanError("unsupported_content", "Strona główna nie zwróciła dokumentu HTML.");
     }
     if (page.status < 200 || page.status >= 400) throw new ScanError("http_error", `Strona zwróciła status ${page.status}.`, page.status >= 500);
-    const pagespeed = await fetchPageSpeed(task.origin, {
-      apiKey: process.env.PAGESPEED_API_KEY || "",
-      enabled: process.env.PAGESPEED_ENABLED !== "false",
+    const snapshot = { ...page, requestedOrigin: task.origin };
+    const [pagespeed, technicalProfile] = await Promise.all([
+      fetchPageSpeed(task.origin, {
+        apiKey: process.env.PAGESPEED_API_KEY || "",
+        enabled: process.env.PAGESPEED_ENABLED !== "false",
+      }),
+      collectTechnicalProfile(snapshot),
+    ]);
+    const report = analyzeSnapshot(snapshot, pagespeed, technicalProfile, {
+      rulesetVersion: task.rulesetVersion,
+      scannerVersion: task.scannerVersion,
     });
-    const report = analyzeSnapshot({ ...page, requestedOrigin: task.origin }, pagespeed);
     console.log(JSON.stringify({
       event: "audit_scan_completed",
       jobId: task.jobId,
@@ -174,7 +185,7 @@ async function handleScan(request, response, body) {
 
 async function handleFinalize(response, body) {
   const completion = verifyCompletionToken(body.completionToken);
-  if (body.jobId !== completion.jobId || !body.report || body.report.schemaVersion !== "1.0") {
+  if (body.jobId !== completion.jobId || !body.report || body.report.schemaVersion !== REPORT_SCHEMA_VERSION) {
     throw new ScanError("invalid_report", "Nieprawidłowy raport.");
   }
   const status = body.report.partial ? "partial" : "completed";
@@ -193,7 +204,7 @@ async function handleFailure(response, body) {
 export function createAuditServer() {
   return createServer(async (request, response) => {
     try {
-      if (request.method === "GET" && request.url === "/health") return sendJson(response, 200, { status: "ok", version: "1.0.0" });
+      if (request.method === "GET" && request.url === "/health") return sendJson(response, 200, { status: "ok", version: "2.0.0" });
       if (request.method !== "POST") return sendJson(response, 405, { error: { code: "method_not_allowed" } });
       const body = await readJson(request);
       if (request.url === "/scan") return await handleScan(request, response, body);

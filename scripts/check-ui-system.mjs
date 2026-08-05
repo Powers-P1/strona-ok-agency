@@ -162,6 +162,53 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("centralne tokeny i system anotacji", failures);
 }
 
+// Content-led routes share one editorial/form system. The audit route may
+// compose report-specific grids, but must not grow its own palette, font stack
+// or replacement controls.
+{
+  const failures = [];
+  const systemPath = "assets/content-system.css";
+  const routePath = "assets/services/site-audit/styles.css";
+  const routeSource = cssSources.get(routePath) || "";
+
+  if (!await exists(systemPath)) failures.push(`${systemPath}: brak centralnych prymitywów treści i formularza`);
+  for (const htmlPath of ["kontakt.html", "diagnoza-www.html"]) {
+    const refs = stylesheetRefs(htmlSources.get(htmlPath) || "");
+    const count = refs.filter(ref => ref === systemPath).length;
+    if (count !== 1) failures.push(`${htmlPath}: ${systemPath} występuje ${count} razy zamiast raz`);
+  }
+
+  for (const [pattern, label] of [
+    [/--audit-[\w-]+\s*:/i, "lokalnej palety/tokenów --audit-*"],
+    [/\b(?:Arial|Georgia)\b/i, "zapasowego kroju spoza systemu"],
+  ]) {
+    const match = routeSource.match(pattern);
+    if (match) failures.push(`${location(routePath, routeSource, match.index)}: wykryto ${label}`);
+  }
+
+  for (const rule of cssRules(routeSource)) {
+    for (const property of cssProperties(rule.declarations).filter(item => item.name === "font-family")) {
+      if (!/^var\(--ok-font-(?:body|display)\)$/.test(property.value)) {
+        failures.push(`${location(routePath, routeSource, rule.index)}: wykryto lokalną rodzinę fontu „${property.value}”`);
+      }
+    }
+  }
+
+  const sharedAppearance = /(?:^|,)\s*\.(?:kicker|page-title|section-title|lead|field|consent|submit|secondary-action|form-status)(?=\s|[,:>{+~]|$)/;
+  const appearanceProperties = /^(?:background(?:-[\w-]+)?|border(?:-[\w-]+)?|box-shadow|color|font(?:-[\w-]+)?|letter-spacing|line-height|text-decoration(?:-[\w-]+)?)$/;
+  for (const path of ["assets/page-contact.css", routePath]) {
+    const source = cssSources.get(path) || "";
+    for (const rule of cssRules(source)) {
+      if (!sharedAppearance.test(rule.selector)) continue;
+      const properties = cssProperties(rule.declarations).filter(property => appearanceProperties.test(property.name));
+      if (properties.length) {
+        failures.push(`${location(path, source, rule.index)}: ${rule.selector.replace(/\s+/g, " ")} nadpisuje wygląd wspólnego komponentu (${[...new Set(properties.map(property => property.name))].join(", ")})`);
+      }
+    }
+  }
+  addCheck("wspólny system treści i formularzy bez lokalnego mini-design-systemu", failures);
+}
+
 // Every annotation route loads one stable, cache-versioned geometry module.
 {
   const failures = [];
@@ -429,6 +476,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   const failures = [];
   const typographyPaths = new Set([
     "assets/annotation-system.css",
+    "assets/content-system.css",
     "assets/design-tokens.css",
     "assets/page-faq.css",
     "assets/scene-viewport.css",

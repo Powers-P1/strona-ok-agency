@@ -5,7 +5,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 ## Podsumowanie
 
 - `!important`: **218**
-- deklaracje typografii w lokalnych arkuszach tras: **1016**
+- deklaracje typografii w lokalnych arkuszach tras: **991**
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **283**
 - inline `style` w HTML: **28**
 - mutacje stylu z JS: **48**
@@ -44,12 +44,13 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/web/styles.css | 89 |
 | assets/services/social/styles.css | 86 |
 | assets/services/campaign/styles.css | 78 |
-| assets/page-contact.css | 74 |
 | assets/page-home.css | 72 |
 | assets/legal-pages.css | 67 |
 | assets/page-menu.css | 67 |
-| assets/services/site-audit/styles.css | 64 |
+| assets/services/site-audit/styles.css | 42 |
+| assets/page-contact.css | 39 |
 | assets/page-faq.css | 39 |
+| assets/content-system.css | 32 |
 | assets/visual-direction-scenes.v20260730-2.css | 15 |
 
 ## Każde użycie `!important`
@@ -86,11 +87,11 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/legal-pages.css | 699 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/legal-pages.css | 700 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/legal-pages.css | 701 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/page-contact.css | 678 | .js .panel > .page-title | — | route-debt |
-| assets/page-contact.css | 678 | .js .panel > .page-title | — | route-debt |
-| assets/page-contact.css | 790 | *, *::before, *::after | — | route-debt |
-| assets/page-contact.css | 791 | *, *::before, *::after | — | route-debt |
-| assets/page-contact.css | 792 | *, *::before, *::after | — | route-debt |
+| assets/page-contact.css | 397 | .js .panel > .page-title | — | route-debt |
+| assets/page-contact.css | 397 | .js .panel > .page-title | — | route-debt |
+| assets/page-contact.css | 497 | *, *::before, *::after | — | route-debt |
+| assets/page-contact.css | 498 | *, *::before, *::after | — | route-debt |
+| assets/page-contact.css | 499 | *, *::before, *::after | — | route-debt |
 | assets/page-faq.css | 396 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-faq.css | 397 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 540 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
@@ -141,7 +142,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/process/styles.css | 1274 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/process/styles.css | 1275 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/process/styles.css | 1276 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/services/site-audit/styles.css | 22 | .site-audit-page [hidden] | — | route-debt |
+| assets/services/site-audit/styles.css | 16 | .site-audit-page [hidden] | — | route-debt |
 | assets/services/social/styles.css | 1104 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/social/styles.css | 1105 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/services/social/styles.css | 1106 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
@@ -279,6 +280,38 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Linia | Selektor | Właściwość | Wartość | Kontekst | Klasyfikacja |
 | --- | --- | --- | --- | --- | --- | --- |
+| assets/content-system.css | 30 | .kicker | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/content-system.css | 31 | .kicker | font-weight | 650 | — | local-type-exception |
+| assets/content-system.css | 32 | .kicker | letter-spacing | .16em | — | local-type-exception |
+| assets/content-system.css | 33 | .kicker | line-height | 1.35 | — | local-type-exception |
+| assets/content-system.css | 49 | .page-title, .section-title | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/content-system.css | 50 | .page-title, .section-title | font-weight | 600 | — | local-type-exception |
+| assets/content-system.css | 51 | .page-title, .section-title | letter-spacing | -.01em | — | local-type-exception |
+| assets/content-system.css | 52 | .page-title, .section-title | line-height | var(--ok-leading-display) | — | semantic-token |
+| assets/content-system.css | 57 | .page-title | font-size | clamp(52px, 6.2vw, var(--ok-type-display-service)) | — | semantic-token |
+| assets/content-system.css | 61 | .section-title | font-size | clamp(42px, 4.8vw, var(--ok-type-display-section)) | — | semantic-token |
+| assets/content-system.css | 82 | .lead | font-size | max(16px, var(--ok-type-content)) | — | semantic-token |
+| assets/content-system.css | 83 | .lead | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/content-system.css | 116 | .field label, .field > span | font-size | max(15px, var(--ok-type-content)) | — | semantic-token |
+| assets/content-system.css | 117 | .field label, .field > span | font-weight | 500 | — | local-type-exception |
+| assets/content-system.css | 133 | .field input, .field select, .field textarea | font | inherit | — | local-type-exception |
+| assets/content-system.css | 134 | .field input, .field select, .field textarea | font-size | max(16px, var(--ok-type-control)) | — | semantic-token |
+| assets/content-system.css | 150 | .field textarea | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/content-system.css | 167 | .field .error | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/content-system.css | 180 | .consent | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/content-system.css | 181 | .consent | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/content-system.css | 251 | .submit | font | inherit | — | local-type-exception |
+| assets/content-system.css | 252 | .submit | font-size | max(17px, var(--ok-type-control)) | — | semantic-token |
+| assets/content-system.css | 253 | .submit | font-weight | 600 | — | local-type-exception |
+| assets/content-system.css | 254 | .submit | letter-spacing | .02em | — | local-type-exception |
+| assets/content-system.css | 274 | .submit .arr | font-size | max(19px, var(--ok-type-icon)) | — | semantic-token |
+| assets/content-system.css | 286 | .secondary-action | font | inherit | — | local-type-exception |
+| assets/content-system.css | 287 | .secondary-action | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/content-system.css | 288 | .secondary-action | font-weight | 550 | — | local-type-exception |
+| assets/content-system.css | 299 | .form-status | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/content-system.css | 300 | .form-status | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/content-system.css | 323 | .form--compact .submit | font-size | max(16px, var(--ok-type-control)) | — | semantic-token |
+| assets/content-system.css | 335 | .page-title | font-size | clamp(52px, 17vw, 72px) | @media (max-width: 640px) | local-type-exception |
 | assets/legal-pages.css | 30 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/legal-pages.css | 70 | .legal-skip | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/legal-pages.css | 71 | .legal-skip | font-weight | 650 | — | local-type-exception |
@@ -347,79 +380,44 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/legal-pages.css | 658 | .error-lead | font-size | 14px | @media (max-width: 640px) | local-type-exception |
 | assets/legal-pages.css | 677 | .error-number | font-size | min(63vw, 260px) | @media (max-width: 640px) | local-type-exception |
 | assets/page-contact.css | 25 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
-| assets/page-contact.css | 69 | .skip | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 102 | .site-nav a | font-size | 12px | — | local-type-exception |
-| assets/page-contact.css | 103 | .site-nav a | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 104 | .site-nav a | letter-spacing | .16em | — | local-type-exception |
-| assets/page-contact.css | 147 | .back-link | font-size | 15px | — | local-type-exception |
-| assets/page-contact.css | 148 | .back-link | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 161 | .kicker | font-size | 12px | — | local-type-exception |
-| assets/page-contact.css | 162 | .kicker | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 163 | .kicker | letter-spacing | .18em | — | local-type-exception |
-| assets/page-contact.css | 175 | .page-title | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-contact.css | 176 | .page-title | font-size | clamp(38px, 3.3vw, 58px) | — | local-type-exception |
-| assets/page-contact.css | 177 | .page-title | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 178 | .page-title | line-height | .98 | — | local-type-exception |
-| assets/page-contact.css | 179 | .page-title | letter-spacing | -.01em | — | local-type-exception |
-| assets/page-contact.css | 188 | .lead | font-size | clamp(14.5px, .95vw, 15.5px) | — | local-type-exception |
-| assets/page-contact.css | 189 | .lead | line-height | 1.55 | — | local-type-exception |
-| assets/page-contact.css | 205 | .proof li | font-size | 14px | — | local-type-exception |
-| assets/page-contact.css | 206 | .proof li | line-height | 1.4 | — | local-type-exception |
-| assets/page-contact.css | 240 | .field label | font-size | 15px | — | local-type-exception |
-| assets/page-contact.css | 241 | .field label | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 256 | .field input, .field select, .field textarea | font | inherit | — | local-type-exception |
-| assets/page-contact.css | 257 | .field input, .field select, .field textarea | font-size | 16px | — | local-type-exception |
-| assets/page-contact.css | 272 | .field textarea | line-height | 1.5 | — | local-type-exception |
-| assets/page-contact.css | 286 | .field .error | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 314 | /* zgoda */ .consent | font-size | 14px | — | local-type-exception |
-| assets/page-contact.css | 315 | /* zgoda */ .consent | line-height | 1.5 | — | local-type-exception |
-| assets/page-contact.css | 387 | .submit | font-size | 17px | — | local-type-exception |
-| assets/page-contact.css | 388 | .submit | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 389 | .submit | letter-spacing | .02em | — | local-type-exception |
-| assets/page-contact.css | 405 | .submit .arr | font-size | 19px | — | local-type-exception |
-| assets/page-contact.css | 412 | .form-status | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 413 | .form-status | line-height | 1.5 | — | local-type-exception |
-| assets/page-contact.css | 440 | .direct-mail p, .context-note p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 441 | .direct-mail p, .context-note p | line-height | 1.45 | — | local-type-exception |
-| assets/page-contact.css | 448 | .direct-mail a | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-contact.css | 449 | .direct-mail a | font-size | 23px | — | local-type-exception |
-| assets/page-contact.css | 450 | .direct-mail a | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 457 | .direct-mail small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 458 | .direct-mail small | line-height | 1.4 | — | local-type-exception |
-| assets/page-contact.css | 468 | .context-note strong | font-size | 13px | — | local-type-exception |
-| assets/page-contact.css | 494 | .form--contact .submit | font-size | 16px | — | local-type-exception |
-| assets/page-contact.css | 500 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 501 | .mailto-helper | line-height | 1.45 | — | local-type-exception |
-| assets/page-contact.css | 514 | .validation-summary | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 515 | .validation-summary | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 529 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | font-size | 9px | — | local-type-exception |
-| assets/page-contact.css | 530 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | line-height | 1 | — | local-type-exception |
-| assets/page-contact.css | 537 | .field.is-invalid .error | line-height | 1.35 | — | local-type-exception |
-| assets/page-contact.css | 553 | .consent-error | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 554 | .consent-error | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 569 | .flow-state h2 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-contact.css | 570 | .flow-state h2 | font-size | clamp(34px, 2.7vw, 46px) | — | local-type-exception |
-| assets/page-contact.css | 571 | .flow-state h2 | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 572 | .flow-state h2 | line-height | 1 | — | local-type-exception |
-| assets/page-contact.css | 582 | .flow-state > p | font-size | 14px | — | local-type-exception |
-| assets/page-contact.css | 583 | .flow-state > p | line-height | 1.55 | — | local-type-exception |
-| assets/page-contact.css | 591 | .state-email | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-contact.css | 592 | .state-email | font-size | 27px | — | local-type-exception |
-| assets/page-contact.css | 593 | .state-email | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 612 | .state-link | font | inherit | — | local-type-exception |
-| assets/page-contact.css | 613 | .state-link | font-size | 13px | — | local-type-exception |
-| assets/page-contact.css | 614 | .state-link | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 627 | .copy-address | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 633 | .copy-feedback | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 634 | .copy-feedback | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 728 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) | semantic-token |
-| assets/page-contact.css | 728 | .site-nav a | letter-spacing | .12em | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 741 | .direct-mail a | font-size | 25px | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 748 | .form--contact .field input, .form--contact .field select, .form--contact .field textarea | font-size | 16px | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 753 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) | semantic-token |
-| assets/page-contact.css | 754 | .flow-state h2 | font-size | 39px | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 755 | .flow-state > p | font-size | 15px | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 756 | .state-email | font-size | 26px | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 87 | .site-nav a | font-size | 12px | — | local-type-exception |
+| assets/page-contact.css | 88 | .site-nav a | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 89 | .site-nav a | letter-spacing | .16em | — | local-type-exception |
+| assets/page-contact.css | 132 | .back-link | font-size | 15px | — | local-type-exception |
+| assets/page-contact.css | 133 | .back-link | font-weight | 500 | — | local-type-exception |
+| assets/page-contact.css | 153 | .proof li | font-size | 14px | — | local-type-exception |
+| assets/page-contact.css | 154 | .proof li | line-height | 1.4 | — | local-type-exception |
+| assets/page-contact.css | 200 | .direct-mail p, .context-note p | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 201 | .direct-mail p, .context-note p | line-height | 1.45 | — | local-type-exception |
+| assets/page-contact.css | 208 | .direct-mail a | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-contact.css | 209 | .direct-mail a | font-size | 23px | — | local-type-exception |
+| assets/page-contact.css | 210 | .direct-mail a | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 217 | .direct-mail small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 218 | .direct-mail small | line-height | 1.4 | — | local-type-exception |
+| assets/page-contact.css | 228 | .context-note strong | font-size | 13px | — | local-type-exception |
+| assets/page-contact.css | 240 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 241 | .mailto-helper | line-height | 1.45 | — | local-type-exception |
+| assets/page-contact.css | 254 | .validation-summary | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 255 | .validation-summary | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 269 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | font-size | 9px | — | local-type-exception |
+| assets/page-contact.css | 270 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | line-height | 1 | — | local-type-exception |
+| assets/page-contact.css | 277 | .field.is-invalid .error | line-height | 1.35 | — | local-type-exception |
+| assets/page-contact.css | 293 | .consent-error | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 294 | .consent-error | font-weight | 500 | — | local-type-exception |
+| assets/page-contact.css | 317 | .flow-state > p | font-size | 14px | — | local-type-exception |
+| assets/page-contact.css | 318 | .flow-state > p | line-height | 1.55 | — | local-type-exception |
+| assets/page-contact.css | 326 | .state-email | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-contact.css | 327 | .state-email | font-size | 27px | — | local-type-exception |
+| assets/page-contact.css | 328 | .state-email | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 346 | .copy-address | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 352 | .copy-feedback | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 353 | .copy-feedback | font-weight | 500 | — | local-type-exception |
+| assets/page-contact.css | 447 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) | semantic-token |
+| assets/page-contact.css | 447 | .site-nav a | letter-spacing | .12em | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 458 | .direct-mail a | font-size | 25px | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 461 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) | semantic-token |
+| assets/page-contact.css | 462 | .flow-state > p | font-size | 15px | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 463 | .state-email | font-size | 26px | @media (max-width: 640px) | local-type-exception |
 | assets/page-faq.css | 31 | body.faq-page | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-faq.css | 55 | .faq-skip | font-size | 13px | — | local-type-exception |
 | assets/page-faq.css | 86 | .faq-kicker, .faq-list__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
@@ -1041,70 +1039,48 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/process/styles.css | 1487 | .process-proof-content h2 | font-size | clamp(39px, 11.3vw, 50px) | @media (max-width: 820px) | local-type-exception |
 | assets/services/process/styles.css | 1492 | .process-proof-content .proof-lead | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
 | assets/services/process/styles.css | 1514 | .process-proof-content .proof-output | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 820px) | semantic-token |
-| assets/services/site-audit/styles.css | 19 | .site-audit-page | font-family | var(--font-sans, Arial, sans-serif) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 46 | .audit-kicker | font-size | 0.73rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 47 | .audit-kicker | font-weight | 750 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 48 | .audit-kicker | letter-spacing | 0.13em | — | local-type-exception |
-| assets/services/site-audit/styles.css | 49 | .audit-kicker | line-height | 1.4 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 59 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | font-family | var(--font-display, Georgia, serif) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 60 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | font-weight | 500 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 61 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | letter-spacing | -0.045em | — | local-type-exception |
-| assets/services/site-audit/styles.css | 62 | .audit-hero h1, .audit-report h2, .audit-progress h2, .audit-method h2 | line-height | 0.96 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 66 | .audit-hero h1 | font-size | clamp(3.2rem, 7.5vw, 7rem) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 67 | .audit-hero h1 em | font-weight | 500 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 68 | .audit-lead | font-size | clamp(1.03rem, 1.6vw, 1.28rem) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 68 | .audit-lead | line-height | 1.55 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 83 | .audit-scope li | font-size | 0.82rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 84 | .audit-scope li | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 106 | .audit-field > span | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 116 | .audit-field input | font | inherit | — | local-type-exception |
-| assets/services/site-audit/styles.css | 117 | .audit-field input | font-size | 1.05rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 121 | .audit-hint | font-size | 0.83rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 121 | .audit-hint | line-height | 1.5 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 128 | .audit-consent | font-size | 0.88rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 129 | .audit-consent | line-height | 1.5 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 133 | .audit-legal-note | font-size | 0.76rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 133 | .audit-legal-note | line-height | 1.55 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 148 | .audit-submit, .audit-secondary | font | inherit | — | local-type-exception |
-| assets/services/site-audit/styles.css | 149 | .audit-submit, .audit-secondary | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 155 | .audit-submit i | font-size | 1.4rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 158 | .audit-status | font-size | 0.85rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 158 | .audit-status | line-height | 1.45 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 175 | .audit-progress h2, .audit-report h2, .audit-method h2 | font-size | clamp(2.3rem, 5vw, 4.8rem) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 176 | .audit-progress p:not(.audit-kicker) | line-height | 1.6 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 177 | .audit-progress__domain | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 189 | .audit-report__header p:not(.audit-kicker, .audit-report__meta) | line-height | 1.6 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 190 | .audit-report__meta | font-size | 0.8rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 190 | .audit-report__meta | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 192 | .audit-score strong | font-family | var(--font-display, Georgia, serif) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 192 | .audit-score strong | font-size | clamp(4rem, 8vw, 7.4rem) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 192 | .audit-score strong | font-weight | 500 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 192 | .audit-score strong | line-height | 0.8 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 193 | .audit-score span | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 197 | .audit-category span | font-size | 0.72rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 197 | .audit-category span | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 197 | .audit-category span | letter-spacing | 0.06em | — | local-type-exception |
-| assets/services/site-audit/styles.css | 197 | .audit-category span | line-height | 1.25 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-family | var(--font-display, Georgia, serif) | — | local-type-exception |
-| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-size | 2.4rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-weight | 500 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 199 | .audit-category small | font-size | 0.72rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 199 | .audit-category small | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 202 | .audit-report h3 | font-size | 1.45rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 205 | .audit-priorities li | line-height | 1.5 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 206 | .audit-priorities li::before | font-size | 0.75rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 206 | .audit-priorities li::before | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 208 | .audit-priorities p | font-size | 0.9rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 209 | .audit-strengths li | line-height | 1.5 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 212 | .audit-limitations summary | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 213 | .audit-limitations ul | line-height | 1.55 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 226 | .audit-method article > span | font-size | 0.72rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 226 | .audit-method article > span | font-weight | 800 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 226 | .audit-method article > span | letter-spacing | 0.12em | — | local-type-exception |
-| assets/services/site-audit/styles.css | 227 | .audit-method h3 | font-size | 1.25rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 228 | .audit-method article p, .audit-method__boundary | line-height | 1.6 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 229 | .audit-method__boundary | font-size | 0.86rem | — | local-type-exception |
-| assets/services/site-audit/styles.css | 258 | .audit-hero h1 | font-size | clamp(2.8rem, 15vw, 4.3rem) | @media (max-width: 520px) | local-type-exception |
+| assets/services/site-audit/styles.css | 12 | .site-audit-page | font-family | var(--ok-font-body) | — | semantic-token |
+| assets/services/site-audit/styles.css | 48 | .audit-scope | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 49 | .audit-scope | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 50 | .audit-scope | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 77 | .audit-hint, .audit-legal-note | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 78 | .audit-hint, .audit-legal-note | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 107 | .audit-progress p:not(.kicker) | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 108 | .audit-progress__domain | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 141 | .audit-report__header p:not(.kicker, .audit-report__meta) | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 148 | .audit-report__meta | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 149 | .audit-report__meta | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 160 | .audit-score strong | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 161 | .audit-score strong | font-size | var(--ok-type-display-result) | — | semantic-token |
+| assets/services/site-audit/styles.css | 162 | .audit-score strong | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 163 | .audit-score strong | line-height | .9 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 166 | .audit-score span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 186 | .audit-category span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 187 | .audit-category span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 188 | .audit-category span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 189 | .audit-category span | line-height | 1.35 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 197 | .audit-category strong | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 199 | .audit-category strong | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 205 | .audit-category small | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 206 | .audit-category small | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 218 | .audit-report h3 | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 219 | .audit-report h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 220 | .audit-report h3 | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 236 | .audit-priorities li | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 243 | .audit-priorities li::before | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 244 | .audit-priorities li::before | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 251 | .audit-priorities p | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 256 | .audit-strengths li | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 265 | .audit-limitations summary | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 266 | .audit-limitations ul | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 288 | .audit-method article > span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 289 | .audit-method article > span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 290 | .audit-method article > span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 295 | .audit-method h3 | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 296 | .audit-method h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 297 | .audit-method h3 | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 303 | .audit-method article p, .audit-method__boundary | line-height | var(--ok-leading-content) | — | semantic-token |
 | assets/services/social/styles.css | 28 | body | font-family | var(--ok-font-body) | — | semantic-token |
 | assets/services/social/styles.css | 155 | .site-header nav a | font-weight | 650 | — | local-type-exception |
 | assets/services/social/styles.css | 156 | .site-header nav a | letter-spacing | .08em | — | local-type-exception |
@@ -1311,25 +1287,25 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/legal-pages.css | 554 | .legal-header nav a:nth-child(2) | display | none | @media (max-width: 640px) |
 | assets/legal-pages.css | 622 | .error-page .legal-header nav a | display | grid | @media (max-width: 640px) |
 | assets/legal-pages.css | 626 | .error-page .legal-header nav a:nth-child(2) | display | none | @media (max-width: 640px) |
-| assets/page-contact.css | 78 | /* ---------- header ---------- */ .site-header | position | absolute | — |
-| assets/page-contact.css | 82 | /* ---------- header ---------- */ .site-header | z-index | 20 | — |
-| assets/page-contact.css | 83 | /* ---------- header ---------- */ .site-header | display | flex | — |
-| assets/page-contact.css | 94 | .site-nav | display | flex | — |
-| assets/page-contact.css | 99 | .site-nav a | position | relative | — |
-| assets/page-contact.css | 102 | .site-nav a | font-size | 12px | — |
-| assets/page-contact.css | 111 | .site-nav a::after | position | absolute | — |
-| assets/page-contact.css | 115 | .site-nav a::after | height | 2px | — |
-| assets/page-contact.css | 639 | /* ---------- scena ---------- */ .scene | position | absolute | — |
-| assets/page-contact.css | 644 | /* ---------- scena ---------- */ .scene | z-index | 0 | — |
-| assets/page-contact.css | 646 | /* ---------- scena ---------- */ .scene | overflow | hidden | — |
-| assets/page-contact.css | 649 | .scene img | position | absolute | — |
-| assets/page-contact.css | 652 | .scene img | height | 100% | — |
-| assets/page-contact.css | 654 | .scene img | position | 50% 62% | — |
-| assets/page-contact.css | 701 | .site-header | position | static | — |
-| assets/page-contact.css | 708 | .scene | position | relative | — |
-| assets/page-contact.css | 710 | .scene | min-height | 54svh | — |
-| assets/page-contact.css | 728 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) |
-| assets/page-contact.css | 729 | .site-nav a:nth-child(2) | display | none | @media (max-width: 640px) |
+| assets/page-contact.css | 63 | /* ---------- header ---------- */ .site-header | position | absolute | — |
+| assets/page-contact.css | 67 | /* ---------- header ---------- */ .site-header | z-index | 20 | — |
+| assets/page-contact.css | 68 | /* ---------- header ---------- */ .site-header | display | flex | — |
+| assets/page-contact.css | 79 | .site-nav | display | flex | — |
+| assets/page-contact.css | 84 | .site-nav a | position | relative | — |
+| assets/page-contact.css | 87 | .site-nav a | font-size | 12px | — |
+| assets/page-contact.css | 96 | .site-nav a::after | position | absolute | — |
+| assets/page-contact.css | 100 | .site-nav a::after | height | 2px | — |
+| assets/page-contact.css | 358 | /* ---------- scena ---------- */ .scene | position | absolute | — |
+| assets/page-contact.css | 363 | /* ---------- scena ---------- */ .scene | z-index | 0 | — |
+| assets/page-contact.css | 365 | /* ---------- scena ---------- */ .scene | overflow | hidden | — |
+| assets/page-contact.css | 368 | .scene img | position | absolute | — |
+| assets/page-contact.css | 371 | .scene img | height | 100% | — |
+| assets/page-contact.css | 373 | .scene img | position | 50% 62% | — |
+| assets/page-contact.css | 420 | .site-header | position | static | — |
+| assets/page-contact.css | 427 | .scene | position | relative | — |
+| assets/page-contact.css | 429 | .scene | min-height | 54svh | — |
+| assets/page-contact.css | 447 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) |
+| assets/page-contact.css | 448 | .site-nav a:nth-child(2) | display | none | @media (max-width: 640px) |
 | assets/page-home.css | 107 | .topbar | position | absolute | — |
 | assets/page-home.css | 108 | .topbar | z-index | 20 | — |
 | assets/page-home.css | 112 | .topbar | height | clamp(5.2rem, 10vh, 7rem) | — |
@@ -1588,16 +1564,16 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Linia | Deklaracja |
 | --- | --- | --- |
-| kontakt.html | 91 | --i:0 |
-| kontakt.html | 93 | --i:1 |
-| kontakt.html | 96 | --d:0s |
-| kontakt.html | 97 | --d:.09s |
-| kontakt.html | 100 | --i:2 |
-| kontakt.html | 102 | --i:3 |
-| kontakt.html | 117 | --i:4 |
-| kontakt.html | 129 | --i:5 |
-| kontakt.html | 200 | --i:5 |
-| kontakt.html | 209 | --i:5 |
+| kontakt.html | 92 | --i:0 |
+| kontakt.html | 94 | --i:1 |
+| kontakt.html | 97 | --d:0s |
+| kontakt.html | 98 | --d:.09s |
+| kontakt.html | 101 | --i:2 |
+| kontakt.html | 103 | --i:3 |
+| kontakt.html | 118 | --i:4 |
+| kontakt.html | 130 | --i:5 |
+| kontakt.html | 201 | --i:5 |
+| kontakt.html | 210 | --i:5 |
 | menu.html | 95 | --d:0s |
 | menu.html | 96 | --d:.09s |
 | menu.html | 105 | --i:0 |

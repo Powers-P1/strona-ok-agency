@@ -1,7 +1,7 @@
 :root {
-  --ok-pink-on-light: #b52454;
-  --ok-pink-on-dark: #ee4d78;
-  --ok-readable-muted: #4d5360;
+  --ok-pink-on-light: var(--ok-color-accent-on-light);
+  --ok-pink-on-dark: var(--ok-color-accent-on-dark);
+  --ok-readable-muted: var(--ok-color-text-muted-on-light);
 }
 
 /* Keep disclosure state changes inside their current full-viewport scene. */

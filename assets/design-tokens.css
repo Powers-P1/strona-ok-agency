@@ -53,11 +53,14 @@
   --ok-rail-section: clamp(760px, 42vw, 2880px);
   --ok-rail-about: clamp(760px, 42vw, 2880px);
   --ok-rail-reading: clamp(560px, 32vw, 2400px);
+  --ok-rail-wide: clamp(960px, 90vw, 3600px);
 
   --ok-color-paper: #ead9cb;
   --ok-color-navy: #071a2c;
   --ok-color-cream: #f0dfcf;
   --ok-color-accent: #ee4d78;
+  --ok-color-accent-on-light: #b52454;
+  --ok-color-accent-on-dark: #ee4d78;
   --ok-color-text-on-light: #071a2c;
   --ok-color-text-muted-on-light: #34424c;
   --ok-color-text-on-dark: #f0dfcf;

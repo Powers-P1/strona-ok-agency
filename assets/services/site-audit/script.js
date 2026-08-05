@@ -38,7 +38,10 @@
   }
 
   function setBusy(busy) {
-    if (submit) submit.disabled = busy;
+    if (submit) {
+      submit.disabled = busy;
+      submit.setAttribute("aria-busy", busy ? "true" : "false");
+    }
     if (domainInput) domainInput.disabled = busy;
     if (consentInput) consentInput.disabled = busy;
     form?.setAttribute("aria-busy", busy ? "true" : "false");

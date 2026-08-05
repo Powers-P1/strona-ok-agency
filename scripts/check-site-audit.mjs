@@ -47,7 +47,7 @@ assert.match(workerConfig, /"binding": "DB"/);
 assert.match(workerConfig, /"binding": "AUDIT_QUEUE"/);
 assert.match(workerConfig, /"dead_letter_queue": "okagency-site-audits-dlq"/);
 assert.match(workerConfig, /"RULESET_VERSION": "2026\.08\.2"/);
-assert.match(workerConfig, /"SCANNER_VERSION": "2\.0\.1"/);
+assert.match(workerConfig, /"SCANNER_VERSION": "2\.0\.2"/);
 assert.match(migration, /daily_global_limit[^\n]*100/i);
 assert.match(migration, /daily_domain_limit[^\n]*3/i);
 

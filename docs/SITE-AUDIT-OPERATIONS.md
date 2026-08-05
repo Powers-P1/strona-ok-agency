@@ -58,7 +58,7 @@ Zmienne Workera:
 - `CALLBACK_BASE_URL=https://okagency-site-audit-api.oli-struska.workers.dev`;
 - `CALLBACK_HOSTNAME=okagency-site-audit-api.oli-struska.workers.dev`;
 - `TURNSTILE_HOSTNAMES=okagency.pl,www.okagency.pl`;
-- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.1`.
+- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.2`.
 
 Sekrety n8n/runnera muszą mieć te same wartości HMAC. `PAGESPEED_API_KEY` jest wymaganym sekretem środowiska runnera; Compose zatrzymuje wdrożenie, jeśli go brakuje. Klucz produkcyjny musi być ograniczony do PageSpeed Insights API i publicznego IP VPS. Awaria pojedynczego zewnętrznego kolektora nie zatrzymuje pozostałych kontroli, ale zapisuje sanitarny kod, czas, status HTTP i liczbę prób w `report.diagnostics`.
 

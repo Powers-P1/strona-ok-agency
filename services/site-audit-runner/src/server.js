@@ -227,7 +227,7 @@ async function handleFailure(response, body) {
 export function createAuditServer() {
   return createServer(async (request, response) => {
     try {
-      if (request.method === "GET" && request.url === "/health") return sendJson(response, 200, { status: "ok", version: "2.0.1" });
+      if (request.method === "GET" && request.url === "/health") return sendJson(response, 200, { status: "ok", version: "2.0.2" });
       if (request.method !== "POST") return sendJson(response, 405, { error: { code: "method_not_allowed" } });
       const body = await readJson(request);
       if (request.url === "/scan") return await handleScan(request, response, body);

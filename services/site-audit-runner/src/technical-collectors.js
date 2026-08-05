@@ -350,6 +350,26 @@ export async function collectPublicResources(snapshot, dnsProfile, { resolver = 
 export async function collectTechnicalProfile(snapshot, options = {}) {
   const hostname = new URL(snapshot.url).hostname;
   const diagnostics = [];
+  if (new URL(snapshot.url).protocol === "https:") {
+    if (!snapshot.tls?.validTo) {
+      diagnostics.push(makeDiagnostic({
+        collector: "tls_certificate",
+        status: "unavailable",
+        code: "metadata_unavailable",
+        retryable: false,
+        durationMs: snapshot.durationMs || 0,
+      }));
+    }
+    if (!snapshot.tls?.protocol) {
+      diagnostics.push(makeDiagnostic({
+        collector: "tls_protocol",
+        status: "unavailable",
+        code: "metadata_unavailable",
+        retryable: false,
+        durationMs: snapshot.durationMs || 0,
+      }));
+    }
+  }
   let dnsProfile;
   try {
     dnsProfile = await collectDnsProfile(hostname, options);

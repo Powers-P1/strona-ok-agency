@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { analyzeSnapshot, fetchPageSpeed } from "../src/analyze.js";
 import { inspectHtml } from "../src/html-inspector.js";
-import { ScanError, resolveAndVet, safeFetch, validateTargetUrl } from "../src/safe-fetch.js";
+import { readTlsMetadata, ScanError, resolveAndVet, safeFetch, validateTargetUrl } from "../src/safe-fetch.js";
 import { collectDnsProfile, probeUrl } from "../src/technical-collectors.js";
 import { validateReport } from "../../../worker/site-audit-core.js";
 
@@ -34,6 +34,26 @@ test("inspektor HTML używa parsera dokumentu i nie zwraca surowej treści", () 
 
 test("runner dopuszcza wyłącznie pasywne metody GET i HEAD", async () => {
   await assert.rejects(() => safeFetch("https://example.com", { method: "POST" }), error => error.code === "invalid_method");
+});
+
+test("metadane TLS są kopiowane zanim gniazdo zostanie odłączone", () => {
+  let attached = true;
+  const socket = {
+    getProtocol: () => attached ? "TLSv1.3" : null,
+    getPeerCertificate: () => attached ? {
+      valid_from: "Aug 01 00:00:00 2026 GMT",
+      valid_to: "Oct 30 23:59:59 2026 GMT",
+      issuer: { O: "Example CA" },
+      subject: { CN: "example.com" },
+      subjectaltname: "DNS:example.com",
+      fingerprint256: "AA:BB",
+    } : {},
+  };
+  const metadata = readTlsMetadata(socket);
+  attached = false;
+  assert.equal(metadata.protocol, "TLSv1.3");
+  assert.equal(metadata.validTo, "Oct 30 23:59:59 2026 GMT");
+  assert.equal(metadata.issuer, "Example CA");
 });
 
 test("sonda HTTP potwierdza przekierowanie przez GET, gdy HEAD jest niekonkluzywny", async () => {

@@ -3,6 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "description": "Wielostronicowy serwis OK Agency publikowany pod okagency.pl.",
+  "workspaces": [
+    "services/site-audit-runner"
+  ],
   "scripts": {
     "dev": "npm run build:site-audit-pdf && node server.mjs",
     "build:site-audit-pdf": "node scripts/build-site-audit-pdf.mjs",

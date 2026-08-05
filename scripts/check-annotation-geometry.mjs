@@ -475,16 +475,10 @@ const waitForClosed = async (page, sceneIndex, calloutIndex) => {
   }, { timeout: TIMEOUT });
 };
 
-const waitForNoObscured = async (page, sceneIndex) => {
-  await page.waitForFunction(({ selector, sceneNumber }) => {
-    const scene = document.querySelectorAll(selector)[sceneNumber];
-    return Boolean(scene && !scene.querySelector(
-      ".annotation-callout.is-obscured, .annotation.is-obscured, .annotation-wire.is-obscured",
-    ));
-  }, {
-    selector: SCENE_SELECTOR,
-    sceneNumber: sceneIndex,
-  }, { timeout: TIMEOUT });
+const waitForNoObscured = async page => {
+  await page.waitForFunction(() => !document.querySelector(
+    ".annotation-callout.is-obscured, .annotation.is-obscured, .annotation-wire.is-obscured",
+  ), null, { timeout: TIMEOUT });
 };
 
 const anchorCenters = async (page, sceneIndex) => page.evaluate(({
@@ -1076,7 +1070,7 @@ const exercisePoint = async (
     phase = "hover/close";
     await page.mouse.move(1, 1);
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page, sceneIndex);
+    await waitForNoObscured(page);
     anchorMovementIssues(
       stableAnchors,
       await anchorCenters(page, sceneIndex),
@@ -1125,7 +1119,7 @@ const exercisePoint = async (
       phase = "Escape/close";
       await page.keyboard.press("Escape");
       await waitForClosed(page, sceneIndex, calloutIndex);
-      await waitForNoObscured(page, sceneIndex);
+      await waitForNoObscured(page);
       recordInteractionIssues(
         route,
         viewport,
@@ -1139,7 +1133,7 @@ const exercisePoint = async (
     phase = "Space/close";
     await dot.press("Space");
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page, sceneIndex);
+    await waitForNoObscured(page);
     recordInteractionIssues(
       route,
       viewport,
@@ -1154,7 +1148,7 @@ const exercisePoint = async (
     phase = "Escape/close";
     await page.keyboard.press("Escape");
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page, sceneIndex);
+    await waitForNoObscured(page);
     recordInteractionIssues(
       route,
       viewport,
@@ -1173,7 +1167,7 @@ const exercisePoint = async (
       pointerType: "mouse",
     });
     await waitForClosed(page, sceneIndex, calloutIndex);
-    await waitForNoObscured(page, sceneIndex);
+    await waitForNoObscured(page);
     recordInteractionIssues(
       route,
       viewport,

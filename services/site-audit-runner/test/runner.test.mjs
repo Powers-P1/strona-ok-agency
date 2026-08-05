@@ -3,7 +3,7 @@ import test from "node:test";
 import { analyzeSnapshot, fetchPageSpeed } from "../src/analyze.js";
 import { inspectHtml } from "../src/html-inspector.js";
 import { ScanError, resolveAndVet, safeFetch, validateTargetUrl } from "../src/safe-fetch.js";
-import { collectDnsProfile } from "../src/technical-collectors.js";
+import { collectDnsProfile, probeUrl } from "../src/technical-collectors.js";
 import { validateReport } from "../../../worker/site-audit-core.js";
 
 test("runner blokuje URL-e lokalne i niestandardowe porty", () => {
@@ -34,6 +34,31 @@ test("inspektor HTML używa parsera dokumentu i nie zwraca surowej treści", () 
 
 test("runner dopuszcza wyłącznie pasywne metody GET i HEAD", async () => {
   await assert.rejects(() => safeFetch("https://example.com", { method: "POST" }), error => error.code === "invalid_method");
+});
+
+test("sonda HTTP potwierdza przekierowanie przez GET, gdy HEAD jest niekonkluzywny", async () => {
+  const calls = [];
+  const fetcher = async (_url, options) => {
+    calls.push(options);
+    if (options.method === "HEAD") {
+      return { status: 403, url: "http://example.com/", redirects: [], headers: {}, tls: null, httpVersion: "1.1" };
+    }
+    return {
+      status: 200,
+      url: "https://example.com/",
+      redirects: [{ status: 301, from: "http://example.com/", to: "https://example.com/" }],
+      headers: {},
+      tls: { protocol: "TLSv1.3" },
+      httpVersion: "2",
+    };
+  };
+
+  const result = await probeUrl("http://example.com/", { fetcher, timeoutMs: 8_000 });
+  assert.deepEqual(calls.map(call => call.method), ["HEAD", "GET"]);
+  assert.ok(calls.every(call => call.maxBytes === 65_536));
+  assert.equal(result.ok, true);
+  assert.equal(result.finalUrl, "https://example.com/");
+  assert.equal(result.redirects.length, 1);
 });
 
 test("kolektor DNS rozróżnia strefę, DNSSEC i konfigurację poczty", async () => {

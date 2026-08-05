@@ -5,6 +5,7 @@ import { AUDIT_USER_AGENT, safeFetch } from "./safe-fetch.js";
 
 const DNS_JSON_ENDPOINT = "https://cloudflare-dns.com/dns-query";
 const MAX_CRAWL_PAGES = 8;
+const HEAD_INCONCLUSIVE_STATUSES = new Set([403, 404, 405, 501]);
 
 async function optional(operation, fallback) {
   try {
@@ -120,10 +121,12 @@ export async function collectDnsProfile(hostname, { resolver = dns, fetchImpl = 
   };
 }
 
-async function probeUrl(url, options = {}) {
+export async function probeUrl(url, { fetcher = safeFetch, ...options } = {}) {
   try {
-    let result = await safeFetch(url, { ...options, method: "HEAD", maxBytes: 65_536 });
-    if (new Set([405, 501]).has(result.status)) result = await safeFetch(url, { ...options, method: "GET" });
+    let result = await fetcher(url, { ...options, method: "HEAD", maxBytes: 65_536 });
+    if (HEAD_INCONCLUSIVE_STATUSES.has(result.status)) {
+      result = await fetcher(url, { ...options, method: "GET", maxBytes: 65_536 });
+    }
     return {
       ok: result.status >= 200 && result.status < 400,
       status: result.status,

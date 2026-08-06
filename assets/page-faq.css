@@ -316,33 +316,6 @@ body.faq-page {
 }
 
 @media (max-width: 600px) {
-  body.faq-page .motion-toggle {
-    z-index: 141;
-    top: max(12px, env(safe-area-inset-top));
-    /* Trigger width + detached rail inset/padding + an exclusive hit-area gap. */
-    right: calc(var(--ok-nav-compact-trigger-width, 76px) + 40px);
-    bottom: auto;
-    width: 44px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0;
-    justify-content: center;
-    color: var(--faq-navy);
-    border-color: rgba(20, 32, 48, .24);
-    background: rgba(248, 238, 228, .72);
-    box-shadow: none;
-  }
-
-  body.faq-page .motion-toggle [data-motion-label] {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
   .faq-main {
     padding: 42px 22px 72px;
     gap: 46px;

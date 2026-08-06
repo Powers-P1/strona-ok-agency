@@ -12,6 +12,7 @@ const ROUTES = [
   "/social-media",
   "/kampanie",
   "/diagnoza",
+  "/diagnoza-www",
   "/proces",
   "/o-nas",
   "/kontakt",

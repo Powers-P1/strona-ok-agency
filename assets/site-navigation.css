@@ -178,6 +178,12 @@ body header[data-ok-global-nav] nav[data-ok-primary-nav] {
   gap: clamp(18px, 2.4vh, 72px);
 }
 
+/* Desktop keeps the motion control as a fixed page utility. In the compact
+ * navigation this wrapper becomes the single owner of MENU and motion tools. */
+.ok-nav-utilities {
+  display: contents;
+}
+
 body header[data-ok-global-nav] nav[data-ok-primary-nav] > a,
 .ok-nav-offer > summary {
   position: relative;
@@ -711,6 +717,16 @@ body header[data-ok-global-nav] .ok-nav-offer__popover > a:first-child {
     display: none;
   }
 
+  body header[data-ok-global-nav][data-ok-nav-ready] .ok-nav-utilities {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+
   body header[data-ok-global-nav][data-ok-nav-ready] .ok-nav-trigger {
     min-width: var(--ok-nav-compact-trigger-width);
     display: inline-flex;
@@ -740,6 +756,16 @@ html[data-ok-nav-compact] body header[data-ok-global-nav] {
 
 html[data-ok-nav-compact] body header[data-ok-global-nav][data-ok-nav-ready] nav[data-ok-primary-nav] {
   display: none;
+}
+
+html[data-ok-nav-compact] body header[data-ok-global-nav][data-ok-nav-ready] .ok-nav-utilities {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex: 0 0 auto;
 }
 
 html[data-ok-nav-compact] body header[data-ok-global-nav][data-ok-nav-ready] .ok-nav-trigger {

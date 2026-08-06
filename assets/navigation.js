@@ -198,7 +198,11 @@
     <span class="ok-nav-trigger__label">Menu</span>
     <span class="ok-nav-trigger__signal" aria-hidden="true"></span>
   `;
-  header.append(trigger);
+  const utilities = document.createElement("div");
+  utilities.className = "ok-nav-utilities";
+  utilities.dataset.okNavUtilities = "";
+  utilities.append(trigger);
+  header.append(utilities);
   header.dataset.okNavReady = "";
 
   const linkHref = (key) => (
@@ -268,6 +272,12 @@
       );
     } else {
       document.documentElement.removeAttribute("data-ok-nav-compact");
+    }
+    const motionToggle = document.querySelector("[data-motion-toggle]");
+    if (compact && motionToggle && motionToggle.parentElement !== utilities) {
+      utilities.prepend(motionToggle);
+    } else if (!compact && motionToggle && motionToggle.parentElement !== document.body) {
+      document.body.append(motionToggle);
     }
     if (!compact) closeMenu();
   };

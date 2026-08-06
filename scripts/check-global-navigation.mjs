@@ -90,6 +90,15 @@ const auditComputedDropdownAlignment = async (browserType = chromium) => {
               `${viewportLabel}: route CSS lowered the global navigation stacking layer.`,
             );
 
+            const desktopMotionParent = await page.locator("[data-motion-toggle]").evaluate(element => (
+              element.parentElement === document.body
+            ));
+            assert.equal(
+              desktopMotionParent,
+              true,
+              `${viewportLabel}: desktop motion control is trapped inside a transformed header.`,
+            );
+
             const links = await page.locator(".ok-nav-offer__popover > a").evaluateAll(elements => (
               elements.map(element => {
                 const style = getComputedStyle(element);
@@ -139,6 +148,45 @@ const auditComputedDropdownAlignment = async (browserType = chromium) => {
       } finally {
         await context.close();
       }
+    }
+
+    const compactViewport = { width: 390, height: 844 };
+    const compactContext = await browser.newContext({ viewport: compactViewport });
+    try {
+      for (const pageName of publicPages) {
+        const page = await compactContext.newPage();
+        try {
+          await page.goto(new URL(routeForPage(pageName), baseUrl).href, { waitUntil: "domcontentloaded" });
+          const viewportLabel = `${pageName} at ${compactViewport.width}x${compactViewport.height}`;
+          const compactState = await page.locator("[data-motion-toggle]").evaluate((element) => {
+            const trigger = document.querySelector(".ok-nav-trigger");
+            const motionBounds = element.getBoundingClientRect();
+            const triggerBounds = trigger?.getBoundingClientRect();
+            const overlap = triggerBounds
+              ? Math.max(0, Math.min(motionBounds.right, triggerBounds.right) - Math.max(motionBounds.left, triggerBounds.left))
+                * Math.max(0, Math.min(motionBounds.bottom, triggerBounds.bottom) - Math.max(motionBounds.top, triggerBounds.top))
+              : -1;
+            element.focus();
+            const style = getComputedStyle(element);
+            return {
+              parentIsUtilityRail: element.parentElement?.hasAttribute("data-ok-nav-utilities") || false,
+              overlap,
+              outlineColor: style.outlineColor,
+              outlineStyle: style.outlineStyle,
+              horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+            };
+          });
+          assert.equal(compactState.parentIsUtilityRail, true, `${viewportLabel}: motion control is outside the utility rail.`);
+          assert.equal(compactState.overlap, 0, `${viewportLabel}: motion control overlaps MENU.`);
+          assert.notEqual(compactState.outlineStyle, "none", `${viewportLabel}: motion control has no visible focus ring.`);
+          assert.notEqual(compactState.outlineColor, "rgb(255, 255, 255)", `${viewportLabel}: focus ring is white on the light rail.`);
+          assert.equal(compactState.horizontalOverflow, 0, `${viewportLabel}: utility rail creates horizontal overflow.`);
+        } finally {
+          await page.close();
+        }
+      }
+    } finally {
+      await compactContext.close();
     }
   } finally {
     await browser.close();
@@ -287,6 +335,9 @@ assert.match(script, /document\.activeElement\s*===\s*last/, "Forward focus wrap
 assert.match(script, /trigger\.focus\(\{\s*preventScroll:\s*true\s*\}\)/, "Focus must return to MENU.");
 assert.match(script, /compactByLayoutViewport/, "Compact navigation must use the layout viewport profile.");
 assert.match(script, /data-ok-nav-compact/, "Navigation must publish one shared compact/tall profile.");
+assert.match(script, /ok-nav-utilities/, "Compact navigation must own a shared utility rail.");
+assert.match(script, /utilities\.prepend\(motionToggle\)/, "Compact navigation must adopt the motion control.");
+assert.match(script, /document\.body\.append\(motionToggle\)/, "Desktop must keep the fixed motion control outside transformed headers.");
 assert.match(
   script,
   /window\.innerWidth\s*\/\s*window\.innerHeight/,

@@ -802,6 +802,20 @@ test("functional parameters have priority while final vendor URLs stay within 10
   assert.doesNotMatch(pageView[2].page_location, /fbclid/);
 });
 
+test("site audit contact context survives vendor URL sanitization", () => {
+  const runtime = loadAnalytics({
+    url: "https://okagency.pl/kontakt?context=site-audit&source=site-audit",
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+  const pageView = eventCommands(runtime).find(command => command[1] === "page_view");
+
+  assert.equal(runtime.replacedUrl(), null, "Bezpiecznego adresu nie trzeba przepisywać");
+  assert.equal(runtime.window.location.searchParams.get("context"), "site-audit");
+  assert.equal(runtime.window.location.searchParams.get("source"), "site-audit");
+  assert.equal(new URL(pageView[2].page_location).searchParams.get("context"), "site-audit");
+  assert.equal(new URL(pageView[2].page_location).searchParams.get("source"), "site-audit");
+});
+
 test("unsafe location blocks Google and Meta when replaceState is missing, throws or is ineffective", () => {
   for (const replaceStateMode of ["missing", "throw", "noop"]) {
     const runtime = loadAnalytics({

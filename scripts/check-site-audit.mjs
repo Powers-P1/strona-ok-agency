@@ -33,6 +33,8 @@ assert.match(client, new RegExp(`NOTICE_VERSION = ["']${noticeVersion}["']`));
 assert.match(client, /textContent/);
 assert.doesNotMatch(client, /innerHTML\s*=/);
 assert.match(client, /sessionStorage\.setItem/);
+assert.match(client, /COMPLETED_ANALYTICS_STORAGE_KEY/);
+assert.match(client, /saveCompletedAnalyticsKey\(analyticsKey\)/);
 assert.match(client, /import\(root\.dataset\.auditPdfModule\)/);
 for (const eventMethod of ["siteAuditStarted", "siteAuditCompleted", "siteAuditPdfDownloaded", "siteAuditContactClicked"]) {
   assert.match(client, new RegExp(`okAnalytics\\?\\.${eventMethod}`), `Brak zdarzenia ${eventMethod} w ścieżce audytu`);

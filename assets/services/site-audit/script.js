@@ -3,6 +3,7 @@
 
   const NOTICE_VERSION = "site-audit-v2-2026-08-05";
   const STORAGE_KEY = "ok-site-audit-job-v2";
+  const COMPLETED_ANALYTICS_STORAGE_KEY = "ok-site-audit-completed-analytics-v1";
   const POLL_DELAYS = [2000, 3000, 5000, 8000, 10000];
   const CATEGORY_LABELS = {
     performance: "Wydajność",
@@ -47,7 +48,7 @@
   let polling = false;
   let pollGeneration = 0;
   let currentReport = null;
-  let completedAnalyticsKey = "";
+  let completedAnalyticsKey = readCompletedAnalyticsKey();
 
   function setStatus(message, state = "") {
     if (!formStatus) return;
@@ -112,6 +113,20 @@
 
   function clearJob() {
     try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* no-op */ }
+  }
+
+  function readCompletedAnalyticsKey() {
+    try { return sessionStorage.getItem(COMPLETED_ANALYTICS_STORAGE_KEY) || ""; } catch { return ""; }
+  }
+
+  function saveCompletedAnalyticsKey(key) {
+    completedAnalyticsKey = key;
+    try { sessionStorage.setItem(COMPLETED_ANALYTICS_STORAGE_KEY, key); } catch { /* no-op */ }
+  }
+
+  function clearCompletedAnalyticsKey() {
+    completedAnalyticsKey = "";
+    try { sessionStorage.removeItem(COMPLETED_ANALYTICS_STORAGE_KEY); } catch { /* no-op */ }
   }
 
   function showProgress(origin, status = "queued") {
@@ -226,7 +241,7 @@
 
     const analyticsKey = String(job.jobId || report.generatedAt || `${report.origin || job.origin || "audit"}:${report.overallScore ?? "unknown"}:${report.coverage ?? "unknown"}`);
     if (completedAnalyticsKey !== analyticsKey) {
-      completedAnalyticsKey = analyticsKey;
+      saveCompletedAnalyticsKey(analyticsKey);
       window.okAnalytics?.siteAuditCompleted?.({
         status: job.status,
         score: report.overallScore,
@@ -352,6 +367,7 @@
         }),
       });
       resetTurnstile();
+      clearCompletedAnalyticsKey();
       window.okAnalytics?.siteAuditStarted?.({
         resultSource: data.deduplicated ? "cached" : "new",
       });
@@ -401,7 +417,6 @@
     pollGeneration += 1;
     polling = false;
     currentReport = null;
-    completedAnalyticsKey = "";
     clearJob();
     reportSection.hidden = true;
     progress.hidden = true;

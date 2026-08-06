@@ -202,9 +202,9 @@
   const SAFE_FUNCTIONAL_PARAMS = Object.freeze({
     context: new Set([
       "web", "website", "social", "campaign", "diagnosis",
-      "process", "about", "conversation", "none",
+      "site-audit", "process", "about", "conversation", "none",
     ]),
-    source: new Set(["diagnosis", "process"]),
+    source: new Set(["diagnosis", "site-audit", "process"]),
     from: new Set([
       "web", "website", "social", "campaign", "diagnosis",
       "process", "about", "conversation", "none",

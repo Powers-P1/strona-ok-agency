@@ -373,6 +373,57 @@ test("marketing consent enables first-touch attribution and one Meta Contact eve
   });
 });
 
+test("site audit funnel stays consent-aware and never becomes a Google Ads conversion", () => {
+  const analyticsRuntime = loadAnalytics({
+    url: "https://okagency.pl/diagnoza-www?utm_source=meta&utm_content=k5_diagnoza_www",
+    localStorage: createStorage({ "ok-consent": consentValue("analytics") }),
+  });
+  analyticsRuntime.window.okAnalytics.siteAuditStarted({ resultSource: "new", domain: "private.example" });
+  analyticsRuntime.window.okAnalytics.siteAuditCompleted({
+    status: "partial",
+    score: 87,
+    coverage: 93,
+    confidence: "high",
+    domain: "private.example",
+  });
+  analyticsRuntime.window.okAnalytics.siteAuditPdfDownloaded();
+  analyticsRuntime.window.okAnalytics.siteAuditContactClicked();
+  assert.deepEqual(eventNames(analyticsRuntime).slice(-4), [
+    "site_audit_started",
+    "site_audit_completed",
+    "site_audit_pdf_downloaded",
+    "site_audit_contact_clicked",
+  ]);
+  const completed = eventCommands(analyticsRuntime).find(command => command[1] === "site_audit_completed");
+  assert.deepEqual(completed[2], {
+    audit_status: "partial",
+    audit_confidence: "high",
+    audit_score: 87,
+    audit_score_band: "80_100",
+    audit_coverage: 93,
+    send_to: "G-D4EWVVL8ZK",
+  });
+  assert.doesNotMatch(JSON.stringify(eventCommands(analyticsRuntime)), /private\.example|utm_content|conversion/);
+  assert.equal(analyticsRuntime.window.fbq, undefined);
+
+  const marketingRuntime = loadAnalytics({
+    url: "https://okagency.pl/diagnoza-www?utm_source=meta&utm_content=k5_diagnoza_www",
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+  });
+  marketingRuntime.window.okAnalytics.siteAuditStarted({ resultSource: "cached" });
+  marketingRuntime.window.okAnalytics.siteAuditCompleted({ status: "completed", score: 42, coverage: 74, confidence: "medium" });
+  marketingRuntime.window.okAnalytics.siteAuditPdfDownloaded();
+  marketingRuntime.window.okAnalytics.siteAuditContactClicked();
+  const customEvents = marketingRuntime.pixelCommands().filter(command => command[0] === "trackCustom");
+  assert.deepEqual(customEvents.map(command => command[1]).slice(-4), [
+    "SiteAuditStarted",
+    "SiteAuditCompleted",
+    "SiteAuditPdfDownloaded",
+    "SiteAuditContactClicked",
+  ]);
+  assert.equal(eventCommands(marketingRuntime).filter(command => command[1] === "conversion").length, 0);
+});
+
 test("enhanced conversion contact data never leaves analytics-only mode", () => {
   const runtime = loadAnalytics({
     localStorage: createStorage({ "ok-consent": consentValue("analytics") }),

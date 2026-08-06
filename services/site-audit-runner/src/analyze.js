@@ -17,6 +17,18 @@ const clamp = value => Math.max(0, Math.min(100, Math.round(value)));
 const truncate = (value, max = 1_000) => String(value ?? "").replace(/\s+/g, " ").trim().slice(0, max);
 const list = (values, fallback = "brak") => values?.length ? values.map(value => truncate(value, 180)).join(", ") : fallback;
 
+function countedPhrase(count, singular, pluralFew, pluralMany) {
+  const absolute = Math.abs(Number(count) || 0);
+  const lastTwo = absolute % 100;
+  const last = absolute % 10;
+  const form = absolute === 1
+    ? singular
+    : last >= 2 && last <= 4 && !(lastTwo >= 12 && lastTwo <= 14)
+      ? pluralFew
+      : pluralMany;
+  return `${count} ${form}`;
+}
+
 function headerValue(headers, name) {
   const value = headers?.[name.toLowerCase()];
   return Array.isArray(value) ? value.join(", ") : String(value || "");
@@ -263,7 +275,12 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   const hstsValue = headerValue(snapshot.headers, "strict-transport-security");
   const hsts = parseHsts(hstsValue);
   const hstsStatus = !isHttps ? "not_applicable" : !hstsValue ? "warning" : hsts.maxAge >= 31_536_000 ? "pass" : hsts.maxAge > 0 ? "warning" : "fail";
-  checks.push(makeCheck({ id: "security_hsts", category: "security", status: hstsStatus, severity: "medium", title: "Strict-Transport-Security", observation: hstsValue || "Nagłówek HSTS nie jest wysyłany.", recommendation: "Włącz HSTS po potwierdzeniu pełnej obsługi HTTPS; includeSubDomains i preload stosuj dopiero po audycie wszystkich subdomen.", source: "Nagłówki odpowiedzi HTTPS" }));
+  const hstsRecommendation = hstsStatus === "pass" || hstsStatus === "not_applicable"
+    ? ""
+    : !hstsValue || !hsts.maxAge
+      ? "Włącz HSTS po potwierdzeniu pełnej obsługi HTTPS; includeSubDomains i preload stosuj dopiero po audycie wszystkich subdomen."
+      : `HSTS jest aktywne, ale max-age wynosi około ${Math.round(hsts.maxAge / 86_400)} dni. Po potwierdzeniu pełnej obsługi HTTPS wydłuż je do co najmniej 31536000 sekund; includeSubDomains i preload stosuj dopiero po audycie wszystkich subdomen.`;
+  checks.push(makeCheck({ id: "security_hsts", category: "security", status: hstsStatus, severity: "medium", title: "Strict-Transport-Security", observation: hstsValue || "Nagłówek HSTS nie jest wysyłany.", recommendation: hstsRecommendation, source: "Nagłówki odpowiedzi HTTPS" }));
   const csp = headerValue(snapshot.headers, "content-security-policy");
   const cspReportOnly = headerValue(snapshot.headers, "content-security-policy-report-only");
   const weakCsp = /(?:default-src|script-src)[^;]*(?:\*|'unsafe-inline'|'unsafe-eval')/i.test(csp);
@@ -282,9 +299,9 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   checks.push(makeCheck({ id: "security_cookie_flags", category: "security", status: cookies.length === 0 ? "not_applicable" : insecureCookies.length ? "fail" : missingSameSite.length ? "warning" : "pass", severity: "medium", title: "Flagi publicznie ustawianych cookies", observation: cookies.length === 0 ? "Strona główna nie ustawiła cookies w badanej odpowiedzi." : `Cookies: ${cookies.length}; bez Secure: ${insecureCookies.length}; bez SameSite: ${missingSameSite.length}.`, recommendation: "Cookies sesyjne oznacz Secure, HttpOnly i właściwym SameSite; wyjątki dokumentuj świadomie.", source: "Nagłówki Set-Cookie strony głównej" }));
   checks.push(makeCheck({ id: "security_redirect_chain", category: "security", status: snapshot.redirects.length <= 2 ? "pass" : "warning", severity: "low", title: "Łańcuch przekierowań", observation: `Przed stroną końcową wykonano ${snapshot.redirects.length} przekierowań.`, recommendation: "Skróć przekierowania do jednego skoku prowadzącego do hosta kanonicznego.", source: "Pasywny pomiar HTTP" }));
 
-  checks.push(makeCheck({ id: "conversion_cta", category: "conversion", status: ctaCount >= 2 ? "pass" : ctaCount === 1 ? "warning" : "fail", severity: "high", title: "Wezwania do działania", observation: `Znaleziono około ${ctaCount} czytelnych sygnałów działania.`, recommendation: "Ustal jedno główne CTA i powtarzaj je w miejscach odpowiadających kolejnym etapom decyzji.", source: "Widoczny tekst strony głównej", weight: 2 }));
-  checks.push(makeCheck({ id: "conversion_offer", category: "conversion", status: offerSignals >= 2 ? "pass" : offerSignals === 1 ? "warning" : "fail", severity: "medium", title: "Czytelność oferty", observation: `Znaleziono około ${offerSignals} sygnałów opisujących ofertę lub korzyści.`, recommendation: "Wyjaśnij dla kogo jest oferta, jaki problem rozwiązuje i co użytkownik otrzyma.", source: "Widoczny tekst strony głównej" }));
-  checks.push(makeCheck({ id: "conversion_contact", category: "conversion", status: contactSignals >= 1 ? "pass" : "fail", severity: "high", title: "Dostępność kontaktu", observation: contactSignals ? `Znaleziono ${contactSignals} sygnałów kontaktu.` : "Nie znaleziono bezpośredniego sposobu kontaktu.", recommendation: "Dodaj widoczny kontakt lub formularz w kluczowych miejscach ścieżki.", source: "Linki i HTML strony głównej", weight: 2 }));
+  checks.push(makeCheck({ id: "conversion_cta", category: "conversion", status: ctaCount >= 2 ? "pass" : ctaCount === 1 ? "warning" : "fail", severity: "high", title: "Wezwania do działania", observation: `Znaleziono około ${countedPhrase(ctaCount, "czytelny sygnał działania", "czytelne sygnały działania", "czytelnych sygnałów działania")}.`, recommendation: "Ustal jedno główne CTA i powtarzaj je w miejscach odpowiadających kolejnym etapom decyzji.", source: "Widoczny tekst strony głównej", weight: 2 }));
+  checks.push(makeCheck({ id: "conversion_offer", category: "conversion", status: offerSignals >= 2 ? "pass" : offerSignals === 1 ? "warning" : "fail", severity: "medium", title: "Czytelność oferty", observation: `Znaleziono około ${countedPhrase(offerSignals, "sygnał opisujący ofertę lub korzyści", "sygnały opisujące ofertę lub korzyści", "sygnałów opisujących ofertę lub korzyści")}.`, recommendation: "Wyjaśnij dla kogo jest oferta, jaki problem rozwiązuje i co użytkownik otrzyma.", source: "Widoczny tekst strony głównej" }));
+  checks.push(makeCheck({ id: "conversion_contact", category: "conversion", status: contactSignals >= 1 ? "pass" : "fail", severity: "high", title: "Dostępność kontaktu", observation: contactSignals ? `Znaleziono ${countedPhrase(contactSignals, "sygnał kontaktu", "sygnały kontaktu", "sygnałów kontaktu")}.` : "Nie znaleziono bezpośredniego sposobu kontaktu.", recommendation: "Dodaj widoczny kontakt lub formularz w kluczowych miejscach ścieżki.", source: "Linki i HTML strony głównej", weight: 2 }));
   checks.push(makeCheck({ id: "conversion_form", category: "conversion", status: inspection.formCount >= 1 ? "pass" : "warning", severity: "low", title: "Formularz lub ścieżka działania", observation: `Formularze na stronie głównej: ${inspection.formCount}.`, recommendation: "Jeżeli kontakt jest głównym celem, skróć drogę do prostego formularza lub innej jednoznacznej akcji.", source: "HTML strony głównej" }));
   checks.push(makeCheck({ id: "conversion_content_depth", category: "conversion", status: inspection.text.length >= 500 ? "pass" : "warning", severity: "low", title: "Zakres treści decyzyjnej", observation: `Widoczna treść ma około ${inspection.text.length} znaków.`, recommendation: "Dodaj informacje potrzebne do decyzji, ale utrzymaj jasną hierarchię i usuń powtórzenia.", source: "Widoczny tekst strony głównej" }));
 
@@ -292,7 +309,7 @@ export function analyzeSnapshot(snapshot, pagespeed = null, technicalProfile = {
   checks.push(makeCheck({ id: "trust_privacy", category: "trust", status: inspection.privacyLink ? "pass" : "warning", severity: "medium", title: "Informacje prawne i prywatność", observation: inspection.privacyLink ? "Znaleziono odnośnik do polityki prywatności lub dokumentu prawnego." : "Nie znaleziono jednoznacznego odnośnika do polityki prywatności lub regulaminu.", recommendation: "Udostępnij aktualne dokumenty prawne w stałym, łatwo dostępnym miejscu.", source: "Linki strony głównej" }));
   const organizationTypes = inspection.structuredDataTypes.filter(type => /(?:Organization|LocalBusiness|Person|Corporation)/i.test(type));
   checks.push(makeCheck({ id: "trust_structured_identity", category: "trust", status: organizationTypes.length ? "pass" : "warning", severity: "low", title: "Dane strukturalne podmiotu", observation: organizationTypes.length ? `Znaleziono typy: ${organizationTypes.join(", ")}.` : "Nie znaleziono danych strukturalnych opisujących podmiot.", recommendation: "Dodaj zgodne z prawdą dane Organization lub właściwy typ LocalBusiness, jeżeli pasuje do działalności.", source: "JSON-LD strony głównej" }));
-  checks.push(makeCheck({ id: "trust_proof", category: "trust", status: trustSignals >= 2 ? "pass" : trustSignals === 1 ? "warning" : "fail", severity: "medium", title: "Dowody wiarygodności", observation: `Znaleziono około ${trustSignals} sygnałów realizacji, doświadczenia lub opinii.`, recommendation: "Pokaż możliwe do zweryfikowania realizacje, proces, opinie lub doświadczenie bez składania nieudokumentowanych obietnic.", source: "Widoczny tekst strony głównej" }));
+  checks.push(makeCheck({ id: "trust_proof", category: "trust", status: trustSignals >= 2 ? "pass" : trustSignals === 1 ? "warning" : "fail", severity: "medium", title: "Dowody wiarygodności", observation: `Znaleziono około ${countedPhrase(trustSignals, "sygnał realizacji, doświadczenia lub opinii", "sygnały realizacji, doświadczenia lub opinii", "sygnałów realizacji, doświadczenia lub opinii")}.`, recommendation: "Pokaż możliwe do zweryfikowania realizacje, proces, opinie lub doświadczenie bez składania nieudokumentowanych obietnic.", source: "Widoczny tekst strony głównej" }));
 
   const categories = Object.fromEntries(REPORT_CATEGORY_KEYS.map(key => [key, categorySummary(checks, key)]));
   const scoredCategories = REPORT_CATEGORY_KEYS.filter(key => Number.isInteger(categories[key].score));

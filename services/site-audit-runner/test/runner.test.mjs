@@ -153,7 +153,27 @@ test("analiza zwraca siedem kategorii, pełne kontrole i poprawny kontrakt 2.0",
   assert.equal(report.partial, false);
   assert.ok(report.strengths.length >= 3);
   assert.ok(report.checks.length >= 40);
+  assert.equal(report.checks.find(check => check.id === "security_hsts")?.recommendation, "");
+  assert.match(report.checks.find(check => check.id === "conversion_cta")?.observation || "", /\b2 czytelne sygnały działania\b/);
   assert.doesNotThrow(() => validateReport(report));
+});
+
+test("analiza odmienia pojedynczy sygnał i nie zaleca ponownego włączania aktywnego HSTS", () => {
+  const report = analyzeSnapshot({
+    body: "<!doctype html><html><head><title>Firma</title></head><body><h1>Usługa</h1><a href='/kontakt'>Kontakt</a></body></html>",
+    requestedOrigin: "https://example.com",
+    url: "https://example.com/",
+    status: 200,
+    durationMs: 200,
+    redirects: [],
+    headers: { "strict-transport-security": "max-age=15552000" },
+    tls: { validTo: "2030-01-01", protocol: "TLSv1.3" },
+  });
+  const cta = report.checks.find(check => check.id === "conversion_cta");
+  const hsts = report.checks.find(check => check.id === "security_hsts");
+  assert.equal(cta?.observation, "Znaleziono około 1 czytelny sygnał działania.");
+  assert.match(hsts?.recommendation || "", /^HSTS jest aktywne, ale max-age wynosi około 180 dni\./);
+  assert.doesNotMatch(hsts?.recommendation || "", /^Włącz HSTS/);
 });
 
 test("PageSpeed degraduje się bezpiecznie po błędzie API", async () => {

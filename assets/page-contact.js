@@ -35,6 +35,7 @@
   const handoffTitle = document.getElementById("handoff-title");
   const fallbackTitle = document.getElementById("fallback-title");
   const contextNote = document.getElementById("context-note");
+  const contextNoteTitle = document.getElementById("context-note-title");
   const contextNoteCopy = document.getElementById("context-note-copy");
   let turnstileWidgetId = null;
 
@@ -62,6 +63,7 @@
     ["social", "Social media"],
     ["campaign", "Kampania płatna"],
     ["diagnosis", "Diagnoza / uporządkowanie problemu"],
+    ["site-audit", "Strona internetowa"],
     ["process", "Proces współpracy"],
     ["about", "Inny temat"],
     ["conversation", "Diagnoza / uporządkowanie problemu"],
@@ -74,10 +76,17 @@
 
   if (mappedTopic) fields.topic.value = mappedTopic;
 
-  if (source === "diagnosis") {
-    contextNoteCopy.textContent = mappedTopic
-      ? "Temat ustawiliśmy na podstawie rekomendowanego kierunku. Możesz go zmienić."
-      : "Wybierz temat, z którym chcesz przejść dalej.";
+  if (source === "diagnosis" || source === "site-audit") {
+    if (contextNoteTitle) {
+      contextNoteTitle.textContent = source === "site-audit"
+        ? "Przechodzisz z audytu WWW"
+        : "Wracasz z Diagnozy";
+    }
+    contextNoteCopy.textContent = source === "site-audit"
+      ? "Temat ustawiliśmy na podstawie wyniku audytu WWW. Możesz go zmienić."
+      : mappedTopic
+        ? "Temat ustawiliśmy na podstawie rekomendowanego kierunku. Możesz go zmienić."
+        : "Wybierz temat, z którym chcesz przejść dalej.";
     contextNote.hidden = false;
     directBlock.classList.add("has-context");
   }

@@ -26,12 +26,17 @@ assert.match(html, /data-action="site_audit"/);
 assert.match(html, /polityka-prywatnosci#rozszerzona-diagnostyka/);
 assert.match(html, /data-audit-pdf-module="\/assets\/generated\/site-audit-pdf\.js\?v=/);
 assert.match(html, /data-audit-download/);
+assert.match(html, /data-audit-contact/);
+assert.match(html, /context=site-audit&amp;source=site-audit/);
 assert.match(html, /siedem obszarów/i);
 assert.match(client, new RegExp(`NOTICE_VERSION = ["']${noticeVersion}["']`));
 assert.match(client, /textContent/);
 assert.doesNotMatch(client, /innerHTML\s*=/);
 assert.match(client, /sessionStorage\.setItem/);
 assert.match(client, /import\(root\.dataset\.auditPdfModule\)/);
+for (const eventMethod of ["siteAuditStarted", "siteAuditCompleted", "siteAuditPdfDownloaded", "siteAuditContactClicked"]) {
+  assert.match(client, new RegExp(`okAnalytics\\?\\.${eventMethod}`), `Brak zdarzenia ${eventMethod} w ścieżce audytu`);
+}
 assert.match(pdfSource, /buildAuditPdf/);
 assert.match(pdfSource, /\/assets\/fonts\/pdf\/archivo-variable\.ttf/);
 assert.doesNotMatch(`${html}\n${client}\n${pdfSource}`, /sendgrid|mailgun|resend|mailto:[^"']*raport/i);

@@ -47,6 +47,7 @@
   let polling = false;
   let pollGeneration = 0;
   let currentReport = null;
+  let completedAnalyticsKey = "";
 
   function setStatus(message, state = "") {
     if (!formStatus) return;
@@ -223,6 +224,17 @@
     root.querySelector("[data-audit-confidence]").textContent = `${CONFIDENCE_LABELS[report.confidence] || "Pomiar częściowy"} · pokrycie ${report.coverage ?? "—"}%`;
     root.querySelector("[data-audit-overall]").textContent = String(report.overallScore ?? "—");
 
+    const analyticsKey = String(job.jobId || report.generatedAt || `${report.origin || job.origin || "audit"}:${report.overallScore ?? "unknown"}:${report.coverage ?? "unknown"}`);
+    if (completedAnalyticsKey !== analyticsKey) {
+      completedAnalyticsKey = analyticsKey;
+      window.okAnalytics?.siteAuditCompleted?.({
+        status: job.status,
+        score: report.overallScore,
+        coverage: report.coverage,
+        confidence: report.confidence,
+      });
+    }
+
     const categoryKeys = Object.keys(CATEGORY_LABELS);
     const firstIssueKey = categoryKeys.find(key => new Set(["fail", "warning"]).has(report.categories[key]?.status));
     root.querySelector("[data-audit-categories]").replaceChildren(...categoryKeys.map(key => categoryCard(key, report.categories[key])));
@@ -340,6 +352,9 @@
         }),
       });
       resetTurnstile();
+      window.okAnalytics?.siteAuditStarted?.({
+        resultSource: data.deduplicated ? "cached" : "new",
+      });
       const job = {
         jobId: data.jobId,
         pollToken: data.pollToken,
@@ -371,6 +386,7 @@
     try {
       const pdf = await import(root.dataset.auditPdfModule);
       await pdf.downloadAuditPdf(currentReport);
+      window.okAnalytics?.siteAuditPdfDownloaded?.();
       setDownloadStatus("Raport PDF został pobrany.", "success");
     } catch (error) {
       console.error("site_audit_pdf_failed", error);
@@ -385,6 +401,7 @@
     pollGeneration += 1;
     polling = false;
     currentReport = null;
+    completedAnalyticsKey = "";
     clearJob();
     reportSection.hidden = true;
     progress.hidden = true;
@@ -396,6 +413,10 @@
     resetTurnstile();
     domainInput.focus();
     form.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  root.querySelector("[data-audit-contact]")?.addEventListener("click", () => {
+    window.okAnalytics?.siteAuditContactClicked?.();
   });
 
   const restored = readJob();

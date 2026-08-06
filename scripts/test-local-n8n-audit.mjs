@@ -24,7 +24,7 @@ const task = {
   origin,
   callbackUrl: `https://okagency.pl/api/site-audits/${jobId}/callback`,
   rulesetVersion: "2026.08.2",
-  scannerVersion: "2.0.0",
+  scannerVersion: "2.0.4",
 };
 const signedPayload = Buffer.from(JSON.stringify(task)).toString("base64url");
 const timestamp = String(Math.floor(Date.now() / 1000));

@@ -9,6 +9,24 @@ const PORT = Number(process.env.PORT || 8080);
 const MAX_BODY_BYTES = 131_072;
 const nonceCache = new Map();
 
+function logCollectorDiagnostics(jobId, diagnostics) {
+  for (const diagnostic of diagnostics || []) {
+    const payload = {
+      event: "audit_collector_result",
+      jobId,
+      collector: diagnostic.collector,
+      status: diagnostic.status,
+      code: diagnostic.code,
+      retryable: diagnostic.retryable,
+      attempts: diagnostic.attempts,
+      durationMs: diagnostic.durationMs,
+      httpStatus: diagnostic.httpStatus,
+    };
+    const logger = diagnostic.status === "unavailable" ? console.error : console.log;
+    logger(JSON.stringify(payload));
+  }
+}
+
 function base64UrlDecode(value) {
   return Buffer.from(value.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8");
 }
@@ -157,6 +175,10 @@ async function handleScan(request, response, body) {
       }),
       collectTechnicalProfile(snapshot),
     ]);
+    logCollectorDiagnostics(task.jobId, [
+      ...(pagespeed?.diagnostic ? [pagespeed.diagnostic] : []),
+      ...(technicalProfile.diagnostics || []),
+    ]);
     const report = analyzeSnapshot(snapshot, pagespeed, technicalProfile, {
       rulesetVersion: task.rulesetVersion,
       scannerVersion: task.scannerVersion,
@@ -166,6 +188,7 @@ async function handleScan(request, response, body) {
       jobId: task.jobId,
       status: report.partial ? "partial" : "completed",
       overallScore: report.overallScore,
+      diagnosticCount: report.diagnostics.length,
     }));
     sendJson(response, 200, {
       jobId: task.jobId,
@@ -204,7 +227,7 @@ async function handleFailure(response, body) {
 export function createAuditServer() {
   return createServer(async (request, response) => {
     try {
-      if (request.method === "GET" && request.url === "/health") return sendJson(response, 200, { status: "ok", version: "2.0.0" });
+      if (request.method === "GET" && request.url === "/health") return sendJson(response, 200, { status: "ok", version: "2.0.4" });
       if (request.method !== "POST") return sendJson(response, 405, { error: { code: "method_not_allowed" } });
       const body = await readJson(request);
       if (request.url === "/scan") return await handleScan(request, response, body);

@@ -107,7 +107,7 @@ test("raport ma ścisły schemat wyników", () => {
   const report = {
     schemaVersion: "2.0",
     rulesetVersion: "2026.08.2",
-    scannerVersion: "2.0.0",
+    scannerVersion: "2.0.1",
     generatedAt: "2026-08-05T10:00:00.000Z",
     origin: "https://example.com",
     finalUrl: "https://example.com/",
@@ -126,6 +126,15 @@ test("raport ma ścisły schemat wyników", () => {
     checks: [check],
     measurements: {},
     limitations: ["Pasywny pomiar."],
+    diagnostics: [{
+      collector: "pagespeed",
+      status: "ok",
+      code: "ok",
+      retryable: false,
+      attempts: 1,
+      durationMs: 12_500,
+      httpStatus: 200,
+    }],
     partial: true,
   };
   assert.equal(validateReport(report), JSON.stringify(report));
@@ -133,6 +142,9 @@ test("raport ma ścisły schemat wyników", () => {
   assert.throws(() => validateReport(report), ApiError);
   report.categories.seo.score = 80;
   report.priorities[0] = { ...check, observation: "Podmieniona obserwacja." };
+  assert.throws(() => validateReport(report), ApiError);
+  report.priorities[0] = check;
+  report.diagnostics[0].collector = "PageSpeed API";
   assert.throws(() => validateReport(report), ApiError);
 });
 

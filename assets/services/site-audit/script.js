@@ -35,6 +35,7 @@
   const consentInput = form?.elements.authorization;
   const submit = form?.querySelector("button[type='submit']");
   const formStatus = root.querySelector("[data-audit-form-status]");
+  const hero = root.querySelector(".audit-hero");
   const progress = root.querySelector("[data-audit-progress]");
   const progressTitle = root.querySelector("#audit-progress-title");
   const progressCopy = root.querySelector("[data-audit-progress-copy]");
@@ -49,6 +50,24 @@
   let pollGeneration = 0;
   let currentReport = null;
   let completedAnalyticsKey = readCompletedAnalyticsKey();
+
+  function setAuditView(view) {
+    const next = new Set(["idle", "progress", "report"]).has(view) ? view : "idle";
+    const changed = root.dataset.auditView !== next;
+    root.dataset.auditView = next;
+    if (hero) hero.hidden = next !== "idle";
+    progress.hidden = next !== "progress";
+    reportSection.hidden = next !== "report";
+    progress.setAttribute("aria-busy", next === "progress" ? "true" : "false");
+    return changed;
+  }
+
+  function focusView(section, title) {
+    title?.focus({ preventScroll: true });
+    requestAnimationFrame(() => {
+      section?.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+  }
 
   function setStatus(message, state = "") {
     if (!formStatus) return;
@@ -84,8 +103,20 @@
       action: "site_audit",
       size: "flexible",
       theme: "light",
+      appearance: "interaction-only",
       callback: token => { turnstileToken = token; setStatus(""); },
       "expired-callback": () => { turnstileToken = ""; },
+      "before-interactive-callback": () => {
+        setStatus("Zabezpieczenie potrzebuje krótkiego potwierdzenia.");
+      },
+      "timeout-callback": () => {
+        turnstileToken = "";
+        setStatus("Weryfikacja zabezpieczenia trwała zbyt długo. Spróbuj ponownie.", "error");
+      },
+      "unsupported-callback": () => {
+        turnstileToken = "";
+        setStatus("Ta przeglądarka nie obsługuje zabezpieczenia. Zaktualizuj ją albo użyj innej.", "error");
+      },
       "error-callback": () => {
         turnstileToken = "";
         setStatus("Nie udało się załadować zabezpieczenia. Odśwież stronę i spróbuj ponownie.", "error");
@@ -131,15 +162,14 @@
 
   function showProgress(origin, status = "queued") {
     currentReport = null;
-    reportSection.hidden = true;
-    progress.hidden = false;
-    progress.setAttribute("aria-busy", "true");
+    const changed = setAuditView("progress");
     progressDomain.textContent = origin || "";
     if (status === "running") {
       progressCopy.textContent = "Sprawdzamy DNS, HTTPS, strukturę, ograniczoną próbkę podstron i mobilny pomiar PageSpeed.";
     } else {
       progressCopy.textContent = "Zadanie czeka w bezpiecznej kolejce. Zwykle trwa to od kilkunastu sekund do około dwóch minut.";
     }
+    if (changed) focusView(progress, progressTitle);
   }
 
   function addListItems(container, values, factory) {
@@ -231,9 +261,7 @@
       return showFailure("Raport ma nieprawidłowy format. Uruchom audyt ponownie.");
     }
     currentReport = report;
-    progress.hidden = true;
-    progress.setAttribute("aria-busy", "false");
-    reportSection.hidden = false;
+    setAuditView("report");
     root.querySelector("[data-audit-summary]").textContent = report.summary || "";
     root.querySelector("[data-audit-origin]").textContent = report.origin || job.origin || "";
     root.querySelector("[data-audit-confidence]").textContent = `${CONFIDENCE_LABELS[report.confidence] || "Pomiar częściowy"} · pokrycie ${report.coverage ?? "—"}%`;
@@ -269,18 +297,17 @@
       root.querySelector("[data-audit-strengths]").append(empty);
     }
     setDownloadStatus("");
-    reportTitle.focus({ preventScroll: true });
-    reportSection.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+    focusView(reportSection, reportTitle);
     setBusy(false);
   }
 
   function showFailure(message) {
     currentReport = null;
-    progress.hidden = true;
-    progress.setAttribute("aria-busy", "false");
+    setAuditView("idle");
     setBusy(false);
     setStatus(message, "error");
-    form?.scrollIntoView({ block: "center" });
+    domainInput?.focus({ preventScroll: true });
+    form?.scrollIntoView({ behavior: "auto", block: "center" });
   }
 
   async function requestJson(url, options = {}, timeoutMs = 15_000) {
@@ -311,7 +338,6 @@
         const data = await requestJson(`/api/site-audits/${encodeURIComponent(job.jobId)}`, {
           headers: { authorization: `Bearer ${job.pollToken}` },
         });
-        showProgress(data.origin || job.origin, data.status);
         saveJob({ ...job, origin: data.origin || job.origin, expiresAt: data.expiresAt || job.expiresAt });
         if (data.status === "completed" || data.status === "partial") {
           renderReport(data);
@@ -321,6 +347,7 @@
           showFailure(data.failure?.message || "Nie udało się ukończyć audytu. Spróbuj ponownie później.");
           return;
         }
+        showProgress(data.origin || job.origin, data.status);
         await new Promise(resolve => setTimeout(resolve, POLL_DELAYS[Math.min(attempt, POLL_DELAYS.length - 1)]));
         attempt += 1;
       }
@@ -347,7 +374,7 @@
       return;
     }
     if (!turnstileToken) {
-      setStatus("Dokończ weryfikację zabezpieczenia.", "error");
+      setStatus("Dokończ widoczne potwierdzenie albo poczekaj chwilę na automatyczną weryfikację.", "error");
       document.getElementById("site-audit-turnstile")?.scrollIntoView({ block: "center" });
       return;
     }
@@ -380,7 +407,7 @@
       saveJob(job);
       setStatus(data.deduplicated ? "Pokazujemy aktualny raport z ostatnich 24 godzin." : "Audyt został przyjęty.", "success");
       if (data.status === "completed" || data.status === "partial") renderReport(data);
-      else { showProgress(job.origin, data.status); progressTitle.focus({ preventScroll: true }); await pollJob(job); }
+      else { showProgress(job.origin, data.status); await pollJob(job); }
     } catch (error) {
       resetTurnstile();
       const messages = {
@@ -388,7 +415,7 @@
         daily_limit_reached: "Dzisiejszy limit audytów został wykorzystany. Wróć jutro.",
         private_target: "Ta domena wskazuje na niedozwolony adres sieciowy.",
         dns_not_found: "Domena nie wskazuje na publiczny serwer WWW.",
-        turnstile_failed: "Weryfikacja zabezpieczenia wygasła. Spróbuj ponownie.",
+        turnstile_failed: "Weryfikacja zabezpieczenia nie powiodła się lub wygasła. Spróbuj ponownie.",
       };
       showFailure(messages[error.code] || error.message || "Nie udało się uruchomić audytu.");
     }
@@ -418,8 +445,7 @@
     polling = false;
     currentReport = null;
     clearJob();
-    reportSection.hidden = true;
-    progress.hidden = true;
+    setAuditView("idle");
     setBusy(false);
     setStatus("");
     setDownloadStatus("");
@@ -439,5 +465,5 @@
     setBusy(true);
     showProgress(restored.origin, "queued");
     pollJob(restored);
-  }
+  } else setAuditView("idle");
 })();

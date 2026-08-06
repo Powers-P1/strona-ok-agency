@@ -16,6 +16,7 @@ const reject = (source, pattern, message) => {
 const publicPages = [
   "404.html",
   "diagnoza.html",
+  "diagnoza-www.html",
   "dostepnosc.html",
   "faq.html",
   "index.html",
@@ -55,6 +56,7 @@ const [
   sceneViewport,
   interactions,
   routeMotion,
+  motionControl,
 ] = await Promise.all([
   read("o-nas.html"),
   read("assets/services/about/styles.css"),
@@ -65,6 +67,7 @@ const [
   read("assets/scene-viewport.css"),
   read("assets/service-interactions.js"),
   read("assets/route-motion.css").catch(() => ""),
+  read("assets/motion-control.js"),
 ]);
 
 for (const page of publicPages) {
@@ -133,6 +136,10 @@ requireText(interactions, '".annotation-callout, .annotation"', "callouty nie ko
 requireText(interactions, '".proof-item, .accordion-item"', "akordeony nie korzystają ze wspólnego skryptu");
 requireText(interactions, "window.OKAgencyMotion?.isPaused()", "interakcje ignorują globalną pauzę");
 requireText(interactions, 'callout.dataset.pinned = "false"', "callouty nie startują systemowo ze stanu zamkniętego");
+requireText(motionControl, "[data-ok-nav-utilities]", "kontrolka ruchu nie korzysta z narzędzi globalnej nawigacji");
+requireText(motionControl, 'hasAttribute("data-ok-nav-compact")', "kontrolka ruchu nie rozróżnia kompaktowej i desktopowej nawigacji");
+requireText(enhancementsCss, 'html[data-ok-nav-compact] .ok-nav-utilities .motion-toggle', "kompaktowa kontrolka ruchu nie ma wspólnego położenia w nawigacji");
+requireText(enhancementsCss, '.ok-nav-utilities .motion-toggle:focus-visible', "kompaktowa kontrolka ruchu nie ma kontrastowego fokusu");
 
 reject(aboutCss, /overflow:\s*hidden;\s*overscroll-behavior:\s*none;/, "O nas nadal blokuje dokument");
 reject(aboutCss, /\.scene\s*\{[^}]*filter:\s*blur/s, "O nas nadal ma lokalny blur scen");

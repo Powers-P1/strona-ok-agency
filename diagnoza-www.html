@@ -49,12 +49,13 @@
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/content-system.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260806-1">
+  <link rel="stylesheet" href="/assets/route-motion.css?v=20260801-2">
   <link rel="stylesheet" href="/assets/site-footer.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/site-navigation.css?v=20260803-5">
+  <link rel="stylesheet" href="/assets/site-navigation.css?v=20260806-1">
   <link rel="stylesheet" href="/assets/responsive-foundation.v20260730-8.css?v=20260804-5">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260805-1">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260806-1">
   <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
-  <script src="/assets/motion-control.js?v=20260729-4"></script>
+  <script src="/assets/motion-control.js?v=20260806-1"></script>
   <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
   <script src="/assets/analytics.js?v=20260806-2" defer></script>
 </head>
@@ -85,7 +86,7 @@
   </header>
   <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
-  <main id="audyt-www" class="audit-main" data-site-audit data-audit-pdf-module="/assets/generated/site-audit-pdf.js?v=20260805-1">
+  <main id="audyt-www" class="audit-main" data-site-audit data-audit-view="idle" data-audit-pdf-module="/assets/generated/site-audit-pdf.js?v=20260805-1">
     <section class="audit-hero" aria-labelledby="audit-title">
       <div class="audit-hero__copy">
         <p class="kicker">Rozszerzona diagnostyka · publiczne dane · bez logowania</p>
@@ -118,7 +119,7 @@
           <p class="audit-legal-note">Test pobiera wyłącznie publiczne zasoby HTTP/HTTPS. Nie loguje się, nie wykonuje brute force, skanowania portów ani prób wykorzystania podatności. Szczegóły opisuje <a href="/polityka-prywatnosci#rozszerzona-diagnostyka">polityka prywatności</a>.</p>
 
           <div class="form-foot audit-submit-row">
-            <div class="cf-turnstile" id="site-audit-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="site_audit" data-size="flexible"></div>
+            <div class="cf-turnstile" id="site-audit-turnstile" data-sitekey="0x4AAAAAAEA1pgmTfeMdKXil" data-action="site_audit" data-size="flexible" data-appearance="interaction-only"></div>
             <button class="submit" type="submit">
               <span>Uruchom pasywny audyt</span><span class="arr" aria-hidden="true">→</span>
             </button>
@@ -202,7 +203,7 @@
   <script src="/assets/services/site-audit/script.js?v=20260806-2" defer></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onSiteAuditTurnstileLoad&amp;render=explicit" defer></script>
   <script src="/assets/site-footer.js?v=20260801-2"></script>
-  <script src="/assets/navigation.js?v=20260803-1"></script>
+  <script src="/assets/navigation.js?v=20260806-1"></script>
   <script src="/assets/route-transition.js?v=20260729-2"></script>
 </body>
 </html>

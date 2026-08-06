@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { analyzeSnapshot, fetchPageSpeed } from "../src/analyze.js";
 import { inspectHtml } from "../src/html-inspector.js";
-import { ScanError, resolveAndVet, safeFetch, validateTargetUrl } from "../src/safe-fetch.js";
+import { readTlsMetadata, ScanError, resolveAndVet, safeFetch, validateTargetUrl } from "../src/safe-fetch.js";
 import { collectDnsProfile, probeUrl } from "../src/technical-collectors.js";
 import { validateReport } from "../../../worker/site-audit-core.js";
 
@@ -34,6 +34,26 @@ test("inspektor HTML używa parsera dokumentu i nie zwraca surowej treści", () 
 
 test("runner dopuszcza wyłącznie pasywne metody GET i HEAD", async () => {
   await assert.rejects(() => safeFetch("https://example.com", { method: "POST" }), error => error.code === "invalid_method");
+});
+
+test("metadane TLS są kopiowane zanim gniazdo zostanie odłączone", () => {
+  let attached = true;
+  const socket = {
+    getProtocol: () => attached ? "TLSv1.3" : null,
+    getPeerCertificate: () => attached ? {
+      valid_from: "Aug 01 00:00:00 2026 GMT",
+      valid_to: "Oct 30 23:59:59 2026 GMT",
+      issuer: { O: "Example CA" },
+      subject: { CN: "example.com" },
+      subjectaltname: "DNS:example.com",
+      fingerprint256: "AA:BB",
+    } : {},
+  };
+  const metadata = readTlsMetadata(socket);
+  attached = false;
+  assert.equal(metadata.protocol, "TLSv1.3");
+  assert.equal(metadata.validTo, "Oct 30 23:59:59 2026 GMT");
+  assert.equal(metadata.issuer, "Example CA");
 });
 
 test("sonda HTTP potwierdza przekierowanie przez GET, gdy HEAD jest niekonkluzywny", async () => {
@@ -86,6 +106,28 @@ test("kolektor DNS rozróżnia strefę, DNSSEC i konfigurację poczty", async ()
   assert.deepEqual(profile.spf, ["v=spf1 -all"]);
   assert.deepEqual(profile.dmarc, ["v=DMARC1; p=reject"]);
   assert.equal(profile.alternateHostname, "www.example.com");
+});
+
+test("diagnostyka DNS-over-HTTPS zachowuje status HTTP usługi upstream", async () => {
+  const noData = Object.assign(new Error("no data"), { code: "ENODATA" });
+  const resolver = {
+    resolveSoa: async name => name === "example.com" ? { nsname: "ns1.example.net" } : Promise.reject(noData),
+    resolve4: async () => [{ address: "93.184.216.34", ttl: 3600 }],
+    resolve6: async () => Promise.reject(noData),
+    resolveCname: async () => Promise.reject(noData),
+    resolveNs: async () => ["ns1.example.net"],
+    resolveCaa: async () => Promise.reject(noData),
+    resolveMx: async () => Promise.reject(noData),
+    resolveTxt: async () => Promise.reject(noData),
+  };
+  const profile = await collectDnsProfile("example.com", {
+    resolver,
+    fetchImpl: async () => new Response("service unavailable", { status: 503 }),
+  });
+  const diagnostics = profile.diagnostics.filter(item => item.collector.startsWith("dnssec_"));
+  assert.equal(diagnostics.length, 2);
+  assert.ok(diagnostics.every(item => item.code === "upstream_unavailable"));
+  assert.ok(diagnostics.every(item => item.httpStatus === 503));
 });
 
 test("analiza zwraca siedem kategorii, pełne kontrole i poprawny kontrakt 2.0", () => {
@@ -146,7 +188,7 @@ test("analiza zwraca siedem kategorii, pełne kontrole i poprawny kontrakt 2.0",
       ],
       crawlLimit: 8,
     },
-  }, { rulesetVersion: "2026.08.2", scannerVersion: "2.0.0" });
+  }, { rulesetVersion: "2026.08.2", scannerVersion: "2.0.1" });
   assert.equal(report.schemaVersion, "2.0");
   assert.deepEqual(Object.keys(report.categories), ["performance", "seo", "accessibility", "technical", "security", "conversion", "trust"]);
   assert.ok(report.overallScore >= 80);
@@ -171,14 +213,126 @@ test("analiza odmienia pojedynczy sygnał i nie zaleca ponownego włączania akt
   });
   const cta = report.checks.find(check => check.id === "conversion_cta");
   const hsts = report.checks.find(check => check.id === "security_hsts");
-  assert.equal(cta?.observation, "Znaleziono około 1 czytelny sygnał działania.");
-  assert.match(hsts?.recommendation || "", /^HSTS jest aktywne, ale max-age wynosi około 180 dni\./);
+  assert.equal(cta?.observation, "Znaleziono 1 czytelny sygnał działania.");
+  assert.match(hsts?.recommendation || "", /^HSTS jest już aktywny\.[\s\S]*wydłuż max-age do co najmniej 31536000 sekund/);
   assert.doesNotMatch(hsts?.recommendation || "", /^Włącz HSTS/);
 });
 
 test("PageSpeed degraduje się bezpiecznie po błędzie API", async () => {
+  let calls = 0;
   const result = await fetchPageSpeed("https://example.com", {
-    fetchImpl: async () => new Response("quota", { status: 429 }),
+    apiKey: "test-api-key",
+    fetchImpl: async () => {
+      calls += 1;
+      return new Response(JSON.stringify({ error: { status: "RESOURCE_EXHAUSTED", message: "quota" } }), { status: 429 });
+    },
   });
-  assert.equal(result, null);
+  assert.equal(result.status, "unavailable");
+  assert.equal(result.diagnostic.code, "quota_exceeded");
+  assert.equal(result.diagnostic.httpStatus, 429);
+  assert.equal(result.diagnostic.retryable, false);
+  assert.equal(calls, 1);
+});
+
+test("PageSpeed nie wykonuje anonimowego wywołania bez klucza", async () => {
+  let calls = 0;
+  const result = await fetchPageSpeed("https://example.com", {
+    fetchImpl: async () => {
+      calls += 1;
+      throw new Error("fetch nie powinien zostać wywołany");
+    },
+  });
+  assert.equal(result.status, "unavailable");
+  assert.equal(result.diagnostic.code, "missing_api_key");
+  assert.equal(result.diagnostic.attempts, 0);
+  assert.equal(calls, 0);
+});
+
+test("PageSpeed ponawia wyłącznie przejściowy błąd i zapisuje liczbę prób", async () => {
+  let calls = 0;
+  const payload = {
+    lighthouseResult: {
+      categories: {
+        performance: { score: 0.81 },
+        accessibility: { score: 0.95 },
+        seo: { score: 0.96 },
+        "best-practices": { score: 0.9 },
+      },
+      audits: {
+        "largest-contentful-paint": { numericValue: 1800 },
+        "cumulative-layout-shift": { numericValue: 0.04 },
+        "total-blocking-time": { numericValue: 120 },
+        "speed-index": { numericValue: 2100 },
+      },
+    },
+  };
+  const result = await fetchPageSpeed("https://example.com", {
+    apiKey: "test-api-key",
+    retryDelayMs: 1,
+    sleepImpl: async () => {},
+    fetchImpl: async () => {
+      calls += 1;
+      return calls === 1
+        ? new Response(JSON.stringify({ error: { status: "UNAVAILABLE" } }), { status: 503 })
+        : new Response(JSON.stringify(payload), { status: 200 });
+    },
+  });
+  assert.equal(result.status, "ok");
+  assert.equal(result.performanceScore, 81);
+  assert.equal(result.diagnostic.code, "ok");
+  assert.equal(result.diagnostic.attempts, 2);
+  assert.equal(calls, 2);
+});
+
+test("błąd resolvera nie udaje braku konfiguracji DNS", async () => {
+  const resolverFailure = Object.assign(new Error("servfail"), { code: "ESERVFAIL" });
+  const noData = Object.assign(new Error("no data"), { code: "ENODATA" });
+  const resolver = {
+    resolveSoa: async name => name === "example.com" ? { nsname: "ns1.example.net" } : Promise.reject(noData),
+    resolve4: async () => [{ address: "93.184.216.34", ttl: 3600 }],
+    resolve6: async () => Promise.reject(noData),
+    resolveCname: async () => Promise.reject(noData),
+    resolveNs: async () => Promise.reject(resolverFailure),
+    resolveCaa: async () => Promise.reject(noData),
+    resolveMx: async () => Promise.reject(noData),
+    resolveTxt: async () => Promise.reject(noData),
+  };
+  const fetchImpl = async () => new Response(JSON.stringify({ Status: 0, AD: false, Answer: [] }), { status: 200 });
+  const profile = await collectDnsProfile("example.com", { resolver, fetchImpl });
+  assert.ok(profile.diagnostics.some(item => item.collector === "dns_nameservers" && item.code === "resolver_servfail"));
+  assert.equal(profile.diagnostics.some(item => item.collector === "dns_caa"), false);
+});
+
+test("raport pokazuje awarię kolektora DNS jako unknown zamiast fałszywego fail", () => {
+  const report = analyzeSnapshot({
+    body: "<!doctype html><html lang=\"pl\"><head><title>Przykładowa strona firmy</title><meta name=\"viewport\" content=\"width=device-width\"></head><body><h1>Oferta</h1></body></html>",
+    requestedOrigin: "https://example.com",
+    url: "https://example.com/",
+    status: 200,
+    durationMs: 300,
+    redirects: [],
+    headers: {},
+    tls: { validTo: "2030-01-01", protocol: "TLSv1.3" },
+  }, {
+    status: "ok",
+    performanceScore: 90,
+    accessibilityScore: 90,
+    seoScore: 90,
+    bestPracticesScore: 90,
+    metrics: { lcpMs: 1200, cls: 0.02, tbtMs: 80 },
+  }, {
+    dns: {
+      zone: "example.com",
+      addresses: { ipv4: ["93.184.216.34"], ipv6: [], ttl: [3600] },
+      nameservers: [],
+      caa: [], mx: [], spf: [], dmarc: [],
+      dnssec: { dsPresent: false, validatedAnswer: false },
+    },
+    resources: { robots: { available: false, status: 404 }, sitemaps: [], crawledPages: [], crawlLimit: 8 },
+    diagnostics: [{ collector: "dns_nameservers", status: "unavailable", code: "resolver_servfail", retryable: true, attempts: 1, durationMs: 25, httpStatus: null }],
+  }, { rulesetVersion: "2026.08.2", scannerVersion: "2.0.1" });
+  const check = report.checks.find(item => item.id === "technical_nameservers");
+  assert.equal(check.status, "unknown");
+  assert.match(check.observation, /resolver_servfail/);
+  assert.doesNotThrow(() => validateReport(report));
 });

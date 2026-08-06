@@ -81,7 +81,10 @@
     button.addEventListener("click", () => {
       setPaused(!paused, { persist: true, announce: true });
     });
-    document.body.append(button);
+    const navigationUtilities = document.querySelector("[data-ok-nav-utilities]");
+    const compactNavigation = document.documentElement.hasAttribute("data-ok-nav-compact");
+    if (navigationUtilities && compactNavigation) navigationUtilities.prepend(button);
+    else document.body.append(button);
     applyState();
   }, { once: true });
 

@@ -74,6 +74,9 @@ function requestPinned(url, address, options) {
         host: url.host,
       },
     }, response => {
+      // Capture TLS metadata while the socket is still attached to the response.
+      // Some runtimes clear the peer session before the body emits `end`.
+      const tls = url.protocol === "https:" ? readTlsMetadata(response.socket) : null;
       const chunks = [];
       let size = 0;
       response.on("data", chunk => {
@@ -85,22 +88,13 @@ function requestPinned(url, address, options) {
         chunks.push(chunk);
       });
       response.on("end", () => {
-        const certificate = response.socket?.getPeerCertificate?.();
         resolve({
           status: response.statusCode || 0,
           headers: response.headers,
           body: options.method === "HEAD" ? "" : Buffer.concat(chunks).toString("utf8"),
           remoteAddress: address,
           httpVersion: response.httpVersion || null,
-          tls: url.protocol === "https:" ? {
-            protocol: response.socket?.getProtocol?.() || null,
-            validFrom: certificate?.valid_from || null,
-            validTo: certificate?.valid_to || null,
-            issuer: certificate?.issuer?.O || certificate?.issuer?.CN || null,
-            subject: certificate?.subject?.CN || null,
-            subjectAltName: certificate?.subjectaltname || null,
-            fingerprint256: certificate?.fingerprint256 || null,
-          } : null,
+          tls,
         });
       });
     });
@@ -108,6 +102,19 @@ function requestPinned(url, address, options) {
     request.on("error", error => reject(error instanceof ScanError ? error : new ScanError("fetch_failed", "Nie udało się pobrać strony.", true)));
     request.end();
   });
+}
+
+export function readTlsMetadata(socket) {
+  const certificate = socket?.getPeerCertificate?.();
+  return {
+    protocol: socket?.getProtocol?.() || null,
+    validFrom: certificate?.valid_from || null,
+    validTo: certificate?.valid_to || null,
+    issuer: certificate?.issuer?.O || certificate?.issuer?.CN || null,
+    subject: certificate?.subject?.CN || null,
+    subjectAltName: certificate?.subjectaltname || null,
+    fingerprint256: certificate?.fingerprint256 || null,
+  };
 }
 
 export async function safeFetch(input, {

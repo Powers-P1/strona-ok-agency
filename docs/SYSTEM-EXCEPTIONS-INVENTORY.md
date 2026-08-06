@@ -92,8 +92,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 497 | *, *::before, *::after | — | route-debt |
 | assets/page-contact.css | 498 | *, *::before, *::after | — | route-debt |
 | assets/page-contact.css | 499 | *, *::before, *::after | — | route-debt |
-| assets/page-faq.css | 396 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/page-faq.css | 397 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-faq.css | 369 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-faq.css | 370 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 540 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
 | assets/page-home.css | 541 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
 | assets/page-home.css | 542 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
@@ -165,12 +165,12 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/site-enhancements.css | 125 | html[data-motion="paused"] *, html[data-motion="paused"] *::before, html[data-motion="paused"] *::after | — | shared-contract |
 | assets/site-enhancements.css | 126 | html[data-motion="paused"] *, html[data-motion="paused"] *::before, html[data-motion="paused"] *::after | — | shared-contract |
 | assets/site-enhancements.css | 127 | html[data-motion="paused"] *, html[data-motion="paused"] *::before, html[data-motion="paused"] *::after | — | shared-contract |
-| assets/site-enhancements.css | 371 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-enhancements.css | 372 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-enhancements.css | 373 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-enhancements.css | 374 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-enhancements.css | 375 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-enhancements.css | 376 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-enhancements.css | 398 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-enhancements.css | 399 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-enhancements.css | 400 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-enhancements.css | 401 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-enhancements.css | 402 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-enhancements.css | 403 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/site-footer.css | 463 | .site-footer *, .site-footer *::before, .site-footer *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/site-footer.css | 464 | .site-footer *, .site-footer *::before, .site-footer *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/site-footer.css | 465 | .site-footer *, .site-footer *::before, .site-footer *::after | @media (prefers-reduced-motion: reduce) | accessibility |
@@ -212,29 +212,29 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/site-navigation.css | 153 | body header[data-ok-global-nav] > a:first-child > img | — | shared-contract |
 | assets/site-navigation.css | 155 | body header[data-ok-global-nav] > a:first-child > img | — | shared-contract |
 | assets/site-navigation.css | 160 | body header[data-ok-global-nav][data-ok-nav-state="detached"] > a:first-child > img | — | shared-contract |
-| assets/site-navigation.css | 191 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, .ok-nav-offer > summary | — | shared-contract |
-| assets/site-navigation.css | 198 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, .ok-nav-offer > summary | — | shared-contract |
-| assets/site-navigation.css | 271 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):hover, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):focus-visible, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a.is-active, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"], .ok-nav-offer > summary:hover, .ok-nav-offer > summary:focus-visible, .ok-nav-offer > summary.is-active, .ok-nav-offer[open] > summary | — | shared-contract |
-| assets/site-navigation.css | 286 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
-| assets/site-navigation.css | 287 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
-| assets/site-navigation.css | 288 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
-| assets/site-navigation.css | 295 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
-| assets/site-navigation.css | 302 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta:hover, body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta:focus-visible, body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta.is-active, body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-current="page"] | — | shared-contract |
-| assets/site-navigation.css | 703 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
-| assets/site-navigation.css | 704 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
-| assets/site-navigation.css | 705 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
-| assets/site-navigation.css | 706 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
-| assets/site-navigation.css | 801 | body header[data-ok-global-nav], body header[data-ok-global-nav] > a:first-child > img, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after, .ok-nav-offer > summary::after, .ok-nav-offer__mark, .ok-nav-trigger__signal::before, .ok-nav-trigger__signal::after, .ok-global-menu__surface, .ok-global-menu__nav a::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-navigation.css | 802 | body header[data-ok-global-nav], body header[data-ok-global-nav] > a:first-child > img, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after, .ok-nav-offer > summary::after, .ok-nav-offer__mark, .ok-nav-trigger__signal::before, .ok-nav-trigger__signal::after, .ok-global-menu__surface, .ok-global-menu__nav a::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/site-navigation.css | 811 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
-| assets/site-navigation.css | 812 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
-| assets/site-navigation.css | 813 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
-| assets/site-navigation.css | 814 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
-| assets/site-navigation.css | 823 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, .ok-nav-offer > summary, .ok-nav-trigger, .ok-global-menu__close, .ok-global-menu__nav a | @media (forced-colors: active) | shared-contract |
-| assets/site-navigation.css | 829 | .ok-nav-cta, .ok-global-menu__nav > .ok-global-menu__cta | @media (forced-colors: active) | shared-contract |
-| assets/site-navigation.css | 846 | .ok-nav-trigger, .ok-global-menu, .ok-nav-slot | @media print | shared-contract |
-| assets/site-navigation.css | 850 | body header[data-ok-global-nav] | @media print | shared-contract |
-| assets/site-navigation.css | 854 | body header[data-ok-global-nav] nav[data-ok-primary-nav] | @media print | shared-contract |
+| assets/site-navigation.css | 197 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, .ok-nav-offer > summary | — | shared-contract |
+| assets/site-navigation.css | 204 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, .ok-nav-offer > summary | — | shared-contract |
+| assets/site-navigation.css | 277 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):hover, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a:not(.ok-nav-cta):focus-visible, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a.is-active, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a[aria-current="page"], .ok-nav-offer > summary:hover, .ok-nav-offer > summary:focus-visible, .ok-nav-offer > summary.is-active, .ok-nav-offer[open] > summary | — | shared-contract |
+| assets/site-navigation.css | 292 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
+| assets/site-navigation.css | 293 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
+| assets/site-navigation.css | 294 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
+| assets/site-navigation.css | 301 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta | — | shared-contract |
+| assets/site-navigation.css | 308 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta:hover, body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta:focus-visible, body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta.is-active, body header[data-ok-global-nav] nav[data-ok-primary-nav] > .ok-nav-cta[aria-current="page"] | — | shared-contract |
+| assets/site-navigation.css | 709 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
+| assets/site-navigation.css | 710 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
+| assets/site-navigation.css | 711 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
+| assets/site-navigation.css | 712 | body header[data-ok-global-nav][data-ok-nav-state="detached"] | @media (max-width: 1180px), (max-aspect-ratio: 4 / 3) | shared-contract |
+| assets/site-navigation.css | 827 | body header[data-ok-global-nav], body header[data-ok-global-nav] > a:first-child > img, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after, .ok-nav-offer > summary::after, .ok-nav-offer__mark, .ok-nav-trigger__signal::before, .ok-nav-trigger__signal::after, .ok-global-menu__surface, .ok-global-menu__nav a::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-navigation.css | 828 | body header[data-ok-global-nav], body header[data-ok-global-nav] > a:first-child > img, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, body header[data-ok-global-nav] nav[data-ok-primary-nav] > a::after, .ok-nav-offer > summary::after, .ok-nav-offer__mark, .ok-nav-trigger__signal::before, .ok-nav-trigger__signal::after, .ok-global-menu__surface, .ok-global-menu__nav a::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/site-navigation.css | 837 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
+| assets/site-navigation.css | 838 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
+| assets/site-navigation.css | 839 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
+| assets/site-navigation.css | 840 | body header[data-ok-global-nav], body header[data-ok-global-nav][data-ok-nav-state="detached"], .ok-nav-offer__popover, .ok-global-menu__surface | @media (forced-colors: active) | shared-contract |
+| assets/site-navigation.css | 849 | body header[data-ok-global-nav] nav[data-ok-primary-nav] > a, .ok-nav-offer > summary, .ok-nav-trigger, .ok-global-menu__close, .ok-global-menu__nav a | @media (forced-colors: active) | shared-contract |
+| assets/site-navigation.css | 855 | .ok-nav-cta, .ok-global-menu__nav > .ok-global-menu__cta | @media (forced-colors: active) | shared-contract |
+| assets/site-navigation.css | 872 | .ok-nav-trigger, .ok-global-menu, .ok-nav-slot | @media print | shared-contract |
+| assets/site-navigation.css | 876 | body header[data-ok-global-nav] | @media print | shared-contract |
+| assets/site-navigation.css | 880 | body header[data-ok-global-nav] nav[data-ok-primary-nav] | @media print | shared-contract |
 | assets/story-standard.css | 12 | html | — | shared-contract |
 | assets/story-standard.css | 13 | html | — | shared-contract |
 | assets/story-standard.css | 17 | html::-webkit-scrollbar | — | shared-contract |
@@ -453,10 +453,10 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-faq.css | 280 | .faq-cta a | font-weight | 720 | — | local-type-exception |
 | assets/page-faq.css | 281 | .faq-cta a | letter-spacing | .12em | — | local-type-exception |
 | assets/page-faq.css | 310 | .faq-intro h1 | font-size | clamp(64px, 11vw, 104px) | @media (max-width: 980px) | local-type-exception |
-| assets/page-faq.css | 353 | .faq-intro h1 | font-size | clamp(54px, 17vw, 76px) | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 358 | .faq-lead | font-size | 15px | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 366 | .faq-list summary | font-size | 25px | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 374 | .faq-answer p | font-size | 15px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 326 | .faq-intro h1 | font-size | clamp(54px, 17vw, 76px) | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 331 | .faq-lead | font-size | 15px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 339 | .faq-list summary | font-size | 25px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 347 | .faq-answer p | font-size | 15px | @media (max-width: 600px) | local-type-exception |
 | assets/page-home.css | 24 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-home.css | 29 | button, a | font | inherit | — | local-type-exception |
 | assets/page-home.css | 136 | .nav a | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
@@ -1045,52 +1045,52 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/services/site-audit/styles.css | 50 | .audit-scope | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
 | assets/services/site-audit/styles.css | 77 | .audit-hint, .audit-legal-note | font-size | var(--ok-type-content) | — | semantic-token |
 | assets/services/site-audit/styles.css | 78 | .audit-hint, .audit-legal-note | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 107 | .audit-progress p:not(.kicker) | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 108 | .audit-progress__domain | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 141 | .audit-report__header p:not(.kicker, .audit-report__meta) | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 148 | .audit-report__meta | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 149 | .audit-report__meta | font-weight | 650 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 160 | .audit-score strong | font-family | var(--ok-font-display) | — | semantic-token |
-| assets/services/site-audit/styles.css | 161 | .audit-score strong | font-size | var(--ok-type-display-result) | — | semantic-token |
-| assets/services/site-audit/styles.css | 162 | .audit-score strong | font-weight | 600 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 163 | .audit-score strong | line-height | .9 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 166 | .audit-score span | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 186 | .audit-category span | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 187 | .audit-category span | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 188 | .audit-category span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 189 | .audit-category span | line-height | 1.35 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 197 | .audit-category strong | font-family | var(--ok-font-display) | — | semantic-token |
-| assets/services/site-audit/styles.css | 198 | .audit-category strong | font-size | var(--ok-type-display-card) | — | semantic-token |
-| assets/services/site-audit/styles.css | 199 | .audit-category strong | font-weight | 600 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 205 | .audit-category small | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 206 | .audit-category small | font-weight | 650 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 218 | .audit-report h3 | font-family | var(--ok-font-display) | — | semantic-token |
-| assets/services/site-audit/styles.css | 219 | .audit-report h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
-| assets/services/site-audit/styles.css | 220 | .audit-report h3 | font-weight | 600 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 236 | .audit-priorities li | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 243 | .audit-priorities li::before | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 244 | .audit-priorities li::before | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 251 | .audit-priorities p | font-size | var(--ok-type-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 258 | .audit-strengths li | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 267 | .audit-limitations summary | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 268 | .audit-limitations ul | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 280 | .audit-details__intro | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 303 | .audit-check-group summary strong | font-family | var(--ok-font-display) | — | semantic-token |
-| assets/services/site-audit/styles.css | 304 | .audit-check-group summary strong | font-size | var(--ok-type-display-card) | — | semantic-token |
-| assets/services/site-audit/styles.css | 305 | .audit-check-group summary strong | font-weight | 600 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 310 | .audit-check-group summary span | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 311 | .audit-check-group summary span | font-weight | 650 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 339 | .audit-check > div span, .audit-check small | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 340 | .audit-check > div span, .audit-check small | font-weight | 650 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 346 | .audit-check p | font-size | var(--ok-type-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 347 | .audit-check p | line-height | var(--ok-leading-content) | — | semantic-token |
-| assets/services/site-audit/styles.css | 371 | .audit-method article > span | font-size | var(--ok-type-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 372 | .audit-method article > span | font-weight | 700 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 373 | .audit-method article > span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
-| assets/services/site-audit/styles.css | 378 | .audit-method h3 | font-family | var(--ok-font-display) | — | semantic-token |
-| assets/services/site-audit/styles.css | 379 | .audit-method h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
-| assets/services/site-audit/styles.css | 380 | .audit-method h3 | font-weight | 600 | — | local-type-exception |
-| assets/services/site-audit/styles.css | 386 | .audit-method article p, .audit-method__boundary | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 115 | .audit-progress p:not(.kicker) | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 116 | .audit-progress__domain | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 149 | .audit-report__header p:not(.kicker, .audit-report__meta) | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 156 | .audit-report__meta | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 157 | .audit-report__meta | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 168 | .audit-score strong | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 169 | .audit-score strong | font-size | var(--ok-type-display-result) | — | semantic-token |
+| assets/services/site-audit/styles.css | 170 | .audit-score strong | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 171 | .audit-score strong | line-height | .9 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 174 | .audit-score span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 194 | .audit-category span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 195 | .audit-category span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 196 | .audit-category span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 197 | .audit-category span | line-height | 1.35 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 205 | .audit-category strong | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 206 | .audit-category strong | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 207 | .audit-category strong | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 213 | .audit-category small | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 214 | .audit-category small | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 226 | .audit-report h3 | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 227 | .audit-report h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 228 | .audit-report h3 | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 244 | .audit-priorities li | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 251 | .audit-priorities li::before | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 252 | .audit-priorities li::before | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 259 | .audit-priorities p | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 266 | .audit-strengths li | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 275 | .audit-limitations summary | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 276 | .audit-limitations ul | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 288 | .audit-details__intro | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 311 | .audit-check-group summary strong | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 312 | .audit-check-group summary strong | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 313 | .audit-check-group summary strong | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 318 | .audit-check-group summary span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 319 | .audit-check-group summary span | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 347 | .audit-check > div span, .audit-check small | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 348 | .audit-check > div span, .audit-check small | font-weight | 650 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 354 | .audit-check p | font-size | var(--ok-type-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 355 | .audit-check p | line-height | var(--ok-leading-content) | — | semantic-token |
+| assets/services/site-audit/styles.css | 379 | .audit-method article > span | font-size | var(--ok-type-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 380 | .audit-method article > span | font-weight | 700 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 381 | .audit-method article > span | letter-spacing | var(--ok-tracking-label) | — | semantic-token |
+| assets/services/site-audit/styles.css | 386 | .audit-method h3 | font-family | var(--ok-font-display) | — | semantic-token |
+| assets/services/site-audit/styles.css | 387 | .audit-method h3 | font-size | var(--ok-type-display-card) | — | semantic-token |
+| assets/services/site-audit/styles.css | 388 | .audit-method h3 | font-weight | 600 | — | local-type-exception |
+| assets/services/site-audit/styles.css | 394 | .audit-method article p, .audit-method__boundary | line-height | var(--ok-leading-content) | — | semantic-token |
 | assets/services/social/styles.css | 28 | body | font-family | var(--ok-font-body) | — | semantic-token |
 | assets/services/social/styles.css | 155 | .site-header nav a | font-weight | 650 | — | local-type-exception |
 | assets/services/social/styles.css | 156 | .site-header nav a | letter-spacing | .08em | — | local-type-exception |

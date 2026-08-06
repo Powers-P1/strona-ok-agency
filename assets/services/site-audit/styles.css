@@ -92,6 +92,14 @@
 .audit-progress,
 .audit-report { margin-block: clamp(72px, 10vw, 144px); }
 
+/* Progress and report are complete application views, not sections appended
+ * below the form. Their state owner removes the inactive hero from layout. */
+[data-site-audit][data-audit-view="progress"] > .audit-progress,
+[data-site-audit][data-audit-view="report"] > .audit-report {
+  margin-block-start: 0;
+  scroll-margin-top: var(--ok-nav-slot-height);
+}
+
 .audit-progress {
   max-width: var(--ok-rail-reading);
   display: grid;

@@ -58,9 +58,9 @@ Zmienne Workera:
 - `CALLBACK_BASE_URL=https://okagency-site-audit-api.oli-struska.workers.dev`;
 - `CALLBACK_HOSTNAME=okagency-site-audit-api.oli-struska.workers.dev`;
 - `TURNSTILE_HOSTNAMES=okagency.pl,www.okagency.pl`;
-- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.0`.
+- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.4`.
 
-Sekrety n8n/runnera muszą mieć te same wartości HMAC. Opcjonalny `PAGESPEED_API_KEY` trafia wyłącznie do magazynu sekretów środowiska runnera. Brak klucza nie zatrzymuje audytu — raport jest oznaczany jako częściowy.
+Sekrety n8n/runnera muszą mieć te same wartości HMAC. `PAGESPEED_API_KEY` jest wymaganym sekretem środowiska runnera; Compose zatrzymuje wdrożenie, jeśli go brakuje. Klucz produkcyjny musi być ograniczony do PageSpeed Insights API i publicznego IP VPS. Awaria pojedynczego zewnętrznego kolektora nie zatrzymuje pozostałych kontroli, ale zapisuje sanitarny kod, czas, status HTTP i liczbę prób w `report.diagnostics`.
 
 ## Wymagania VPS
 
@@ -83,7 +83,13 @@ Caddy musi redagować `Cf-Access-Client-Id`, `Cf-Access-Client-Secret` i `X-Ok-S
 7. Wdrożyć Worker, uruchomić test przeglądarkowy i dopiero potem opublikować link w nawigacji.
 8. Przez pierwszą dobę obserwować Queue, DLQ, odsetek raportów częściowych, czas realizacji i błędy callbacku.
 
-Pilot kontraktu `2.0` na kontrolowanej domenie OK Agency zakończył się 2026-08-05 statusem `partial`, wynikiem 94/100 i pokryciem 83%. Raport miał siedem kategorii oraz 56 kontroli, a callback zapisał w D1 wersje `RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.0` i `schemaVersion=2.0`. Interfejs produkcyjny wyrenderował pełny raport, a generator PDF załadował moduł i oba lokalne fonty oraz potwierdził pobranie. Status `partial` jest dozwolonym wynikiem audytu: brak opcjonalnego `PAGESPEED_API_KEY` lub niedostępność pojedynczego sygnału zewnętrznego nie blokują pozostałych kontroli, lecz obniżają poziom pewności raportu.
+Pilot kontraktu `2.0` na kontrolowanej domenie OK Agency zakończył się 2026-08-05 statusem `partial`, wynikiem 94/100 i pokryciem 83%. Raport miał siedem kategorii oraz 56 kontroli, a callback zapisał w D1 wersje `RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.0` i `schemaVersion=2.0`. Ten pilot ujawnił brak wymaganego klucza PageSpeed. Od `SCANNER_VERSION=2.0.1` runner nie wykonuje anonimowych wywołań, rozróżnia limity, błędy konfiguracji, timeouty, błędy sieciowe i odpowiedzi 5xx oraz zapisuje diagnostykę kolektorów bez domeny i sekretów.
+
+Końcowy pilot `SCANNER_VERSION=2.0.2` zakończył się statusem `completed`, wynikiem 87/100 i pokryciem 100%. D1 potwierdziło `unknown_count=0`, brak niedostępnych kolektorów, PageSpeed HTTP 200 oraz wyniki Lighthouse 65/100/100/100. Certyfikat i protokół TLS są odczytywane przed odłączeniem gniazda; kontrola produkcyjna zwróciła TLS 1.3 i ważny certyfikat.
+
+`SCANNER_VERSION=2.0.3` poprawia semantykę rekomendacji HSTS i polską odmianę liczebników. Zmiana wersji celowo unieważnia 24-godzinną deduplikację raportów wygenerowanych starszym copy.
+
+`SCANNER_VERSION=2.0.4` zachowuje kod HTTP odpowiedzi upstream w diagnostyce DNS-over-HTTPS. Zmiana wersji zapobiega zwracaniu przez 24-godzinną deduplikację raportów z niepełną diagnostyką kolektora.
 
 ## Monitoring i reakcja
 

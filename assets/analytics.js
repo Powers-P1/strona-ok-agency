@@ -202,9 +202,9 @@
   const SAFE_FUNCTIONAL_PARAMS = Object.freeze({
     context: new Set([
       "web", "website", "social", "campaign", "diagnosis",
-      "process", "about", "conversation", "none",
+      "site-audit", "process", "about", "conversation", "none",
     ]),
-    source: new Set(["diagnosis", "process"]),
+    source: new Set(["diagnosis", "site-audit", "process"]),
     from: new Set([
       "web", "website", "social", "campaign", "diagnosis",
       "process", "about", "conversation", "none",
@@ -649,6 +649,55 @@
     }
   };
 
+  const metaCustomEvent = (name, parameters = {}) => {
+    if (!marketingGranted || !hasMeta || !window.fbq || !prepareVendorLocation()) return false;
+    window.fbq("trackCustom", name, parameters);
+    return true;
+  };
+
+  const siteAuditStarted = ({ resultSource = "new" } = {}) => {
+    const auditResultSource = resultSource === "cached" ? "cached" : "new";
+    const parameters = { audit_result_source: auditResultSource };
+    ga4Event("site_audit_started", parameters);
+    metaCustomEvent("SiteAuditStarted", parameters);
+  };
+
+  const siteAuditCompleted = ({ status = "completed", score, coverage, confidence } = {}) => {
+    const auditStatus = status === "partial" ? "partial" : "completed";
+    const numericScore = Number(score);
+    const numericCoverage = Number(coverage);
+    const auditScore = Number.isFinite(numericScore)
+      ? Math.max(0, Math.min(100, Math.round(numericScore)))
+      : undefined;
+    const auditCoverage = Number.isFinite(numericCoverage)
+      ? Math.max(0, Math.min(100, Math.round(numericCoverage)))
+      : undefined;
+    const auditConfidence = new Set(["high", "medium", "low"]).has(confidence)
+      ? confidence
+      : "unknown";
+    const parameters = {
+      audit_status: auditStatus,
+      audit_confidence: auditConfidence,
+      ...(auditScore === undefined ? {} : {
+        audit_score: auditScore,
+        audit_score_band: auditScore >= 80 ? "80_100" : auditScore >= 50 ? "50_79" : "0_49",
+      }),
+      ...(auditCoverage === undefined ? {} : { audit_coverage: auditCoverage }),
+    };
+    ga4Event("site_audit_completed", parameters);
+    metaCustomEvent("SiteAuditCompleted", parameters);
+  };
+
+  const siteAuditPdfDownloaded = () => {
+    ga4Event("site_audit_pdf_downloaded");
+    metaCustomEvent("SiteAuditPdfDownloaded");
+  };
+
+  const siteAuditContactClicked = () => {
+    ga4Event("site_audit_contact_clicked");
+    metaCustomEvent("SiteAuditContactClicked");
+  };
+
   let fallbackEventCounter = 0;
   const createEventId = () => {
     if (window.crypto?.randomUUID) return window.crypto.randomUUID();
@@ -863,6 +912,10 @@
   window.okAnalytics = Object.freeze({
     diagnosisStart,
     diagnosisComplete,
+    siteAuditStarted,
+    siteAuditCompleted,
+    siteAuditPdfDownloaded,
+    siteAuditContactClicked,
     generateLead,
     createMarketingEventId,
     marketingContext,

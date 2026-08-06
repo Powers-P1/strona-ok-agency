@@ -3,6 +3,7 @@
 
   const NOTICE_VERSION = "site-audit-v2-2026-08-05";
   const STORAGE_KEY = "ok-site-audit-job-v2";
+  const COMPLETED_ANALYTICS_STORAGE_KEY = "ok-site-audit-completed-analytics-v1";
   const POLL_DELAYS = [2000, 3000, 5000, 8000, 10000];
   const CATEGORY_LABELS = {
     performance: "Wydajność",
@@ -48,6 +49,7 @@
   let polling = false;
   let pollGeneration = 0;
   let currentReport = null;
+  let completedAnalyticsKey = readCompletedAnalyticsKey();
 
   function setAuditView(view) {
     const next = new Set(["idle", "progress", "report"]).has(view) ? view : "idle";
@@ -142,6 +144,20 @@
 
   function clearJob() {
     try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* no-op */ }
+  }
+
+  function readCompletedAnalyticsKey() {
+    try { return sessionStorage.getItem(COMPLETED_ANALYTICS_STORAGE_KEY) || ""; } catch { return ""; }
+  }
+
+  function saveCompletedAnalyticsKey(key) {
+    completedAnalyticsKey = key;
+    try { sessionStorage.setItem(COMPLETED_ANALYTICS_STORAGE_KEY, key); } catch { /* no-op */ }
+  }
+
+  function clearCompletedAnalyticsKey() {
+    completedAnalyticsKey = "";
+    try { sessionStorage.removeItem(COMPLETED_ANALYTICS_STORAGE_KEY); } catch { /* no-op */ }
   }
 
   function showProgress(origin, status = "queued") {
@@ -250,6 +266,17 @@
     root.querySelector("[data-audit-origin]").textContent = report.origin || job.origin || "";
     root.querySelector("[data-audit-confidence]").textContent = `${CONFIDENCE_LABELS[report.confidence] || "Pomiar częściowy"} · pokrycie ${report.coverage ?? "—"}%`;
     root.querySelector("[data-audit-overall]").textContent = String(report.overallScore ?? "—");
+
+    const analyticsKey = String(job.jobId || report.generatedAt || `${report.origin || job.origin || "audit"}:${report.overallScore ?? "unknown"}:${report.coverage ?? "unknown"}`);
+    if (completedAnalyticsKey !== analyticsKey) {
+      saveCompletedAnalyticsKey(analyticsKey);
+      window.okAnalytics?.siteAuditCompleted?.({
+        status: job.status,
+        score: report.overallScore,
+        coverage: report.coverage,
+        confidence: report.confidence,
+      });
+    }
 
     const categoryKeys = Object.keys(CATEGORY_LABELS);
     const firstIssueKey = categoryKeys.find(key => new Set(["fail", "warning"]).has(report.categories[key]?.status));
@@ -367,6 +394,10 @@
         }),
       });
       resetTurnstile();
+      clearCompletedAnalyticsKey();
+      window.okAnalytics?.siteAuditStarted?.({
+        resultSource: data.deduplicated ? "cached" : "new",
+      });
       const job = {
         jobId: data.jobId,
         pollToken: data.pollToken,
@@ -398,6 +429,7 @@
     try {
       const pdf = await import(root.dataset.auditPdfModule);
       await pdf.downloadAuditPdf(currentReport);
+      window.okAnalytics?.siteAuditPdfDownloaded?.();
       setDownloadStatus("Raport PDF został pobrany.", "success");
     } catch (error) {
       console.error("site_audit_pdf_failed", error);
@@ -422,6 +454,10 @@
     resetTurnstile();
     domainInput.focus();
     form.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  root.querySelector("[data-audit-contact]")?.addEventListener("click", () => {
+    window.okAnalytics?.siteAuditContactClicked?.();
   });
 
   const restored = readJob();

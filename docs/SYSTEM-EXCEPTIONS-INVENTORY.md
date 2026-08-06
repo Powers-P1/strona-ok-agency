@@ -1615,8 +1615,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/art-coordinate-system.js | 1092 | .style.setProperty("width", \`${bounds.width}px\`) |
 | assets/art-coordinate-system.js | 1093 | .style.setProperty("height", \`${bounds.height}px\`) |
 | assets/page-contact.js | 18 | .style.translate = \`${(-cx * 10).toFixed(2)}px ${(-cy * 8).toFixed(2)}px\` |
-| assets/page-contact.js | 180 | .style.position = "fixed" |
-| assets/page-contact.js | 181 | .style.opacity = "0" |
+| assets/page-contact.js | 189 | .style.position = "fixed" |
+| assets/page-contact.js | 190 | .style.opacity = "0" |
 | assets/responsive-safety.js | 117 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
 | assets/responsive-safety.js | 126 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
 | assets/responsive-safety.js | 127 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |

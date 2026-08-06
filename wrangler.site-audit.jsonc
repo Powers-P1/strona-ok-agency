@@ -50,7 +50,7 @@
     "CALLBACK_BASE_URL": "https://okagency-site-audit-api.oli-struska.workers.dev",
     "CALLBACK_HOSTNAME": "okagency-site-audit-api.oli-struska.workers.dev",
     "RULESET_VERSION": "2026.08.2",
-    "SCANNER_VERSION": "2.0.3"
+    "SCANNER_VERSION": "2.0.4"
   },
   "observability": {
     "enabled": true,

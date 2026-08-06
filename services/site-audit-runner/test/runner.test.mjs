@@ -108,6 +108,28 @@ test("kolektor DNS rozróżnia strefę, DNSSEC i konfigurację poczty", async ()
   assert.equal(profile.alternateHostname, "www.example.com");
 });
 
+test("diagnostyka DNS-over-HTTPS zachowuje status HTTP usługi upstream", async () => {
+  const noData = Object.assign(new Error("no data"), { code: "ENODATA" });
+  const resolver = {
+    resolveSoa: async name => name === "example.com" ? { nsname: "ns1.example.net" } : Promise.reject(noData),
+    resolve4: async () => [{ address: "93.184.216.34", ttl: 3600 }],
+    resolve6: async () => Promise.reject(noData),
+    resolveCname: async () => Promise.reject(noData),
+    resolveNs: async () => ["ns1.example.net"],
+    resolveCaa: async () => Promise.reject(noData),
+    resolveMx: async () => Promise.reject(noData),
+    resolveTxt: async () => Promise.reject(noData),
+  };
+  const profile = await collectDnsProfile("example.com", {
+    resolver,
+    fetchImpl: async () => new Response("service unavailable", { status: 503 }),
+  });
+  const diagnostics = profile.diagnostics.filter(item => item.collector.startsWith("dnssec_"));
+  assert.equal(diagnostics.length, 2);
+  assert.ok(diagnostics.every(item => item.code === "upstream_unavailable"));
+  assert.ok(diagnostics.every(item => item.httpStatus === 503));
+});
+
 test("analiza zwraca siedem kategorii, pełne kontrole i poprawny kontrakt 2.0", () => {
   const html = `<!doctype html><html lang="pl"><head>
     <title>Przykładowa firma — skuteczna usługa dla biznesu</title>

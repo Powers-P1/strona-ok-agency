@@ -58,7 +58,7 @@ Zmienne Workera:
 - `CALLBACK_BASE_URL=https://okagency-site-audit-api.oli-struska.workers.dev`;
 - `CALLBACK_HOSTNAME=okagency-site-audit-api.oli-struska.workers.dev`;
 - `TURNSTILE_HOSTNAMES=okagency.pl,www.okagency.pl`;
-- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.3`.
+- `RULESET_VERSION=2026.08.2` i `SCANNER_VERSION=2.0.4`.
 
 Sekrety n8n/runnera muszą mieć te same wartości HMAC. `PAGESPEED_API_KEY` jest wymaganym sekretem środowiska runnera; Compose zatrzymuje wdrożenie, jeśli go brakuje. Klucz produkcyjny musi być ograniczony do PageSpeed Insights API i publicznego IP VPS. Awaria pojedynczego zewnętrznego kolektora nie zatrzymuje pozostałych kontroli, ale zapisuje sanitarny kod, czas, status HTTP i liczbę prób w `report.diagnostics`.
 
@@ -88,6 +88,8 @@ Pilot kontraktu `2.0` na kontrolowanej domenie OK Agency zakończył się 2026-0
 Końcowy pilot `SCANNER_VERSION=2.0.2` zakończył się statusem `completed`, wynikiem 87/100 i pokryciem 100%. D1 potwierdziło `unknown_count=0`, brak niedostępnych kolektorów, PageSpeed HTTP 200 oraz wyniki Lighthouse 65/100/100/100. Certyfikat i protokół TLS są odczytywane przed odłączeniem gniazda; kontrola produkcyjna zwróciła TLS 1.3 i ważny certyfikat.
 
 `SCANNER_VERSION=2.0.3` poprawia semantykę rekomendacji HSTS i polską odmianę liczebników. Zmiana wersji celowo unieważnia 24-godzinną deduplikację raportów wygenerowanych starszym copy.
+
+`SCANNER_VERSION=2.0.4` zachowuje kod HTTP odpowiedzi upstream w diagnostyce DNS-over-HTTPS. Zmiana wersji zapobiega zwracaniu przez 24-godzinną deduplikację raportów z niepełną diagnostyką kolektora.
 
 ## Monitoring i reakcja
 

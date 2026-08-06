@@ -22,6 +22,7 @@ async function optional(operation, fallback, { diagnostics = null, collector = "
         code,
         retryable: isRetryableDiagnostic(code),
         durationMs: Date.now() - startedAt,
+        httpStatus: error?.httpStatus,
       }));
     }
     return fallback;

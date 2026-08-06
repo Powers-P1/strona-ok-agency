@@ -626,7 +626,7 @@ SSH dopuszcza wyłącznie klucz użytkownika `ubuntu`; logowanie hasłem i root 
 
 Worker wysyła webhook przez Caddy z dodatkową parą losowych nagłówków bramki i podpisem HMAC. Caddy redaguje identyfikator bramki, jej sekret oraz podpis z access logów. Callback omija Bot Fight Mode strefy przez callback-only host `okagency-site-audit-api.oli-struska.workers.dev`; kod udostępnia tam wyłącznie podpisany endpoint callbacku, a każdy inny request otrzymuje `404`.
 
-Kontrakt raportu `2.0` (`RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.3`) obejmuje siedem kategorii. Runner zbiera publiczne A/AAAA, NS, CAA, MX, SPF, DMARC i sygnał DNSSEC, parametry TLS i nagłówki HTTP, robots.txt, maksymalnie 3 mapy XML oraz próbkę do 8 podstron tego samego hosta przy współbieżności 2. Każde połączenie i przekierowanie przechodzi kontrolę SSRF oraz limit czasu i rozmiaru. Raport zapisuje sanitarną diagnostykę kolektorów; nie zawiera domeny w logach kolektora ani sekretów. Raport PDF jest generowany dopiero po kliknięciu, lokalnie w przeglądarce, z tych samych fontów i ról kolorystycznych co serwis; nie istnieje osobny endpoint PDF ani wysyłka e-mail.
+Kontrakt raportu `2.0` (`RULESET_VERSION=2026.08.2`, `SCANNER_VERSION=2.0.4`) obejmuje siedem kategorii. Runner zbiera publiczne A/AAAA, NS, CAA, MX, SPF, DMARC i sygnał DNSSEC, parametry TLS i nagłówki HTTP, robots.txt, maksymalnie 3 mapy XML oraz próbkę do 8 podstron tego samego hosta przy współbieżności 2. Każde połączenie i przekierowanie przechodzi kontrolę SSRF oraz limit czasu i rozmiaru. Raport zapisuje sanitarną diagnostykę kolektorów; nie zawiera domeny w logach kolektora ani sekretów. Raport PDF jest generowany dopiero po kliknięciu, lokalnie w przeglądarce, z tych samych fontów i ról kolorystycznych co serwis; nie istnieje osobny endpoint PDF ani wysyłka e-mail.
 
 Codzienny backup PostgreSQL wykonuje `okagency-audit-backup.timer` około 03:20 czasu Warszawy. Pliki custom-format mają uprawnienia tylko dla roota, trafiają do `/var/backups/okagency-audit` i są utrzymywane przez 7 dni. Timer należy kontrolować poleceniami:
 
@@ -648,3 +648,5 @@ Pełny pilot kontraktu `2.0` na kontrolowanej domenie OK Agency zakończył się
 Końcowy pilot `SCANNER_VERSION=2.0.2` zakończył się statusem `completed`, wynikiem 87/100 i pokryciem 100%. D1 potwierdziło `unknown_count=0`, brak niedostępnych kolektorów, PageSpeed HTTP 200 oraz wyniki Lighthouse 65/100/100/100. Certyfikat i protokół TLS są odczytywane przed odłączeniem gniazda; kontrola produkcyjna zwróciła TLS 1.3 i ważny certyfikat.
 
 `SCANNER_VERSION=2.0.3` poprawia semantykę rekomendacji HSTS i polską odmianę liczebników. Zmiana wersji celowo omija 24-godzinną deduplikację raportów z poprzednim copy.
+
+`SCANNER_VERSION=2.0.4` zachowuje kod HTTP odpowiedzi upstream w diagnostyce DNS-over-HTTPS i omija raporty `2.0.3` z niepełną telemetrią kolektora.

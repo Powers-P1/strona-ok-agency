@@ -48,7 +48,7 @@
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/content-system.css?v=20260805-1">
-  <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260805-2">
+  <link rel="stylesheet" href="/assets/services/site-audit/styles.css?v=20260806-1">
   <link rel="stylesheet" href="/assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="/assets/site-navigation.css?v=20260803-5">
   <link rel="stylesheet" href="/assets/responsive-foundation.v20260730-8.css?v=20260804-5">
@@ -56,7 +56,7 @@
   <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
   <script src="/assets/motion-control.js?v=20260729-4"></script>
   <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
-  <script src="/assets/analytics.js?v=20260804-2" defer></script>
+  <script src="/assets/analytics.js?v=20260806-2" defer></script>
 </head>
 <body class="site-audit-page">
   <a class="skip-link" href="#audyt-www">Przejdź do audytu strony</a>
@@ -180,7 +180,7 @@
 
       <div class="audit-report__actions">
         <button class="submit" type="button" data-audit-download><span>Pobierz pełny raport PDF</span><span class="arr" aria-hidden="true">↓</span></button>
-        <a class="submit" href="/kontakt?context=web&amp;source=site-audit"><span>Omów wynik z OK Agency</span><span class="arr" aria-hidden="true">→</span></a>
+        <a class="submit" href="/kontakt?context=site-audit&amp;source=site-audit" data-audit-contact><span>Omów wynik z OK Agency</span><span class="arr" aria-hidden="true">→</span></a>
         <button class="secondary-action" type="button" data-audit-new>Sprawdź inną domenę</button>
       </div>
       <p class="form-status audit-download-status" data-audit-download-status role="status" aria-live="polite"></p>
@@ -199,7 +199,7 @@
   </main>
 
   <div data-site-footer></div>
-  <script src="/assets/services/site-audit/script.js?v=20260805-2"></script>
+  <script src="/assets/services/site-audit/script.js?v=20260806-2" defer></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onSiteAuditTurnstileLoad&amp;render=explicit" defer></script>
   <script src="/assets/site-footer.js?v=20260801-2"></script>
   <script src="/assets/navigation.js?v=20260803-1"></script>

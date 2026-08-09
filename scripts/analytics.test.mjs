@@ -13,7 +13,7 @@ const diagnosisSource = await readFile(
 );
 
 const consentValue = (level, at = new Date().toISOString()) => JSON.stringify({
-  version: 3,
+  version: 4,
   level,
   at,
 });
@@ -127,6 +127,7 @@ function loadAnalytics({
   existingIds = ["contact-form", "diagnosis-outcome"],
   replaceStateMode = "available",
   cookie = "",
+  clarityProjectId = "",
 } = {}) {
   let activeReplaceStateMode = replaceStateMode;
   const head = new FakeElement("head");
@@ -142,6 +143,12 @@ function loadAnalytics({
     createElement: tagName => new FakeElement(tagName),
     getElementById(id) {
       return existingIds.includes(id) ? { id } : null;
+    },
+    querySelector(selector) {
+      if (selector === 'meta[name="clarity-project-id"]' && clarityProjectId) {
+        return { content: clarityProjectId };
+      }
+      return null;
     },
     addEventListener(name, listener) {
       documentListeners.set(name, listener);
@@ -190,6 +197,7 @@ function loadAnalytics({
   const scripts = () => head.children
     .filter(child => child instanceof FakeElement && child.tagName === "SCRIPT")
     .map(script => script.src);
+  const clarityCommands = () => Array.from(window.clarity?.q || [], normalizeCommand);
   const button = text => body.find(element => (
     element.tagName === "BUTTON" && element.textContent === text
   ));
@@ -204,6 +212,7 @@ function loadAnalytics({
     body,
     button,
     commands,
+    clarityCommands,
     dispatchStorage,
     dispatchWindow,
     localStorage,
@@ -268,7 +277,7 @@ test("analytics-only grants GA4 but keeps Ads, Meta and marketing attribution di
   runtime.button("Tylko analityka").click();
 
   const stored = JSON.parse(runtime.localStorage.value("ok-consent"));
-  assert.equal(stored.version, 3);
+  assert.equal(stored.version, 4);
   assert.equal(stored.level, "analytics");
   const update = runtime.commands().findLast(command => command[0] === "consent" && command[1] === "update");
   assert.equal(update[2].analytics_storage, "granted");
@@ -422,6 +431,86 @@ test("site audit funnel stays consent-aware and never becomes a Google Ads conve
     "SiteAuditContactClicked",
   ]);
   assert.equal(eventCommands(marketingRuntime).filter(command => command[1] === "conversion").length, 0);
+});
+
+test("diagnosis and form diagnostics expose the full funnel without answer or field content", () => {
+  const runtime = loadAnalytics({
+    url: "https://okagency.pl/diagnoza?utm_source=meta&utm_content=k2_430",
+    localStorage: createStorage({ "ok-consent": consentValue("analytics") }),
+  });
+
+  runtime.window.okAnalytics.diagnosisStart();
+  runtime.window.okAnalytics.diagnosisStepCompleted(1);
+  runtime.window.okAnalytics.diagnosisStepCompleted(4);
+  runtime.window.okAnalytics.diagnosisStepCompleted(5);
+  runtime.window.okAnalytics.diagnosisComplete("website");
+  runtime.window.okAnalytics.diagnosisResultCtaClicked();
+  runtime.window.okAnalytics.diagnosisContactOpened();
+  runtime.window.okAnalytics.formStarted("diagnosis");
+  runtime.window.okAnalytics.formSubmitAttempt("diagnosis");
+  runtime.window.okAnalytics.formValidationError("diagnosis", "email_invalid");
+  runtime.window.okAnalytics.formSubmitError("diagnosis", "network_error");
+
+  assert.deepEqual(eventNames(runtime), [
+    "page_view",
+    "diagnosis_view",
+    "diagnosis_start",
+    "diagnosis_step_completed",
+    "diagnosis_step_completed",
+    "diagnosis_complete",
+    "diagnosis_result_cta_click",
+    "diagnosis_contact_open",
+    "diagnosis_form_start",
+    "diagnosis_submit_attempt",
+    "diagnosis_validation_error",
+    "diagnosis_submit_error",
+  ]);
+  const steps = eventCommands(runtime)
+    .filter(command => command[1] === "diagnosis_step_completed")
+    .map(command => command[2].step_number);
+  assert.deepEqual(steps, [1, 4]);
+  assert.doesNotMatch(JSON.stringify(eventCommands(runtime)), /k2_430|utm_source|@|phone|answer/);
+});
+
+test("Clarity loads only after analytics consent and receives masked funnel events", () => {
+  const runtime = loadAnalytics({
+    url: "https://okagency.pl/diagnoza",
+    clarityProjectId: "clarity123",
+  });
+
+  assert.equal(runtime.scripts().some(src => src.includes("clarity.ms")), false);
+  assert.deepEqual(runtime.clarityCommands(), []);
+
+  runtime.button("Tylko analityka").click();
+  assert.ok(runtime.scripts().some(src => src === "https://www.clarity.ms/tag/clarity123"));
+  assert.ok(runtime.clarityCommands().some(command => (
+    command[0] === "consentv2"
+    && command[1].analytics_Storage === "granted"
+    && command[1].ad_Storage === "denied"
+  )));
+  assert.ok(runtime.clarityCommands().some(command => (
+    command[0] === "event" && command[1] === "diagnosis_view"
+  )));
+});
+
+test("non-production hosts never send analytics, ads, attribution or CAPI context", () => {
+  const runtime = loadAnalytics({
+    url: "https://preview.okagency.pages.dev/diagnoza?utm_source=meta",
+    localStorage: createStorage({ "ok-consent": consentValue("marketing") }),
+    clarityProjectId: "clarity123",
+  });
+
+  runtime.window.okAnalytics.diagnosisStart();
+  runtime.window.okAnalytics.generateLead("diagnosis", "lead-event-12345", {
+    email: "lead@example.com",
+  });
+
+  assert.deepEqual(eventNames(runtime), []);
+  assert.equal(runtime.scripts().some(src => /clarity|google|facebook/.test(src)), false);
+  assert.equal(runtime.window.fbq, undefined);
+  assert.equal(runtime.window.okAnalytics.attribution(), null);
+  assert.equal(runtime.window.okAnalytics.createMarketingEventId(), "");
+  assert.deepEqual(plain(runtime.window.okAnalytics.marketingContext()), { marketingConsent: false });
 });
 
 test("enhanced conversion contact data never leaves analytics-only mode", () => {

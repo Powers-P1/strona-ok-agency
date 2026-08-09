@@ -324,6 +324,7 @@
       clearAfter(step);
       answers[answer.dataset.question] = answer.dataset.value;
       syncPressed();
+      window.okAnalytics?.diagnosisStepCompleted?.(step);
 
       if (step < 4) {
         showQuestion(step + 1);
@@ -347,7 +348,13 @@
     }
 
     if (event.target.closest("[data-show-contact]")) {
+      window.okAnalytics?.diagnosisContactOpened?.();
       showOutcomePanel("contact");
+      return;
+    }
+
+    if (event.target.closest("[data-result-primary]")) {
+      window.okAnalytics?.diagnosisResultCtaClicked?.();
       return;
     }
 
@@ -377,6 +384,18 @@
     const leadFax = leadForm.querySelector("#rl-fax");
     let leadWidgetId = null;
     let leadSent = false;
+    let leadFormStarted = false;
+
+    const markLeadFormStarted = () => {
+      if (leadFormStarted) return;
+      leadFormStarted = true;
+      window.okAnalytics?.formStarted?.("diagnosis");
+    };
+
+    leadForm.addEventListener("focusin", event => {
+      if (event.target.matches("input, select, textarea")) markLeadFormStarted();
+    });
+    leadForm.addEventListener("input", markLeadFormStarted, { once: true });
 
     ensureLeadTurnstile = () => {
       if (window.turnstile && leadWidgetId === null) {
@@ -422,7 +441,10 @@
 
       if (leadFax.value) return;
       if (leadSent) return;
+      markLeadFormStarted();
+      window.okAnalytics?.formSubmitAttempt?.("diagnosis");
       if (!currentOutcome) {
+        window.okAnalytics?.formValidationError?.("diagnosis", "required_fields");
         setLeadStatus("Najpierw ukończ diagnozę.", "error");
         return;
       }
@@ -431,11 +453,13 @@
       const email = leadEmail.value.trim();
 
       if (name.length < 3) {
+        window.okAnalytics?.formValidationError?.("diagnosis", "name_too_short");
         setLeadStatus("Podaj imię — co najmniej 3 znaki.", "error");
         leadName.focus();
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        window.okAnalytics?.formValidationError?.("diagnosis", "email_invalid");
         setLeadStatus("Podaj poprawny adres e-mail.", "error");
         leadEmail.focus();
         return;
@@ -443,6 +467,7 @@
 
       const turnstileToken = leadForm.querySelector('[name="cf-turnstile-response"]')?.value || "";
       if (!turnstileToken) {
+        window.okAnalytics?.formValidationError?.("diagnosis", "turnstile_missing");
         setLeadStatus("Potwierdź, że formularz wysyła człowiek.", "error");
         return;
       }
@@ -481,7 +506,11 @@
         setLeadStatus("Dziękujemy — odezwiemy się z konkretem.", "success");
         leadForm.querySelectorAll("input, button").forEach(element => { element.disabled = true; });
         window.okAnalytics?.generateLead("diagnosis", analyticsEventId, { email });
-      } catch {
+      } catch (error) {
+        window.okAnalytics?.formSubmitError?.(
+          "diagnosis",
+          error?.name === "TypeError" ? "network_error" : "server_error",
+        );
         resetLeadTurnstile();
         setLeadStatus("Nie udało się wysłać. Napisz na hello@okagency.pl albo spróbuj z formularza kontaktowego.", "error");
       } finally {

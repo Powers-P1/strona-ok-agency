@@ -5,7 +5,7 @@ Stan: 10 sierpnia 2026 r.
 ## Zakres i koszt
 
 - GA4 Standard, Google Ads tag, Meta Pixel i Meta Conversions API: bez dodatkowego abonamentu.
-- Microsoft Clarity: plan bezpłatny.
+- Microsoft Clarity: plan bezpłatny, projekt `OK Agency`, ID `y03fqcii96`.
 - Cloudflare Worker formularza i CAPI: istniejąca infrastruktura, bez nowej płatnej usługi.
 - Nie używamy GTM, BigQuery, Hotjara ani płatnych wtyczek.
 

@@ -116,5 +116,10 @@ test("production tracking asset version is consistent on every public HTML page"
   for (const page of publicPages) {
     const source = await read(page);
     assert.match(source, /\/assets\/analytics\.js\?v=20260810-1/, page + " has stale analytics asset");
+    assert.match(
+      source,
+      /<meta name="clarity-project-id" content="y03fqcii96">/,
+      page + " is missing the production Clarity project",
+    );
   }
 });

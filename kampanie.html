@@ -81,21 +81,23 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/campaign/campaign-art-opening-clean-v1-1280.webp" type="image/webp" imagesrcset="assets/services/campaign/campaign-art-opening-clean-v1-960.webp 960w, assets/services/campaign/campaign-art-opening-clean-v1-1280.webp 1280w, assets/services/campaign/campaign-art-opening-clean-v1.webp 1672w" imagesizes="100vw">
-  <link rel="stylesheet" href="assets/services/campaign/styles.css?v=20260803-2">
-  <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/story-standard.css?v=20260801-4">
-  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260803-2">
+  <script src="assets/scene-transitions.v20260804-1.js?v=20260810-1"></script>
+  <link rel="stylesheet" href="assets/services/campaign/styles.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/route-motion.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/story-standard.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/scene-transitions.v20260804-1.css?v=20260810-1">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260806-1">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260804-5">
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260806-1">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260810-1">
   <link rel="stylesheet" href="/assets/annotation-system.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
+  <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260810-1">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260810-1">
   <script src="/assets/motion-control.js?v=20260806-1"></script>
-  <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
+  <script src="/assets/responsive-safety.js?v=20260810-1" defer></script>
   <script src="/assets/analytics.js?v=20260810-1" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
@@ -127,10 +129,11 @@
   <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="campaign-story">
-    <div class="story-stage">
-    <section class="campaign-frame campaign-opening" id="campaign-opening" aria-labelledby="opening-title">
+    <div class="story-stage" data-scene-flow="document" data-scene-seam-light-backdrop-src="assets/editorial-atelier-backdrop-horizonless-v1-1672.webp" data-scene-seam-dark-backdrop-src="assets/editorial-atelier-backdrop-dark-v1.webp">
+    <section class="campaign-frame campaign-opening" id="campaign-opening" aria-labelledby="opening-title" data-scene-frame data-scene-tone="light" data-scene-seam-safe-backdrop-src="assets/editorial-atelier-backdrop-horizonless-v1-1672.webp">
       <img
         class="campaign-art"
+        data-scene-art
         src="assets/services/campaign/campaign-art-opening-clean-v1.webp"
         data-ok-safe-backdrop="light"
         data-placement-mask="assets/services/campaign/campaign-art-opening-clean-v1-placement-mask-v1.png"
@@ -189,7 +192,7 @@
         </div>
       </article>
 
-      <div class="opening-copy">
+      <div class="opening-copy" data-seam-safe-content>
         <h1 id="opening-title">Pomysł,<br>który <em>trafia</em> do<br>właściwych ludzi.</h1>
         <p>Prowadzimy kampanie w Meta Ads i Google Ads — od strategii<br>i kreacji po emisję, analitykę i bieżącą optymalizację.</p>
         <div class="opening-scope" role="group" aria-label="Cele prowadzonych kampanii">
@@ -205,17 +208,27 @@
         </a>
       </div>
 
-      <a class="scroll-cue scroll-cue-light" href="#campaign-journey">
-        <span class="scroll-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg>
-        </span>
-        <span>Przewiń</span>
-      </a>
     </section>
 
-    <section class="campaign-frame campaign-journey" id="campaign-journey" aria-labelledby="journey-title">
+    <div class="scene-seam" data-scene-seam-source="previous" aria-hidden="true">
+      <span class="scene-seam__field">
+        <picture class="scene-seam__atmosphere">
+          <source media="(max-width: 820px)" srcset="assets/scene-transitions/scene-seam-atmosphere-light-dark-compact-v1.webp">
+          <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/scene-transitions/scene-seam-atmosphere-light-dark-low-v1.webp">
+          <img src="assets/scene-transitions/scene-seam-atmosphere-light-dark-v1.webp" width="1672" height="376" alt="" role="presentation" decoding="async">
+        </picture>
+        <picture class="scene-seam__art">
+          <source media="(max-width: 820px)" srcset="assets/services/campaign/campaign-seam-art-to-dark-compact-v3.webp">
+          <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/campaign/campaign-seam-art-to-dark-low-v4.webp?v=20260805-1">
+          <img src="assets/services/campaign/campaign-seam-art-to-dark-v4.webp" width="1672" height="376" alt="" role="presentation" decoding="async">
+        </picture>
+      </span>
+    </div>
+
+    <section class="campaign-frame campaign-journey" id="campaign-journey" aria-labelledby="journey-title" data-scene-frame data-scene-tone="dark">
       <img
         class="campaign-art"
+        data-scene-art
         src="assets/services/campaign/campaign-art-journey-clean-v1.webp"
         data-ok-safe-backdrop="dark"
         data-placement-mask="assets/services/campaign/campaign-art-journey-clean-v1-placement-mask-v1.png"
@@ -228,7 +241,7 @@
         decoding="async"
       >
 
-      <div class="journey-intro">
+      <div class="journey-intro" data-seam-safe-content>
         <h2 id="journey-title">Od planu<br>do <em>wyniku</em></h2>
         <p>Cztery etapy. Każdy kończy się<br>konkretną decyzją albo gotowym elementem kampanii.</p>
         <ol class="journey-mobile-steps" aria-label="Etapy prowadzenia kampanii">
@@ -290,17 +303,22 @@
         </div>
       </article>
 
-      <a class="scroll-cue scroll-cue-dark" href="#campaign-proof">
-        <span class="scroll-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg>
-        </span>
-        <span>Zobacz efekt</span>
-      </a>
     </section>
 
-    <section class="campaign-frame campaign-proof" id="campaign-proof" aria-labelledby="proof-title">
+    <div class="scene-seam" data-scene-seam-source="next" aria-hidden="true">
+      <span class="scene-seam__field">
+        <picture class="scene-seam__atmosphere">
+          <source media="(max-width: 820px)" srcset="assets/services/campaign/campaign-seam-fog-to-light-clean-v4-compact.webp">
+          <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/campaign/campaign-seam-fog-to-light-low-v3.webp">
+          <img src="assets/services/campaign/campaign-seam-fog-to-light-clean-v4.webp" width="1672" height="376" alt="" role="presentation" loading="lazy" decoding="async">
+        </picture>
+      </span>
+    </div>
+
+    <section class="campaign-frame campaign-proof" id="campaign-proof" aria-labelledby="proof-title" data-scene-frame data-scene-tone="light" data-scene-boundary-source>
       <img
         class="campaign-art"
+        data-scene-art
         src="assets/services/campaign/campaign-art-proof-editorial-v1.webp"
         data-ok-safe-backdrop="light"
         data-placement-mask="assets/services/campaign/campaign-art-proof-editorial-v1-placement-mask-v1.png"
@@ -315,7 +333,7 @@
 
       <span class="proof-bloom" aria-hidden="true"></span>
 
-      <div class="proof-content">
+      <div class="proof-content" data-seam-safe-content>
         <h2 id="proof-title">Mierzymy decyzje,<br>nie tylko <em>kliknięcia.</em></h2>
         <p class="proof-lead">Dla każdej kampanii ustalamy jeden główny cel biznesowy. Pozostałe dane wykorzystujemy do znalezienia przyczyny wyniku.</p>
 
@@ -377,83 +395,104 @@
         </div>
       </div>
     </section>
-    </div>
 
-    <section class="decision-guide" aria-labelledby="campaign-decision-title">
-      <picture class="direction-scene-art direction-scene-art--decision" aria-hidden="true">
-        <source
-          type="image/avif"
-          srcset="/assets/direction-scenes/campaign-decision-v1-768.avif 768w, /assets/direction-scenes/campaign-decision-v1-1024.avif 1024w, /assets/direction-scenes/campaign-decision-v1-1672.avif 1672w"
-          sizes="100vw">
-        <img
-          src="/assets/direction-scenes/campaign-decision-v1-1672.webp"
-          srcset="/assets/direction-scenes/campaign-decision-v1-768.webp 768w, /assets/direction-scenes/campaign-decision-v1-1024.webp 1024w, /assets/direction-scenes/campaign-decision-v1-1672.webp 1672w"
-          sizes="100vw"
-          width="1672"
-          height="941"
-          alt=""
-          loading="lazy"
-          decoding="async">
-      </picture>
-      <picture class="direction-scene-art direction-scene-art--faq" aria-hidden="true">
-        <source
-          type="image/avif"
-          srcset="/assets/direction-scenes/campaign-faq-v1-768.avif 768w, /assets/direction-scenes/campaign-faq-v1-1024.avif 1024w, /assets/direction-scenes/campaign-faq-v1-1672.avif 1672w"
-          sizes="100vw">
-        <img
-          src="/assets/direction-scenes/campaign-faq-v1-1672.webp"
-          srcset="/assets/direction-scenes/campaign-faq-v1-768.webp 768w, /assets/direction-scenes/campaign-faq-v1-1024.webp 1024w, /assets/direction-scenes/campaign-faq-v1-1672.webp 1672w"
-          sizes="100vw"
-          width="1672"
-          height="941"
-          alt=""
-          loading="lazy"
-          decoding="async">
-      </picture>
-      <div class="decision-guide__intro">
-        <p class="decision-guide__eyebrow">Przed uruchomieniem / konkrety</p>
-        <h2 id="campaign-decision-title">Czy płatna kampania jest gotowa do <span>startu?</span></h2>
-        <p class="decision-guide__lead">Tak, jeśli oferta, miejsce docelowe i podstawy pomiaru są gotowe. Reklama wzmacnia działający układ — nie naprawi niejasnej oferty ani strony, która nie prowadzi do konwersji.</p>
+    <section class="campaign-frame" id="campaign-decision" aria-labelledby="campaign-decision-title" data-scene-frame data-scene-tone="light" data-scene-boundary-target data-scene-continuation data-scene-boundary-source data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-campaign-proof-decision-v1.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-campaign-proof-decision-v1-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-campaign-proof-decision-v1-compact.webp">
+      <img
+        class="campaign-art"
+        data-scene-art
+        data-ok-safe-backdrop="light"
+        src="/assets/direction-scenes/campaign-decision-v1-1672.webp"
+        srcset="/assets/direction-scenes/campaign-decision-v1-768.webp 768w, /assets/direction-scenes/campaign-decision-v1-1024.webp 1024w, /assets/direction-scenes/campaign-decision-v1-1672.webp 1672w"
+        sizes="100vw"
+        width="1672"
+        height="941"
+        alt=""
+        loading="lazy"
+        decoding="async">
+
+      <div class="proof-content" data-seam-safe-content>
+        <p data-scene-eyebrow>Przed uruchomieniem / konkrety</p>
+        <h2 id="campaign-decision-title">Czy płatna kampania<br>jest gotowa do <em>startu?</em></h2>
+        <p class="proof-lead">Tak, jeśli oferta, miejsce docelowe i podstawy pomiaru są gotowe. Reklama wzmacnia działający układ — nie naprawi niejasnej oferty ani strony, która nie prowadzi do konwersji.</p>
+
+        <div class="proof-list" role="group" aria-label="Kryteria gotowości kampanii">
+          <article class="proof-item is-open">
+            <button class="proof-trigger" type="button" aria-expanded="true" aria-controls="campaign-decision-fit">
+              <span class="proof-index">01</span><span class="proof-label"><strong>Dla kogo</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-decision-fit"><p>Dla firm, które chcą kontrolowanego sposobu pozyskiwania ruchu lub zapytań i potrafią wskazać jeden główny wynik biznesowy.</p></div>
+          </article>
+          <article class="proof-item">
+            <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="campaign-decision-price">
+              <span class="proof-index">02</span><span class="proof-label"><strong>Od czego zależy wycena</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-decision-price" hidden><p>Od liczby kanałów i rynków, liczby etapów lejka, zakresu kreacji, stanu analityki, częstotliwości optymalizacji i raportowania.</p></div>
+          </article>
+          <article class="proof-item">
+            <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="campaign-decision-inputs">
+              <span class="proof-index">03</span><span class="proof-label"><strong>Co przygotować</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-decision-inputs" hidden><p>Ofertę, landing page, dostęp do kont reklamowych i analitycznych, zasoby kreacyjne, budżet mediowy oraz kryterium jakościowego wyniku.</p></div>
+          </article>
+          <article class="proof-item">
+            <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="campaign-decision-stop">
+              <span class="proof-index">04</span><span class="proof-label"><strong>Kiedy nie zaczynać</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-decision-stop" hidden><p>Bez gotowej oferty, miejsca docelowego i pomiaru. W takiej sytuacji kampania tylko szybciej ujawni istniejące braki.</p></div>
+          </article>
+        </div>
       </div>
-
-      <div class="decision-guide__grid">
-        <article class="decision-guide__item">
-          <h3>Dla kogo</h3>
-          <p>Dla firm, które chcą kontrolowanego sposobu pozyskiwania ruchu lub zapytań i potrafią wskazać jeden główny wynik biznesowy.</p>
-        </article>
-        <article class="decision-guide__item">
-          <h3>Od czego zależy wycena</h3>
-          <p>Od liczby kanałów i rynków, liczby etapów lejka, zakresu kreacji, stanu analityki, częstotliwości optymalizacji i raportowania.</p>
-        </article>
-        <article class="decision-guide__item">
-          <h3>Co przygotować</h3>
-          <p>Ofertę, landing page, dostęp do kont reklamowych i analitycznych, zasoby kreacyjne, budżet mediowy oraz kryterium jakościowego wyniku.</p>
-        </article>
-        <article class="decision-guide__item">
-          <h3>Kiedy nie zaczynać</h3>
-          <p>Bez gotowej oferty, miejsca docelowego i pomiaru. W takiej sytuacji kampania tylko szybciej ujawni istniejące braki.</p>
-        </article>
-      </div>
-
-      <section class="decision-guide__faq" aria-labelledby="campaign-faq-title">
-        <h2 id="campaign-faq-title">Najczęstsze <span>pytania</span></h2>
-        <details>
-          <summary>Czy budżet reklamowy jest częścią wynagrodzenia?</summary>
-          <p>Nie. Budżet mediowy pozostaje na koncie reklamowym klienta i jest rozliczany bezpośrednio z platformą. Zakres obsługi kampanii wyceniamy osobno.</p>
-        </details>
-        <details>
-          <summary>Jak wygląda początek współpracy?</summary>
-          <p>Najpierw potwierdzamy cel, miejsce docelowe i sposób pomiaru. Następnie powstają koncepcja i kreacje, konfiguracja zdarzeń, uruchomienie oraz rytm optymalizacji. Terminy zależą od gotowości dostępów, materiałów i ścieżki akceptacji.</p>
-        </details>
-        <details>
-          <summary>Czy kampania od razu gwarantuje sprzedaż?</summary>
-          <p>Nie. Kampania pozwala kontrolować dystrybucję, testować komunikaty i mierzyć kolejne etapy lejka. Wynik zależy również od oferty, strony, procesu sprzedaży, budżetu i warunków rynkowych.</p>
-        </details>
-      </section>
     </section>
+
+    <section class="campaign-frame" id="campaign-faq" aria-labelledby="campaign-faq-title" data-scene-frame data-scene-tone="light" data-scene-boundary-target data-scene-continuation data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-campaign-decision-faq-v1.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-campaign-decision-faq-v1-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-campaign-decision-faq-v1-compact.webp">
+      <img
+        class="campaign-art"
+        data-scene-art
+        data-ok-safe-backdrop="light"
+        src="/assets/direction-scenes/campaign-faq-v1-1672.webp"
+        srcset="/assets/direction-scenes/campaign-faq-v1-768.webp 768w, /assets/direction-scenes/campaign-faq-v1-1024.webp 1024w, /assets/direction-scenes/campaign-faq-v1-1672.webp 1672w"
+        sizes="100vw"
+        width="1672"
+        height="941"
+        alt=""
+        loading="lazy"
+        decoding="async">
+
+      <div class="proof-content" data-seam-safe-content>
+        <h2 id="campaign-faq-title">Najczęstsze<br><em>pytania.</em></h2>
+        <div class="proof-list" role="group" aria-label="Najczęstsze pytania o kampanie">
+          <article class="proof-item is-open">
+            <button class="proof-trigger" type="button" aria-expanded="true" aria-controls="campaign-faq-budget">
+              <span class="proof-index">01</span><span class="proof-label"><strong>Czy budżet reklamowy jest częścią wynagrodzenia?</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-faq-budget"><p>Nie. Budżet mediowy pozostaje na koncie reklamowym klienta i jest rozliczany bezpośrednio z platformą. Zakres obsługi kampanii wyceniamy osobno.</p></div>
+          </article>
+          <article class="proof-item">
+            <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="campaign-faq-start">
+              <span class="proof-index">02</span><span class="proof-label"><strong>Jak wygląda początek współpracy?</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-faq-start" hidden><p>Najpierw potwierdzamy cel, miejsce docelowe i sposób pomiaru. Następnie powstają koncepcja i kreacje, konfiguracja zdarzeń, uruchomienie oraz rytm optymalizacji. Terminy zależą od gotowości dostępów, materiałów i ścieżki akceptacji.</p></div>
+          </article>
+          <article class="proof-item">
+            <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="campaign-faq-result">
+              <span class="proof-index">03</span><span class="proof-label"><strong>Czy kampania od razu gwarantuje sprzedaż?</strong></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+            </button>
+            <div class="proof-detail" id="campaign-faq-result" hidden><p>Nie. Kampania pozwala kontrolować dystrybucję, testować komunikaty i mierzyć kolejne etapy lejka. Wynik zależy również od oferty, strony, procesu sprzedaży, budżetu i warunków rynkowych.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+    </div>
   </main>
   <div data-site-footer></div>
-  <script src="assets/art-coordinate-system.js?v=20260804-1"></script>
+  <script src="assets/art-coordinate-system.js?v=20260810-1"></script>
   <script src="assets/navigation.js?v=20260806-1"></script>
   <script src="assets/service-interactions.js?v=20260802-6"></script>
   <script src="assets/site-footer.js?v=20260801-2"></script>

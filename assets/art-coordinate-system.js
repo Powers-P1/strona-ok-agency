@@ -48,7 +48,7 @@
     ".portrait-frame",
     ".scene-inner > .copy",
   ].join(",");
-  const fixedUiSelector = ".site-header, .motion-toggle, .scroll-cue";
+  const fixedUiSelector = ".site-header, .motion-toggle";
   const adapters = [];
   const runtimeStyles = new Map();
   const runtimeAttributes = new Map();
@@ -568,9 +568,6 @@
 
   const fixedAnchorObstaclesFor = (adapter, sceneRect) => {
     const obstacles = obstaclesFor(adapter, sceneRect);
-    const local = [...adapter.scene.querySelectorAll(".scroll-cue")]
-      .filter(isBox)
-      .map(element => viewportRectWithin(element, sceneRect, FIXED_UI_EXPANSION));
     const global = [...document.querySelectorAll(".site-header, .motion-toggle")]
       .filter(isBox)
       .map(element => {
@@ -582,7 +579,7 @@
           bounds.height + FIXED_UI_EXPANSION * 2,
         );
       });
-    return { content: obstacles.content, fixed: [...local, ...global] };
+    return { content: obstacles.content, fixed: global };
   };
 
   const ringFor = point => rect(

@@ -9,6 +9,15 @@
   --ok-scene-viewport-height: var(--ok-viewport-height, 100svh);
 }
 
+[data-scene-first-view] {
+  --ok-scene-first-view-height: max(
+    0px,
+    calc(var(--ok-scene-viewport-height) - var(--ok-nav-slot-height, 0px))
+  );
+  height: var(--ok-scene-first-view-height);
+  min-height: var(--ok-scene-first-view-height);
+}
+
 html.ok-scene-page {
   scroll-padding-top: 0;
 }
@@ -117,18 +126,6 @@ html.ok-scene-page .ok-nav-slot {
 
 @media (min-width: 821px) and (max-height: 730px) {
   html.ok-scene-page {
-    --ok-scene-opening-display: clamp(56px, 4.45vw, 74px);
-    --ok-scene-section-display: clamp(48px, 3.8vw, 64px);
-    --ok-scene-copy-gap: 12px;
-    --ok-scene-section-gap: 12px;
-    --ok-scene-row-block: 6px;
-    --ok-scene-proof-top: 11.5%;
-    --ok-scene-editorial-top: 13%;
-  }
-}
-
-@media (min-width: 821px) and (max-height: 730px) {
-  html.ok-scene-page {
     --ok-scene-opening-display: clamp(54px, 4.2vw, 70px);
     --ok-scene-section-display: clamp(46px, 3.55vw, 60px);
     --ok-scene-copy-gap: 10px;
@@ -144,9 +141,7 @@ html.ok-scene-page .ok-nav-slot {
    * both actions on one row, so an expanded item cannot push them into the next
    * full-viewport scene.
    */
-  :is(.campaign-page, .social-page, .web-service, .process-page)
-    :is(.campaign-frame, .social-frame, .process-frame)
-    .proof-content {
+  [data-scene-frame] > .proof-content[data-seam-safe-content]:has(> .proof-actions) {
     width: min(720px, calc(100vw - 48px));
   }
 
@@ -219,6 +214,10 @@ html.ok-scene-page .ok-nav-slot {
     min-height: 44px;
   }
 
+  [data-scene-frame] > .proof-content[data-seam-safe-content]:has(> .proof-actions) {
+    width: min(900px, calc(100vw - 48px));
+  }
+
   :is(.campaign-frame, .social-frame, .process-frame) .proof-item.is-open .proof-detail {
     max-height: none;
     padding-bottom: 0;
@@ -236,6 +235,12 @@ html.ok-scene-page .ok-nav-slot {
 
   :is(.campaign-frame, .social-frame, .process-frame) .proof-primary {
     min-height: 44px;
+  }
+}
+
+@media (max-width: 820px) {
+  [data-scene-frame] > .proof-content[data-seam-safe-content] {
+    bottom: auto;
   }
 }
 

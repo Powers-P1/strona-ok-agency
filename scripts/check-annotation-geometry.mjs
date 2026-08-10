@@ -27,7 +27,7 @@ const CONTENT_SELECTOR = [
   ".portrait-frame",
   ".scene-inner > .copy",
 ].join(",");
-const FIXED_UI_SELECTOR = ".site-header, .motion-toggle, .scroll-cue";
+const FIXED_UI_SELECTOR = ".site-header, .motion-toggle";
 
 const ROUTES = [
   { path: "/strony-internetowe", callouts: 8 },

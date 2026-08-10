@@ -100,6 +100,11 @@ for (const page of scenePages) {
 
 for (const page of scenePages) {
   const html = await read(page);
+  reject(
+    html,
+    /(?:data-scene-cue|scroll-cue|scroll-icon)/,
+    `${page}: usunięta podpowiedź przewijania wróciła do DOM`,
+  );
   if (storyPages.includes(page)) {
     requireText(
       html,
@@ -115,7 +120,6 @@ for (const page of scenePages) {
 }
 
 requireText(routeMotion, "--ok-motion-spring", "brak wspólnego easing ruchu");
-requireText(routeMotion, "--ok-motion-cue-duration", "brak wspólnego czasu scroll cue");
 requireText(storyCss, ".about-page .scene", "O nas nie korzysta ze wspólnego modelu scen");
 requireText(
   sceneViewport,
@@ -131,7 +135,6 @@ requireText(sceneViewport, "--ok-scene-opening-display", "wspólny model nie ste
 requireText(sceneViewport, "--ok-scene-section-gap", "wspólny model nie steruje rytmem tokenem na niskim ekranie");
 reject(sceneViewport, /(?:^|[;{])\s*scale\s*:\s*(?:0?\.\d+|[1-9]\d*\.?\d*)/im, "wspólny model nie może skalować przodków treści właściwością scale");
 reject(sceneViewport, /(?:^|[;{])\s*transform\s*:\s*[^;}]*scale\s*\(/im, "wspólny model nie może skalować przodków treści przez transform");
-requireText(storyCss, "ok-story-cue", "scroll cue nie ma wspólnej animacji");
 requireText(interactions, '".annotation-callout, .annotation"', "callouty nie korzystają ze wspólnego skryptu");
 requireText(interactions, '".proof-item, .accordion-item"', "akordeony nie korzystają ze wspólnego skryptu");
 requireText(interactions, "window.OKAgencyMotion?.isPaused()", "interakcje ignorują globalną pauzę");

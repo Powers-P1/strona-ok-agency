@@ -272,8 +272,9 @@ const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
     const brand = header.querySelector(":scope > a:first-child img");
     const directLink = header.querySelector("nav[data-ok-primary-nav] > a");
     const popoverLink = header.querySelector(".ok-nav-offer__popover > a");
-    const gridBody = document.querySelector(".decision-guide__item p");
-    const gridLabel = document.querySelector(".decision-guide__item h3");
+    const supportBody = document.querySelector("#web-decision .proof-detail p");
+    const supportLabel = document.querySelector("#web-decision .proof-label strong");
+    const supportList = document.querySelector("#web-decision .proof-list");
     return {
       roles: {
         label: Number.parseFloat(rootStyle.getPropertyValue("--ok-type-label")),
@@ -286,9 +287,9 @@ const auditWebSystem = async (page, baseUrl, viewport, navScale) => {
         brandWidth: brand.getBoundingClientRect().width,
       },
       support: {
-        body: number(gridBody, "fontSize"),
-        label: number(gridLabel, "fontSize"),
-        width: document.querySelector(".decision-guide__grid").getBoundingClientRect().width,
+        body: number(supportBody, "fontSize"),
+        label: number(supportLabel, "fontSize"),
+        width: supportList.getBoundingClientRect().width,
       },
     };
   });

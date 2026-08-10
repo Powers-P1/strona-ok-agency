@@ -187,7 +187,7 @@ for (const file of sourceFiles) {
       ]);
     }
 
-    const sharedSelector = /(?:site-header|topbar|header-nav|site-nav|\bnav\b|site-footer|annotation|scroll-cue|story-stage|campaign-frame|social-frame|process-frame|diagnosis-frame|\.scene(?:\b|[-_]))/;
+    const sharedSelector = /(?:site-header|topbar|header-nav|site-nav|\bnav\b|site-footer|annotation|story-stage|campaign-frame|social-frame|process-frame|diagnosis-frame|\.scene(?:\b|[-_]))/;
     const ownershipProperty = /\b(position|z-index|display|height|min-height|max-height|overflow(?:-[xy])?|font-family|font-size)\s*:\s*([^;{}]+)(?:;|(?=}))/g;
     for (const match of source.matchAll(ownershipProperty)) {
       const context = contextAt(blocks, match.index);

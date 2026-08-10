@@ -97,18 +97,21 @@
   >
   <link rel="prefetch" href="/menu">
   <link rel="prefetch" href="/kontakt">
-  <link rel="stylesheet" href="assets/page-home.css?v=20260803-1">
-<link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
+  <link rel="stylesheet" href="assets/page-home.css?v=20260810-1">
+<link rel="stylesheet" href="assets/scene-viewport.css?v=20260810-1">
+<link rel="stylesheet" href="assets/route-motion.css?v=20260810-1">
+<link rel="stylesheet" href="assets/scene-transitions.v20260804-1.css?v=20260810-1">
 <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260806-1">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260804-5">
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260806-1">
-  <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260810-1">
+  <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260810-1">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260810-1">
   <script src="/assets/motion-control.js?v=20260806-1"></script>
-  <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
+  <script src="/assets/responsive-safety.js?v=20260810-1" defer></script>
+  <script src="/assets/scene-transitions.v20260804-1.js?v=20260810-1" defer></script>
   <script src="/assets/analytics.js?v=20260810-1" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
@@ -138,7 +141,7 @@
   </header>
   <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
   <main>
-    <section class="hero" id="hero" tabindex="-1" aria-labelledby="hero-title">
+    <section class="hero" id="hero" tabindex="-1" aria-labelledby="hero-title" data-scene-boundary-source data-scene-tone="light" data-scene-first-view>
       <picture class="hero-backdrop" aria-hidden="true">
         <source
           type="image/avif"
@@ -161,6 +164,7 @@
           sizes="100vw"
         >
         <img
+          data-scene-art
           src="assets/editorial-atelier-backdrop-v2-1672.webp"
           alt=""
           width="1672"
@@ -241,6 +245,7 @@
             >
             <img
               class="sculpture"
+              data-scene-seam-art-source
               id="sculpture"
               src="assets/editorial-atelier-scene-v1-1280.webp"
               data-fallback-src="assets/wire-cherry-sculpture-epic-v3.png"
@@ -258,7 +263,7 @@
         </div>
       </div>
 
-      <div class="copy" id="intro">
+      <div class="copy" id="intro" data-seam-safe-content>
         <p class="scene-label">Agencja marketingowa</p>
         <h1 id="hero-title">Ładnie to <span>za mało</span></h1>
         <p class="descriptor">Strony internetowe · Social media · Kampanie płatne</p>
@@ -281,13 +286,14 @@
       </section>
       </section>
 
-    <section class="home-intro" aria-labelledby="home-intro-title">
+    <section class="home-intro" aria-labelledby="home-intro-title" data-scene-boundary-target data-scene-continuation data-scene-tone="light" data-scene-seam-matte="assets/scene-transitions/scene-seam-diffuse-matte-source-cover-v1.webp" data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-home-hero-intro-v3.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-home-hero-intro-v3-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-home-hero-intro-v3-compact.webp">
       <picture class="direction-scene-art" aria-hidden="true">
         <source
           type="image/avif"
           srcset="/assets/direction-scenes/home-intro-v1-768.avif 768w, /assets/direction-scenes/home-intro-v1-1024.avif 1024w, /assets/direction-scenes/home-intro-v1-1672.avif 1672w"
           sizes="100vw">
         <img
+          data-scene-continuation-art
           src="/assets/direction-scenes/home-intro-v1-1672.webp"
           srcset="/assets/direction-scenes/home-intro-v1-768.webp 768w, /assets/direction-scenes/home-intro-v1-1024.webp 1024w, /assets/direction-scenes/home-intro-v1-1672.webp 1672w"
           sizes="100vw"
@@ -297,9 +303,9 @@
           loading="lazy"
           decoding="async">
       </picture>
-      <div class="home-intro__inner">
-        <p class="home-intro__eyebrow">Strategia · komunikacja · wdrożenie</p>
-        <h2 id="home-intro-title">Marketing, który prowadzi do właściwej <span>decyzji.</span></h2>
+      <div class="home-intro__inner" data-seam-safe-content data-scene-continuation-content>
+        <p class="home-intro__eyebrow" data-scene-eyebrow>Strategia · komunikacja · wdrożenie</p>
+        <h2 id="home-intro-title" data-scene-continuation-title>Marketing, który prowadzi do właściwej <span>decyzji.</span></h2>
 
         <div class="home-intro__copy">
           <p>OK Agency to agencja marketingowa dla małych i średnich firm. Pomagamy uporządkować ofertę, komunikację i drogę klienta, zanim powstaną kolejne ekrany, posty albo reklamy. Dzięki temu projekt nie zaczyna się od przypadkowej kreacji, lecz od odpowiedzi na pytanie: co ma zrozumieć i zrobić właściwy odbiorca?</p>

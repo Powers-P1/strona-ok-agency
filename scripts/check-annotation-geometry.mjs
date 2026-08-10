@@ -1070,6 +1070,11 @@ const exercisePoint = async (
       await page.mouse.move(1, 1);
       await page.keyboard.press("Escape");
       await waitForClosed(page, sceneIndex, calloutIndex).catch(() => {});
+      // Moving off the dot schedules the production 140 ms pointerleave close.
+      // Let that real timer drain before retrying so it cannot close the next
+      // natural hover during the stability window.
+      await page.waitForTimeout(180);
+      await waitForClosed(page, sceneIndex, calloutIndex).catch(() => {});
     }
     if (!hoverStable) throw hoverError || new Error("natural hover did not remain open");
     anchorMovementIssues(

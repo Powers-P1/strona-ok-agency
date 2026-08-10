@@ -50,6 +50,19 @@
   let pollGeneration = 0;
   let currentReport = null;
   let completedAnalyticsKey = readCompletedAnalyticsKey();
+  let auditFormStarted = false;
+
+  function markAuditFormStarted() {
+    if (auditFormStarted) return;
+    auditFormStarted = true;
+    window.okAnalytics?.siteAuditFormStarted?.();
+  }
+
+  form?.addEventListener("focusin", event => {
+    if (event.target.matches("input, select, textarea")) markAuditFormStarted();
+  });
+  form?.addEventListener("input", markAuditFormStarted, { once: true });
+  form?.addEventListener("change", markAuditFormStarted, { once: true });
 
   function setAuditView(view) {
     const next = new Set(["idle", "progress", "report"]).has(view) ? view : "idle";
@@ -258,6 +271,7 @@
   function renderReport(job) {
     const report = job.report;
     if (report?.schemaVersion !== "2.0" || !report?.categories || !Array.isArray(report.checks)) {
+      window.okAnalytics?.siteAuditFailed?.("report_invalid");
       return showFailure("Raport ma nieprawidłowy format. Uruchom audyt ponownie.");
     }
     currentReport = report;
@@ -344,6 +358,7 @@
           return;
         }
         if (data.status === "failed") {
+          window.okAnalytics?.siteAuditFailed?.("audit_failed");
           showFailure(data.failure?.message || "Nie udało się ukończyć audytu. Spróbuj ponownie później.");
           return;
         }
@@ -352,9 +367,17 @@
         attempt += 1;
       }
     } catch (error) {
-      if (error.name === "AbortError") showFailure("Połączenie trwało zbyt długo. Sprawdź sieć i spróbuj ponownie.");
-      else if (error.status === 404) { clearJob(); showFailure("Dostęp do tego audytu wygasł. Uruchom nowy test."); }
-      else showFailure(error.message || "Nie udało się pobrać wyniku. Spróbuj ponownie.");
+      if (error.name === "AbortError") {
+        window.okAnalytics?.siteAuditFailed?.("timeout");
+        showFailure("Połączenie trwało zbyt długo. Sprawdź sieć i spróbuj ponownie.");
+      } else if (error.status === 404) {
+        window.okAnalytics?.siteAuditFailed?.("access_expired");
+        clearJob();
+        showFailure("Dostęp do tego audytu wygasł. Uruchom nowy test.");
+      } else {
+        window.okAnalytics?.siteAuditFailed?.("request_failed");
+        showFailure(error.message || "Nie udało się pobrać wyniku. Spróbuj ponownie.");
+      }
     } finally {
       polling = false;
     }
@@ -362,18 +385,23 @@
 
   form?.addEventListener("submit", async event => {
     event.preventDefault();
+    markAuditFormStarted();
+    window.okAnalytics?.siteAuditSubmitAttempt?.();
     setStatus("");
     if (!domainInput.value.trim()) {
+      window.okAnalytics?.siteAuditValidationError?.("domain_missing");
       setStatus("Podaj domenę do sprawdzenia.", "error");
       domainInput.focus();
       return;
     }
     if (!consentInput.checked) {
+      window.okAnalytics?.siteAuditValidationError?.("consent_missing");
       setStatus("Potwierdź, że możesz zlecić analizę tej domeny.", "error");
       consentInput.focus();
       return;
     }
     if (!turnstileToken) {
+      window.okAnalytics?.siteAuditValidationError?.("turnstile_missing");
       setStatus("Dokończ widoczne potwierdzenie albo poczekaj chwilę na automatyczną weryfikację.", "error");
       document.getElementById("site-audit-turnstile")?.scrollIntoView({ block: "center" });
       return;
@@ -417,6 +445,9 @@
         dns_not_found: "Domena nie wskazuje na publiczny serwer WWW.",
         turnstile_failed: "Weryfikacja zabezpieczenia nie powiodła się lub wygasła. Spróbuj ponownie.",
       };
+      window.okAnalytics?.siteAuditFailed?.(
+        error?.name === "AbortError" ? "timeout" : (error.code || "request_failed"),
+      );
       showFailure(messages[error.code] || error.message || "Nie udało się uruchomić audytu.");
     }
   });

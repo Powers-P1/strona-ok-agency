@@ -1574,34 +1574,34 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 | Plik | Linia | Deklaracja |
 | --- | --- | --- |
-| kontakt.html | 92 | --i:0 |
-| kontakt.html | 94 | --i:1 |
-| kontakt.html | 97 | --d:0s |
-| kontakt.html | 98 | --d:.09s |
-| kontakt.html | 101 | --i:2 |
-| kontakt.html | 103 | --i:3 |
-| kontakt.html | 118 | --i:4 |
-| kontakt.html | 130 | --i:5 |
-| kontakt.html | 201 | --i:5 |
-| kontakt.html | 210 | --i:5 |
-| menu.html | 95 | --d:0s |
-| menu.html | 96 | --d:.09s |
-| menu.html | 105 | --i:0 |
-| menu.html | 119 | --i:1 |
-| menu.html | 133 | --i:2 |
-| menu.html | 147 | --i:3 |
-| o-nas.html | 128 | --x: 70%; --y: 62%; |
-| o-nas.html | 132 | --x: 87%; --y: 75%; |
-| o-nas.html | 136 | --x: 84%; --y: 35%; |
-| o-nas.html | 140 | --x: 73%; --y: 80%; --leader: 12px; --about-copy-width: 240px; |
-| o-nas.html | 192 | --x: 33%; --y: 72%; --leader: 48px; |
-| o-nas.html | 196 | --x: 32.5%; --y: 35%; --leader: 32px; --copy-w: 195px; |
-| o-nas.html | 200 | --x: 37%; --y: 76%; --leader: 38px; |
-| o-nas.html | 204 | --x: 49%; --y: 73%; |
-| o-nas.html | 249 | --x: 74%; --y: 62%; |
-| o-nas.html | 253 | --x: 84%; --y: 37%; |
-| o-nas.html | 257 | --x: 90%; --y: 73%; |
-| o-nas.html | 261 | --x: 79%; --y: 80%; |
+| kontakt.html | 93 | --i:0 |
+| kontakt.html | 95 | --i:1 |
+| kontakt.html | 98 | --d:0s |
+| kontakt.html | 99 | --d:.09s |
+| kontakt.html | 102 | --i:2 |
+| kontakt.html | 104 | --i:3 |
+| kontakt.html | 119 | --i:4 |
+| kontakt.html | 131 | --i:5 |
+| kontakt.html | 202 | --i:5 |
+| kontakt.html | 211 | --i:5 |
+| menu.html | 96 | --d:0s |
+| menu.html | 97 | --d:.09s |
+| menu.html | 106 | --i:0 |
+| menu.html | 120 | --i:1 |
+| menu.html | 134 | --i:2 |
+| menu.html | 148 | --i:3 |
+| o-nas.html | 129 | --x: 70%; --y: 62%; |
+| o-nas.html | 133 | --x: 87%; --y: 75%; |
+| o-nas.html | 137 | --x: 84%; --y: 35%; |
+| o-nas.html | 141 | --x: 73%; --y: 80%; --leader: 12px; --about-copy-width: 240px; |
+| o-nas.html | 193 | --x: 33%; --y: 72%; --leader: 48px; |
+| o-nas.html | 197 | --x: 32.5%; --y: 35%; --leader: 32px; --copy-w: 195px; |
+| o-nas.html | 201 | --x: 37%; --y: 76%; --leader: 38px; |
+| o-nas.html | 205 | --x: 49%; --y: 73%; |
+| o-nas.html | 250 | --x: 74%; --y: 62%; |
+| o-nas.html | 254 | --x: 84%; --y: 37%; |
+| o-nas.html | 258 | --x: 90%; --y: 73%; |
+| o-nas.html | 262 | --x: 79%; --y: 80%; |
 
 ## Mutacje stylu z JavaScript
 
@@ -1615,8 +1615,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/art-coordinate-system.js | 1092 | .style.setProperty("width", \`${bounds.width}px\`) |
 | assets/art-coordinate-system.js | 1093 | .style.setProperty("height", \`${bounds.height}px\`) |
 | assets/page-contact.js | 18 | .style.translate = \`${(-cx * 10).toFixed(2)}px ${(-cy * 8).toFixed(2)}px\` |
-| assets/page-contact.js | 189 | .style.position = "fixed" |
-| assets/page-contact.js | 190 | .style.opacity = "0" |
+| assets/page-contact.js | 201 | .style.position = "fixed" |
+| assets/page-contact.js | 202 | .style.opacity = "0" |
 | assets/responsive-safety.js | 117 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
 | assets/responsive-safety.js | 126 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
 | assets/responsive-safety.js | 127 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |

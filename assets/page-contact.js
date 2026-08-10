@@ -178,6 +178,18 @@
     button.addEventListener("click", returnToForm);
   });
 
+  let contactFormStarted = false;
+  const markContactFormStarted = () => {
+    if (contactFormStarted) return;
+    contactFormStarted = true;
+    window.okAnalytics?.contactFormStarted?.();
+  };
+  form.addEventListener("focusin", event => {
+    if (event.target.matches("input, select, textarea")) markContactFormStarted();
+  });
+  form.addEventListener("input", markContactFormStarted, { once: true });
+  form.addEventListener("change", markContactFormStarted, { once: true });
+
   const copyFeedback = document.getElementById("copy-feedback");
   document.getElementById("copy-address").addEventListener("click", async () => {
     try {
@@ -201,6 +213,8 @@
 
     if (document.getElementById("f-fax").value) return;
 
+    markContactFormStarted();
+    window.okAnalytics?.contactSubmitAttempt?.();
     submitted = true;
     const results = Object.keys(fields).map(key => ({
       key,
@@ -209,6 +223,14 @@
     const invalid = results.filter(result => !result.valid);
 
     if (invalid.length) {
+      const firstInvalid = invalid[0].key;
+      window.okAnalytics?.contactValidationError?.(
+        firstInvalid === "email"
+          ? "email_invalid"
+          : firstInvalid === "consent"
+            ? "consent_missing"
+            : "required_fields",
+      );
       updateValidationSummary(invalid.length);
       fields[invalid[0].key].focus({ preventScroll: false });
       return;
@@ -218,6 +240,7 @@
 
     const turnstileToken = form.querySelector('[name="cf-turnstile-response"]')?.value || "";
     if (!turnstileToken) {
+      window.okAnalytics?.contactValidationError?.("turnstile_missing");
       validationSummary.textContent = "Potwierdź, że formularz wysyła człowiek.";
       validationSummary.hidden = false;
       document.getElementById("contact-turnstile").scrollIntoView({ block: "center" });
@@ -259,7 +282,10 @@
       resetTurnstile();
       showState(handoffState, handoffTitle);
       window.okAnalytics?.generateLead("contact", analyticsEventId, { email, phone });
-    } catch {
+    } catch (error) {
+      window.okAnalytics?.contactSubmitError?.(
+        error?.name === "TypeError" ? "network_error" : "server_error",
+      );
       resetTurnstile();
       showState(fallbackState, fallbackTitle);
     } finally {

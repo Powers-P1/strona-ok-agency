@@ -2,7 +2,7 @@
 
    Google Consent Mode v2 działa w wariancie Basic: stan "denied" jest ustawiany
    lokalnie przed decyzją, ale Google tag nie ładuje się i nie wysyła requestów.
-   GA4 startuje po zgodzie analitycznej, a Google Ads i Meta dopiero marketingowej.
+   GA4 i Microsoft Clarity startują po zgodzie analitycznej, a Google Ads i Meta dopiero marketingowej.
    Meta Pixel reaguje natychmiast na wycofanie zgody.
 */
 (() => {
@@ -14,9 +14,10 @@
   const GOOGLE_ADS_LEAD_LABEL = "O7kQCOLA1dkcEIvmoLNE";
   // Brak osobnej akcji Google Ads dla ukończenia diagnozy — zdarzenie trafia do GA4.
   const GOOGLE_ADS_DIAGNOSIS_LABEL = "";
+  const CLARITY_PROJECT_ID = document.querySelector?.('meta[name="clarity-project-id"]')?.content?.trim() || "";
 
   const CONSENT_STORAGE_KEY = "ok-consent";
-  const CONSENT_POLICY_VERSION = 3;
+  const CONSENT_POLICY_VERSION = 4;
   const CONSENT_MAX_AGE_MS = 180 * 24 * 60 * 60 * 1000;
   const CONSENT_CLOCK_SKEW_MS = 5 * 60 * 1000;
   const ATTRIBUTION_STORAGE_KEY = "ok-attribution";
@@ -47,6 +48,29 @@
     "none",
   ]);
   const FORM_TYPES = new Set(["contact", "diagnosis"]);
+  const FUNNEL_FORM_TYPES = new Set(["contact", "diagnosis", "site_audit"]);
+  const VALIDATION_ERROR_TYPES = new Set([
+    "required_fields",
+    "name_too_short",
+    "email_invalid",
+    "consent_missing",
+    "domain_missing",
+    "turnstile_missing",
+  ]);
+  const SUBMIT_ERROR_TYPES = new Set([
+    "network_error",
+    "server_error",
+    "timeout",
+    "request_failed",
+    "domain_limit_reached",
+    "daily_limit_reached",
+    "private_target",
+    "dns_not_found",
+    "turnstile_failed",
+    "report_invalid",
+    "audit_failed",
+    "access_expired",
+  ]);
   const CONSENT_LEVELS = new Set(["denied", "analytics", "marketing"]);
 
   const hasMeta = /^\d{10,20}$/.test(PIXEL_ID);
@@ -54,7 +78,18 @@
   const hasGa4 = /^G-[A-Z0-9]+$/.test(GA4_ID);
   const hasGoogleAdsLead = /^[A-Za-z0-9_-]+$/.test(GOOGLE_ADS_LEAD_LABEL);
   const hasGoogleAdsDiagnosis = /^[A-Za-z0-9_-]+$/.test(GOOGLE_ADS_DIAGNOSIS_LABEL);
+  const hasClarity = /^[a-z0-9]{6,32}$/i.test(CLARITY_PROJECT_ID);
   const hasGoogleTag = hasGoogleAds || hasGa4;
+  const isProductionHost = new Set(["okagency.pl", "www.okagency.pl"]).has(
+    window.location.hostname.toLowerCase(),
+  );
+  const isQaTraffic = (() => {
+    try {
+      return new URL(window.location.href).searchParams.get("ok_qa") === "1";
+    } catch {
+      return false;
+    }
+  })();
 
   /* ---------- bezpieczne dane strony i kampanii ---------- */
 
@@ -371,7 +406,7 @@
 
   const loadGoogleTag = () => {
     if (googleTagLoaded) return true;
-    if (!hasGoogleTag || !prepareVendorLocation()) return false;
+    if (!isProductionHost || !hasGoogleTag || !prepareVendorLocation()) return false;
     googleTagLoaded = true;
     const loaderId = hasGa4 ? GA4_ID : GOOGLE_ADS_ID;
     const tag = document.createElement("script");
@@ -390,6 +425,7 @@
       send_page_view: false,
       page_location: analyticsPageLocation,
       page_referrer: currentReferrer,
+      ...(isQaTraffic ? { debug_mode: true, traffic_type: "internal" } : {}),
     });
   };
 
@@ -401,6 +437,36 @@
       page_location: marketingPageLocation,
       page_referrer: currentReferrer,
     });
+  };
+
+  /* ---------- Microsoft Clarity (wyłącznie po zgodzie analitycznej) ---------- */
+
+  let clarityLoaded = false;
+
+  const setClarityConsent = () => {
+    if (!clarityLoaded || typeof window.clarity !== "function") return;
+    window.clarity("consentv2", {
+      analytics_Storage: analyticsGranted ? "granted" : "denied",
+      ad_Storage: marketingGranted ? "granted" : "denied",
+    });
+  };
+
+  const configureClarity = () => {
+    if (!analyticsGranted || !isProductionHost || !hasClarity) return false;
+    if (!prepareVendorLocation()) return false;
+    if (!clarityLoaded) {
+      clarityLoaded = true;
+      const clarity = (window.clarity = window.clarity || function () {
+        (clarity.q = clarity.q || []).push(arguments);
+      });
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.clarity.ms/tag/${encodeURIComponent(CLARITY_PROJECT_ID)}`;
+      document.head.appendChild(script);
+    }
+    setClarityConsent();
+    if (isQaTraffic) window.clarity("set", "traffic_type", "internal");
+    return true;
   };
 
   if (hasGoogleTag) {
@@ -439,7 +505,7 @@
   };
 
   const readAttribution = () => {
-    if (!marketingGranted) return null;
+    if (!marketingGranted || !isProductionHost) return null;
     try {
       const raw = sessionStorage.getItem(ATTRIBUTION_STORAGE_KEY);
       if (!raw) return volatileAttribution;
@@ -455,7 +521,7 @@
   };
 
   const writeAttribution = attribution => {
-    if (!marketingGranted) return;
+    if (!marketingGranted || !isProductionHost) return;
     volatileAttribution = attribution;
     try {
       sessionStorage.setItem(ATTRIBUTION_STORAGE_KEY, JSON.stringify(attribution));
@@ -474,7 +540,7 @@
   };
 
   const captureAttribution = () => {
-    if (!marketingGranted) return;
+    if (!marketingGranted || !isProductionHost) return;
     const stored = readAttribution();
     const touch = normalizeStoredTouch(currentTouch);
     if (!touch) return;
@@ -491,7 +557,7 @@
   };
 
   const attributionForLead = () => {
-    if (!marketingGranted) return null;
+    if (!marketingGranted || !isProductionHost) return null;
     const stored = readAttribution();
     if (!stored) return null;
     return {
@@ -506,7 +572,7 @@
   let metaPageViewSent = false;
 
   const startPixel = () => {
-    if (!marketingGranted || !hasMeta) return;
+    if (!marketingGranted || !isProductionHost || !hasMeta) return;
     if (!prepareVendorLocation()) return;
 
     if (pixelStarted) {
@@ -546,18 +612,38 @@
 
   let pageViewSent = false;
   let contactViewSent = false;
+  let diagnosisViewSent = false;
+  let siteAuditViewSent = false;
 
   const ga4Event = (name, parameters = {}) => {
-    if (!analyticsGranted || !hasGa4 || !prepareVendorLocation()) return false;
+    if (!analyticsGranted || !isProductionHost || !hasGa4 || !prepareVendorLocation()) return false;
     window.gtag("event", name, {
       ...parameters,
+      ...(isQaTraffic ? { debug_mode: true, traffic_type: "internal" } : {}),
       send_to: GA4_ID,
     });
     return true;
   };
 
+  const clarityEvent = (name, parameters = {}) => {
+    if (!analyticsGranted || !isProductionHost || !configureClarity()) return false;
+    for (const [key, value] of Object.entries(parameters)) {
+      if (["string", "number", "boolean"].includes(typeof value)) {
+        window.clarity("set", key, String(value).slice(0, 100));
+      }
+    }
+    window.clarity("event", name);
+    return true;
+  };
+
+  const analyticsEvent = (name, parameters = {}) => {
+    const sentToGa4 = ga4Event(name, parameters);
+    const sentToClarity = clarityEvent(name, parameters);
+    return sentToGa4 || sentToClarity;
+  };
+
   const sendPageEvents = () => {
-    if (!analyticsGranted || !hasGa4) return;
+    if (!analyticsGranted) return;
     if (!pageViewSent) {
       pageViewSent = ga4Event("page_view", {
         page_location: marketingGranted ? marketingPageLocation : analyticsPageLocation,
@@ -566,7 +652,15 @@
     }
     const contactPath = window.location.pathname.replace(/\/+$/, "") === "/kontakt";
     if (contactPath && !contactViewSent) {
-      contactViewSent = ga4Event("contact_view");
+      contactViewSent = analyticsEvent("contact_view");
+    }
+    const diagnosisPath = window.location.pathname.replace(/\/+$/, "") === "/diagnoza";
+    if (diagnosisPath && !diagnosisViewSent) {
+      diagnosisViewSent = analyticsEvent("diagnosis_view");
+    }
+    const siteAuditPath = window.location.pathname.replace(/\/+$/, "") === "/diagnoza-www";
+    if (siteAuditPath && !siteAuditViewSent) {
+      siteAuditViewSent = analyticsEvent("site_audit_view");
     }
   };
 
@@ -580,7 +674,7 @@
   const applyDecision = level => {
     const nextAnalyticsGranted = level === "analytics" || level === "marketing";
     const nextMarketingGranted = level === "marketing";
-    const losesLoadedAnalytics = googleTagLoaded
+    const losesLoadedAnalytics = (googleTagLoaded || clarityLoaded)
       && analyticsGranted
       && !nextAnalyticsGranted;
     const losesLoadedMarketing = (googleAdsConfigured || pixelStarted)
@@ -613,6 +707,7 @@
     setGoogleConsent(level);
     configureGa4();
     configureGoogleAds();
+    configureClarity();
 
     if (!marketingGranted) {
       revokePixel();
@@ -625,20 +720,27 @@
   };
 
   const diagnosisStart = () => {
-    ga4Event("diagnosis_start");
+    analyticsEvent("diagnosis_start");
+  };
+
+  const diagnosisStepCompleted = stepNumber => {
+    const numericStep = Number(stepNumber);
+    if (!Number.isInteger(numericStep) || numericStep < 1 || numericStep > 4) return false;
+    return analyticsEvent("diagnosis_step_completed", { step_number: numericStep });
   };
 
   const diagnosisComplete = outcome => {
     const safeOutcome = DIAGNOSIS_OUTCOMES.has(outcome) ? outcome : "none";
-    ga4Event("diagnosis_complete", { diagnosis_outcome: safeOutcome });
+    analyticsEvent("diagnosis_complete", { diagnosis_outcome: safeOutcome });
 
-    if (marketingGranted && hasMeta && window.fbq && prepareVendorLocation()) {
+    if (marketingGranted && isProductionHost && hasMeta && window.fbq && prepareVendorLocation()) {
       window.fbq("trackCustom", "DiagnosisComplete", {
         diagnosis_outcome: safeOutcome,
       });
     }
     if (
       marketingGranted
+      && isProductionHost
       && hasGoogleAds
       && hasGoogleAdsDiagnosis
       && prepareVendorLocation()
@@ -649,8 +751,46 @@
     }
   };
 
+  const diagnosisResultCtaClicked = () => analyticsEvent("diagnosis_result_cta_click");
+
+  const diagnosisContactOpened = () => {
+    analyticsEvent("diagnosis_contact_open");
+    metaCustomEvent("DiagnosisContactOpened");
+  };
+
+  const safeFunnelFormType = value => (
+    FUNNEL_FORM_TYPES.has(value) ? value : "contact"
+  );
+
+  const formStarted = formType => analyticsEvent("diagnosis_form_start", {
+    form_type: safeFunnelFormType(formType),
+  });
+
+  const formSubmitAttempt = formType => analyticsEvent("diagnosis_submit_attempt", {
+    form_type: safeFunnelFormType(formType),
+  });
+
+  const formValidationError = (formType, errorType) => analyticsEvent("diagnosis_validation_error", {
+    form_type: safeFunnelFormType(formType),
+    error_type: VALIDATION_ERROR_TYPES.has(errorType) ? errorType : "required_fields",
+  });
+
+  const formSubmitError = (formType, errorType) => analyticsEvent("diagnosis_submit_error", {
+    form_type: safeFunnelFormType(formType),
+    error_type: SUBMIT_ERROR_TYPES.has(errorType) ? errorType : "server_error",
+  });
+
+  const contactFormStarted = () => analyticsEvent("contact_form_start");
+  const contactSubmitAttempt = () => analyticsEvent("contact_submit_attempt");
+  const contactValidationError = errorType => analyticsEvent("contact_validation_error", {
+    error_type: VALIDATION_ERROR_TYPES.has(errorType) ? errorType : "required_fields",
+  });
+  const contactSubmitError = errorType => analyticsEvent("contact_submit_error", {
+    error_type: SUBMIT_ERROR_TYPES.has(errorType) ? errorType : "server_error",
+  });
+
   const metaCustomEvent = (name, parameters = {}) => {
-    if (!marketingGranted || !hasMeta || !window.fbq || !prepareVendorLocation()) return false;
+    if (!marketingGranted || !isProductionHost || !hasMeta || !window.fbq || !prepareVendorLocation()) return false;
     window.fbq("trackCustom", name, parameters);
     return true;
   };
@@ -658,7 +798,7 @@
   const siteAuditStarted = ({ resultSource = "new" } = {}) => {
     const auditResultSource = resultSource === "cached" ? "cached" : "new";
     const parameters = { audit_result_source: auditResultSource };
-    ga4Event("site_audit_started", parameters);
+    analyticsEvent("site_audit_started", parameters);
     metaCustomEvent("SiteAuditStarted", parameters);
   };
 
@@ -684,19 +824,28 @@
       }),
       ...(auditCoverage === undefined ? {} : { audit_coverage: auditCoverage }),
     };
-    ga4Event("site_audit_completed", parameters);
+    analyticsEvent("site_audit_completed", parameters);
     metaCustomEvent("SiteAuditCompleted", parameters);
   };
 
   const siteAuditPdfDownloaded = () => {
-    ga4Event("site_audit_pdf_downloaded");
+    analyticsEvent("site_audit_pdf_downloaded");
     metaCustomEvent("SiteAuditPdfDownloaded");
   };
 
   const siteAuditContactClicked = () => {
-    ga4Event("site_audit_contact_clicked");
+    analyticsEvent("site_audit_contact_clicked");
     metaCustomEvent("SiteAuditContactClicked");
   };
+
+  const siteAuditFormStarted = () => analyticsEvent("site_audit_form_start");
+  const siteAuditSubmitAttempt = () => analyticsEvent("site_audit_submit_attempt");
+  const siteAuditValidationError = errorType => analyticsEvent("site_audit_validation_error", {
+    error_type: VALIDATION_ERROR_TYPES.has(errorType) ? errorType : "required_fields",
+  });
+  const siteAuditFailed = errorType => analyticsEvent("site_audit_failed", {
+    error_type: SUBMIT_ERROR_TYPES.has(errorType) ? errorType : "audit_failed",
+  });
 
   let fallbackEventCounter = 0;
   const createEventId = () => {
@@ -711,7 +860,9 @@
       : ""
   );
 
-  const createMarketingEventId = () => (marketingGranted ? createEventId() : "");
+  const createMarketingEventId = () => (
+    marketingGranted && isProductionHost ? createEventId() : ""
+  );
 
   const cookieValue = name => {
     if (!marketingGranted || typeof document.cookie !== "string") return "";
@@ -729,7 +880,7 @@
   };
 
   const marketingContext = () => {
-    if (!marketingGranted) return { marketingConsent: false };
+    if (!marketingGranted || !isProductionHost) return { marketingConsent: false };
     return {
       marketingConsent: true,
       eventSourceUrl: marketingPageLocation,
@@ -758,18 +909,19 @@
 
   const generateLead = (formType, suppliedEventId, suppliedUserData) => {
     const safeFormType = FORM_TYPES.has(formType) ? formType : "contact";
-    const eventId = marketingGranted
+    const eventId = marketingGranted && isProductionHost
       ? normalizeEventId(suppliedEventId) || createEventId()
       : "";
     ga4Event("generate_lead", { form_type: safeFormType });
 
-    if (marketingGranted && hasMeta && window.fbq && prepareVendorLocation()) {
+    if (marketingGranted && isProductionHost && hasMeta && window.fbq && prepareVendorLocation()) {
       // Jeden standardowy event zgodny z optymalizacją zestawu reklam.
       // eventID umożliwia deduplikację, jeśli CAPI zostanie spięte z tym samym ID.
       window.fbq("track", "Contact", {}, { eventID: eventId });
     }
     if (
       marketingGranted
+      && isProductionHost
       && hasGoogleAds
       && hasGoogleAdsLead
       && prepareVendorLocation()
@@ -823,7 +975,7 @@
     const body = document.createElement("p");
     body.className = "ok-consent__body";
     body.append(
-      "Możesz zgodzić się tylko na pomiar statystyczny GA4 albo również na atrybucję i narzędzia reklamowe. Po zgodzie reklamowej i skutecznym wysłaniu formularza Google i Meta mogą otrzymać znormalizowany lub jednokierunkowo zaszyfrowany e-mail i telefon w celu dopasowania konwersji. Przed wyborem i po odrzuceniu nie uruchamiamy tych narzędzi. Szczegóły w ",
+      "Możesz zgodzić się tylko na pomiar statystyczny GA4 i analizę zachowania w Microsoft Clarity albo również na atrybucję i narzędzia reklamowe. Formularze i odpowiedzi w Diagnozie są maskowane w nagraniach. Po zgodzie reklamowej i skutecznym wysłaniu formularza Google i Meta mogą otrzymać znormalizowany lub jednokierunkowo zaszyfrowany e-mail i telefon w celu dopasowania konwersji. Przed wyborem i po odrzuceniu nie uruchamiamy tych narzędzi. Szczegóły w ",
     );
     const link = document.createElement("a");
     link.href = "/polityka-prywatnosci";
@@ -911,7 +1063,22 @@
 
   window.okAnalytics = Object.freeze({
     diagnosisStart,
+    diagnosisStepCompleted,
     diagnosisComplete,
+    diagnosisResultCtaClicked,
+    diagnosisContactOpened,
+    formStarted,
+    formSubmitAttempt,
+    formValidationError,
+    formSubmitError,
+    contactFormStarted,
+    contactSubmitAttempt,
+    contactValidationError,
+    contactSubmitError,
+    siteAuditFormStarted,
+    siteAuditSubmitAttempt,
+    siteAuditValidationError,
+    siteAuditFailed,
     siteAuditStarted,
     siteAuditCompleted,
     siteAuditPdfDownloaded,

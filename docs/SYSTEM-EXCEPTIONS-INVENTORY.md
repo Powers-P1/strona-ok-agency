@@ -109,9 +109,9 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-menu.css | 681 | *, *::before, *::after | — | route-debt |
 | assets/page-menu.css | 682 | *, *::before, *::after | — | route-debt |
 | assets/page-menu.css | 683 | *, *::before, *::after | — | route-debt |
-| assets/responsive-safety.css | 208 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
-| assets/responsive-safety.css | 209 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
-| assets/responsive-safety.css | 328 | [data-ok-safe-art] | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/responsive-safety.css | 211 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
+| assets/responsive-safety.css | 212 | /* The focused home state hides the measured intro and owns its own panel. */ .home-page .hero.is-focused .art-stage | — | shared-contract |
+| assets/responsive-safety.css | 331 | [data-ok-safe-art] | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/scene-viewport.css | 37 | :is( .campaign-frame, .social-frame, .process-frame, .about-page .scene ) | — | shared-contract |
 | assets/scene-viewport.css | 38 | :is( .campaign-frame, .social-frame, .process-frame, .about-page .scene ) | — | shared-contract |
 | assets/scene-viewport.css | 39 | :is( .campaign-frame, .social-frame, .process-frame, .about-page .scene ) | — | shared-contract |

@@ -121,10 +121,10 @@ const waitForStablePage = async page => {
       }
     `,
   });
-  if (await page.locator(".home-page .hero").count()) {
+  if (await page.locator("[data-scene-first-view]").count()) {
     await page.waitForFunction(() => (
       Boolean(window.OKAgencyResponsiveSafety)
-      && document.querySelector(".hero")?.hasAttribute("data-ok-safe-scene")
+      && document.querySelector("[data-scene-first-view]")?.hasAttribute("data-ok-safe-scene")
     ));
     await page.evaluate(() => window.OKAgencyResponsiveSafety.refresh());
     await page.evaluate(() => new Promise(resolveFrame => (
@@ -161,7 +161,7 @@ const auditDocument = async (page, route, viewport) => {
         scrollHeight: element.scrollHeight,
       }));
     const sceneSelectors = [
-      ".hero",
+      "[data-scene-first-view]",
       ".campaign-frame",
       ".social-frame",
       ".process-frame",
@@ -172,11 +172,14 @@ const auditDocument = async (page, route, viewport) => {
       .filter(visible)
       .map(element => {
         const rect = element.getBoundingClientRect();
-        const copy = element.matches(".hero") ? element.querySelector(".copy") : null;
+        const firstView = element.hasAttribute("data-scene-first-view");
+        const copy = firstView ? element.querySelector(".copy") : null;
         const copyRect = copy?.getBoundingClientRect();
         return {
           id: element.id || element.className,
+          firstView,
           height: rect.height,
+          bottom: rect.bottom,
           minHeight: getComputedStyle(element).minHeight,
           maxHeight: getComputedStyle(element).maxHeight,
           requiredHeight: getComputedStyle(element).getPropertyValue("--ok-safe-required-height").trim(),
@@ -213,9 +216,10 @@ const auditDocument = async (page, route, viewport) => {
     `${label}: route replaced the shared content role (${metrics.contentToken})`,
   );
   for (const scene of metrics.scenes) {
+    const viewportExtent = scene.firstView ? scene.bottom : scene.height;
     assert.ok(
-      Math.abs(scene.height - viewport.height) <= 2,
-      `${label}: scene ${scene.id} is ${scene.height}px instead of one ${viewport.height}px viewport; ${JSON.stringify(scene)}`,
+      Math.abs(viewportExtent - viewport.height) <= 2,
+      `${label}: scene ${scene.id} occupies ${viewportExtent}px instead of one ${viewport.height}px viewport; ${JSON.stringify(scene)}`,
     );
   }
 };
@@ -364,11 +368,12 @@ const auditHomeRatiosAndResize = async (browser, baseUrl) => {
         const viewportToken = Number(
           getComputedStyle(root).getPropertyValue("--ok-viewport-height-runtime").replace("px", ""),
         );
-        const heroHeight = document.querySelector(".hero").getBoundingClientRect().height;
+        const firstView = document.querySelector("[data-scene-first-view]");
+        const firstViewBottom = firstView.getBoundingClientRect().bottom;
         return innerWidth === width
           && innerHeight === height
           && Math.abs(viewportToken - height) <= 1
-          && Math.abs(heroHeight - height) <= 2;
+          && Math.abs(firstViewBottom - height) <= 2;
       }, viewport);
       await auditDocument(page, "/ (resize)", viewport);
       const state = await homeState(page);

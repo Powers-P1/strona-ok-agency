@@ -85,7 +85,7 @@
   <link rel="stylesheet" href="assets/route-motion.css?v=20260810-1">
   <link rel="stylesheet" href="assets/story-standard.css?v=20260810-1">
   <link rel="stylesheet" href="assets/scene-viewport.css?v=20260810-2">
-  <link rel="stylesheet" href="assets/scene-transitions.v20260804-1.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/scene-transitions.v20260804-1.css?v=20260810-2">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260806-1">
   <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260810-1">
@@ -96,8 +96,8 @@
   <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260810-1">
   <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260810-2">
   <script src="/assets/motion-control.js?v=20260806-1"></script>
-  <script src="assets/scene-transitions.v20260804-1.js?v=20260810-1"></script>
-  <script src="/assets/responsive-safety.js?v=20260810-1" defer></script>
+  <script src="assets/scene-transitions.v20260804-1.js?v=20260810-2"></script>
+  <script src="/assets/responsive-safety.js?v=20260810-2" defer></script>
   <script src="/assets/analytics.js?v=20260810-1" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
@@ -399,18 +399,24 @@
       </section>
 
       <section class="campaign-frame" id="web-decision" aria-labelledby="web-decision-title" data-scene-frame data-scene-tone="light" data-scene-boundary-target data-scene-continuation data-scene-boundary-source data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-web-proof-decision-v1.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-web-proof-decision-v1-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-web-proof-decision-v1-compact.webp">
-        <img
-          class="campaign-art"
-          data-scene-art
-          data-ok-safe-backdrop="light"
-          src="/assets/direction-scenes/web-decision-v1-1672.webp"
-          srcset="/assets/direction-scenes/web-decision-v1-768.webp 768w, /assets/direction-scenes/web-decision-v1-1024.webp 1024w, /assets/direction-scenes/web-decision-v1-1672.webp 1672w"
-          sizes="100vw"
-          width="1672"
-          height="941"
-          alt=""
-          loading="lazy"
-          decoding="async">
+        <picture aria-hidden="true">
+          <source
+            type="image/avif"
+            srcset="/assets/direction-scenes/web-decision-v1-768.avif 768w, /assets/direction-scenes/web-decision-v1-1024.avif 1024w, /assets/direction-scenes/web-decision-v1-1672.avif 1672w"
+            sizes="100vw">
+          <img
+            class="campaign-art"
+            data-scene-art
+            data-ok-safe-backdrop="light"
+            src="/assets/direction-scenes/web-decision-v1-1672.webp"
+            srcset="/assets/direction-scenes/web-decision-v1-768.webp 768w, /assets/direction-scenes/web-decision-v1-1024.webp 1024w, /assets/direction-scenes/web-decision-v1-1672.webp 1672w"
+            sizes="100vw"
+            width="1672"
+            height="941"
+            alt=""
+            loading="lazy"
+            decoding="async">
+        </picture>
 
         <div class="proof-content" data-seam-safe-content>
           <p data-scene-eyebrow>Przed wyceną / konkrety</p>
@@ -451,18 +457,24 @@
       </section>
 
       <section class="campaign-frame" id="web-faq" aria-labelledby="web-faq-title" data-scene-frame data-scene-tone="light" data-scene-boundary-target data-scene-continuation data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-web-decision-faq-v2.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-web-decision-faq-v2-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-web-decision-faq-v2-compact.webp">
-        <img
-          class="campaign-art"
-          data-scene-art
-          data-ok-safe-backdrop="light"
-          src="/assets/direction-scenes/web-faq-v1-1672.webp"
-          srcset="/assets/direction-scenes/web-faq-v1-768.webp 768w, /assets/direction-scenes/web-faq-v1-1024.webp 1024w, /assets/direction-scenes/web-faq-v1-1672.webp 1672w"
-          sizes="100vw"
-          width="1672"
-          height="941"
-          alt=""
-          loading="lazy"
-          decoding="async">
+        <picture aria-hidden="true">
+          <source
+            type="image/avif"
+            srcset="/assets/direction-scenes/web-faq-v1-768.avif 768w, /assets/direction-scenes/web-faq-v1-1024.avif 1024w, /assets/direction-scenes/web-faq-v1-1672.avif 1672w"
+            sizes="100vw">
+          <img
+            class="campaign-art"
+            data-scene-art
+            data-ok-safe-backdrop="light"
+            src="/assets/direction-scenes/web-faq-v1-1672.webp"
+            srcset="/assets/direction-scenes/web-faq-v1-768.webp 768w, /assets/direction-scenes/web-faq-v1-1024.webp 1024w, /assets/direction-scenes/web-faq-v1-1672.webp 1672w"
+            sizes="100vw"
+            width="1672"
+            height="941"
+            alt=""
+            loading="lazy"
+            decoding="async">
+        </picture>
 
         <div class="proof-content" data-seam-safe-content>
           <h2 id="web-faq-title">Najczęstsze<br><em>pytania.</em></h2>
@@ -494,7 +506,7 @@
     </div>
   </main>
   <div data-site-footer></div>
-  <script src="assets/art-coordinate-system.js?v=20260810-1"></script>
+  <script src="assets/art-coordinate-system.js?v=20260810-2"></script>
   <script src="assets/navigation.js?v=20260806-1"></script>
   <script src="assets/service-interactions.js?v=20260802-6"></script>
   <script src="assets/site-footer.js?v=20260801-2"></script>

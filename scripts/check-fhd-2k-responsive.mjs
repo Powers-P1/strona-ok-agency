@@ -149,7 +149,7 @@ const auditDisplayCase = async (page, baseUrl, viewport, displayCase, textSample
 };
 
 const readMaskMetrics = async scene => scene.evaluate(async element => {
-  const art = element.querySelector(":scope > .campaign-art, :scope > .scene-art");
+  const art = element.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
   const content = element.querySelector("[data-ok-safe-content]");
   const bounds = window.OKAgencyResponsiveSafety.getArtBounds(element);
   const sceneRect = element.getBoundingClientRect();
@@ -343,7 +343,7 @@ const auditResize = async (page, baseUrl, {
   }
   await frames(page, 4);
   const before = await scene.evaluate((element, withMask) => {
-    const art = element.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const art = element.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
     const bounds = withMask ? window.OKAgencyResponsiveSafety.getArtBounds(element) : null;
     return {
       scrollY,
@@ -357,7 +357,7 @@ const auditResize = async (page, baseUrl, {
   await frames(page, 6);
   await page.waitForTimeout(120);
   const after = await scene.evaluate((element, withMask) => {
-    const art = element.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const art = element.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
     const bounds = withMask ? window.OKAgencyResponsiveSafety.getArtBounds(element) : null;
     return {
       scrollY,

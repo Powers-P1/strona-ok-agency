@@ -80,7 +80,7 @@ try {
         const layers = [...document.querySelectorAll("[data-ok-safe-backdrop-layer]")]
           .map(backdrop => {
             const scene = backdrop.closest("[data-ok-safe-scene]");
-            const artwork = scene?.querySelector(":scope > .campaign-art, :scope > .scene-art");
+            const artwork = scene?.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
             const backdropRect = backdrop.getBoundingClientRect();
             const artworkRect = artwork?.getBoundingClientRect();
             const style = getComputedStyle(backdrop);

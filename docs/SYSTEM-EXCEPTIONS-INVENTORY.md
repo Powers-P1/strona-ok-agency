@@ -6,9 +6,9 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 
 - `!important`: **217**
 - deklaracje typografii w lokalnych arkuszach tras: **978**
-- lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **302**
+- lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **292**
 - inline `style` w HTML: **28**
-- mutacje stylu z JS: **59**
+- mutacje stylu z JS: **58**
 
 ### Największe źródła `!important`
 
@@ -1345,36 +1345,26 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/scene-transitions.v20260804-1.css | 29 | .scene-seam__field | overflow | hidden | — |
 | assets/scene-transitions.v20260804-1.css | 36 | .scene-seam__field | position | center | — |
 | assets/scene-transitions.v20260804-1.css | 37 | .scene-seam__field | position | center | — |
-| assets/scene-transitions.v20260804-1.css | 55 | .scene-seam__atmosphere, .scene-seam__art | position | absolute | — |
-| assets/scene-transitions.v20260804-1.css | 56 | .scene-seam__atmosphere, .scene-seam__art | z-index | 0 | — |
-| assets/scene-transitions.v20260804-1.css | 58 | .scene-seam__atmosphere, .scene-seam__art | display | block | — |
-| assets/scene-transitions.v20260804-1.css | 59 | .scene-seam__atmosphere, .scene-seam__art | overflow | hidden | — |
-| assets/scene-transitions.v20260804-1.css | 65 | .scene-seam__atmosphere, .scene-seam__art | position | center | — |
-| assets/scene-transitions.v20260804-1.css | 66 | .scene-seam__atmosphere, .scene-seam__art | position | center | — |
-| assets/scene-transitions.v20260804-1.css | 72 | .scene-seam__bridge | position | absolute | — |
-| assets/scene-transitions.v20260804-1.css | 73 | .scene-seam__bridge | z-index | 0 | — |
-| assets/scene-transitions.v20260804-1.css | 76 | .scene-seam__bridge | height | 100% | — |
-| assets/scene-transitions.v20260804-1.css | 77 | .scene-seam__bridge | display | block | — |
-| assets/scene-transitions.v20260804-1.css | 85 | .scene-seam[data-scene-seam-material="scene-derived"] .scene-seam__bridge | z-index | 1 | — |
-| assets/scene-transitions.v20260804-1.css | 91 | .scene-seam[data-scene-seam-material="scene-derived"] .scene-seam__bridge | position | center | — |
-| assets/scene-transitions.v20260804-1.css | 92 | .scene-seam[data-scene-seam-material="scene-derived"] .scene-seam__bridge | position | center | — |
-| assets/scene-transitions.v20260804-1.css | 98 | .scene-seam[data-scene-seam-material="scene-derived"] .scene-seam__atmosphere | z-index | 0 | — |
-| assets/scene-transitions.v20260804-1.css | 108 | .scene-seam__art | z-index | 1 | — |
-| assets/scene-transitions.v20260804-1.css | 113 | .scene-seam__atmosphere img, .scene-seam__art img | position | absolute | — |
-| assets/scene-transitions.v20260804-1.css | 119 | .scene-seam__atmosphere img, .scene-seam__art img | height | var(--scene-seam-source-height) | — |
-| assets/scene-transitions.v20260804-1.css | 120 | .scene-seam__atmosphere img, .scene-seam__art img | display | block | — |
-| assets/scene-transitions.v20260804-1.css | 122 | .scene-seam__atmosphere img, .scene-seam__art img | position | var(--scene-seam-source-object-position) | — |
-| assets/scene-transitions.v20260804-1.css | 133 | /* Generated pair assets are complete transition plates, not continuations of one endpoint artwork. Keep them full-bleed even when the source artwork is narrower than the viewport (for example the home hero sculpture). */ .scene-seam[data-scene-seam-material="asset"] .scene-seam__atmosphere img | height | 100% | — |
-| assets/scene-transitions.v20260804-1.css | 135 | /* Generated pair assets are complete transition plates, not continuations of one endpoint artwork. Keep them full-bleed even when the source artwork is narrower than the viewport (for example the home hero sculpture). */ .scene-seam[data-scene-seam-material="asset"] .scene-seam__atmosphere img | position | center | — |
-| assets/scene-transitions.v20260804-1.css | 196 | .scene-seam--switch | position | absolute | — |
-| assets/scene-transitions.v20260804-1.css | 198 | .scene-seam--switch | height | auto | — |
-| assets/scene-transitions.v20260804-1.css | 199 | .scene-seam--switch | display | none | — |
-| assets/scene-transitions.v20260804-1.css | 201 | .scene-seam--switch | overflow | hidden | — |
-| assets/scene-transitions.v20260804-1.css | 209 | .scene-seam--switch[data-scene-seam-state="active"] | display | block | — |
-| assets/scene-transitions.v20260804-1.css | 255 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | height | 100% | @media (max-width: 820px) |
-| assets/scene-transitions.v20260804-1.css | 257 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | position | center | @media (max-width: 820px) |
-| assets/scene-transitions.v20260804-1.css | 266 | .scene-seam__art | display | none | @media (max-width: 820px) |
-| assets/scene-transitions.v20260804-1.css | 278 | .scene-seam--switch[data-scene-seam-state="active"] | display | none | @media (prefers-reduced-motion: reduce) |
+| assets/scene-transitions.v20260804-1.css | 54 | .scene-seam__atmosphere | position | absolute | — |
+| assets/scene-transitions.v20260804-1.css | 55 | .scene-seam__atmosphere | z-index | 0 | — |
+| assets/scene-transitions.v20260804-1.css | 57 | .scene-seam__atmosphere | display | block | — |
+| assets/scene-transitions.v20260804-1.css | 58 | .scene-seam__atmosphere | overflow | hidden | — |
+| assets/scene-transitions.v20260804-1.css | 64 | .scene-seam__atmosphere | position | center | — |
+| assets/scene-transitions.v20260804-1.css | 65 | .scene-seam__atmosphere | position | center | — |
+| assets/scene-transitions.v20260804-1.css | 71 | .scene-seam__atmosphere img | position | absolute | — |
+| assets/scene-transitions.v20260804-1.css | 77 | .scene-seam__atmosphere img | height | var(--scene-seam-source-height) | — |
+| assets/scene-transitions.v20260804-1.css | 78 | .scene-seam__atmosphere img | display | block | — |
+| assets/scene-transitions.v20260804-1.css | 80 | .scene-seam__atmosphere img | position | var(--scene-seam-source-object-position) | — |
+| assets/scene-transitions.v20260804-1.css | 91 | /* Generated pair assets are complete transition plates, not continuations of one endpoint artwork. Keep them full-bleed even when the source artwork is narrower than the viewport (for example the home hero sculpture). */ .scene-seam[data-scene-seam-material="asset"] .scene-seam__atmosphere img | height | 100% | — |
+| assets/scene-transitions.v20260804-1.css | 93 | /* Generated pair assets are complete transition plates, not continuations of one endpoint artwork. Keep them full-bleed even when the source artwork is narrower than the viewport (for example the home hero sculpture). */ .scene-seam[data-scene-seam-material="asset"] .scene-seam__atmosphere img | position | center | — |
+| assets/scene-transitions.v20260804-1.css | 162 | .scene-seam--switch | position | absolute | — |
+| assets/scene-transitions.v20260804-1.css | 164 | .scene-seam--switch | height | auto | — |
+| assets/scene-transitions.v20260804-1.css | 165 | .scene-seam--switch | display | none | — |
+| assets/scene-transitions.v20260804-1.css | 167 | .scene-seam--switch | overflow | hidden | — |
+| assets/scene-transitions.v20260804-1.css | 175 | .scene-seam--switch[data-scene-seam-state="active"] | display | block | — |
+| assets/scene-transitions.v20260804-1.css | 221 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | height | 100% | @media (max-width: 820px) |
+| assets/scene-transitions.v20260804-1.css | 223 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | position | center | @media (max-width: 820px) |
+| assets/scene-transitions.v20260804-1.css | 240 | .scene-seam--switch[data-scene-seam-state="active"] | display | none | @media (prefers-reduced-motion: reduce) |
 | assets/services/about/styles.css | 66 | .site-header | position | fixed | — |
 | assets/services/about/styles.css | 67 | .site-header | z-index | 50 | — |
 | assets/services/about/styles.css | 71 | .site-header | height | var(--header-h) | — |
@@ -1612,43 +1602,42 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.js | 18 | .style.translate = \`${(-cx * 10).toFixed(2)}px ${(-cy * 8).toFixed(2)}px\` |
 | assets/page-contact.js | 201 | .style.position = "fixed" |
 | assets/page-contact.js | 202 | .style.opacity = "0" |
-| assets/responsive-safety.js | 119 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
-| assets/responsive-safety.js | 128 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
-| assets/responsive-safety.js | 129 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |
-| assets/responsive-safety.js | 186 | .style.objectPosition = style.objectPosition |
-| assets/responsive-safety.js | 187 | .style.transform = style.transform |
-| assets/responsive-safety.js | 188 | .style.transformOrigin = style.transformOrigin |
-| assets/responsive-safety.js | 656 | .style.removeProperty("--ok-safe-mask-image") |
-| assets/responsive-safety.js | 678 | .style.removeProperty("--ok-safe-content-max-height") |
-| assets/responsive-safety.js | 697 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 698 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 735 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 745 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 800 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 816 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 823 | .style.removeProperty("--ok-safe-curtain-mask") |
-| assets/responsive-safety.js | 824 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 841 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 843 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 850 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
-| assets/responsive-safety.js | 852 | .style.removeProperty("--ok-safe-required-height") |
-| assets/responsive-safety.js | 867 | .style.setProperty("--ok-safe-mask-image", directionalFeather.image) |
-| assets/responsive-safety.js | 887 | .style.removeProperty("--ok-safe-card-height") |
-| assets/responsive-safety.js | 895 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
-| assets/responsive-safety.js | 911 | .style.removeProperty("--ok-safe-card-height") |
-| assets/responsive-safety.js | 920 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
-| assets/responsive-safety.js | 1043 | .style.removeProperty("--ok-safe-required-height") |
-| assets/scene-transitions.v20260804-1.js | 211 | .style.removeProperty("--scene-seam-safe-exclusion-mask") |
-| assets/scene-transitions.v20260804-1.js | 227 | .style.removeProperty("--scene-seam-reserve") |
-| assets/scene-transitions.v20260804-1.js | 241 | .style.setProperty("--scene-seam-reserve", \`${reserve}px\`) |
-| assets/scene-transitions.v20260804-1.js | 288 | .style.setProperty("--scene-seam-safe-exclusion-mask", exclusionSvg(fieldRect.width, fieldRect.height, maskHoles)) |
-| assets/scene-transitions.v20260804-1.js | 715 | .style.removeProperty("--scene-seam-safe-mask-image") |
-| assets/scene-transitions.v20260804-1.js | 757 | .style.setProperty("--scene-seam-source-left", \`${geometry.left}px\`) |
-| assets/scene-transitions.v20260804-1.js | 758 | .style.setProperty("--scene-seam-source-width", \`${geometry.renderedWidth}px\`) |
-| assets/scene-transitions.v20260804-1.js | 759 | .style.setProperty("--scene-seam-source-height", \`${extensionHeight}px\`) |
-| assets/scene-transitions.v20260804-1.js | 760 | .style.setProperty("--scene-seam-source-object-fit", geometry.fit) |
-| assets/scene-transitions.v20260804-1.js | 761 | .style.setProperty("--scene-seam-source-object-position", geometry.objectPosition) |
-| assets/scene-transitions.v20260804-1.js | 886 | .style.setProperty("--scene-seam-matte", \`url("${matteUrl}")\`) |
+| assets/responsive-safety.js | 120 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
+| assets/responsive-safety.js | 129 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
+| assets/responsive-safety.js | 130 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |
+| assets/responsive-safety.js | 190 | .style.objectPosition = style.objectPosition |
+| assets/responsive-safety.js | 191 | .style.transform = style.transform |
+| assets/responsive-safety.js | 192 | .style.transformOrigin = style.transformOrigin |
+| assets/responsive-safety.js | 660 | .style.removeProperty("--ok-safe-mask-image") |
+| assets/responsive-safety.js | 682 | .style.removeProperty("--ok-safe-content-max-height") |
+| assets/responsive-safety.js | 701 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 702 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 739 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 749 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 804 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 820 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 827 | .style.removeProperty("--ok-safe-curtain-mask") |
+| assets/responsive-safety.js | 828 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 845 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 847 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 854 | .style.setProperty("--ok-safe-required-height", \`${requiredHeight}px\`) |
+| assets/responsive-safety.js | 856 | .style.removeProperty("--ok-safe-required-height") |
+| assets/responsive-safety.js | 871 | .style.setProperty("--ok-safe-mask-image", directionalFeather.image) |
+| assets/responsive-safety.js | 891 | .style.removeProperty("--ok-safe-card-height") |
+| assets/responsive-safety.js | 899 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
+| assets/responsive-safety.js | 915 | .style.removeProperty("--ok-safe-card-height") |
+| assets/responsive-safety.js | 924 | .style.setProperty("--ok-safe-card-height", \`${Math.ceil(textHeight + imageHeight + 24)}px\`) |
+| assets/responsive-safety.js | 1047 | .style.removeProperty("--ok-safe-required-height") |
+| assets/scene-transitions.v20260804-1.js | 196 | .style.removeProperty("--scene-seam-safe-exclusion-mask") |
+| assets/scene-transitions.v20260804-1.js | 212 | .style.removeProperty("--scene-seam-reserve") |
+| assets/scene-transitions.v20260804-1.js | 226 | .style.setProperty("--scene-seam-reserve", \`${reserve}px\`) |
+| assets/scene-transitions.v20260804-1.js | 273 | .style.setProperty("--scene-seam-safe-exclusion-mask", exclusionSvg(fieldRect.width, fieldRect.height, maskHoles)) |
+| assets/scene-transitions.v20260804-1.js | 353 | .style.setProperty("--scene-seam-source-left", \`${geometry.left}px\`) |
+| assets/scene-transitions.v20260804-1.js | 354 | .style.setProperty("--scene-seam-source-width", \`${geometry.renderedWidth}px\`) |
+| assets/scene-transitions.v20260804-1.js | 355 | .style.setProperty("--scene-seam-source-height", \`${extensionHeight}px\`) |
+| assets/scene-transitions.v20260804-1.js | 356 | .style.setProperty("--scene-seam-source-object-fit", geometry.fit) |
+| assets/scene-transitions.v20260804-1.js | 357 | .style.setProperty("--scene-seam-source-object-position", geometry.objectPosition) |
+| assets/scene-transitions.v20260804-1.js | 448 | .style.setProperty("--scene-seam-matte", \`url("${matteUrl}")\`) |
 | assets/service-interactions.js | 209 | .style.scrollBehavior = "auto" |
 | assets/service-interactions.js | 211 | .style.scrollBehavior = previousBehavior |
 | assets/tree-energy.js | 2045 | .style.width = \`${cssWidth}px\` |

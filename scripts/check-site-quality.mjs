@@ -8,6 +8,7 @@ const htmlFiles = (await readdir(root))
   .sort();
 const publicFiles = htmlFiles.filter(name => name !== "404.html");
 const failures = [];
+const retiredTransitionPattern = /\b(?:scene-seam__art|scene-seam__bridge|scene-derived|data-scene-continuation-art|campaign-seam-art-to-dark|diagnosis-seam-atmosphere-v1)\b/i;
 
 const decodeEntities = value => value
   .replaceAll("&amp;", "&")
@@ -178,6 +179,9 @@ for (const file of publicFiles) {
   if (/href=["'][^"']*\.html(?:[?#"'])/i.test(source)) failures.push(`${file}: wewnętrzny link zawiera .html`);
   if (/fonts\.(?:googleapis|gstatic)\.com/i.test(source)) failures.push(`${file}: zewnętrzne Google Fonts`);
   if (/\[(?:DO UZUPEŁNIENIA|UZUPEŁNIJ)[^\]]*\]|TODO|FIXME/i.test(source)) failures.push(`${file}: znacznik roboczy`);
+  if (retiredTransitionPattern.test(source)) {
+    failures.push(`${file}: przejście zawiera wycofany renderer, marker lub dekoracyjny asset`);
+  }
 
   if (file === "index.html") {
     const homeIntro = source.match(/<section class=["']home-intro["'][\s\S]*?<\/section>/i)?.[0] || "";
@@ -277,10 +281,13 @@ for (const path of requiredFiles) {
 }
 
 const assetFiles = await readdir(join(root, "assets"), { recursive: true });
-for (const path of assetFiles.filter(path => path.endsWith(".css"))) {
+for (const path of assetFiles.filter(path => /\.(?:css|js)$/i.test(path))) {
   const source = await readFile(join(root, "assets", path), "utf8");
-  if (/fonts\.(?:googleapis|gstatic)\.com/i.test(source)) {
+  if (path.endsWith(".css") && /fonts\.(?:googleapis|gstatic)\.com/i.test(source)) {
     failures.push(`assets/${path}: zewnętrzne Google Fonts`);
+  }
+  if (retiredTransitionPattern.test(source)) {
+    failures.push(`assets/${path}: kod przywraca wycofany renderer, marker lub dekoracyjny asset`);
   }
 }
 

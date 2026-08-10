@@ -50,8 +50,7 @@
   opacity: .78;
 }
 
-.scene-seam__atmosphere,
-.scene-seam__art {
+.scene-seam__atmosphere {
   position: absolute;
   z-index: 0;
   inset: 0;
@@ -68,48 +67,7 @@
   mask-size: 100% 100%;
 }
 
-.scene-seam__bridge {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
-  filter: saturate(.94);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 18%, #000 82%, transparent 100%);
-}
-
-.scene-seam[data-scene-seam-material="scene-derived"] .scene-seam__bridge {
-  z-index: 1;
-  filter: saturate(.98);
-  -webkit-mask-image: var(--scene-seam-matte);
-  mask-image: var(--scene-seam-matte);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
-
-.scene-seam[data-scene-seam-material="scene-derived"] .scene-seam__atmosphere {
-  z-index: 0;
-  opacity: .14;
-  mix-blend-mode: soft-light;
-}
-
-.scene-seam[data-scene-seam-material="scene-derived"]:not([data-scene-seam-bridge="ready"]) .scene-seam__field {
-  opacity: 0;
-}
-
-.scene-seam__art {
-  z-index: 1;
-}
-
-.scene-seam__atmosphere img,
-.scene-seam__art img {
+.scene-seam__atmosphere img {
   position: absolute;
   top: 50%;
   right: auto;
@@ -136,18 +94,8 @@
 }
 
 /* A single family can serve both mixed-tone directions without another file. */
-.scene-seam[data-scene-seam-orientation="reverse"] :is(.scene-seam__atmosphere, .scene-seam__art) img {
+.scene-seam[data-scene-seam-orientation="reverse"] .scene-seam__atmosphere img {
   transform: translateY(-50%) scaleY(-1);
-}
-
-/* The artwork extension inherits the owner's directional text-safe feather. */
-.scene-seam__art img[data-ok-seam-safe-mask="active"] {
-  -webkit-mask-image: var(--scene-seam-safe-mask-image);
-  mask-image: var(--scene-seam-safe-mask-image);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
 }
 
 /* Shared decorative/content stacking. Route classes are deliberately absent. */
@@ -159,8 +107,26 @@
   z-index: 0;
 }
 
-[data-scene-frame] > [data-scene-art]:not([data-ok-safe-backdrop-layer]) {
+[data-scene-frame] > [data-scene-art]:not([data-ok-safe-backdrop-layer]),
+[data-scene-frame] > picture > [data-scene-art]:not([data-ok-safe-backdrop-layer]) {
   z-index: 1;
+}
+
+[data-scene-frame] > picture:has(> [data-scene-art]:not([data-ok-safe-backdrop-layer])) {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+[data-scene-frame] > picture > [data-scene-art]:not([data-ok-safe-backdrop-layer]) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
 }
 
 [data-seam-safe-content] {
@@ -260,10 +226,6 @@
 
   .scene-seam[data-scene-seam-orientation="reverse"] .scene-seam__atmosphere img {
     transform: scaleY(-1);
-  }
-
-  .scene-seam__art {
-    display: none;
   }
 }
 

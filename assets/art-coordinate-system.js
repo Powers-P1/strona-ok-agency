@@ -362,7 +362,7 @@
   });
 
   document.querySelectorAll(serviceSelector).forEach(scene => {
-    const art = scene.querySelector(":scope > .campaign-art");
+    const art = scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art");
     const annotations = [...scene.querySelectorAll(":scope > .annotation-callout")]
       .map(callout => createAnnotation(callout, "service"))
       .filter(annotation => annotation.dot && annotation.copy);

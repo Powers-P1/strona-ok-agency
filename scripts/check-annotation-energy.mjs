@@ -69,7 +69,7 @@ try {
     });
     await page.evaluate(async sceneSelector => {
       const images = [...document.querySelectorAll(sceneSelector)]
-        .map(scene => scene.querySelector(":scope > .campaign-art, :scope > .scene-art"))
+        .map(scene => scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art"))
         .filter(Boolean);
       images.forEach(image => { image.loading = "eager"; });
       await Promise.all(images.map(image => image.decode().catch(() => undefined)));
@@ -139,7 +139,7 @@ try {
       const scenes = [...document.querySelectorAll(sceneSelector)];
       for (let sceneIndex = 0; sceneIndex < scenes.length; sceneIndex += 1) {
         const scene = scenes[sceneIndex];
-        const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+        const art = scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
         const callouts = [...scene.querySelectorAll(calloutSelector)];
         if (!art || !callouts.length) continue;
 

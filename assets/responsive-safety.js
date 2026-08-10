@@ -91,6 +91,7 @@
       ".map-interface",
       ".result-content",
     ].join(","),
+    serviceArt: ":scope > .campaign-art, :scope > picture > .campaign-art",
   };
   const backdropSources = Object.freeze({
     light: "assets/editorial-atelier-backdrop-v2-1672.webp",
@@ -166,7 +167,10 @@
     backdrop.setAttribute("role", "presentation");
     backdrop.decoding = "async";
     backdrop.loading = "eager";
-    art.after(backdrop);
+    const artHost = art.parentElement?.tagName === "PICTURE"
+      ? art.parentElement
+      : art;
+    artHost.after(backdrop);
 
     const markReady = () => {
       if (!backdrop.naturalWidth) return;
@@ -662,7 +666,7 @@
     if (home) addLayout(home, ":scope > .copy, :scope > .detail", ":scope > .art-stage", "grow");
 
     document.querySelectorAll(selectors.serviceScene).forEach(scene => {
-      addLayout(scene, selectors.serviceContent, ":scope > .campaign-art");
+      addLayout(scene, selectors.serviceContent, selectors.serviceArt);
     });
 
     document.querySelectorAll(".about-page .scene").forEach(scene => {

@@ -464,7 +464,7 @@ try {
     const context = await browser.newContext({ viewport, reducedMotion: "reduce" });
     await context.addInitScript(() => {
       localStorage.setItem("ok-consent", JSON.stringify({
-        version: 3,
+        version: 4,
         level: "denied",
         at: new Date().toISOString(),
       }));
@@ -492,7 +492,7 @@ try {
   if (!WEBKIT_SMOKE) {
     const mobileContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
     await mobileContext.addInitScript(() => {
-      localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+      localStorage.setItem("ok-consent", JSON.stringify({ version: 4, level: "denied", at: new Date().toISOString() }));
     });
     const mobilePage = await mobileContext.newPage();
     try {
@@ -506,7 +506,7 @@ try {
 
     const placementContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
     await placementContext.addInitScript(() => {
-      localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+      localStorage.setItem("ok-consent", JSON.stringify({ version: 4, level: "denied", at: new Date().toISOString() }));
     });
     const placementPage = await placementContext.newPage();
     try {
@@ -525,7 +525,7 @@ try {
 
   const fallbackContext = await browser.newContext({ viewport: MOBILE_VIEWPORT, reducedMotion: "reduce" });
   await fallbackContext.addInitScript(() => {
-    localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+    localStorage.setItem("ok-consent", JSON.stringify({ version: 4, level: "denied", at: new Date().toISOString() }));
   });
   const fallbackPage = await fallbackContext.newPage();
   try {
@@ -554,7 +554,7 @@ try {
     reducedMotion: "reduce",
   });
   await resizeContext.addInitScript(() => {
-    localStorage.setItem("ok-consent", JSON.stringify({ version: 3, level: "denied", at: new Date().toISOString() }));
+    localStorage.setItem("ok-consent", JSON.stringify({ version: 4, level: "denied", at: new Date().toISOString() }));
   });
   const resizePage = await resizeContext.newPage();
   try {

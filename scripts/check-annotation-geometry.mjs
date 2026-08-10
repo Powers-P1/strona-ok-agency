@@ -67,7 +67,7 @@ const webkitAudit = process.argv.includes("--webkit");
 const browserType = webkitAudit ? webkit : chromium;
 const consentInit = () => {
   localStorage.setItem("ok-consent", JSON.stringify({
-    version: 3,
+    version: 4,
     level: "denied",
     at: new Date().toISOString(),
   }));

@@ -110,7 +110,10 @@ const waitForDocumentReady = async page => {
   await page.waitForFunction(() => {
     const api = window.OKAgencyResponsiveSafety;
     if (document.fonts?.status && document.fonts.status !== "loaded") return false;
-    return typeof api?.getArtBounds === "function";
+    return (
+      typeof api?.getArtBounds === "function"
+      && typeof window.OKAgencyAnnotations?.open === "function"
+    );
   }, null, { timeout: TIMEOUT });
   await settleLayout(page);
 };

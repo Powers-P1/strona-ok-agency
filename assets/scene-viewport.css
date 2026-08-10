@@ -142,7 +142,7 @@ html.ok-scene-page .ok-nav-slot {
    * full-viewport scene.
    */
   [data-scene-frame] > .proof-content[data-seam-safe-content]:has(> .proof-actions) {
-    width: min(720px, calc(100vw - 48px));
+    width: min(var(--ok-short-proof-rail, 720px), calc(100vw - 48px));
   }
 
   :is(.campaign-frame, .social-frame, .process-frame)
@@ -215,7 +215,7 @@ html.ok-scene-page .ok-nav-slot {
   }
 
   [data-scene-frame] > .proof-content[data-seam-safe-content]:has(> .proof-actions) {
-    width: min(900px, calc(100vw - 48px));
+    width: min(var(--ok-short-proof-rail, 900px), calc(100vw - 48px));
   }
 
   :is(.campaign-frame, .social-frame, .process-frame) .proof-item.is-open .proof-detail {

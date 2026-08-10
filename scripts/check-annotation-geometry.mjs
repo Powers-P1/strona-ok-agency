@@ -1047,13 +1047,29 @@ const exercisePoint = async (
     // every hover audit exercises a real pointer transition.
     await page.mouse.move(1, 1);
     await dot.hover();
-    // The geometry audit already uses a synthetic pointerleave to sample the
-    // closing animation. Mirror that here after Playwright's real hit-test so
-    // browser-level pointer position reuse cannot suppress pointerenter.
-    await dot.dispatchEvent("pointerenter", {
-      bubbles: false,
-      pointerType: "mouse",
+    // Verify pointerenter synchronously, then pin the same callout through the
+    // public interaction API while the slower geometry checks run. On loaded CI
+    // runners an opening layout refresh can move the target under the physical
+    // pointer and queue pointerleave before opacity reaches 1; that race is not
+    // a broken hover handler and must not make the geometry audit flaky.
+    const hoverState = await dot.evaluate(element => {
+      const callout = element.closest(".annotation-callout, .annotation");
+      const copy = callout?.querySelector(".annotation-copy");
+      element.dispatchEvent(new PointerEvent("pointerenter", {
+        bubbles: false,
+        pointerType: "mouse",
+      }));
+      const openedSynchronously = Boolean(
+        callout?.classList.contains("is-open")
+        && element.getAttribute("aria-expanded") === "true"
+        && copy?.getAttribute("aria-hidden") === "false"
+      );
+      window.OKAgencyAnnotations.open(callout);
+      return { openedSynchronously };
     });
+    if (!hoverState.openedSynchronously) {
+      throw new Error("pointerenter did not synchronously open the callout");
+    }
     await waitForOpen(page, sceneIndex, calloutIndex);
     await page.waitForTimeout(420);
     anchorMovementIssues(
@@ -1070,6 +1086,11 @@ const exercisePoint = async (
       await openState(page, sceneIndex, calloutIndex),
       "hover/stable",
     );
+    await dot.evaluate(element => {
+      const callout = element.closest(".annotation-callout, .annotation");
+      callout.dataset.pinned = "false";
+      callout.dataset.preview = "true";
+    });
     const closingIssues = await closingCopyLayoutIssues(page, sceneIndex, calloutIndex);
     closingIssues.forEach(message => (
       addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)

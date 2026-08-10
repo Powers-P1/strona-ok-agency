@@ -368,11 +368,16 @@ const auditHomeRatiosAndResize = async (browser, baseUrl) => {
         const viewportToken = Number(
           getComputedStyle(root).getPropertyValue("--ok-viewport-height-runtime").replace("px", ""),
         );
+        const contentToken = Number(
+          getComputedStyle(root).getPropertyValue("--ok-type-content").replace("px", ""),
+        );
+        const bodyFont = Number(getComputedStyle(document.body).fontSize.replace("px", ""));
         const firstView = document.querySelector("[data-scene-first-view]");
         const firstViewBottom = firstView.getBoundingClientRect().bottom;
         return innerWidth === width
           && innerHeight === height
           && Math.abs(viewportToken - height) <= 1
+          && Math.abs(bodyFont - contentToken) <= .1
           && Math.abs(firstViewBottom - height) <= 2;
       }, viewport);
       await auditDocument(page, "/ (resize)", viewport);

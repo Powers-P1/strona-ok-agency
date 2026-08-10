@@ -19,6 +19,9 @@ body.home-page {
     var(--ok-safe-required-height, var(--ok-scene-first-view-height))
   );
   height: auto;
+  /* Measurements must settle synchronously; reduced-motion micro-transitions
+     would otherwise republish geometry from the previous viewport. */
+  transition-property: none;
   overflow-x: clip;
   overflow-y: visible;
 }

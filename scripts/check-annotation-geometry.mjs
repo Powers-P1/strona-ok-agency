@@ -439,7 +439,7 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
   fixedUiSelector: FIXED_UI_SELECTOR,
 });
 
-const waitForOpen = async (page, sceneIndex, calloutIndex) => {
+const waitForOpen = async (page, sceneIndex, calloutIndex, timeout = TIMEOUT) => {
   await page.waitForFunction(({ selector, sceneNumber, calloutNumber }) => {
     const callout = document.querySelectorAll(selector)[sceneNumber]
       ?.querySelectorAll(".annotation-callout, .annotation")[calloutNumber];
@@ -455,7 +455,7 @@ const waitForOpen = async (page, sceneIndex, calloutIndex) => {
     selector: SCENE_SELECTOR,
     sceneNumber: sceneIndex,
     calloutNumber: calloutIndex,
-  }, { timeout: TIMEOUT });
+  }, { timeout });
 };
 
 const waitForClosed = async (page, sceneIndex, calloutIndex) => {
@@ -1041,37 +1041,37 @@ const exercisePoint = async (
     await settleLayout(page);
     const stableAnchors = await anchorCenters(page, sceneIndex);
     phase = "hover/open";
-    // Chromium keeps the physical pointer position between pages. If the next
-    // audited dot lands at the same coordinates, locator.hover() has no move to
-    // perform and no pointerenter event is emitted. Start outside the artwork so
-    // every hover audit exercises a real pointer transition.
-    await page.mouse.move(1, 1);
-    await dot.hover();
-    // Verify pointerenter synchronously, then pin the same callout through the
-    // public interaction API while the slower geometry checks run. On loaded CI
-    // runners an opening layout refresh can move the target under the physical
-    // pointer and queue pointerleave before opacity reaches 1; that race is not
-    // a broken hover handler and must not make the geometry audit flaky.
-    const hoverState = await dot.evaluate(element => {
-      const callout = element.closest(".annotation-callout, .annotation");
-      const copy = callout?.querySelector(".annotation-copy");
-      element.dispatchEvent(new PointerEvent("pointerenter", {
-        bubbles: false,
-        pointerType: "mouse",
-      }));
-      const openedSynchronously = Boolean(
-        callout?.classList.contains("is-open")
-        && element.getAttribute("aria-expanded") === "true"
-        && copy?.getAttribute("aria-hidden") === "false"
-      );
-      window.OKAgencyAnnotations.open(callout);
-      return { openedSynchronously };
-    });
-    if (!hoverState.openedSynchronously) {
-      throw new Error("pointerenter did not synchronously open the callout");
+    let hoverError = null;
+    let hoverStable = false;
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      // Chromium keeps the physical pointer position between pages. Start
+      // outside the artwork so each attempt exercises a real pointer transition.
+      await page.keyboard.press("Escape");
+      await page.mouse.move(1, 1);
+      await dot.hover();
+      try {
+        await waitForOpen(page, sceneIndex, calloutIndex, 2_000);
+        await page.waitForTimeout(420);
+        hoverStable = await dot.evaluate(element => {
+          const callout = element.closest(".annotation-callout, .annotation");
+          const copy = callout?.querySelector(".annotation-copy");
+          return Boolean(
+            callout?.classList.contains("is-open")
+            && element.getAttribute("aria-expanded") === "true"
+            && copy?.getAttribute("aria-hidden") === "false"
+            && Number.parseFloat(getComputedStyle(copy).opacity || "0") > 0.99
+          );
+        });
+        if (hoverStable) break;
+        hoverError = new Error(`natural hover closed during stability window (attempt ${attempt}/3)`);
+      } catch (error) {
+        hoverError = error;
+      }
+      await page.mouse.move(1, 1);
+      await page.keyboard.press("Escape");
+      await waitForClosed(page, sceneIndex, calloutIndex).catch(() => {});
     }
-    await waitForOpen(page, sceneIndex, calloutIndex);
-    await page.waitForTimeout(420);
+    if (!hoverStable) throw hoverError || new Error("natural hover did not remain open");
     anchorMovementIssues(
       stableAnchors,
       await anchorCenters(page, sceneIndex),
@@ -1086,11 +1086,6 @@ const exercisePoint = async (
       await openState(page, sceneIndex, calloutIndex),
       "hover/stable",
     );
-    await dot.evaluate(element => {
-      const callout = element.closest(".annotation-callout, .annotation");
-      callout.dataset.pinned = "false";
-      callout.dataset.preview = "true";
-    });
     const closingIssues = await closingCopyLayoutIssues(page, sceneIndex, calloutIndex);
     closingIssues.forEach(message => (
       addFailure(route, viewport, sceneId, `callout-${calloutIndex + 1}`, message)

@@ -37,11 +37,15 @@ body.faq-page {
   z-index: 0;
   inset: 0;
   pointer-events: none;
-  opacity: .34;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, .48) 0 1px, transparent 1.2px),
-    radial-gradient(circle at 70% 60%, rgba(20, 32, 48, .08) 0 .7px, transparent 1px);
-  background-size: 13px 17px, 17px 19px;
+  opacity: .88;
+  background-image: url("faq/faq-canvas-v1-1672.webp");
+  background-image: image-set(
+    url("faq/faq-canvas-v1-1672.avif") type("image/avif"),
+    url("faq/faq-canvas-v1-1672.webp") type("image/webp")
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .faq-skip {
@@ -315,7 +319,38 @@ body.faq-page {
   }
 }
 
+@media (max-width: 1100px) and (min-aspect-ratio: 4 / 3) {
+  .faq-page::before {
+    background-image: url("faq/faq-canvas-v1-1024.webp");
+    background-image: image-set(
+      url("faq/faq-canvas-v1-1024.avif") type("image/avif"),
+      url("faq/faq-canvas-v1-1024.webp") type("image/webp")
+    );
+  }
+}
+
+@media (max-width: 600px) and (min-aspect-ratio: 4 / 3) {
+  .faq-page::before {
+    background-image: url("faq/faq-canvas-v1-768.webp");
+    background-image: image-set(
+      url("faq/faq-canvas-v1-768.avif") type("image/avif"),
+      url("faq/faq-canvas-v1-768.webp") type("image/webp")
+    );
+  }
+}
+
+@media (max-aspect-ratio: 3 / 4) {
+  .faq-page::before {
+    background-image: url("faq/faq-canvas-v1-portrait-1024.webp");
+    background-image: image-set(
+      url("faq/faq-canvas-v1-portrait-1024.avif") type("image/avif"),
+      url("faq/faq-canvas-v1-portrait-1024.webp") type("image/webp")
+    );
+  }
+}
+
 @media (max-width: 600px) {
+
   .faq-main {
     padding: 42px 22px 72px;
     gap: 46px;
@@ -372,6 +407,10 @@ body.faq-page {
 }
 
 @media (forced-colors: active) {
+  .faq-page::before {
+    display: none;
+  }
+
   .faq-page,
   .faq-cta a {
     color: CanvasText;

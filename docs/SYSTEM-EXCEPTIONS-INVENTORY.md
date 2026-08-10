@@ -92,8 +92,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 497 | *, *::before, *::after | — | route-debt |
 | assets/page-contact.css | 498 | *, *::before, *::after | — | route-debt |
 | assets/page-contact.css | 499 | *, *::before, *::after | — | route-debt |
-| assets/page-faq.css | 369 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/page-faq.css | 370 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-faq.css | 404 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-faq.css | 405 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 538 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
 | assets/page-home.css | 539 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
 | assets/page-home.css | 540 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
@@ -418,44 +418,44 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 462 | .flow-state > p | font-size | 15px | @media (max-width: 640px) | local-type-exception |
 | assets/page-contact.css | 463 | .state-email | font-size | 26px | @media (max-width: 640px) | local-type-exception |
 | assets/page-faq.css | 31 | body.faq-page | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 55 | .faq-skip | font-size | 13px | — | local-type-exception |
-| assets/page-faq.css | 86 | .faq-kicker, .faq-list__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/page-faq.css | 87 | .faq-kicker, .faq-list__label | font-weight | 720 | — | local-type-exception |
-| assets/page-faq.css | 88 | .faq-kicker, .faq-list__label | letter-spacing | .18em | — | local-type-exception |
-| assets/page-faq.css | 89 | .faq-kicker, .faq-list__label | line-height | 1.4 | — | local-type-exception |
-| assets/page-faq.css | 95 | .faq-intro h1 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 96 | .faq-intro h1 | font-size | clamp(58px, 6.3vw, 108px) | — | local-type-exception |
-| assets/page-faq.css | 97 | .faq-intro h1 | font-weight | 430 | — | local-type-exception |
-| assets/page-faq.css | 98 | .faq-intro h1 | letter-spacing | -.045em | — | local-type-exception |
-| assets/page-faq.css | 99 | .faq-intro h1 | line-height | .82 | — | local-type-exception |
-| assets/page-faq.css | 104 | .faq-intro h1 em | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 106 | .faq-intro h1 em | font-weight | 500 | — | local-type-exception |
-| assets/page-faq.css | 113 | .faq-lead | font-size | clamp(16px, 1.15vw, 19px) | — | local-type-exception |
-| assets/page-faq.css | 114 | .faq-lead | line-height | 1.65 | — | local-type-exception |
-| assets/page-faq.css | 125 | .faq-intro__link | font-size | 13px | — | local-type-exception |
-| assets/page-faq.css | 126 | .faq-intro__link | font-weight | 680 | — | local-type-exception |
-| assets/page-faq.css | 166 | .faq-list summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 167 | .faq-list summary | font-size | clamp(25px, 2.15vw, 38px) | — | local-type-exception |
-| assets/page-faq.css | 168 | .faq-list summary | font-weight | 480 | — | local-type-exception |
-| assets/page-faq.css | 169 | .faq-list summary | line-height | 1.05 | — | local-type-exception |
-| assets/page-faq.css | 182 | .faq-number | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 183 | .faq-number | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/page-faq.css | 184 | .faq-number | font-weight | 720 | — | local-type-exception |
-| assets/page-faq.css | 185 | .faq-number | letter-spacing | .16em | — | local-type-exception |
-| assets/page-faq.css | 243 | .faq-answer p | font-size | clamp(15px, 1.05vw, 18px) | — | local-type-exception |
-| assets/page-faq.css | 244 | .faq-answer p | line-height | 1.7 | — | local-type-exception |
-| assets/page-faq.css | 259 | .faq-cta p | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 260 | .faq-cta p | font-size | clamp(28px, 3vw, 46px) | — | local-type-exception |
-| assets/page-faq.css | 261 | .faq-cta p | line-height | .98 | — | local-type-exception |
-| assets/page-faq.css | 267 | .faq-cta p span | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 279 | .faq-cta a | font-size | 12px | — | local-type-exception |
-| assets/page-faq.css | 280 | .faq-cta a | font-weight | 720 | — | local-type-exception |
-| assets/page-faq.css | 281 | .faq-cta a | letter-spacing | .12em | — | local-type-exception |
-| assets/page-faq.css | 310 | .faq-intro h1 | font-size | clamp(64px, 11vw, 104px) | @media (max-width: 980px) | local-type-exception |
-| assets/page-faq.css | 326 | .faq-intro h1 | font-size | clamp(54px, 17vw, 76px) | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 331 | .faq-lead | font-size | 15px | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 339 | .faq-list summary | font-size | 25px | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 347 | .faq-answer p | font-size | 15px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 59 | .faq-skip | font-size | 13px | — | local-type-exception |
+| assets/page-faq.css | 90 | .faq-kicker, .faq-list__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/page-faq.css | 91 | .faq-kicker, .faq-list__label | font-weight | 720 | — | local-type-exception |
+| assets/page-faq.css | 92 | .faq-kicker, .faq-list__label | letter-spacing | .18em | — | local-type-exception |
+| assets/page-faq.css | 93 | .faq-kicker, .faq-list__label | line-height | 1.4 | — | local-type-exception |
+| assets/page-faq.css | 99 | .faq-intro h1 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 100 | .faq-intro h1 | font-size | clamp(58px, 6.3vw, 108px) | — | local-type-exception |
+| assets/page-faq.css | 101 | .faq-intro h1 | font-weight | 430 | — | local-type-exception |
+| assets/page-faq.css | 102 | .faq-intro h1 | letter-spacing | -.045em | — | local-type-exception |
+| assets/page-faq.css | 103 | .faq-intro h1 | line-height | .82 | — | local-type-exception |
+| assets/page-faq.css | 108 | .faq-intro h1 em | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 110 | .faq-intro h1 em | font-weight | 500 | — | local-type-exception |
+| assets/page-faq.css | 117 | .faq-lead | font-size | clamp(16px, 1.15vw, 19px) | — | local-type-exception |
+| assets/page-faq.css | 118 | .faq-lead | line-height | 1.65 | — | local-type-exception |
+| assets/page-faq.css | 129 | .faq-intro__link | font-size | 13px | — | local-type-exception |
+| assets/page-faq.css | 130 | .faq-intro__link | font-weight | 680 | — | local-type-exception |
+| assets/page-faq.css | 170 | .faq-list summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 171 | .faq-list summary | font-size | clamp(25px, 2.15vw, 38px) | — | local-type-exception |
+| assets/page-faq.css | 172 | .faq-list summary | font-weight | 480 | — | local-type-exception |
+| assets/page-faq.css | 173 | .faq-list summary | line-height | 1.05 | — | local-type-exception |
+| assets/page-faq.css | 186 | .faq-number | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 187 | .faq-number | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/page-faq.css | 188 | .faq-number | font-weight | 720 | — | local-type-exception |
+| assets/page-faq.css | 189 | .faq-number | letter-spacing | .16em | — | local-type-exception |
+| assets/page-faq.css | 247 | .faq-answer p | font-size | clamp(15px, 1.05vw, 18px) | — | local-type-exception |
+| assets/page-faq.css | 248 | .faq-answer p | line-height | 1.7 | — | local-type-exception |
+| assets/page-faq.css | 263 | .faq-cta p | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 264 | .faq-cta p | font-size | clamp(28px, 3vw, 46px) | — | local-type-exception |
+| assets/page-faq.css | 265 | .faq-cta p | line-height | .98 | — | local-type-exception |
+| assets/page-faq.css | 271 | .faq-cta p span | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 283 | .faq-cta a | font-size | 12px | — | local-type-exception |
+| assets/page-faq.css | 284 | .faq-cta a | font-weight | 720 | — | local-type-exception |
+| assets/page-faq.css | 285 | .faq-cta a | letter-spacing | .12em | — | local-type-exception |
+| assets/page-faq.css | 314 | .faq-intro h1 | font-size | clamp(64px, 11vw, 104px) | @media (max-width: 980px) | local-type-exception |
+| assets/page-faq.css | 361 | .faq-intro h1 | font-size | clamp(54px, 17vw, 76px) | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 366 | .faq-lead | font-size | 15px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 374 | .faq-list summary | font-size | 25px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 382 | .faq-answer p | font-size | 15px | @media (max-width: 600px) | local-type-exception |
 | assets/page-home.css | 24 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-home.css | 29 | button, a | font | inherit | — | local-type-exception |
 | assets/page-home.css | 134 | .nav a | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |

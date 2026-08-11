@@ -92,8 +92,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 497 | *, *::before, *::after | — | route-debt |
 | assets/page-contact.css | 498 | *, *::before, *::after | — | route-debt |
 | assets/page-contact.css | 499 | *, *::before, *::after | — | route-debt |
-| assets/page-faq.css | 404 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/page-faq.css | 405 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-faq.css | 352 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
+| assets/page-faq.css | 353 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 538 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
 | assets/page-home.css | 539 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
 | assets/page-home.css | 540 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
@@ -417,45 +417,45 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 461 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) | semantic-token |
 | assets/page-contact.css | 462 | .flow-state > p | font-size | 15px | @media (max-width: 640px) | local-type-exception |
 | assets/page-contact.css | 463 | .state-email | font-size | 26px | @media (max-width: 640px) | local-type-exception |
-| assets/page-faq.css | 31 | body.faq-page | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 59 | .faq-skip | font-size | 13px | — | local-type-exception |
-| assets/page-faq.css | 90 | .faq-kicker, .faq-list__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/page-faq.css | 91 | .faq-kicker, .faq-list__label | font-weight | 720 | — | local-type-exception |
-| assets/page-faq.css | 92 | .faq-kicker, .faq-list__label | letter-spacing | .18em | — | local-type-exception |
-| assets/page-faq.css | 93 | .faq-kicker, .faq-list__label | line-height | 1.4 | — | local-type-exception |
-| assets/page-faq.css | 99 | .faq-intro h1 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 100 | .faq-intro h1 | font-size | clamp(58px, 6.3vw, 108px) | — | local-type-exception |
-| assets/page-faq.css | 101 | .faq-intro h1 | font-weight | 430 | — | local-type-exception |
-| assets/page-faq.css | 102 | .faq-intro h1 | letter-spacing | -.045em | — | local-type-exception |
-| assets/page-faq.css | 103 | .faq-intro h1 | line-height | .82 | — | local-type-exception |
-| assets/page-faq.css | 108 | .faq-intro h1 em | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 110 | .faq-intro h1 em | font-weight | 500 | — | local-type-exception |
-| assets/page-faq.css | 117 | .faq-lead | font-size | clamp(16px, 1.15vw, 19px) | — | local-type-exception |
-| assets/page-faq.css | 118 | .faq-lead | line-height | 1.65 | — | local-type-exception |
-| assets/page-faq.css | 129 | .faq-intro__link | font-size | 13px | — | local-type-exception |
-| assets/page-faq.css | 130 | .faq-intro__link | font-weight | 680 | — | local-type-exception |
-| assets/page-faq.css | 170 | .faq-list summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 171 | .faq-list summary | font-size | clamp(25px, 2.15vw, 38px) | — | local-type-exception |
-| assets/page-faq.css | 172 | .faq-list summary | font-weight | 480 | — | local-type-exception |
-| assets/page-faq.css | 173 | .faq-list summary | line-height | 1.05 | — | local-type-exception |
-| assets/page-faq.css | 186 | .faq-number | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 187 | .faq-number | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
-| assets/page-faq.css | 188 | .faq-number | font-weight | 720 | — | local-type-exception |
-| assets/page-faq.css | 189 | .faq-number | letter-spacing | .16em | — | local-type-exception |
-| assets/page-faq.css | 247 | .faq-answer p | font-size | clamp(15px, 1.05vw, 18px) | — | local-type-exception |
-| assets/page-faq.css | 248 | .faq-answer p | line-height | 1.7 | — | local-type-exception |
-| assets/page-faq.css | 263 | .faq-cta p | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 264 | .faq-cta p | font-size | clamp(28px, 3vw, 46px) | — | local-type-exception |
-| assets/page-faq.css | 265 | .faq-cta p | line-height | .98 | — | local-type-exception |
-| assets/page-faq.css | 271 | .faq-cta p span | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-faq.css | 283 | .faq-cta a | font-size | 12px | — | local-type-exception |
-| assets/page-faq.css | 284 | .faq-cta a | font-weight | 720 | — | local-type-exception |
-| assets/page-faq.css | 285 | .faq-cta a | letter-spacing | .12em | — | local-type-exception |
-| assets/page-faq.css | 314 | .faq-intro h1 | font-size | clamp(64px, 11vw, 104px) | @media (max-width: 980px) | local-type-exception |
-| assets/page-faq.css | 361 | .faq-intro h1 | font-size | clamp(54px, 17vw, 76px) | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 366 | .faq-lead | font-size | 15px | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 374 | .faq-list summary | font-size | 25px | @media (max-width: 600px) | local-type-exception |
-| assets/page-faq.css | 382 | .faq-answer p | font-size | 15px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 26 | body.faq-page | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 37 | .faq-skip | font-size | 13px | — | local-type-exception |
+| assets/page-faq.css | 68 | .faq-kicker, .faq-list__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/page-faq.css | 69 | .faq-kicker, .faq-list__label | font-weight | 720 | — | local-type-exception |
+| assets/page-faq.css | 70 | .faq-kicker, .faq-list__label | letter-spacing | .18em | — | local-type-exception |
+| assets/page-faq.css | 71 | .faq-kicker, .faq-list__label | line-height | 1.4 | — | local-type-exception |
+| assets/page-faq.css | 77 | .faq-intro h1 | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 78 | .faq-intro h1 | font-size | clamp(58px, 6.3vw, 108px) | — | local-type-exception |
+| assets/page-faq.css | 79 | .faq-intro h1 | font-weight | 430 | — | local-type-exception |
+| assets/page-faq.css | 80 | .faq-intro h1 | letter-spacing | -.045em | — | local-type-exception |
+| assets/page-faq.css | 81 | .faq-intro h1 | line-height | .82 | — | local-type-exception |
+| assets/page-faq.css | 86 | .faq-intro h1 em | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 88 | .faq-intro h1 em | font-weight | 500 | — | local-type-exception |
+| assets/page-faq.css | 95 | .faq-lead | font-size | clamp(16px, 1.15vw, 19px) | — | local-type-exception |
+| assets/page-faq.css | 96 | .faq-lead | line-height | 1.65 | — | local-type-exception |
+| assets/page-faq.css | 107 | .faq-intro__link | font-size | 13px | — | local-type-exception |
+| assets/page-faq.css | 108 | .faq-intro__link | font-weight | 680 | — | local-type-exception |
+| assets/page-faq.css | 148 | .faq-list summary | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 149 | .faq-list summary | font-size | clamp(25px, 2.15vw, 38px) | — | local-type-exception |
+| assets/page-faq.css | 150 | .faq-list summary | font-weight | 480 | — | local-type-exception |
+| assets/page-faq.css | 151 | .faq-list summary | line-height | 1.05 | — | local-type-exception |
+| assets/page-faq.css | 164 | .faq-number | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 165 | .faq-number | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
+| assets/page-faq.css | 166 | .faq-number | font-weight | 720 | — | local-type-exception |
+| assets/page-faq.css | 167 | .faq-number | letter-spacing | .16em | — | local-type-exception |
+| assets/page-faq.css | 225 | .faq-answer p | font-size | clamp(15px, 1.05vw, 18px) | — | local-type-exception |
+| assets/page-faq.css | 226 | .faq-answer p | line-height | 1.7 | — | local-type-exception |
+| assets/page-faq.css | 241 | .faq-cta p | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 242 | .faq-cta p | font-size | clamp(28px, 3vw, 46px) | — | local-type-exception |
+| assets/page-faq.css | 243 | .faq-cta p | line-height | .98 | — | local-type-exception |
+| assets/page-faq.css | 249 | .faq-cta p span | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-faq.css | 261 | .faq-cta a | font-size | 12px | — | local-type-exception |
+| assets/page-faq.css | 262 | .faq-cta a | font-weight | 720 | — | local-type-exception |
+| assets/page-faq.css | 263 | .faq-cta a | letter-spacing | .12em | — | local-type-exception |
+| assets/page-faq.css | 292 | .faq-intro h1 | font-size | clamp(64px, 11vw, 104px) | @media (max-width: 980px) | local-type-exception |
+| assets/page-faq.css | 309 | .faq-intro h1 | font-size | clamp(54px, 17vw, 76px) | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 314 | .faq-lead | font-size | 15px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 322 | .faq-list summary | font-size | 25px | @media (max-width: 600px) | local-type-exception |
+| assets/page-faq.css | 330 | .faq-answer p | font-size | 15px | @media (max-width: 600px) | local-type-exception |
 | assets/page-home.css | 24 | body | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-home.css | 29 | button, a | font | inherit | — | local-type-exception |
 | assets/page-home.css | 134 | .nav a | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
@@ -1364,7 +1364,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/scene-transitions.v20260804-1.css | 175 | .scene-seam--switch[data-scene-seam-state="active"] | display | block | — |
 | assets/scene-transitions.v20260804-1.css | 221 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | height | 100% | @media (max-width: 820px) |
 | assets/scene-transitions.v20260804-1.css | 223 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | position | center | @media (max-width: 820px) |
-| assets/scene-transitions.v20260804-1.css | 240 | .scene-seam--switch[data-scene-seam-state="active"] | display | none | @media (prefers-reduced-motion: reduce) |
+| assets/scene-transitions.v20260804-1.css | 264 | .scene-seam--switch[data-scene-seam-state="active"] | display | none | @media (prefers-reduced-motion: reduce) |
 | assets/services/about/styles.css | 66 | .site-header | position | fixed | — |
 | assets/services/about/styles.css | 67 | .site-header | z-index | 50 | — |
 | assets/services/about/styles.css | 71 | .site-header | height | var(--header-h) | — |
@@ -1637,7 +1637,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/scene-transitions.v20260804-1.js | 355 | .style.setProperty("--scene-seam-source-height", \`${extensionHeight}px\`) |
 | assets/scene-transitions.v20260804-1.js | 356 | .style.setProperty("--scene-seam-source-object-fit", geometry.fit) |
 | assets/scene-transitions.v20260804-1.js | 357 | .style.setProperty("--scene-seam-source-object-position", geometry.objectPosition) |
-| assets/scene-transitions.v20260804-1.js | 448 | .style.setProperty("--scene-seam-matte", \`url("${matteUrl}")\`) |
+| assets/scene-transitions.v20260804-1.js | 450 | .style.setProperty("--scene-seam-matte", \`url("${matteUrl}")\`) |
 | assets/service-interactions.js | 209 | .style.scrollBehavior = "auto" |
 | assets/service-interactions.js | 211 | .style.scrollBehavior = previousBehavior |
 | assets/tree-energy.js | 2045 | .style.width = \`${cssWidth}px\` |

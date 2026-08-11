@@ -440,6 +440,8 @@
       seam.dataset.sceneSeamFrom = "light";
       seam.dataset.sceneSeamTo = "light";
       seam.dataset.sceneSeamMaterial = "asset";
+      const profile = target.dataset.sceneSeamProfile?.trim();
+      if (profile) seam.dataset.sceneSeamProfile = profile;
       seam.setAttribute("data-scene-seam-boundary", "");
       seam.setAttribute("aria-hidden", "true");
       const matteSource = target.dataset.sceneSeamMatte?.trim();

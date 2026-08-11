@@ -23,29 +23,7 @@ body.faq-page {
   min-width: 320px;
   margin: 0;
   color: var(--faq-navy);
-  background:
-    radial-gradient(circle at 82% 9%, rgba(181, 36, 84, .07), transparent 24%),
-    radial-gradient(circle at 8% 68%, rgba(166, 104, 77, .09), transparent 27%),
-    linear-gradient(128deg, rgba(255, 255, 255, .16), transparent 48%),
-    var(--faq-paper);
   font-family: var(--ok-font-body, "Archivo", sans-serif);
-}
-
-.faq-page::before {
-  content: "";
-  position: fixed;
-  z-index: 0;
-  inset: 0;
-  pointer-events: none;
-  opacity: .88;
-  background-image: url("faq/faq-canvas-v1-1672.webp");
-  background-image: image-set(
-    url("faq/faq-canvas-v1-1672.avif") type("image/avif"),
-    url("faq/faq-canvas-v1-1672.webp") type("image/webp")
-  );
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .faq-skip {
@@ -319,36 +297,6 @@ body.faq-page {
   }
 }
 
-@media (max-width: 1100px) and (min-aspect-ratio: 4 / 3) {
-  .faq-page::before {
-    background-image: url("faq/faq-canvas-v1-1024.webp");
-    background-image: image-set(
-      url("faq/faq-canvas-v1-1024.avif") type("image/avif"),
-      url("faq/faq-canvas-v1-1024.webp") type("image/webp")
-    );
-  }
-}
-
-@media (max-width: 600px) and (min-aspect-ratio: 4 / 3) {
-  .faq-page::before {
-    background-image: url("faq/faq-canvas-v1-768.webp");
-    background-image: image-set(
-      url("faq/faq-canvas-v1-768.avif") type("image/avif"),
-      url("faq/faq-canvas-v1-768.webp") type("image/webp")
-    );
-  }
-}
-
-@media (max-aspect-ratio: 3 / 4) {
-  .faq-page::before {
-    background-image: url("faq/faq-canvas-v1-portrait-1024.webp");
-    background-image: image-set(
-      url("faq/faq-canvas-v1-portrait-1024.avif") type("image/avif"),
-      url("faq/faq-canvas-v1-portrait-1024.webp") type("image/webp")
-    );
-  }
-}
-
 @media (max-width: 600px) {
 
   .faq-main {
@@ -407,10 +355,6 @@ body.faq-page {
 }
 
 @media (forced-colors: active) {
-  .faq-page::before {
-    display: none;
-  }
-
   .faq-page,
   .faq-cta a {
     color: CanvasText;

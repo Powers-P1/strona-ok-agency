@@ -668,7 +668,7 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   const failures = [];
   const path = "faq.html";
   const source = htmlSources.get(path);
-  const cssPath = "assets/page-faq.css";
+  const cssPath = "assets/page-canvas.css";
   const cssSource = cssSources.get(cssPath);
   const canvasAssets = [
     "assets/faq/faq-canvas-v1-768.avif",
@@ -694,7 +694,17 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   if (/campaign-art|data-scene-|scene-seam|direction-scenes\//i.test(source)) {
     failures.push(`${path}: FAQ was coupled to an illustrated scene or transition renderer`);
   }
-  addCheck("FAQ: clean paper canvas without scene artwork", failures);
+  const canvasPages = ["faq.html", "diagnoza-www.html", "polityka-prywatnosci.html", "dostepnosc.html"];
+  for (const canvasPage of canvasPages) {
+    const canvasSource = htmlSources.get(canvasPage);
+    if (!/data-page-canvas=["']atelier["']/.test(canvasSource)) {
+      failures.push(`${canvasPage}: missing the shared atelier canvas marker`);
+    }
+    if (!/assets\/page-canvas\.css\?v=/.test(canvasSource)) {
+      failures.push(`${canvasPage}: missing the shared atelier canvas stylesheet`);
+    }
+  }
+  addCheck("Utility pages: shared clean paper canvas without scene artwork", failures);
 }
 
 // Contact uses a seamless paper field; the old bitmap contained a horizontal

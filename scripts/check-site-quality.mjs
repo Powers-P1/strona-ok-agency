@@ -185,10 +185,19 @@ for (const file of publicFiles) {
 
   if (file === "index.html") {
     const homeIntro = source.match(/<section class=["']home-intro["'][\s\S]*?<\/section>/i)?.[0] || "";
+    const homeIntroTag = source.match(/<section\b(?=[^>]*\bclass=["'][^"']*\bhome-intro\b)[^>]*>/i)?.[0] || "";
     const homeIntroText = decodeEntities(homeIntro.replace(/<[^>]+>/g, " "));
     const homeIntroWords = homeIntroText.match(/\p{L}[\p{L}\p{M}’'-]*/gu) || [];
     if (homeIntroWords.length < 150 || homeIntroWords.length > 250) {
       failures.push(`${file}: blok home-intro ma ${homeIntroWords.length} słów zamiast 150–250`);
+    }
+    if (!/\bdata-scene-seam-profile=["']shallow["']/i.test(homeIntroTag)) {
+      failures.push(`${file}: przejście hero nie korzysta ze wspólnego płytkiego profilu`);
+    }
+    for (const tier of ["default", "low", "compact"]) {
+      if (!new RegExp(`\\bdata-scene-seam-atmosphere-${tier}=["'][^"']*home-hero-intro-v4`, "i").test(homeIntroTag)) {
+        failures.push(`${file}: przejście hero nie ma wariantu v4 dla ${tier}`);
+      }
     }
   }
 

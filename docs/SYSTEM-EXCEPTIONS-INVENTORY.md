@@ -1364,7 +1364,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/scene-transitions.v20260804-1.css | 175 | .scene-seam--switch[data-scene-seam-state="active"] | display | block | — |
 | assets/scene-transitions.v20260804-1.css | 221 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | height | 100% | @media (max-width: 820px) |
 | assets/scene-transitions.v20260804-1.css | 223 | /* Compact atmosphere is complete; extracted art would duplicate it. */ .scene-seam__atmosphere img | position | center | @media (max-width: 820px) |
-| assets/scene-transitions.v20260804-1.css | 264 | .scene-seam--switch[data-scene-seam-state="active"] | display | none | @media (prefers-reduced-motion: reduce) |
+| assets/scene-transitions.v20260804-1.css | 265 | .scene-seam--switch[data-scene-seam-state="active"] | display | none | @media (prefers-reduced-motion: reduce) |
 | assets/services/about/styles.css | 66 | .site-header | position | fixed | — |
 | assets/services/about/styles.css | 67 | .site-header | z-index | 50 | — |
 | assets/services/about/styles.css | 71 | .site-header | height | var(--header-h) | — |

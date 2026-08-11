@@ -53,6 +53,7 @@
     name: document.getElementById("f-name"),
     email: document.getElementById("f-email"),
     topic: document.getElementById("f-topic"),
+    goal: document.getElementById("f-goal"),
     message: document.getElementById("f-message"),
     consent: document.getElementById("f-consent"),
   };
@@ -69,12 +70,26 @@
     ["conversation", "Diagnoza / uporządkowanie problemu"],
     ["none", "Inny temat"],
   ]);
+  const goalMap = new Map([
+    ["web", "Pozyskiwać więcej zapytań"],
+    ["website", "Pozyskiwać więcej zapytań"],
+    ["social", "Pozyskiwać więcej zapytań"],
+    ["campaign", "Pozyskiwać więcej zapytań"],
+    ["diagnosis", "Potrzebuję diagnozy i kierunku"],
+    ["site-audit", "Potrzebuję diagnozy i kierunku"],
+    ["conversation", "Potrzebuję diagnozy i kierunku"],
+    ["none", "Potrzebuję diagnozy i kierunku"],
+  ]);
   const params = new URLSearchParams(window.location.search);
   const context = params.get("context") || "";
   const source = params.get("source") || "";
   const mappedTopic = contextMap.get(context);
 
-  if (mappedTopic) fields.topic.value = mappedTopic;
+  const applyContextDefaults = () => {
+    if (mappedTopic) fields.topic.value = mappedTopic;
+    if (goalMap.has(context)) fields.goal.value = goalMap.get(context);
+  };
+  applyContextDefaults();
 
   if (source === "diagnosis" || source === "site-audit") {
     if (contextNoteTitle) {
@@ -104,9 +119,13 @@
       errorId: "e-topic",
       isValid: () => Boolean(fields.topic.value),
     },
+    goal: {
+      errorId: "e-goal",
+      isValid: () => Boolean(fields.goal.value),
+    },
     message: {
       errorId: "e-message",
-      isValid: () => fields.message.value.trim().length >= 10,
+      isValid: () => Boolean(fields.message.value.trim()),
     },
     consent: {
       errorId: "e-consent",
@@ -266,7 +285,10 @@
           phone,
           company: v("f-company"),
           topic: fields.topic.value,
+          goal: fields.goal.value,
           message: v("f-message"),
+          formKind: "contact",
+          source: source || context || "contact",
           fax: v("f-fax"),
           turnstileToken,
           attribution: window.okAnalytics?.attribution?.() || null,
@@ -279,6 +301,7 @@
       if (!response.ok || result.ok !== true) throw new Error("contact_send_failed");
 
       form.reset();
+      applyContextDefaults();
       resetTurnstile();
       showState(handoffState, handoffTitle);
       window.okAnalytics?.generateLead("contact", analyticsEventId, { email, phone });

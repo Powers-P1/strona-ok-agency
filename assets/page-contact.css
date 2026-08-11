@@ -233,6 +233,16 @@ html[data-motion="paused"] .page-title .mask { overflow: visible; }
   margin-top: clamp(13px, 1.8vh, 18px);
   row-gap: clamp(9px, 1.2vh, 14px);
 }
+
+.contact-field-hint {
+  margin: 6px 0 0;
+  color: var(--navy-ink);
+  font-size: var(--ok-type-content-min, 14px);
+  line-height: 1.4;
+}
+
+.field.is-invalid .contact-field-hint { display: none; }
+
 .mailto-helper {
   max-width: 300px;
   margin: 1px 0 0;

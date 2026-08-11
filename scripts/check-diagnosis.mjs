@@ -60,6 +60,19 @@ for (const [context, topic] of mappings) {
   if (!contactHtml.includes(`value="${topic}"`)) failures.push(`Kontakt: brak opcji „${topic}”`);
 }
 
+for (const contract of [
+  'id="f-goal" name="goal" required',
+  'id="f-message" name="message" rows="3" maxlength="2000"',
+  "Jedno zdanie wystarczy.",
+]) {
+  if (!contactHtml.includes(contract)) failures.push(`Kontakt: brak kontraktu jakości „${contract}”`);
+}
+if (!contactSource.includes('goal: fields.goal.value') ||
+    !contactSource.includes('formKind: "contact"') ||
+    !contactSource.includes('Boolean(fields.message.value.trim())')) {
+  failures.push("Kontakt: klient nie wysyła celu lub odrzuca krótkie wiadomości");
+}
+
 const requiredDiagnosisCopy = [
   "Wynik dostajesz od razu — bez zapisu i podawania danych.",
   "Jeśli chcesz omówić wynik, przejdź do opcjonalnego kontaktu.",
@@ -91,6 +104,9 @@ if (!diagnosisHtml.includes('name="email" type="email"') || !diagnosisHtml.inclu
 }
 if (!diagnosisHtml.includes('id="diagnosis-turnstile"') || !diagnosisSource.includes('fetch("/api/contact"')) {
   failures.push("Diagnoza: brak zachowanego Turnstile lub API /api/contact");
+}
+if (!diagnosisSource.includes('formKind: "diagnosis"') || !diagnosisSource.includes('source: "diagnosis"')) {
+  failures.push("Diagnoza: zgłoszenie nie identyfikuje źródła i rodzaju formularza");
 }
 if (/\.diagnosis-frame\s*\{[^}]*overflow-y\s*:\s*auto/s.test(diagnosisStyles)) {
   failures.push("Diagnoza: niedozwolony wewnętrzny scroller ramki");

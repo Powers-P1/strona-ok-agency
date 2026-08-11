@@ -423,8 +423,6 @@
         .map((key, index) => `${index + 1}. ${answers[key] || "—"}`)
         .join("\n");
       return [
-        `Zgłoszenie z diagnozy marketingowej.`,
-        ``,
         `Wynik: ${copy.title}`,
         `Uzasadnienie: ${copy.why}`,
         ``,
@@ -488,7 +486,10 @@
             phone: "",
             company: "",
             topic: `Diagnoza: ${RESULTS[currentOutcome].title}`,
+            goal: "Omówić wynik diagnozy",
             message: buildLeadMessage(),
+            formKind: "diagnosis",
+            source: "diagnosis",
             fax: "",
             turnstileToken,
             attribution: window.okAnalytics?.attribution?.() || null,

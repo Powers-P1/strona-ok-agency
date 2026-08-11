@@ -5,6 +5,7 @@ import {
   MAX_BODY_BYTES,
   buildMetaConversionEvent,
   buildEmail,
+  isValidContactPayload,
   normalizeAttribution,
   normalizePayload,
   readJsonBody,
@@ -119,7 +120,8 @@ test("Worker rejects contact data hidden with control or zero-width separators",
       "https://okagency.pl/?gclid=click-ab123456789xyz",
     );
     assert.equal(attribution.first_touch.utm_content, undefined);
-    assert.doesNotMatch(JSON.stringify(attribution.first_touch), /501|tel|jan/i);
+    const { captured_at: _capturedAt, ...campaignData } = attribution.first_touch;
+    assert.doesNotMatch(JSON.stringify(campaignData), /501|tel|jan/i);
   }
 });
 
@@ -199,7 +201,10 @@ test("sanitizes event ID and includes accepted attribution in the email", () => 
     phone: "",
     company: "OK",
     topic: "Strona internetowa",
+    goal: "Pozyskiwać więcej zapytań",
     message: "Proszę o kontakt w sprawie strony.",
+    formKind: "contact",
+    source: "web",
     fax: "",
     analyticsEventId: "lead-event-12345\r\nBcc: attacker@example.com",
     attribution: {
@@ -211,10 +216,96 @@ test("sanitizes event ID and includes accepted attribution in the email", () => 
 
   payload.analyticsEventId = "lead-event-12345";
   const email = buildEmail(payload, "forms@okagency.pl", "hello@okagency.pl");
+  assert.equal(email.subject, "[WWW] Jan Kowalski — OK");
+  assert.match(email.text, /Źródło formularza: Oferta stron internetowych/);
+  assert.match(email.text, /Najważniejszy cel: Pozyskiwać więcej zapytań/);
+  assert.match(email.text, /Treść wiadomości:\nProszę o kontakt w sprawie strony\./);
   assert.match(email.text, /Identyfikator zdarzenia: lead-event-12345/);
-  assert.match(email.text, /Atrybucja kampanii \(dane przekazane przez przeglądarkę\)/);
-  assert.match(email.text, /utm_campaign: brand/);
+  assert.match(email.text, /Ostatni kontakt:/);
+  assert.match(email.text, /Kampania: brand/);
+  assert.doesNotMatch(email.text, /gclid|fbclid|click-1/);
   assert.doesNotMatch(email.text, /pii@example\.com|secret=1/);
+});
+
+test("accepts concise contact messages while still requiring a goal and message", () => {
+  const base = normalizePayload({
+    name: "Mirosław Kowalak",
+    email: "kowalak@premiumleasing24.pl",
+    topic: "Strona internetowa",
+    goal: "Pozyskiwać więcej zapytań",
+    formKind: "contact",
+    source: "campaign",
+  });
+
+  assert.equal(isValidContactPayload({ ...base, message: "Stworzyć kanał który sprzedaje" }), true);
+  assert.equal(isValidContactPayload({ ...base, message: "   " }), false);
+  assert.equal(isValidContactPayload({ ...base, message: "Za krótko" }), false);
+  assert.equal(isValidContactPayload({ ...base, goal: "", message: "Proszę o kontakt" }), false);
+  assert.equal(isValidContactPayload({
+    ...base,
+    message: "Prowadzimy firmę leasingową. Strona ma pozyskiwać więcej konkretnych zapytań.",
+  }), true);
+
+  const diagnosis = normalizePayload({
+    name: "Anna Nowak",
+    email: "anna@example.com",
+    topic: "Diagnoza: Strona internetowa",
+    message: "Wynik: Strona internetowa",
+    formKind: "diagnosis",
+    source: "diagnosis",
+  });
+  assert.equal(isValidContactPayload(diagnosis), true);
+});
+
+test("keeps the previous form payload contract valid during a rolling deployment", () => {
+  const legacyContact = normalizePayload({
+    name: "Mirosław Kowalak",
+    email: "kowalak@premiumleasing24.pl",
+    topic: "Strona internetowa",
+    message: "Stworzyć kanał który sprzedaje",
+  });
+  assert.equal(legacyContact.legacyContract, true);
+  assert.equal(isValidContactPayload(legacyContact), true);
+  assert.equal(isValidContactPayload({ ...legacyContact, message: "   " }), false);
+  assert.equal(isValidContactPayload({ ...legacyContact, message: "Za krótko" }), false);
+
+  const legacyDiagnosis = normalizePayload({
+    name: "Anna Nowak",
+    email: "anna@example.com",
+    topic: "Diagnoza: Strona internetowa",
+    message: "Wynik: Strona internetowa",
+  });
+  assert.equal(legacyDiagnosis.legacyContract, true);
+  assert.equal(isValidContactPayload(legacyDiagnosis), true);
+});
+
+test("collapses identical campaign touches and keeps the lead email readable", () => {
+  const identicalTouch = touch({
+    utm_source: "meta",
+    utm_medium: "paid_social",
+    utm_campaign: "Diagnoza WWW",
+    utm_content: "K5 Produkt",
+    utm_term: "Warszawa 40km",
+    fbclid: "opaque-click-id",
+  });
+  const payload = normalizePayload({
+    name: "Mirosław Kowalak",
+    email: "kowalak@premiumleasing24.pl",
+    phone: "+48 515 101 113",
+    topic: "Strona internetowa",
+    goal: "Pozyskiwać więcej zapytań",
+    message: "Prowadzimy firmę leasingową. Strona ma pozyskiwać więcej konkretnych zapytań.",
+    formKind: "contact",
+    source: "campaign",
+    attribution: { first_touch: identicalTouch, last_touch: { ...identicalTouch } },
+  });
+  const email = buildEmail(payload, "forms@okagency.pl", "hello@okagency.pl");
+
+  assert.equal((email.text.match(/Kontakt z kampanii:/g) || []).length, 1);
+  assert.doesNotMatch(email.text, /Pierwszy kontakt:|Ostatni kontakt:/);
+  assert.match(email.text, /Kanał: meta \/ paid_social/);
+  assert.match(email.text, /Domena firmowego e-maila: premiumleasing24\.pl/);
+  assert.doesNotMatch(email.text, /fbclid|opaque-click-id/);
 });
 
 test("builds a consented Meta Contact server event with hashed contact data", async () => {

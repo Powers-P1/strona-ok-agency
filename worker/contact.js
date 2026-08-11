@@ -20,9 +20,62 @@ const LIMITS = {
   phone: 50,
   company: 150,
   topic: 100,
+  goal: 100,
   message: 5000,
+  formKind: 30,
+  source: 40,
   fax: 200,
 };
+
+const FORM_KINDS = new Set(["contact", "diagnosis"]);
+const LEAD_SOURCES = new Set([
+  "contact",
+  "web",
+  "website",
+  "social",
+  "campaign",
+  "diagnosis",
+  "site-audit",
+  "process",
+  "about",
+  "conversation",
+  "none",
+]);
+const CONTACT_GOALS = new Set([
+  "Pozyskiwać więcej zapytań",
+  "Uporządkować ofertę i komunikację",
+  "Zbudować lub odświeżyć wizerunek",
+  "Uruchomić nową markę lub usługę",
+  "Potrzebuję diagnozy i kierunku",
+  "Omówić wynik diagnozy",
+  "Inny cel",
+]);
+const EMAIL_TOPIC_LABELS = new Map([
+  ["Strona internetowa", "WWW"],
+  ["Social media", "Social media"],
+  ["Kampania płatna", "Kampanie"],
+  ["Diagnoza / uporządkowanie problemu", "Diagnoza"],
+  ["Proces współpracy", "Współpraca"],
+  ["Inny temat", "Kontakt"],
+]);
+const EMAIL_SOURCE_LABELS = new Map([
+  ["contact", "Formularz kontaktowy"],
+  ["web", "Oferta stron internetowych"],
+  ["website", "Oferta stron internetowych"],
+  ["social", "Oferta social media"],
+  ["campaign", "Oferta kampanii płatnych"],
+  ["diagnosis", "Diagnoza marketingowa"],
+  ["site-audit", "Audyt WWW"],
+  ["process", "Opis procesu współpracy"],
+  ["about", "Strona O nas"],
+  ["conversation", "Diagnoza marketingowa"],
+  ["none", "Diagnoza marketingowa"],
+]);
+const PERSONAL_EMAIL_DOMAINS = new Set([
+  "gmail.com", "googlemail.com", "outlook.com", "hotmail.com", "live.com",
+  "icloud.com", "me.com", "wp.pl", "o2.pl", "onet.pl", "interia.pl",
+  "vp.pl", "poczta.fm", "proton.me", "protonmail.com", "yahoo.com",
+]);
 
 const META_LIMITS = Object.freeze({
   eventSourceUrl: 1000,
@@ -71,6 +124,10 @@ function normalizePayload(input) {
   const payload = Object.fromEntries(
     Object.entries(LIMITS).map(([key, limit]) => [key, clean(input?.[key], limit)]),
   );
+  payload.legacyContract = !payload.formKind && !payload.goal;
+  payload.formKind = FORM_KINDS.has(payload.formKind) ? payload.formKind : "contact";
+  payload.source = LEAD_SOURCES.has(payload.source) ? payload.source : "contact";
+  payload.goal = CONTACT_GOALS.has(payload.goal) ? payload.goal : "";
   payload.attribution = normalizeAttribution(input?.attribution);
   const analyticsEventId = clean(input?.analyticsEventId, 100);
   payload.analyticsEventId = /^[A-Za-z0-9._:-]{8,100}$/.test(analyticsEventId)
@@ -373,33 +430,54 @@ function safeHeader(value) {
   return value.replace(/[\r\n]+/g, " ").trim();
 }
 
-function attributionLines(attribution) {
-  if (!attribution) return [];
-  const labels = {
-    captured_at: "czas",
-    landing_page: "landing",
-    referrer: "referrer",
-    utm_source: "utm_source",
-    utm_medium: "utm_medium",
-    utm_campaign: "utm_campaign",
-    utm_content: "utm_content",
-    utm_term: "utm_term",
-    gclid: "gclid",
-    gbraid: "gbraid",
-    wbraid: "wbraid",
-    fbclid: "fbclid",
-  };
-  const formatTouch = (title, touch) => [
-    title,
-    ...Object.entries(labels)
-      .filter(([key]) => touch[key])
-      .map(([key, label]) => `- ${label}: ${touch[key]}`),
+function compactUrl(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    const path = url.pathname === "/" ? "" : url.pathname.replace(/\/$/, "");
+    return `${url.hostname}${path}`;
+  } catch {
+    return value;
+  }
+}
+
+function sameMarketingTouch(firstTouch, lastTouch) {
+  const keys = [
+    "landing_page",
+    "referrer",
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
   ];
+  return keys.every(key => (firstTouch[key] || "") === (lastTouch[key] || ""));
+}
+
+function attributionLines(attribution) {
+  if (!attribution) return ["Kampania: brak danych — wejście bezpośrednie lub brak zgody/pamięci przeglądarki"];
+
+  const formatTouch = (title, touch) => {
+    const channel = [touch.utm_source, touch.utm_medium].filter(Boolean).join(" / ");
+    return [
+      title,
+      channel ? `Kanał: ${channel}` : null,
+      touch.utm_campaign ? `Kampania: ${touch.utm_campaign}` : null,
+      touch.utm_content ? `Reklama / wariant: ${touch.utm_content}` : null,
+      touch.utm_term ? `Grupa / fraza: ${touch.utm_term}` : null,
+      touch.landing_page ? `Strona wejścia: ${compactUrl(touch.landing_page)}` : null,
+      touch.referrer ? `Przejście z: ${compactUrl(touch.referrer)}` : null,
+    ].filter(Boolean);
+  };
+
+  if (sameMarketingTouch(attribution.first_touch, attribution.last_touch)) {
+    return formatTouch("Kontakt z kampanii:", attribution.last_touch);
+  }
+
   return [
+    ...formatTouch("Pierwszy kontakt:", attribution.first_touch),
     "",
-    "Atrybucja kampanii (dane przekazane przez przeglądarkę):",
-    ...formatTouch("First touch:", attribution.first_touch),
-    ...formatTouch("Last touch:", attribution.last_touch),
+    ...formatTouch("Ostatni kontakt:", attribution.last_touch),
   ];
 }
 
@@ -490,6 +568,17 @@ async function verifyTurnstile(token, secret, remoteip, hostnameConfig) {
 }
 
 function buildEmail(payload, from, to) {
+  const emailDomain = payload.email.split("@").at(-1)?.toLowerCase() || "";
+  const businessEmailDomain = emailDomain && !PERSONAL_EMAIL_DOMAINS.has(emailDomain)
+    ? emailDomain
+    : "";
+  const subjectTag = payload.formKind === "diagnosis"
+    ? "Diagnoza"
+    : EMAIL_TOPIC_LABELS.get(payload.topic) || payload.topic;
+  const technicalLines = payload.analyticsEventId
+    ? ["", "DANE TECHNICZNE", `Identyfikator zdarzenia: ${payload.analyticsEventId}`]
+    : [];
+
   return {
     from: {
       email: from,
@@ -498,20 +587,44 @@ function buildEmail(payload, from, to) {
     to,
     replyTo: payload.email,
     subject: safeHeader(
-      `[${payload.topic}] ${payload.name}${payload.company ? ` — ${payload.company}` : ""}`,
+      `[${subjectTag}] ${payload.name}${payload.company ? ` — ${payload.company}` : ""}`,
     ),
     text: [
-      `Temat: ${payload.topic}`,
+      "NOWY LEAD — OK AGENCY",
+      `Źródło formularza: ${EMAIL_SOURCE_LABELS.get(payload.source) || "Formularz kontaktowy"}`,
+      "",
+      "KONTAKT",
       `Imię i nazwisko: ${payload.name}`,
       `E-mail: ${payload.email}`,
       payload.phone ? `Telefon: ${payload.phone}` : null,
-      payload.company ? `Firma: ${payload.company}` : null,
+      payload.company ? `Firma / marka: ${payload.company}` : null,
+      businessEmailDomain ? `Domena firmowego e-maila: ${businessEmailDomain}` : null,
       "",
+      "ZGŁOSZENIE",
+      `Temat: ${payload.topic}`,
+      payload.goal ? `Najważniejszy cel: ${payload.goal}` : null,
+      "Treść wiadomości:",
       payload.message,
-      payload.analyticsEventId ? `Identyfikator zdarzenia: ${payload.analyticsEventId}` : null,
+      "",
+      "POCHODZENIE LEADA",
       ...attributionLines(payload.attribution),
+      ...technicalLines,
     ].filter(value => value !== null).join("\n"),
   };
+}
+
+function isValidContactPayload(payload) {
+  if (
+    payload.name.length < 3
+    || !isValidEmail(payload.email)
+    || !payload.topic
+  ) return false;
+
+  if (payload.formKind === "diagnosis") return payload.message.length >= 10;
+
+  if (payload.legacyContract) return payload.message.trim().length >= 10;
+
+  return Boolean(payload.goal) && payload.message.trim().length >= 10;
 }
 
 async function handleContact(request, env, ctx) {
@@ -545,12 +658,7 @@ async function handleContact(request, env, ctx) {
 
   const payload = normalizePayload(parsed.value);
   if (payload.fax) return json({ ok: true });
-  if (
-    payload.name.length < 3
-    || !isValidEmail(payload.email)
-    || !payload.topic
-    || payload.message.length < 10
-  ) {
+  if (!isValidContactPayload(payload)) {
     return json({ ok: false, error: "validation" }, 400);
   }
 
@@ -603,6 +711,7 @@ export {
   MAX_BODY_BYTES,
   buildMetaConversionEvent,
   buildEmail,
+  isValidContactPayload,
   normalizeAttribution,
   normalizePayload,
   sendMetaConversion,

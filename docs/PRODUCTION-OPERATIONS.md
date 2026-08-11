@@ -117,6 +117,28 @@ Szablon nagłówków znajduje się w [`_headers`](../_headers), a generator CSP 
 
 Kod endpointu: [`worker/contact.js`](../worker/contact.js).
 
+### Kontrakt zgłoszenia i zgodność wdrożeniowa
+
+Aktualny formularz kontaktowy wysyła pola `name`, `email`, `phone`, `company`,
+`topic`, `goal`, `message`, `formKind`, `source`, `fax`, `turnstileToken` oraz
+opcjonalny kontekst atrybucji i zgód. `formKind` ma wartość `contact` albo
+`diagnosis`, a `source` i `goal` są normalizowane do jawnych list dozwolonych
+wartości. Formularz kontaktowy wymaga celu oraz wiadomości o długości co
+najmniej 10 znaków, ale nie narzuca minimalnej liczby słów. Diagnoza przekazuje
+własny wynik jako kontekst zgłoszenia.
+
+Worker zachowuje zgodność z poprzednim kontraktem, który nie zawierał `goal`
+ani `formKind`. Jest to celowe: wdrożenie Workera i Cloudflare Pages odbywa się
+niezależnie, a użytkownik może również wysłać formularz z karty otwartej przed
+publikacją nowej wersji. Taki payload nadal wymaga poprawnych danych
+kontaktowych, tematu i wiadomości o długości co najmniej 10 znaków. Nie usuwaj tej zgodności bez
+wersjonowania endpointu i zakończenia okresu migracji.
+
+Mail z leadem ma krótki temat oraz sekcje `KONTAKT`, `ZGŁOSZENIE`,
+`POCHODZENIE LEADA` i `DANE TECHNICZNE`. Surowe identyfikatory kliknięć nie są
+umieszczane w treści wiadomości, a identyczny first/last touch jest zwijany do
+jednego bloku kampanii.
+
 Istotne zabezpieczenia:
 
 - dozwolone origins: `https://okagency.pl` i `https://www.okagency.pl`;
@@ -564,6 +586,16 @@ curl.exe -I https://okagency.pl/api/contact
 
 Poprawny request `GET` powinien zwrócić `405` i nagłówek `Allow: POST`.
 Pełny test wysyłki wymaga świeżego tokenu Turnstile z formularza.
+
+Przy zmianie kontraktu formularza wdrażaj frontend i Worker przez merge do
+`main`, pozostawiając w Workerze zgodność z poprzednią wersją payloadu na czas
+rolloutu. Po zakończeniu obu deploymentów odśwież produkcyjną stronę kontaktu,
+wyślij oznaczone zgłoszenie testowe z krótką wiadomością i potwierdź:
+
+1. widoczny stan sukcesu w formularzu;
+2. zdarzenie `contact_email_sent` bez danych klienta w logach Workera;
+3. dostarczenie maila do `hello@okagency.pl` z poprawnym `Reply-To`;
+4. czytelne sekcje maila oraz brak surowych `fbclid` i `gclid`.
 
 ### Rotacja tokenu wdrożeniowego
 

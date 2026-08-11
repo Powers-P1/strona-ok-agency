@@ -49,7 +49,7 @@
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
   <link rel="stylesheet" href="/assets/content-system.css?v=20260805-1">
-  <link rel="stylesheet" href="assets/page-contact.css?v=20260805-1">
+  <link rel="stylesheet" href="assets/page-contact.css?v=20260811-1">
   <link rel="stylesheet" href="assets/route-motion.css?v=20260810-1">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260806-1">
@@ -145,10 +145,10 @@
           <input id="f-phone" name="phone" type="tel" autocomplete="tel">
         </div>
         <div class="field">
-          <label for="f-company">Firma <span class="opt">(opcjonalnie)</span></label>
+          <label for="f-company">Firma lub marka <span class="opt">(opcjonalnie)</span></label>
           <input id="f-company" name="company" type="text" autocomplete="organization">
         </div>
-        <div class="field field--wide">
+        <div class="field">
           <label for="f-topic">Z jakim tematem się do nas zgłaszasz? <span class="req" aria-hidden="true">*</span></label>
           <select id="f-topic" name="topic" required>
             <option value="" selected disabled>Wybierz temat</option>
@@ -161,10 +161,24 @@
           </select>
           <p class="error" id="e-topic">Wybierz temat zgłoszenia.</p>
         </div>
+        <div class="field">
+          <label for="f-goal">Co ma się zmienić? <span class="req" aria-hidden="true">*</span></label>
+          <select id="f-goal" name="goal" required>
+            <option value="" selected disabled>Wybierz najważniejszy cel</option>
+            <option value="Pozyskiwać więcej zapytań">Pozyskiwać więcej zapytań</option>
+            <option value="Uporządkować ofertę i komunikację">Uporządkować ofertę i komunikację</option>
+            <option value="Zbudować lub odświeżyć wizerunek">Zbudować lub odświeżyć wizerunek</option>
+            <option value="Uruchomić nową markę lub usługę">Uruchomić nową markę lub usługę</option>
+            <option value="Potrzebuję diagnozy i kierunku">Potrzebuję diagnozy i kierunku</option>
+            <option value="Inny cel">Inny cel</option>
+          </select>
+          <p class="error" id="e-goal">Wybierz najważniejszy cel.</p>
+        </div>
         <div class="field field--wide">
-          <label for="f-message">Opowiedz krótko o swoim projekcie i celach <span class="req" aria-hidden="true">*</span></label>
-          <textarea id="f-message" name="message" rows="3" required></textarea>
-          <p class="error" id="e-message">Napisz kilka zdań o projekcie.</p>
+          <label for="f-message">Napisz krótko, czego potrzebujesz <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="f-message" name="message" rows="3" minlength="10" maxlength="2000" aria-describedby="f-message-hint" required></textarea>
+          <p class="contact-field-hint" id="f-message-hint">Jedno zdanie wystarczy. Jeśli chcesz, dodaj czym zajmuje się firma, co dziś nie działa albo jaki efekt chcesz osiągnąć. Możesz też wkleić adres obecnej strony.</p>
+          <p class="error" id="e-message">Napisz krótko, czego potrzebujesz — minimum 10 znaków.</p>
         </div>
 
         <div class="hp" aria-hidden="true" inert>
@@ -228,7 +242,7 @@
   <script src="assets/site-footer.js?v=20260801-2"></script>
 
   <script src="assets/navigation.js?v=20260806-1"></script>
-  <script src="assets/page-contact.js?v=20260810-1"></script>
+  <script src="assets/page-contact.js?v=20260811-3"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onContactTurnstileLoad&amp;render=explicit" defer></script>
 </body>
 </html>

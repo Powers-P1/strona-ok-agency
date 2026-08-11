@@ -5,7 +5,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 ## Podsumowanie
 
 - `!important`: **217**
-- deklaracje typografii w lokalnych arkuszach tras: **978**
+- deklaracje typografii w lokalnych arkuszach tras: **980**
 - lokalne przejęcia selektorów wspólnych komponentów/geometrii scen: **292**
 - inline `style` w HTML: **28**
 - mutacje stylu z JS: **58**
@@ -48,7 +48,7 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-home.css | 67 |
 | assets/page-menu.css | 67 |
 | assets/services/site-audit/styles.css | 52 |
-| assets/page-contact.css | 39 |
+| assets/page-contact.css | 41 |
 | assets/page-faq.css | 39 |
 | assets/content-system.css | 32 |
 | assets/visual-direction-scenes.v20260730-2.css | 8 |
@@ -87,11 +87,11 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/legal-pages.css | 699 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/legal-pages.css | 700 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/legal-pages.css | 701 | *, *::before, *::after | @media (prefers-reduced-motion: reduce) | accessibility |
-| assets/page-contact.css | 397 | .js .panel > .page-title | — | route-debt |
-| assets/page-contact.css | 397 | .js .panel > .page-title | — | route-debt |
-| assets/page-contact.css | 497 | *, *::before, *::after | — | route-debt |
-| assets/page-contact.css | 498 | *, *::before, *::after | — | route-debt |
-| assets/page-contact.css | 499 | *, *::before, *::after | — | route-debt |
+| assets/page-contact.css | 407 | .js .panel > .page-title | — | route-debt |
+| assets/page-contact.css | 407 | .js .panel > .page-title | — | route-debt |
+| assets/page-contact.css | 507 | *, *::before, *::after | — | route-debt |
+| assets/page-contact.css | 508 | *, *::before, *::after | — | route-debt |
+| assets/page-contact.css | 509 | *, *::before, *::after | — | route-debt |
 | assets/page-faq.css | 352 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-faq.css | 353 | .faq-page *, .faq-page *::before, .faq-page *::after | @media (prefers-reduced-motion: reduce) | accessibility |
 | assets/page-home.css | 538 | html[data-motion="paused"] .copy > *, html[data-motion="paused"] .topbar | — | route-debt |
@@ -394,29 +394,31 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 217 | .direct-mail small | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
 | assets/page-contact.css | 218 | .direct-mail small | line-height | 1.4 | — | local-type-exception |
 | assets/page-contact.css | 228 | .context-note strong | font-size | 13px | — | local-type-exception |
-| assets/page-contact.css | 240 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 241 | .mailto-helper | line-height | 1.45 | — | local-type-exception |
-| assets/page-contact.css | 254 | .validation-summary | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 255 | .validation-summary | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 269 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | font-size | 9px | — | local-type-exception |
-| assets/page-contact.css | 270 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | line-height | 1 | — | local-type-exception |
-| assets/page-contact.css | 277 | .field.is-invalid .error | line-height | 1.35 | — | local-type-exception |
-| assets/page-contact.css | 293 | .consent-error | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 294 | .consent-error | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 317 | .flow-state > p | font-size | 14px | — | local-type-exception |
-| assets/page-contact.css | 318 | .flow-state > p | line-height | 1.55 | — | local-type-exception |
-| assets/page-contact.css | 326 | .state-email | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
-| assets/page-contact.css | 327 | .state-email | font-size | 27px | — | local-type-exception |
-| assets/page-contact.css | 328 | .state-email | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 346 | .copy-address | font-weight | 600 | — | local-type-exception |
-| assets/page-contact.css | 352 | .copy-feedback | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
-| assets/page-contact.css | 353 | .copy-feedback | font-weight | 500 | — | local-type-exception |
-| assets/page-contact.css | 447 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) | semantic-token |
-| assets/page-contact.css | 447 | .site-nav a | letter-spacing | .12em | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 458 | .direct-mail a | font-size | 25px | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 461 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) | semantic-token |
-| assets/page-contact.css | 462 | .flow-state > p | font-size | 15px | @media (max-width: 640px) | local-type-exception |
-| assets/page-contact.css | 463 | .state-email | font-size | 26px | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 240 | .contact-field-hint | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 241 | .contact-field-hint | line-height | 1.4 | — | local-type-exception |
+| assets/page-contact.css | 250 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 251 | .mailto-helper | line-height | 1.45 | — | local-type-exception |
+| assets/page-contact.css | 264 | .validation-summary | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 265 | .validation-summary | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 279 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | font-size | 9px | — | local-type-exception |
+| assets/page-contact.css | 280 | .validation-summary::before, .field.is-invalid .error::before, .consent-error::before | line-height | 1 | — | local-type-exception |
+| assets/page-contact.css | 287 | .field.is-invalid .error | line-height | 1.35 | — | local-type-exception |
+| assets/page-contact.css | 303 | .consent-error | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 304 | .consent-error | font-weight | 500 | — | local-type-exception |
+| assets/page-contact.css | 327 | .flow-state > p | font-size | 14px | — | local-type-exception |
+| assets/page-contact.css | 328 | .flow-state > p | line-height | 1.55 | — | local-type-exception |
+| assets/page-contact.css | 336 | .state-email | font-family | var(--ok-font-display, "Barlow Condensed", sans-serif) | — | semantic-token |
+| assets/page-contact.css | 337 | .state-email | font-size | 27px | — | local-type-exception |
+| assets/page-contact.css | 338 | .state-email | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 356 | .copy-address | font-weight | 600 | — | local-type-exception |
+| assets/page-contact.css | 362 | .copy-feedback | font-size | var(--ok-type-content-min, 14px) | — | semantic-token |
+| assets/page-contact.css | 363 | .copy-feedback | font-weight | 500 | — | local-type-exception |
+| assets/page-contact.css | 457 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) | semantic-token |
+| assets/page-contact.css | 457 | .site-nav a | letter-spacing | .12em | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 468 | .direct-mail a | font-size | 25px | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 471 | .mailto-helper | font-size | var(--ok-type-content-min, 14px) | @media (max-width: 640px) | semantic-token |
+| assets/page-contact.css | 472 | .flow-state > p | font-size | 15px | @media (max-width: 640px) | local-type-exception |
+| assets/page-contact.css | 473 | .state-email | font-size | 26px | @media (max-width: 640px) | local-type-exception |
 | assets/page-faq.css | 26 | body.faq-page | font-family | var(--ok-font-body, "Archivo", sans-serif) | — | semantic-token |
 | assets/page-faq.css | 37 | .faq-skip | font-size | 13px | — | local-type-exception |
 | assets/page-faq.css | 68 | .faq-kicker, .faq-list__label | font-size | var(--ok-type-label-min, 12px) | — | semantic-token |
@@ -1281,17 +1283,17 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/page-contact.css | 87 | .site-nav a | font-size | 12px | — |
 | assets/page-contact.css | 96 | .site-nav a::after | position | absolute | — |
 | assets/page-contact.css | 100 | .site-nav a::after | height | 2px | — |
-| assets/page-contact.css | 358 | /* ---------- scena ---------- */ .scene | position | absolute | — |
-| assets/page-contact.css | 363 | /* ---------- scena ---------- */ .scene | z-index | 0 | — |
-| assets/page-contact.css | 365 | /* ---------- scena ---------- */ .scene | overflow | hidden | — |
-| assets/page-contact.css | 368 | .scene img | position | absolute | — |
-| assets/page-contact.css | 371 | .scene img | height | 100% | — |
-| assets/page-contact.css | 373 | .scene img | position | 50% 62% | — |
-| assets/page-contact.css | 420 | .site-header | position | static | — |
-| assets/page-contact.css | 427 | .scene | position | relative | — |
-| assets/page-contact.css | 429 | .scene | min-height | 54svh | — |
-| assets/page-contact.css | 447 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) |
-| assets/page-contact.css | 448 | .site-nav a:nth-child(2) | display | none | @media (max-width: 640px) |
+| assets/page-contact.css | 368 | /* ---------- scena ---------- */ .scene | position | absolute | — |
+| assets/page-contact.css | 373 | /* ---------- scena ---------- */ .scene | z-index | 0 | — |
+| assets/page-contact.css | 375 | /* ---------- scena ---------- */ .scene | overflow | hidden | — |
+| assets/page-contact.css | 378 | .scene img | position | absolute | — |
+| assets/page-contact.css | 381 | .scene img | height | 100% | — |
+| assets/page-contact.css | 383 | .scene img | position | 50% 62% | — |
+| assets/page-contact.css | 430 | .site-header | position | static | — |
+| assets/page-contact.css | 437 | .scene | position | relative | — |
+| assets/page-contact.css | 439 | .scene | min-height | 54svh | — |
+| assets/page-contact.css | 457 | .site-nav a | font-size | var(--ok-type-label-min, 12px) | @media (max-width: 640px) |
+| assets/page-contact.css | 458 | .site-nav a:nth-child(2) | display | none | @media (max-width: 640px) |
 | assets/page-home.css | 105 | .topbar | position | absolute | — |
 | assets/page-home.css | 106 | .topbar | z-index | 20 | — |
 | assets/page-home.css | 110 | .topbar | height | clamp(5.2rem, 10vh, 7rem) | — |
@@ -1567,8 +1569,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | kontakt.html | 104 | --i:3 |
 | kontakt.html | 119 | --i:4 |
 | kontakt.html | 131 | --i:5 |
-| kontakt.html | 202 | --i:5 |
-| kontakt.html | 211 | --i:5 |
+| kontakt.html | 216 | --i:5 |
+| kontakt.html | 225 | --i:5 |
 | menu.html | 96 | --d:0s |
 | menu.html | 97 | --d:.09s |
 | menu.html | 106 | --i:0 |
@@ -1600,8 +1602,8 @@ Raport jest generowany przez `node scripts/audit-system-exceptions.mjs --write`.
 | assets/art-coordinate-system.js | 1089 | .style.setProperty("width", \`${bounds.width}px\`) |
 | assets/art-coordinate-system.js | 1090 | .style.setProperty("height", \`${bounds.height}px\`) |
 | assets/page-contact.js | 18 | .style.translate = \`${(-cx * 10).toFixed(2)}px ${(-cy * 8).toFixed(2)}px\` |
-| assets/page-contact.js | 201 | .style.position = "fixed" |
-| assets/page-contact.js | 202 | .style.opacity = "0" |
+| assets/page-contact.js | 220 | .style.position = "fixed" |
+| assets/page-contact.js | 221 | .style.opacity = "0" |
 | assets/responsive-safety.js | 120 | .style.setProperty("--ok-viewport-height-runtime", \`${viewportHeight}px\`) |
 | assets/responsive-safety.js | 129 | .style.setProperty(\`--ok-type-${role}-runtime\`, resolvedValue) |
 | assets/responsive-safety.js | 130 | .style.setProperty(\`--ok-type-${role}\`, resolvedValue) |

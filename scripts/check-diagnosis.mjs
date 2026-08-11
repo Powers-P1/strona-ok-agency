@@ -62,14 +62,14 @@ for (const [context, topic] of mappings) {
 
 for (const contract of [
   'id="f-goal" name="goal" required',
-  'id="f-message" name="message" rows="3" maxlength="2000"',
+  'id="f-message" name="message" rows="3" minlength="10" maxlength="2000"',
   "Jedno zdanie wystarczy.",
 ]) {
   if (!contactHtml.includes(contract)) failures.push(`Kontakt: brak kontraktu jakości „${contract}”`);
 }
 if (!contactSource.includes('goal: fields.goal.value') ||
     !contactSource.includes('formKind: "contact"') ||
-    !contactSource.includes('Boolean(fields.message.value.trim())')) {
+    !contactSource.includes('fields.message.value.trim().length >= 10')) {
   failures.push("Kontakt: klient nie wysyła celu lub odrzuca krótkie wiadomości");
 }
 

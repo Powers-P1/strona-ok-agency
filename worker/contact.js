@@ -622,9 +622,9 @@ function isValidContactPayload(payload) {
 
   if (payload.formKind === "diagnosis") return payload.message.length >= 10;
 
-  if (payload.legacyContract) return Boolean(payload.message.trim());
+  if (payload.legacyContract) return payload.message.trim().length >= 10;
 
-  return Boolean(payload.goal) && Boolean(payload.message.trim());
+  return Boolean(payload.goal) && payload.message.trim().length >= 10;
 }
 
 async function handleContact(request, env, ctx) {

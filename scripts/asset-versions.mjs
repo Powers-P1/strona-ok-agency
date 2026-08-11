@@ -10,7 +10,7 @@ export const ASSET_VERSIONS = Object.freeze({
   "assets/motion-control.js": "20260806-1",
   "assets/navigation.js": "20260806-1",
   "assets/page-contact.css": "20260811-1",
-  "assets/page-contact.js": "20260811-2",
+  "assets/page-contact.js": "20260811-3",
   "assets/page-canvas.css": "20260811-1",
   "assets/page-faq.css": "20260811-1",
   "assets/page-home.css": "20260810-1",

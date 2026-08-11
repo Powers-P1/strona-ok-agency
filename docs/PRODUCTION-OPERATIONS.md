@@ -123,15 +123,15 @@ Aktualny formularz kontaktowy wysyła pola `name`, `email`, `phone`, `company`,
 `topic`, `goal`, `message`, `formKind`, `source`, `fax`, `turnstileToken` oraz
 opcjonalny kontekst atrybucji i zgód. `formKind` ma wartość `contact` albo
 `diagnosis`, a `source` i `goal` są normalizowane do jawnych list dozwolonych
-wartości. Formularz kontaktowy wymaga niepustej wiadomości i celu, ale nie
-narzuca minimalnej liczby znaków ani słów. Diagnoza przekazuje własny wynik jako
-kontekst zgłoszenia.
+wartości. Formularz kontaktowy wymaga celu oraz wiadomości o długości co
+najmniej 10 znaków, ale nie narzuca minimalnej liczby słów. Diagnoza przekazuje
+własny wynik jako kontekst zgłoszenia.
 
 Worker zachowuje zgodność z poprzednim kontraktem, który nie zawierał `goal`
 ani `formKind`. Jest to celowe: wdrożenie Workera i Cloudflare Pages odbywa się
 niezależnie, a użytkownik może również wysłać formularz z karty otwartej przed
 publikacją nowej wersji. Taki payload nadal wymaga poprawnych danych
-kontaktowych, tematu i niepustej wiadomości. Nie usuwaj tej zgodności bez
+kontaktowych, tematu i wiadomości o długości co najmniej 10 znaków. Nie usuwaj tej zgodności bez
 wersjonowania endpointu i zakończenia okresu migracji.
 
 Mail z leadem ma krótki temat oraz sekcje `KONTAKT`, `ZGŁOSZENIE`,

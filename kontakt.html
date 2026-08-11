@@ -176,9 +176,9 @@
         </div>
         <div class="field field--wide">
           <label for="f-message">Napisz krótko, czego potrzebujesz <span class="req" aria-hidden="true">*</span></label>
-          <textarea id="f-message" name="message" rows="3" maxlength="2000" aria-describedby="f-message-hint" required></textarea>
+          <textarea id="f-message" name="message" rows="3" minlength="10" maxlength="2000" aria-describedby="f-message-hint" required></textarea>
           <p class="contact-field-hint" id="f-message-hint">Jedno zdanie wystarczy. Jeśli chcesz, dodaj czym zajmuje się firma, co dziś nie działa albo jaki efekt chcesz osiągnąć. Możesz też wkleić adres obecnej strony.</p>
-          <p class="error" id="e-message">Napisz krótko, czego potrzebujesz.</p>
+          <p class="error" id="e-message">Napisz krótko, czego potrzebujesz — minimum 10 znaków.</p>
         </div>
 
         <div class="hp" aria-hidden="true" inert>
@@ -242,7 +242,7 @@
   <script src="assets/site-footer.js?v=20260801-2"></script>
 
   <script src="assets/navigation.js?v=20260806-1"></script>
-  <script src="assets/page-contact.js?v=20260811-2"></script>
+  <script src="assets/page-contact.js?v=20260811-3"></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onContactTurnstileLoad&amp;render=explicit" defer></script>
 </body>
 </html>

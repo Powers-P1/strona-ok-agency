@@ -239,6 +239,7 @@ test("accepts concise contact messages while still requiring a goal and message"
 
   assert.equal(isValidContactPayload({ ...base, message: "Stworzyć kanał który sprzedaje" }), true);
   assert.equal(isValidContactPayload({ ...base, message: "   " }), false);
+  assert.equal(isValidContactPayload({ ...base, message: "Za krótko" }), false);
   assert.equal(isValidContactPayload({ ...base, goal: "", message: "Proszę o kontakt" }), false);
   assert.equal(isValidContactPayload({
     ...base,
@@ -266,6 +267,7 @@ test("keeps the previous form payload contract valid during a rolling deployment
   assert.equal(legacyContact.legacyContract, true);
   assert.equal(isValidContactPayload(legacyContact), true);
   assert.equal(isValidContactPayload({ ...legacyContact, message: "   " }), false);
+  assert.equal(isValidContactPayload({ ...legacyContact, message: "Za krótko" }), false);
 
   const legacyDiagnosis = normalizePayload({
     name: "Anna Nowak",

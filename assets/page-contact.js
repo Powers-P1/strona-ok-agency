@@ -125,7 +125,7 @@
     },
     message: {
       errorId: "e-message",
-      isValid: () => Boolean(fields.message.value.trim()),
+      isValid: () => fields.message.value.trim().length >= 10,
     },
     consent: {
       errorId: "e-consent",

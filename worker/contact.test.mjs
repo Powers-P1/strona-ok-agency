@@ -120,7 +120,8 @@ test("Worker rejects contact data hidden with control or zero-width separators",
       "https://okagency.pl/?gclid=click-ab123456789xyz",
     );
     assert.equal(attribution.first_touch.utm_content, undefined);
-    assert.doesNotMatch(JSON.stringify(attribution.first_touch), /501|tel|jan/i);
+    const { captured_at: _capturedAt, ...campaignData } = attribution.first_touch;
+    assert.doesNotMatch(JSON.stringify(campaignData), /501|tel|jan/i);
   }
 });
 
@@ -253,6 +254,27 @@ test("accepts concise contact messages while still requiring a goal and message"
     source: "diagnosis",
   });
   assert.equal(isValidContactPayload(diagnosis), true);
+});
+
+test("keeps the previous form payload contract valid during a rolling deployment", () => {
+  const legacyContact = normalizePayload({
+    name: "Mirosław Kowalak",
+    email: "kowalak@premiumleasing24.pl",
+    topic: "Strona internetowa",
+    message: "Stworzyć kanał który sprzedaje",
+  });
+  assert.equal(legacyContact.legacyContract, true);
+  assert.equal(isValidContactPayload(legacyContact), true);
+  assert.equal(isValidContactPayload({ ...legacyContact, message: "   " }), false);
+
+  const legacyDiagnosis = normalizePayload({
+    name: "Anna Nowak",
+    email: "anna@example.com",
+    topic: "Diagnoza: Strona internetowa",
+    message: "Wynik: Strona internetowa",
+  });
+  assert.equal(legacyDiagnosis.legacyContract, true);
+  assert.equal(isValidContactPayload(legacyDiagnosis), true);
 });
 
 test("collapses identical campaign touches and keeps the lead email readable", () => {

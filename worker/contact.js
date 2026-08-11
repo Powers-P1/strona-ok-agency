@@ -124,6 +124,7 @@ function normalizePayload(input) {
   const payload = Object.fromEntries(
     Object.entries(LIMITS).map(([key, limit]) => [key, clean(input?.[key], limit)]),
   );
+  payload.legacyContract = !payload.formKind && !payload.goal;
   payload.formKind = FORM_KINDS.has(payload.formKind) ? payload.formKind : "contact";
   payload.source = LEAD_SOURCES.has(payload.source) ? payload.source : "contact";
   payload.goal = CONTACT_GOALS.has(payload.goal) ? payload.goal : "";
@@ -620,6 +621,8 @@ function isValidContactPayload(payload) {
   ) return false;
 
   if (payload.formKind === "diagnosis") return payload.message.length >= 10;
+
+  if (payload.legacyContract) return Boolean(payload.message.trim());
 
   return Boolean(payload.goal) && Boolean(payload.message.trim());
 }

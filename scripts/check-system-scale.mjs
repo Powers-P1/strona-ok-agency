@@ -216,10 +216,9 @@ const auditDocument = async (page, route, viewport) => {
     `${label}: route replaced the shared content role (${metrics.contentToken})`,
   );
   for (const scene of metrics.scenes) {
-    const viewportExtent = scene.firstView ? scene.bottom : scene.height;
     assert.ok(
-      Math.abs(viewportExtent - viewport.height) <= 2,
-      `${label}: scene ${scene.id} occupies ${viewportExtent}px instead of one ${viewport.height}px viewport; ${JSON.stringify(scene)}`,
+      Math.abs(scene.height - viewport.height) <= 2,
+      `${label}: scene ${scene.id} is ${scene.height}px instead of one ${viewport.height}px viewport; ${JSON.stringify(scene)}`,
     );
   }
 };
@@ -373,12 +372,12 @@ const auditHomeRatiosAndResize = async (browser, baseUrl) => {
         );
         const bodyFont = Number(getComputedStyle(document.body).fontSize.replace("px", ""));
         const firstView = document.querySelector("[data-scene-first-view]");
-        const firstViewBottom = firstView.getBoundingClientRect().bottom;
+        const firstViewHeight = firstView.getBoundingClientRect().height;
         return innerWidth === width
           && innerHeight === height
           && Math.abs(viewportToken - height) <= 1
           && Math.abs(bodyFont - contentToken) <= .1
-          && Math.abs(firstViewBottom - height) <= 2;
+          && Math.abs(firstViewHeight - height) <= 2;
       }, viewport);
       await auditDocument(page, "/ (resize)", viewport);
       const state = await homeState(page);

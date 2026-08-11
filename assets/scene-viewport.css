@@ -10,10 +10,10 @@
 }
 
 [data-scene-first-view] {
-  --ok-scene-first-view-height: max(
-    0px,
-    calc(var(--ok-scene-viewport-height) - var(--ok-nav-slot-height, 0px))
-  );
+  /* Keep the first view geometrically identical to the production hero.
+     The navigation slot remains additional document flow, as it was before
+     the transition layer was introduced. */
+  --ok-scene-first-view-height: var(--ok-scene-viewport-height);
   height: var(--ok-scene-first-view-height);
   min-height: var(--ok-scene-first-view-height);
 }

@@ -195,7 +195,7 @@ for (const file of publicFiles) {
       failures.push(`${file}: przejście hero nie korzysta ze wspólnego płytkiego profilu`);
     }
     for (const tier of ["default", "low", "compact"]) {
-      if (!new RegExp(`\\bdata-scene-seam-atmosphere-${tier}=["'][^"']*home-hero-intro-v4`, "i").test(homeIntroTag)) {
+      if (!new RegExp(`\\bdata-scene-seam-atmosphere-${tier}=["'][^"']*home-hero-intro-v5`, "i").test(homeIntroTag)) {
         failures.push(`${file}: przejście hero nie ma wariantu v4 dla ${tier}`);
       }
     }

@@ -84,11 +84,6 @@ html::-webkit-scrollbar {
   will-change: auto !important;
 }
 
-.scroll-cue span,
-.scroll-icon {
-  animation: ok-story-cue var(--ok-motion-cue-duration) var(--ok-motion-spring) infinite !important;
-}
-
 .proof-bloom {
   animation: ok-story-proof-bloom 4.8s ease-in-out infinite;
 }
@@ -96,16 +91,6 @@ html::-webkit-scrollbar {
 .proof-detail,
 .accordion-detail {
   transition-timing-function: var(--ok-motion-spring) !important;
-}
-
-@keyframes ok-story-cue {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
 }
 
 @keyframes ok-story-proof-bloom {

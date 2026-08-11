@@ -149,6 +149,14 @@ const tallDesktop = getHomeHeroLayout({
   contentBottom: 600,
   gap: 40,
 });
+const dockedFirstView = getHomeHeroLayout({
+  viewportWidth: 1280,
+  viewportHeight: 720,
+  firstViewHeight: 640,
+  sceneTop: 80,
+  contentBottom: 360,
+  gap: 40,
+});
 
 if (!shortBeforeResize.copyFitsFirstView) {
   failures.push("niski viewport 1024x500 nie powinien tworzyć pustej rezerwy pod treścią");
@@ -170,6 +178,9 @@ if ("artScale" in tallDesktop || "artScale" in shortBeforeResize) {
 }
 if (shortBeforeResize.requiredHeight !== 500) {
   failures.push(`niski viewport 1024x500 ma sztuczną wysokość ${shortBeforeResize.requiredHeight}px`);
+}
+if (dockedFirstView.requiredHeight !== 640) {
+  failures.push(`hero z navem nie respektuje pierwszego widoku 640 px: ${dockedFirstView.requiredHeight}px`);
 }
 
 requireText(homeCss, "@media (min-width: 1025px) and (min-aspect-ratio: 1672 / 941)", "brak reguły szerokiego desktopu");

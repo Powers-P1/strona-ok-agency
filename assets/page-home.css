@@ -38,8 +38,6 @@ button { color: inherit; }
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
-  height: 100svh;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 76% 89%, rgba(55, 82, 105, .2), transparent 31%),
@@ -643,11 +641,6 @@ html[data-motion="paused"] .topbar {
 }
 
 @media (max-width: 640px) {
-  .hero {
-    min-height: 100svh;
-    height: 100svh;
-  }
-
   .grid::before {
     inset: 0 1.25rem;
     background: none;
@@ -1123,19 +1116,13 @@ h1 {
 .home-intro__inner {
   width: min(100%, 1440px);
   margin-inline: auto;
-  padding: clamp(72px, 9vw, 144px) var(--gutter) clamp(84px, 10vw, 160px);
+  padding: 0 var(--gutter) clamp(84px, 10vw, 160px);
 }
 
 .home-intro__eyebrow {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 0 0 24px;
-  color: #b52454;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
 }
 
 .home-intro__eyebrow::before {
@@ -1149,9 +1136,7 @@ h1 {
   max-width: 980px;
   margin: 0;
   font-family: var(--ok-font-display, "Barlow Condensed", sans-serif);
-  font-size: clamp(52px, 7.4vw, 112px);
   font-weight: 500;
-  line-height: .92;
   letter-spacing: -.035em;
 }
 
@@ -1167,8 +1152,8 @@ h1 {
 .home-intro__trust {
   margin: 0;
   color: #3f4854;
-  font-size: clamp(16px, 1.25vw, 19px);
-  line-height: 1.72;
+  font-size: var(--ok-type-content, 15px);
+  line-height: var(--ok-leading-content, 1.5);
 }
 
 .home-services {

@@ -13,17 +13,20 @@ body.home-page {
   overflow-y: auto;
 }
 
-.home-page .hero[data-ok-safe-scene] {
+[data-scene-first-view][data-ok-safe-scene] {
   min-height: max(
-    var(--ok-viewport-height, 100svh),
-    var(--ok-safe-required-height, var(--ok-viewport-height, 100svh))
+    var(--ok-scene-first-view-height),
+    var(--ok-safe-required-height, var(--ok-scene-first-view-height))
   );
   height: auto;
+  /* Measurements must settle synchronously; reduced-motion micro-transitions
+     would otherwise republish geometry from the previous viewport. */
+  transition-property: none;
   overflow-x: clip;
   overflow-y: visible;
 }
 
-.home-page .hero[data-ok-safe-scene] :is(.art-stage, .hero-backdrop) {
+[data-scene-first-view][data-ok-safe-scene] > :is(.art-stage, .hero-backdrop) {
   min-height: inherit;
 }
 
@@ -214,20 +217,19 @@ body.home-page {
   clipping it to one viewport. The photographic backdrop remains full bleed.
 */
 @media (max-height: 720px) {
-  .home-page .hero {
+  [data-scene-first-view][data-ok-safe-scene] {
     min-height: max(
-      var(--ok-viewport-height, 100svh),
-      var(--ok-safe-required-height, 680px),
-      680px
+      var(--ok-scene-first-view-height),
+      var(--ok-safe-required-height, var(--ok-scene-first-view-height))
     );
     height: auto;
     overflow-x: clip;
     overflow-y: visible;
   }
 
-  .home-page .art-stage,
-  .home-page .hero-backdrop {
-    min-height: inherit;
+  [data-scene-first-view] > :is(.art-stage, .hero-backdrop) {
+    height: 100%;
+    min-height: 100%;
   }
 
   .error-page {
@@ -290,19 +292,15 @@ body.home-page {
     display: none;
   }
 
-  .home-page .hero[data-ok-safe-scene][data-ok-safe-compact-fit="first-view"] {
-    height: var(--ok-viewport-height, 100svh);
-    min-height: var(--ok-viewport-height, 100svh);
+  [data-scene-first-view][data-ok-safe-scene][data-ok-safe-compact-fit="first-view"] {
+    height: var(--ok-scene-first-view-height);
+    min-height: var(--ok-scene-first-view-height);
     overflow-y: clip;
   }
 
-  .home-page .hero[data-ok-safe-scene][data-ok-safe-compact-fit="first-view"] :is(.art-stage, .hero-backdrop) {
-    height: var(--ok-viewport-height, 100svh);
-    min-height: var(--ok-viewport-height, 100svh);
-  }
-
-  html.ok-scene-page :is(.campaign-frame, .social-frame, .process-frame) > .scroll-cue {
-    display: none;
+  [data-scene-first-view][data-ok-safe-scene][data-ok-safe-compact-fit="first-view"] > :is(.art-stage, .hero-backdrop) {
+    height: 100%;
+    min-height: 100%;
   }
 
   [data-ok-safe-content] {

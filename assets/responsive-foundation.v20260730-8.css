@@ -35,6 +35,13 @@
   overflow-wrap: anywhere;
 }
 
+:is(.campaign-page, .social-page, .web-service, .process-page)
+  .proof-item.is-open .proof-detail,
+.about-page .scene .accordion-item.is-open .accordion-detail {
+  max-height: none;
+  overflow: visible;
+}
+
 html {
   max-width: 100%;
   overflow-x: clip;
@@ -340,9 +347,7 @@ canvas {
   :is(.campaign-page, .social-page, .web-service, .process-page)
     .proof-item.is-open .proof-detail,
   .about-page .scene .accordion-item.is-open .accordion-detail {
-    max-height: none;
     padding-bottom: var(--ok-space-interactive-inset);
-    overflow: visible;
   }
 
   :is(.campaign-page, .social-page, .web-service, .process-page)

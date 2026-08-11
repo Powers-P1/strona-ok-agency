@@ -137,7 +137,6 @@ requireText(storyCss, "filter: none !important", "wspólny model nadal może roz
 requireText(css, '[data-ok-safe-cards="stacked"]', "CSS nie ma bezpiecznego układu kart");
 requireText(css, "@media (max-height: 720px)", "CSS nie ma obsługi niskiego okna");
 requireText(css, '[data-ok-safe-compact-fit="first-view"]', "mobile hero nie ma stabilnej wysokości 100svh");
-requireText(css, ".social-frame, .process-frame) > .scroll-cue", "mobile nadal pokazuje zasłaniające podpowiedzi przewijania");
 requireText(socialCss, ".proof-item.is-open .proof-detail", "Social nie ma mobilnego kontraktu rozwiniętych sygnałów");
 requireText(socialCss, "max-height: none", "rozwinięty sygnał nadal może być przycięty stałą wysokością");
 requireText(faqCss, "grid-template-columns: minmax(0, 1fr)", "FAQ nie zeruje minimalnej szerokości mobilnej kolumny");
@@ -155,7 +154,8 @@ requireText(script, "pendingSceneAnchor", "JS nie zachowuje aktywnej sceny podcz
 requireText(script, "restoreSceneAnchor", "JS nie odtwarza względnego offsetu aktywnej sceny");
 requireText(script, "copySafeZone", "JS nie utrzymuje jednego źródła progu bezpiecznej strefy hero");
 requireText(script, "homeLayout.copyFitsFirstView", "JS nie utrzymuje kompaktowego hero w pierwszym widoku");
-requireText(script, 'Math.ceil(viewportHeight)', "JS nie kotwiczy kompaktowego hero do jednego viewportu");
+requireText(script, "firstViewHeight = viewportHeight", "JS nie przyjmuje wysokości pierwszego widoku po odjęciu nawigacji");
+requireText(script, "Math.ceil(availableHeight)", "JS nie kotwiczy kompaktowego hero do dostępnej wysokości pierwszego widoku");
 requireText(script, '"accessible-overflow"', "JS nie zachowuje dostępnego reflow po powiększeniu tekstu");
 requireText(script, "viewportWidth <= 1180 || viewportRatio <= 4 / 3", "JS nie ma wspólnego progu kompaktowego hero");
 if (/visualViewport\?\.width|visualViewport\?\.height/.test(script)) {

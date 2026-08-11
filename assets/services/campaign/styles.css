@@ -299,49 +299,6 @@ svg {
   stroke: white;
 }
 
-.scroll-cue {
-  position: absolute;
-  z-index: 10;
-  bottom: 35px;
-  left: 50%;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  font-size: 12px;
-  opacity: var(--content-opacity);
-  transform: translateX(-50%);
-  transition: opacity .16s linear;
-}
-
-.scroll-icon {
-  width: 32px;
-  height: 32px;
-  display: grid;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  place-items: center;
-}
-
-.scroll-icon svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.scroll-cue-dark {
-  color: var(--cream);
-}
-
-.campaign-opening > .scroll-cue {
-  right: clamp(24px, 4vw, 68px);
-  left: auto;
-  transform: none;
-}
-
 .journey-intro {
   position: absolute;
   z-index: 8;

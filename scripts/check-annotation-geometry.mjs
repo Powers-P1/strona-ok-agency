@@ -27,7 +27,7 @@ const CONTENT_SELECTOR = [
   ".portrait-frame",
   ".scene-inner > .copy",
 ].join(",");
-const FIXED_UI_SELECTOR = ".site-header, .motion-toggle, .scroll-cue";
+const FIXED_UI_SELECTOR = ".site-header, .motion-toggle";
 
 const ROUTES = [
   { path: "/strony-internetowe", callouts: 8 },
@@ -139,7 +139,7 @@ const activateScene = async (page, route, index) => {
   await page.waitForFunction(({ selector, sceneIndex }) => {
     const current = document.querySelectorAll(selector)[sceneIndex];
     if (!current) return false;
-    const art = current.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const art = current.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
     return !art || (art.complete && art.naturalWidth > 0);
   }, { selector: SCENE_SELECTOR, sceneIndex: index }, { timeout: TIMEOUT });
   await settleLayout(page);
@@ -156,7 +156,7 @@ const waitForSceneMode = async (page, index, mobile) => {
     if (!callouts.length || isMobile) return true;
     if (scene.querySelector(".is-obscured")) return false;
 
-    const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const art = scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
     const api = window.OKAgencyResponsiveSafety;
     if (!(api?.getArtBounds?.(scene) || (art && api?.getArtBounds?.(art)))) return false;
 
@@ -304,7 +304,7 @@ const auditScene = async (page, index, mobile) => page.evaluate(({
     }));
   const visibleDots = calloutStates.filter(item => item.state === "placed" && visible(item.dot));
   const lines = [...scene.querySelectorAll(".annotation-lines")].filter(visible);
-  const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+  const art = scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
   if (scene.classList.contains("annotations-unavailable")) {
     issue("mode", "scene uses the removed annotations-unavailable hidden mode");
   }
@@ -968,7 +968,7 @@ const auditScrollVisibility = async (page, sceneIndex) => page.evaluate(async ({
   const issues = [];
   const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
   const centers = () => {
-    const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+    const art = scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
     const artRect = art?.getBoundingClientRect();
     const reference = artRect?.width > 0 && artRect?.height > 0
       ? artRect

@@ -662,15 +662,49 @@ const cssSources = new Map(await Promise.all(cssPaths.map(async path => [path, a
   addCheck("sceny ilustracyjne: jedna warstwa artworku i wspólna maska", failures);
 }
 
-// FAQ begins with the first useful question, not a redundant count label.
+// FAQ begins with the first useful question and uses one quiet, object-free
+// paper plate. It is a natural-height page, not another illustrated scene.
 {
   const failures = [];
   const path = "faq.html";
   const source = htmlSources.get(path);
+  const cssPath = "assets/page-canvas.css";
+  const cssSource = cssSources.get(cssPath);
+  const canvasAssets = [
+    "assets/faq/faq-canvas-v1-768.avif",
+    "assets/faq/faq-canvas-v1-768.webp",
+    "assets/faq/faq-canvas-v1-1024.avif",
+    "assets/faq/faq-canvas-v1-1024.webp",
+    "assets/faq/faq-canvas-v1-1672.avif",
+    "assets/faq/faq-canvas-v1-1672.webp",
+    "assets/faq/faq-canvas-v1-portrait-1024.avif",
+    "assets/faq/faq-canvas-v1-portrait-1024.webp",
+  ];
   if (/faq-list__label/.test(source) || /06\s+odpowiedzi\s*\/\s*bez\s+drobnego\s+druku/i.test(source)) {
     failures.push(`${path}: redundant answer-count label returned`);
   }
-  addCheck("FAQ: bez redundantnej etykiety liczby odpowiedzi", failures);
+  for (const asset of canvasAssets) {
+    if (!cssSource.includes(asset.replace(/^assets\//, ""))) {
+      failures.push(`${cssPath}: missing reference to ${asset}`);
+    }
+    if (!(await exists(asset))) {
+      failures.push(`${asset}: missing FAQ canvas file`);
+    }
+  }
+  if (/campaign-art|data-scene-|scene-seam|direction-scenes\//i.test(source)) {
+    failures.push(`${path}: FAQ was coupled to an illustrated scene or transition renderer`);
+  }
+  const canvasPages = ["faq.html", "diagnoza-www.html", "polityka-prywatnosci.html", "dostepnosc.html"];
+  for (const canvasPage of canvasPages) {
+    const canvasSource = htmlSources.get(canvasPage);
+    if (!/data-page-canvas=["']atelier["']/.test(canvasSource)) {
+      failures.push(`${canvasPage}: missing the shared atelier canvas marker`);
+    }
+    if (!/assets\/page-canvas\.css\?v=/.test(canvasSource)) {
+      failures.push(`${canvasPage}: missing the shared atelier canvas stylesheet`);
+    }
+  }
+  addCheck("Utility pages: shared clean paper canvas without scene artwork", failures);
 }
 
 // Contact uses a seamless paper field; the old bitmap contained a horizontal

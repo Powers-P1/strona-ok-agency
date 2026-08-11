@@ -4,6 +4,7 @@
   const getHomeHeroLayout = ({
     viewportWidth,
     viewportHeight,
+    firstViewHeight = viewportHeight,
     sceneTop,
     contentBottom,
     gap,
@@ -11,6 +12,7 @@
     const viewportRatio = viewportWidth / viewportHeight;
     const compact = viewportWidth <= 1180 || viewportRatio <= 4 / 3;
     const shortLandscape = viewportHeight <= 760 && viewportRatio > 4 / 3;
+    const availableHeight = Math.max(0, firstViewHeight);
 
     if (!compact) {
       return Object.freeze({
@@ -19,7 +21,7 @@
         shortLandscape,
         copySafeZone: 1,
         copyFitsFirstView: true,
-        requiredHeight: Math.ceil(viewportHeight),
+        requiredHeight: Math.ceil(availableHeight),
       });
     }
 
@@ -32,12 +34,12 @@
         ? .6
         : .5;
     const copyEnd = contentBottom - sceneTop + gap;
-    const copySafeBoundary = sceneTop + viewportHeight * copySafeZone;
+    const copySafeBoundary = sceneTop + availableHeight * copySafeZone;
     const copyFitsFirstView = contentBottom + gap <= copySafeBoundary;
     const requiredHeight = copyFitsFirstView
-      ? Math.ceil(viewportHeight)
+      ? Math.ceil(availableHeight)
       : Math.max(
-          Math.ceil(viewportHeight),
+          Math.ceil(availableHeight),
           Math.ceil(copyEnd / copySafeZone),
         );
 
@@ -89,6 +91,7 @@
       ".map-interface",
       ".result-content",
     ].join(","),
+    serviceArt: ":scope > .campaign-art, :scope > picture > .campaign-art",
   };
   const backdropSources = Object.freeze({
     light: "assets/editorial-atelier-backdrop-v2-1672.webp",
@@ -164,7 +167,10 @@
     backdrop.setAttribute("role", "presentation");
     backdrop.decoding = "async";
     backdrop.loading = "eager";
-    art.after(backdrop);
+    const artHost = art.parentElement?.tagName === "PICTURE"
+      ? art.parentElement
+      : art;
+    artHost.after(backdrop);
 
     const markReady = () => {
       if (!backdrop.naturalWidth) return;
@@ -660,7 +666,7 @@
     if (home) addLayout(home, ":scope > .copy, :scope > .detail", ":scope > .art-stage", "grow");
 
     document.querySelectorAll(selectors.serviceScene).forEach(scene => {
-      addLayout(scene, selectors.serviceContent, ":scope > .campaign-art");
+      addLayout(scene, selectors.serviceContent, selectors.serviceArt);
     });
 
     document.querySelectorAll(".about-page .scene").forEach(scene => {
@@ -779,6 +785,7 @@
       ? getHomeHeroLayout({
           viewportWidth,
           viewportHeight,
+          firstViewHeight: sceneRect.height,
           sceneTop: sceneRect.top,
           contentBottom: contentRect.bottom,
           gap,
@@ -809,7 +816,7 @@
      * next section (most noticeably in Safari on short Mac viewports).
      */
     if (isHome && !layout.scene.classList.contains("is-focused")) {
-      requiredHeight = Math.max(viewportHeight, requiredHeight);
+      requiredHeight = Math.max(sceneRect.height, requiredHeight);
       layout.scene.style.setProperty("--ok-safe-required-height", `${requiredHeight}px`);
       clearArtMask(layout, sceneRect, artRect);
       return;

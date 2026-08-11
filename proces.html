@@ -43,20 +43,22 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/process/process-art-opening-v1.webp" type="image/webp">
-  <link rel="stylesheet" href="assets/services/process/styles.css?v=20260803-2">
-  <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/story-standard.css?v=20260801-4">
-  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260803-2">
+  <link rel="stylesheet" href="assets/services/process/styles.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/route-motion.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/story-standard.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260811-1">
+  <link rel="stylesheet" href="assets/scene-transitions.v20260804-1.css?v=20260811-6">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260806-1">
-  <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260804-5">
+  <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260810-1">
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260806-1">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260810-1">
   <link rel="stylesheet" href="/assets/annotation-system.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260810-2">
   <script src="/assets/motion-control.js?v=20260806-1"></script>
-  <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
+  <script src="assets/scene-transitions.v20260804-1.js?v=20260811-1"></script>
+  <script src="/assets/responsive-safety.js?v=20260810-2" defer></script>
   <script src="/assets/analytics.js?v=20260810-1" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
@@ -88,10 +90,11 @@
   <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="campaign-story process-story">
-    <div class="story-stage">
-      <section class="campaign-frame campaign-opening process-frame process-opening" id="process-opening" data-stage-bg="#ead9cb" aria-labelledby="process-opening-title">
+    <div class="story-stage" data-scene-flow="document" data-scene-seam-light-backdrop-src="assets/editorial-atelier-backdrop-horizonless-v1-1672.webp" data-scene-seam-dark-backdrop-src="assets/editorial-atelier-backdrop-dark-v1.webp">
+      <section class="campaign-frame campaign-opening process-frame process-opening" id="process-opening" data-stage-bg="#ead9cb" aria-labelledby="process-opening-title" data-scene-frame data-scene-tone="light">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/process/process-art-opening-v1.webp"
           data-ok-safe-backdrop="light"
           data-placement-mask="assets/services/process/process-art-opening-v1-placement-mask-v1.png"
@@ -137,7 +140,7 @@
           </div>
         </article>
 
-        <div class="opening-copy process-opening-copy">
+        <div class="opening-copy process-opening-copy" data-seam-safe-content>
           <h1 id="process-opening-title">Od problemu<br>do <em>działania.</em></h1>
           <p>Strategia, kreacja i wdrożenie działają w jednym procesie.<br>Wiesz, co robimy, dlaczego i jaki wynik kończy każdy etap.</p>
           <div class="opening-scope" role="group" aria-label="Filary procesu OK Agency">
@@ -153,17 +156,22 @@
           </a>
         </div>
 
-        <a class="scroll-cue scroll-cue-light" href="#process-discovery">
-          <span class="scroll-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg>
-          </span>
-          <span>Przewiń</span>
-        </a>
       </section>
 
-      <section class="campaign-frame process-frame process-editorial process-discovery-scene" id="process-discovery" data-stage-bg="#ead9cb" aria-labelledby="process-discovery-title">
+      <div class="scene-seam" data-scene-seam-source="previous" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/scene-transitions/scene-seam-atmosphere-light-light-compact-v1.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/scene-transitions/scene-seam-atmosphere-light-light-low-v1.webp">
+            <img src="assets/scene-transitions/scene-seam-atmosphere-light-light-v1.webp" width="1672" height="376" alt="" role="presentation" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame process-frame process-editorial process-discovery-scene" id="process-discovery" data-stage-bg="#ead9cb" aria-labelledby="process-discovery-title" data-scene-frame data-scene-tone="light">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/process/process-art-discovery-v3.webp"
           data-ok-safe-backdrop="light"
           data-placement-mask="assets/services/process/process-art-discovery-v3-placement-mask-v1.png"
@@ -203,7 +211,7 @@
           </div>
         </article>
 
-        <div class="process-editorial-content process-editorial-right">
+        <div class="process-editorial-content process-editorial-right" data-seam-safe-content>
           <span class="process-act">Odkrycie</span>
           <h2 id="process-discovery-title">Najpierw rozumiemy,<br>co naprawdę trzeba <em>zmienić.</em></h2>
           <p class="process-editorial-lead">Łączymy perspektywę biznesową, zachowanie odbiorców i dostępne dane. Oddzielamy fakty od założeń, zanim powstanie rozwiązanie.</p>
@@ -215,15 +223,22 @@
           <p class="process-stage-output"><strong>Rezultat etapu:</strong> brief decyzyjny, priorytet problemu i lista założeń do sprawdzenia.</p>
         </div>
 
-        <a class="scroll-cue scroll-cue-light" href="#process-direction">
-          <span class="scroll-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg></span>
-          <span>Wybierz kierunek</span>
-        </a>
       </section>
 
-      <section class="campaign-frame campaign-journey process-frame process-direction" id="process-direction" data-stage-bg="#06192b" aria-labelledby="process-direction-title">
+      <div class="scene-seam" data-scene-seam-source="previous" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/scene-transitions/scene-seam-atmosphere-light-dark-compact-v1.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/scene-transitions/scene-seam-atmosphere-light-dark-low-v1.webp">
+            <img src="assets/scene-transitions/scene-seam-atmosphere-light-dark-v1.webp" width="1672" height="376" alt="" role="presentation" loading="lazy" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame campaign-journey process-frame process-direction" id="process-direction" data-stage-bg="#06192b" aria-labelledby="process-direction-title" data-scene-frame data-scene-tone="dark">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/process/process-art-method-v1.webp"
           data-ok-safe-backdrop="dark"
           data-placement-mask="assets/services/process/process-art-method-v1-placement-mask-v1.png"
@@ -233,7 +248,7 @@
           loading="lazy"
         >
 
-        <div class="journey-intro process-method-intro">
+        <div class="journey-intro process-method-intro" data-seam-safe-content>
           <h2 id="process-direction-title">Kierunek to wybór.<br>Nie lista <em>życzeń.</em></h2>
           <p>Porządkujemy priorytety i zakres tak,<br>aby zespół wiedział, co robimy najpierw — i po co.</p>
           <ol class="journey-mobile-steps" aria-label="Elementy kierunku projektu">
@@ -295,17 +310,22 @@
           </div>
         </article>
 
-        <a class="scroll-cue scroll-cue-dark" href="#process-delivery">
-          <span class="scroll-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg>
-          </span>
-          <span>Przejdź do realizacji</span>
-        </a>
       </section>
 
-      <section class="campaign-frame process-frame process-editorial process-delivery-scene" id="process-delivery" data-stage-bg="#ead9cb" aria-labelledby="process-delivery-title">
+      <div class="scene-seam" data-scene-seam-source="next" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/services/process/process-seam-direction-delivery-clean-v4-compact.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/process/process-seam-direction-delivery-clean-v4-low.webp">
+            <img src="assets/services/process/process-seam-direction-delivery-clean-v4.webp" width="1672" height="376" alt="" role="presentation" loading="lazy" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame process-frame process-editorial process-delivery-scene" id="process-delivery" data-stage-bg="#ead9cb" aria-labelledby="process-delivery-title" data-scene-frame data-scene-tone="light">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/process/process-art-delivery-v3.webp"
           data-ok-safe-backdrop="light"
           data-placement-mask="assets/services/process/process-art-delivery-v3-placement-mask-v1.png"
@@ -315,7 +335,7 @@
           loading="lazy"
         >
 
-        <div class="process-editorial-content process-editorial-right process-delivery-content">
+        <div class="process-editorial-content process-editorial-right process-delivery-content" data-seam-safe-content>
           <span class="process-act">Realizacja</span>
           <h2 id="process-delivery-title">Robimy, sprawdzamy<br>i <em>dowozimy.</em></h2>
           <p class="process-editorial-lead">Praca nie znika w produkcyjnej czarnej skrzynce. Pokazujemy postęp w ustalonych momentach, a przed publikacją sprawdzamy rozwiązanie względem celu i kryteriów jakości.</p>
@@ -327,15 +347,22 @@
           <p class="process-stage-output"><strong>Rezultat etapu:</strong> gotowy materiał lub rozwiązanie, lista wykonanych kontroli i jasne zasady odbioru.</p>
         </div>
 
-        <a class="scroll-cue scroll-cue-light" href="#process-optimization">
-          <span class="scroll-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg></span>
-          <span>Sprawdź, co dalej</span>
-        </a>
       </section>
 
-      <section class="campaign-frame process-frame process-editorial process-optimization-scene" id="process-optimization" data-stage-bg="#06192b" aria-labelledby="process-optimization-title">
+      <div class="scene-seam" data-scene-seam-source="previous" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/services/process/process-seam-delivery-optimization-v2-compact.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/process/process-seam-delivery-optimization-v2-low.webp">
+            <img src="assets/services/process/process-seam-delivery-optimization-v2.webp" width="1672" height="376" alt="" role="presentation" loading="lazy" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame process-frame process-editorial process-optimization-scene" id="process-optimization" data-stage-bg="#06192b" aria-labelledby="process-optimization-title" data-scene-frame data-scene-tone="dark">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/process/process-art-optimization-v3.webp"
           data-ok-safe-backdrop="dark"
           data-placement-mask="assets/services/process/process-art-optimization-v3-placement-mask-v1.png"
@@ -345,7 +372,7 @@
           loading="lazy"
         >
 
-        <div class="process-editorial-content process-editorial-right process-editorial-dark process-optimization-content">
+        <div class="process-editorial-content process-editorial-right process-editorial-dark process-optimization-content" data-seam-safe-content>
           <span class="process-act">Optymalizacja</span>
           <h2 id="process-optimization-title">Wynik wraca<br>do <em>procesu.</em></h2>
           <p class="process-editorial-lead">Po publikacji nie kończymy na eksporcie statystyk. Porównujemy rezultat z celem, szukamy przyczyny i wybieramy następną zmianę, która ma największy sens.</p>
@@ -357,15 +384,22 @@
           <p class="process-stage-output"><strong>Rezultat etapu:</strong> raport z wnioskami, decyzją i zakresem kolejnej iteracji — nie zestaw wykresów bez kontekstu.</p>
         </div>
 
-        <a class="scroll-cue scroll-cue-dark" href="#process-proof">
-          <span class="scroll-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg></span>
-          <span>Zobacz standard współpracy</span>
-        </a>
       </section>
 
-      <section class="campaign-frame campaign-proof process-frame process-proof" id="process-proof" data-stage-bg="#ead9cb" aria-labelledby="process-proof-title">
+      <div class="scene-seam" data-scene-seam-source="next" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/services/process/process-seam-optimization-proof-v2-compact.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/process/process-seam-optimization-proof-v2-low.webp">
+            <img src="assets/services/process/process-seam-optimization-proof-v2.webp" width="1672" height="376" alt="" role="presentation" loading="lazy" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame campaign-proof process-frame process-proof" id="process-proof" data-stage-bg="#ead9cb" aria-labelledby="process-proof-title" data-scene-frame data-scene-tone="light">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/process/process-art-proof-v1.webp"
           data-ok-safe-backdrop="light"
           data-placement-mask="assets/services/process/process-art-proof-v1-placement-mask-v1.png"
@@ -377,7 +411,7 @@
 
         <span class="proof-bloom process-proof-bloom" aria-hidden="true"></span>
 
-        <div class="proof-content process-proof-content">
+        <div class="proof-content process-proof-content" data-seam-safe-content>
           <h2 id="process-proof-title">Profesjonalizm widać<br>w tym, co <em>dostajesz.</em></h2>
           <p class="proof-lead">Nie musisz zgadywać, co dzieje się z projektem. Ustalamy rytm pracy, pokazujemy decyzje i zostawiamy po każdym etapie użyteczny rezultat.</p>
 
@@ -459,7 +493,7 @@
     </div>
   </main>
   <div data-site-footer></div>
-  <script src="assets/art-coordinate-system.js?v=20260804-1"></script>
+  <script src="assets/art-coordinate-system.js?v=20260810-2"></script>
   <script src="assets/navigation.js?v=20260806-1"></script>
   <script src="assets/service-interactions.js?v=20260802-6"></script>
   <script src="assets/site-footer.js?v=20260801-2"></script>

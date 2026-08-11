@@ -81,21 +81,23 @@
     }
   </script>
   <link rel="preload" as="image" href="assets/services/web/web-art-opening-v1-1280.webp" type="image/webp" imagesrcset="assets/services/web/web-art-opening-v1-960.webp 960w, assets/services/web/web-art-opening-v1-1280.webp 1280w, assets/services/web/web-art-opening-v1.webp 1672w" imagesizes="100vw">
-  <link rel="stylesheet" href="assets/services/web/styles.css?v=20260803-1">
-  <link rel="stylesheet" href="assets/route-motion.css?v=20260801-2">
-  <link rel="stylesheet" href="assets/story-standard.css?v=20260801-4">
-  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260803-2">
+  <link rel="stylesheet" href="assets/services/web/styles.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/route-motion.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/story-standard.css?v=20260810-1">
+  <link rel="stylesheet" href="assets/scene-viewport.css?v=20260811-1">
+  <link rel="stylesheet" href="assets/scene-transitions.v20260804-1.css?v=20260811-6">
   <link rel="stylesheet" href="assets/site-footer.css?v=20260803-1">
   <link rel="stylesheet" href="assets/site-navigation.css?v=20260806-1">
-  <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260804-5">
+  <link rel="stylesheet" href="assets/responsive-foundation.v20260730-8.css?v=20260810-1">
   <link rel="stylesheet" href="/assets/fonts.css?v=20260801-1">
   <link rel="stylesheet" href="/assets/design-tokens.css?v=20260805-1">
-  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260806-1">
+  <link rel="stylesheet" href="/assets/site-enhancements.css?v=20260810-1">
   <link rel="stylesheet" href="/assets/annotation-system.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260803-1">
-  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260804-9">
+  <link rel="stylesheet" href="/assets/visual-direction-scenes.v20260730-2.css?v=20260810-1">
+  <link rel="stylesheet" href="/assets/responsive-safety.css?v=20260810-2">
   <script src="/assets/motion-control.js?v=20260806-1"></script>
-  <script src="/assets/responsive-safety.js?v=20260804-18" defer></script>
+  <script src="assets/scene-transitions.v20260804-1.js?v=20260811-1"></script>
+  <script src="/assets/responsive-safety.js?v=20260810-2" defer></script>
   <script src="/assets/analytics.js?v=20260810-1" defer></script>
   <meta name="facebook-domain-verification" content="uhomzd83tcn0ww4jhzgtdaow468iu9" />
 </head>
@@ -127,10 +129,11 @@
   <div class="ok-nav-slot" aria-hidden="true"><span class="ok-nav-sentinel" data-ok-nav-sentinel></span></div>
 
   <main class="campaign-story">
-    <div class="story-stage">
-      <section class="campaign-frame campaign-opening" id="web-opening" aria-labelledby="opening-title">
+    <div class="story-stage" data-scene-flow="document" data-scene-seam-light-backdrop-src="assets/editorial-atelier-backdrop-horizonless-v1-1672.webp" data-scene-seam-dark-backdrop-src="assets/editorial-atelier-backdrop-dark-v1.webp">
+      <section class="campaign-frame campaign-opening" id="web-opening" aria-labelledby="opening-title" data-scene-frame data-scene-tone="light">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/web/web-art-opening-v1.webp"
           data-ok-safe-backdrop="light"
           data-placement-mask="assets/services/web/web-art-opening-v1-placement-mask-v1.png"
@@ -189,7 +192,7 @@
           </div>
         </article>
 
-        <div class="opening-copy">
+        <div class="opening-copy" data-seam-safe-content>
           <span class="section-kicker">Strony internetowe</span>
           <h1 id="opening-title">Najpierw <em>sens.</em><br>Potem ekran.</h1>
           <p>Zanim projektujemy widoki, porządkujemy ofertę, odbiorców<br>i cel biznesowy strony.</p>
@@ -207,17 +210,22 @@
           </a>
         </div>
 
-        <a class="scroll-cue scroll-cue-light" href="#web-architecture">
-          <span class="scroll-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg>
-          </span>
-          <span>Przewiń</span>
-        </a>
       </section>
 
-      <section class="campaign-frame campaign-journey" id="web-architecture" aria-labelledby="architecture-title">
+      <div class="scene-seam" data-scene-seam-source="previous" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/services/web/web-seam-atmosphere-clean-v3-compact.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/web/web-seam-atmosphere-clean-v3-low.webp">
+            <img src="assets/services/web/web-seam-atmosphere-clean-v3.webp" width="1672" height="376" alt="" role="presentation" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame campaign-journey" id="web-architecture" aria-labelledby="architecture-title" data-scene-frame data-scene-tone="dark">
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/web/web-art-architecture-v1.webp"
           data-ok-safe-backdrop="dark"
           data-placement-mask="assets/services/web/web-art-architecture-v1-placement-mask-v1.png"
@@ -231,7 +239,7 @@
           decoding="async"
         >
 
-        <div class="journey-intro">
+        <div class="journey-intro" data-seam-safe-content>
           <span class="section-kicker">Architektura decyzji</span>
           <h2 id="architecture-title">Droga bez<br><em>ślepych zaułków.</em></h2>
           <p>Architektura, treść i interakcje powstają razem.<br>Każdy etap kończy się czymś, co można sprawdzić.</p>
@@ -294,17 +302,22 @@
           </div>
         </article>
 
-        <a class="scroll-cue scroll-cue-dark" href="#web-proof">
-          <span class="scroll-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M12 5v13M7.5 13.5 12 18l4.5-4.5"></path></svg>
-          </span>
-          <span>Zobacz, co uruchamiamy</span>
-        </a>
       </section>
 
-      <section class="campaign-frame campaign-proof" id="web-proof" aria-labelledby="proof-title">
+      <div class="scene-seam" data-scene-seam-source="next" data-scene-seam-orientation="reverse" aria-hidden="true">
+        <span class="scene-seam__field">
+          <picture class="scene-seam__atmosphere">
+            <source media="(max-width: 820px)" srcset="assets/services/web/web-seam-atmosphere-clean-reverse-v1-compact.webp">
+            <source media="(min-width: 821px) and (max-height: 620px)" srcset="assets/services/web/web-seam-atmosphere-clean-reverse-v1-low.webp">
+            <img src="assets/services/web/web-seam-atmosphere-clean-reverse-v1.webp" width="1672" height="376" alt="" role="presentation" loading="lazy" decoding="async">
+          </picture>
+        </span>
+      </div>
+
+      <section class="campaign-frame campaign-proof" id="web-proof" aria-labelledby="proof-title" data-scene-frame data-scene-tone="light" data-scene-boundary-source>
         <img
           class="campaign-art"
+          data-scene-art
           src="assets/services/web/web-art-foundation-v1.webp"
           data-ok-safe-backdrop="light"
           data-placement-mask="assets/services/web/web-art-foundation-v1-placement-mask-v1.png"
@@ -319,7 +332,7 @@
 
         <span class="proof-bloom" aria-hidden="true"></span>
 
-        <div class="proof-content">
+        <div class="proof-content" data-seam-safe-content>
           <span class="section-kicker">Po publikacji</span>
           <h2 id="proof-title">Gotowa do pracy<br>od <em>pierwszego dnia.</em></h2>
           <p class="proof-lead">Dobra strona nie kończy się na estetycznym projekcie. Ma być szybka, czytelna, łatwa do edycji i przygotowana do dalszego rozwoju.</p>
@@ -384,83 +397,116 @@
           </div>
         </div>
       </section>
-    </div>
 
-    <section class="decision-guide" aria-labelledby="web-decision-title">
-      <picture class="direction-scene-art direction-scene-art--decision" aria-hidden="true">
-        <source
-          type="image/avif"
-          srcset="/assets/direction-scenes/web-decision-v1-768.avif 768w, /assets/direction-scenes/web-decision-v1-1024.avif 1024w, /assets/direction-scenes/web-decision-v1-1672.avif 1672w"
-          sizes="100vw">
-        <img
-          src="/assets/direction-scenes/web-decision-v1-1672.webp"
-          srcset="/assets/direction-scenes/web-decision-v1-768.webp 768w, /assets/direction-scenes/web-decision-v1-1024.webp 1024w, /assets/direction-scenes/web-decision-v1-1672.webp 1672w"
-          sizes="100vw"
-          width="1672"
-          height="941"
-          alt=""
-          loading="lazy"
-          decoding="async">
-      </picture>
-      <picture class="direction-scene-art direction-scene-art--faq" aria-hidden="true">
-        <source
-          type="image/avif"
-          srcset="/assets/direction-scenes/web-faq-v1-768.avif 768w, /assets/direction-scenes/web-faq-v1-1024.avif 1024w, /assets/direction-scenes/web-faq-v1-1672.avif 1672w"
-          sizes="100vw">
-        <img
-          src="/assets/direction-scenes/web-faq-v1-1672.webp"
-          srcset="/assets/direction-scenes/web-faq-v1-768.webp 768w, /assets/direction-scenes/web-faq-v1-1024.webp 1024w, /assets/direction-scenes/web-faq-v1-1672.webp 1672w"
-          sizes="100vw"
-          width="1672"
-          height="941"
-          alt=""
-          loading="lazy"
-          decoding="async">
-      </picture>
-      <div class="decision-guide__intro">
-        <p class="decision-guide__eyebrow">Przed wyceną / konkrety</p>
-        <h2 id="web-decision-title">Czy strona jest dziś właściwym <span>krokiem?</span></h2>
-        <p class="decision-guide__lead">Tak, jeśli oferta jest gotowa, ale odbiorca nie ma jednego miejsca, które jasno tłumaczy wartość i prowadzi do decyzji. Zakres strony wynika z zadania biznesowego — nie z gotowej liczby ekranów.</p>
-      </div>
+      <section class="campaign-frame" id="web-decision" aria-labelledby="web-decision-title" data-scene-frame data-scene-tone="light" data-scene-boundary-target data-scene-continuation data-scene-boundary-source data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-web-proof-decision-v1.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-web-proof-decision-v1-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-web-proof-decision-v1-compact.webp">
+        <picture aria-hidden="true">
+          <source
+            type="image/avif"
+            srcset="/assets/direction-scenes/web-decision-v1-768.avif 768w, /assets/direction-scenes/web-decision-v1-1024.avif 1024w, /assets/direction-scenes/web-decision-v1-1672.avif 1672w"
+            sizes="100vw">
+          <img
+            class="campaign-art"
+            data-scene-art
+            data-ok-safe-backdrop="light"
+            src="/assets/direction-scenes/web-decision-v1-1672.webp"
+            srcset="/assets/direction-scenes/web-decision-v1-768.webp 768w, /assets/direction-scenes/web-decision-v1-1024.webp 1024w, /assets/direction-scenes/web-decision-v1-1672.webp 1672w"
+            sizes="100vw"
+            width="1672"
+            height="941"
+            alt=""
+            loading="lazy"
+            decoding="async">
+        </picture>
 
-      <div class="decision-guide__grid">
-        <article class="decision-guide__item">
-          <h3>Dla kogo</h3>
-          <p>Dla małych i średnich firm, które potrzebują uporządkować ofertę, poprawić ścieżkę do kontaktu albo zastąpić serwis, który nie wspiera już sprzedaży.</p>
-        </article>
-        <article class="decision-guide__item">
-          <h3>Od czego zależy wycena</h3>
-          <p>Od liczby typów podstron, gotowości treści i identyfikacji, potrzebnych integracji, CMS-u oraz zakresu wdrożenia i testów.</p>
-        </article>
-        <article class="decision-guide__item">
-          <h3>Co przygotować</h3>
-          <p>Ofertę, wiedzę o odbiorcach, cel strony, materiały marki, dostępne dane oraz osoby, które zatwierdzają treść i projekt.</p>
-        </article>
-        <article class="decision-guide__item">
-          <h3>Kiedy nie zaczynać</h3>
-          <p>Gdy oferta i główna decyzja użytkownika nie są jeszcze określone. Wtedy najpierw potrzebna jest diagnoza i wybór kierunku.</p>
-        </article>
-      </div>
+        <div class="proof-content" data-seam-safe-content>
+          <p data-scene-eyebrow>Przed wyceną / konkrety</p>
+          <h2 id="web-decision-title">Czy strona jest dziś<br>właściwym <em>krokiem?</em></h2>
+          <p class="proof-lead">Tak, jeśli oferta jest gotowa, ale odbiorca nie ma jednego miejsca, które jasno tłumaczy wartość i prowadzi do decyzji. Zakres strony wynika z zadania biznesowego — nie z gotowej liczby ekranów.</p>
 
-      <section class="decision-guide__faq" aria-labelledby="web-faq-title">
-        <h2 id="web-faq-title">Najczęstsze <span>pytania</span></h2>
-        <details>
-          <summary>Ile trwa przygotowanie strony internetowej?</summary>
-          <p>Nie podajemy jednej liczby tygodni bez poznania zakresu. Po rozmowie otrzymujesz etapowy harmonogram obejmujący kierunek, architekturę, treść i prototyp, projekt, wdrożenie, testy oraz publikację. Na termin najmocniej wpływają gotowość materiałów, liczba typów podstron, integracje i tempo decyzji.</p>
-        </details>
-        <details>
-          <summary>Czy muszę mieć gotowe teksty?</summary>
-          <p>Nie. Treść może powstać w ramach procesu. Potrzebne są jednak rzetelne informacje o ofercie, odbiorcach, przewagach i ograniczeniach — bez nich nie da się napisać strony, która prowadzi do właściwej decyzji.</p>
-        </details>
-        <details>
-          <summary>Co dokładnie otrzymuję po publikacji?</summary>
-          <p>Uzgodnioną architekturę i treść, projekt responsywny, wdrożenie, CMS w ustalonym zakresie, podstawy SEO i analityki, testy kluczowych ścieżek oraz gotowy do publikacji serwis.</p>
-        </details>
+          <div class="proof-list" role="group" aria-label="Kryteria gotowości do budowy strony">
+            <article class="proof-item is-open">
+              <button class="proof-trigger" type="button" aria-expanded="true" aria-controls="web-decision-fit">
+                <span class="proof-index">01</span><span class="proof-label"><strong>Dla kogo</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-decision-fit"><p>Dla małych i średnich firm, które potrzebują uporządkować ofertę, poprawić ścieżkę do kontaktu albo zastąpić serwis, który nie wspiera już sprzedaży.</p></div>
+            </article>
+            <article class="proof-item">
+              <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="web-decision-price">
+                <span class="proof-index">02</span><span class="proof-label"><strong>Od czego zależy wycena</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-decision-price" hidden><p>Od liczby typów podstron, gotowości treści i identyfikacji, potrzebnych integracji, CMS-u oraz zakresu wdrożenia i testów.</p></div>
+            </article>
+            <article class="proof-item">
+              <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="web-decision-inputs">
+                <span class="proof-index">03</span><span class="proof-label"><strong>Co przygotować</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-decision-inputs" hidden><p>Ofertę, wiedzę o odbiorcach, cel strony, materiały marki, dostępne dane oraz osoby, które zatwierdzają treść i projekt.</p></div>
+            </article>
+            <article class="proof-item">
+              <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="web-decision-stop">
+                <span class="proof-index">04</span><span class="proof-label"><strong>Kiedy nie zaczynać</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-decision-stop" hidden><p>Gdy oferta i główna decyzja użytkownika nie są jeszcze określone. Wtedy najpierw potrzebna jest diagnoza i wybór kierunku.</p></div>
+            </article>
+          </div>
+        </div>
       </section>
-    </section>
+
+      <section class="campaign-frame" id="web-faq" aria-labelledby="web-faq-title" data-scene-frame data-scene-tone="light" data-scene-boundary-target data-scene-continuation data-scene-seam-atmosphere-default="assets/scene-transitions/scene-seam-pair-web-decision-faq-v2.webp" data-scene-seam-atmosphere-low="assets/scene-transitions/scene-seam-pair-web-decision-faq-v2-low.webp" data-scene-seam-atmosphere-compact="assets/scene-transitions/scene-seam-pair-web-decision-faq-v2-compact.webp">
+        <picture aria-hidden="true">
+          <source
+            type="image/avif"
+            srcset="/assets/direction-scenes/web-faq-v1-768.avif 768w, /assets/direction-scenes/web-faq-v1-1024.avif 1024w, /assets/direction-scenes/web-faq-v1-1672.avif 1672w"
+            sizes="100vw">
+          <img
+            class="campaign-art"
+            data-scene-art
+            data-ok-safe-backdrop="light"
+            src="/assets/direction-scenes/web-faq-v1-1672.webp"
+            srcset="/assets/direction-scenes/web-faq-v1-768.webp 768w, /assets/direction-scenes/web-faq-v1-1024.webp 1024w, /assets/direction-scenes/web-faq-v1-1672.webp 1672w"
+            sizes="100vw"
+            width="1672"
+            height="941"
+            alt=""
+            loading="lazy"
+            decoding="async">
+        </picture>
+
+        <div class="proof-content" data-seam-safe-content>
+          <h2 id="web-faq-title">Najczęstsze<br><em>pytania.</em></h2>
+          <div class="proof-list" role="group" aria-label="Najczęstsze pytania o strony internetowe">
+            <article class="proof-item is-open">
+              <button class="proof-trigger" type="button" aria-expanded="true" aria-controls="web-faq-timeline">
+                <span class="proof-index">01</span><span class="proof-label"><strong>Ile trwa przygotowanie strony internetowej?</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-faq-timeline"><p>Nie podajemy jednej liczby tygodni bez poznania zakresu. Po rozmowie otrzymujesz etapowy harmonogram obejmujący kierunek, architekturę, treść i prototyp, projekt, wdrożenie, testy oraz publikację. Na termin najmocniej wpływają gotowość materiałów, liczba typów podstron, integracje i tempo decyzji.</p></div>
+            </article>
+            <article class="proof-item">
+              <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="web-faq-copy">
+                <span class="proof-index">02</span><span class="proof-label"><strong>Czy muszę mieć gotowe teksty?</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-faq-copy" hidden><p>Nie. Treść może powstać w ramach procesu. Potrzebne są jednak rzetelne informacje o ofercie, odbiorcach, przewagach i ograniczeniach — bez nich nie da się napisać strony, która prowadzi do właściwej decyzji.</p></div>
+            </article>
+            <article class="proof-item">
+              <button class="proof-trigger" type="button" aria-expanded="false" aria-controls="web-faq-delivery">
+                <span class="proof-index">03</span><span class="proof-label"><strong>Co dokładnie otrzymuję po publikacji?</strong></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"></path></svg>
+              </button>
+              <div class="proof-detail" id="web-faq-delivery" hidden><p>Uzgodnioną architekturę i treść, projekt responsywny, wdrożenie, CMS w ustalonym zakresie, podstawy SEO i analityki, testy kluczowych ścieżek oraz gotowy do publikacji serwis.</p></div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
   <div data-site-footer></div>
-  <script src="assets/art-coordinate-system.js?v=20260804-1"></script>
+  <script src="assets/art-coordinate-system.js?v=20260810-2"></script>
   <script src="assets/navigation.js?v=20260806-1"></script>
   <script src="assets/service-interactions.js?v=20260802-6"></script>
   <script src="assets/site-footer.js?v=20260801-2"></script>

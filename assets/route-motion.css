@@ -8,7 +8,6 @@
   --ok-motion-fast: .24s;
   --ok-motion-medium: .36s;
   --ok-motion-route: .76s;
-  --ok-motion-cue-duration: 2.4s;
 }
 
 @view-transition {

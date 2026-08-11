@@ -1,0 +1,273 @@
+/* One route-neutral seam contract for document and state-switch stories. */
+
+.scene-seam {
+  --scene-seam-depth: clamp(280px, 22vw, 360px);
+  --scene-seam-matte: url("scene-transitions/scene-seam-diffuse-matte-v3.webp");
+  --scene-seam-source-left: 0px;
+  --scene-seam-source-width: 100%;
+  --scene-seam-source-height: 100%;
+  --scene-seam-source-object-fit: cover;
+  --scene-seam-source-object-position: 50% 50%;
+  --scene-seam-reserve: 0px;
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  height: var(--scene-seam-reserve);
+  display: block;
+  background: none;
+  pointer-events: none;
+}
+
+.scene-seam__field {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: var(--scene-seam-depth);
+  display: block;
+  overflow: hidden;
+  transform: translateY(-50%);
+  pointer-events: none;
+  -webkit-mask-image: var(--scene-seam-safe-exclusion-mask, none);
+  mask-image: var(--scene-seam-safe-exclusion-mask, none);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* Prevent an unmeasured full-depth field from flashing over protected copy. */
+.scene-seam[data-scene-seam-source]:not([data-scene-seam-exclusion]) .scene-seam__field {
+  opacity: 0;
+}
+
+/* Dense layouts keep a quiet, mask-shaped organic edge instead of exposing a
+   straight scene boundary. The local holes remain the primary text guard. */
+.scene-seam[data-scene-seam-exclusion="dense"] .scene-seam__field {
+  opacity: .78;
+}
+
+.scene-seam__atmosphere {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: var(--scene-seam-matte);
+  mask-image: var(--scene-seam-matte);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.scene-seam__atmosphere img {
+  position: absolute;
+  top: 50%;
+  right: auto;
+  left: var(--scene-seam-source-left);
+  width: var(--scene-seam-source-width);
+  max-width: none;
+  height: var(--scene-seam-source-height);
+  display: block;
+  object-fit: var(--scene-seam-source-object-fit);
+  object-position: var(--scene-seam-source-object-position);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Generated pair assets are complete transition plates, not continuations of
+   one endpoint artwork. Keep them full-bleed even when the source artwork is
+   narrower than the viewport (for example the home hero sculpture). */
+.scene-seam[data-scene-seam-material="asset"] .scene-seam__atmosphere img {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+}
+
+/* A single family can serve both mixed-tone directions without another file. */
+.scene-seam[data-scene-seam-orientation="reverse"] .scene-seam__atmosphere img {
+  transform: translateY(-50%) scaleY(-1);
+}
+
+/* Shared decorative/content stacking. Route classes are deliberately absent. */
+[data-scene-frame] {
+  isolation: auto;
+}
+
+[data-scene-frame] > [data-ok-safe-backdrop-layer] {
+  z-index: 0;
+}
+
+[data-scene-frame] > [data-scene-art]:not([data-ok-safe-backdrop-layer]),
+[data-scene-frame] > picture > [data-scene-art]:not([data-ok-safe-backdrop-layer]) {
+  z-index: 1;
+}
+
+[data-scene-frame] > picture:has(> [data-scene-art]:not([data-ok-safe-backdrop-layer])) {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+[data-scene-frame] > picture > [data-scene-art]:not([data-ok-safe-backdrop-layer]) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+[data-seam-safe-content] {
+  z-index: 8;
+}
+
+/* Document-flow continuations stay outside the fullscreen scene contract.
+   Fullscreen continuations keep the native stacking of their route frames. */
+[data-scene-boundary-target][data-scene-continuation]:not([data-scene-frame]) {
+  position: relative;
+  z-index: auto;
+  isolation: auto;
+}
+
+[data-scene-boundary-target][data-scene-continuation]:not([data-scene-frame]) > [data-seam-safe-content] {
+  position: relative;
+  z-index: 8;
+}
+
+/* Switch stories use the same field and raster tiers only during activation. */
+[data-scene-flow="switch"] {
+  position: relative;
+}
+
+/* The active switch frame must not trap its children in a lower stacking
+   context: artwork stays at 1, the transient veil at 4 and controls at 8. */
+[data-scene-flow="switch"] [data-scene-frame].is-active {
+  z-index: auto;
+  transform: none;
+}
+
+.scene-seam--switch {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  display: none;
+  background: none;
+  overflow: hidden;
+}
+
+.scene-seam--switch .scene-seam__field {
+  top: 50%;
+}
+
+.scene-seam--switch[data-scene-seam-state="active"] {
+  display: block;
+  animation: scene-seam-switch-veil 780ms cubic-bezier(.22, .61, .36, 1) both;
+}
+
+@keyframes scene-seam-switch-veil {
+  0%, 15%, 70%, 100% { opacity: 0; }
+  28%, 55% { opacity: 1; }
+}
+
+/* Protected copy leaves before the bright veil and returns after it. The
+   background/artwork may keep the route's native crossfade underneath. */
+[data-scene-flow="switch"][data-scene-seam-switching="active"]
+  [data-scene-frame][data-scene-seam-role="outgoing"] [data-seam-safe-content] {
+  animation: scene-seam-safe-out 780ms ease both;
+}
+
+[data-scene-flow="switch"][data-scene-seam-switching="active"]
+  [data-scene-frame][data-scene-seam-role="incoming"] [data-seam-safe-content] {
+  animation: scene-seam-safe-in 780ms ease both;
+}
+
+@keyframes scene-seam-safe-out {
+  0% { opacity: 1; }
+  16%, 100% { opacity: 0; }
+}
+
+@keyframes scene-seam-safe-in {
+  0%, 68% { opacity: 0; }
+  95%, 100% { opacity: 1; }
+}
+
+@media (max-width: 1200px) {
+  .scene-seam {
+    --scene-seam-depth: clamp(240px, 28vw, 300px);
+  }
+}
+
+@media (max-width: 820px) {
+  .scene-seam {
+    --scene-seam-depth: clamp(200px, 58vw, 280px);
+  }
+
+  /* Compact atmosphere is complete; extracted art would duplicate it. */
+  .scene-seam__atmosphere img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    object-position: center;
+    transform: none;
+  }
+
+  .scene-seam[data-scene-seam-orientation="reverse"] .scene-seam__atmosphere img {
+    transform: scaleY(-1);
+  }
+}
+
+@media (max-height: 620px) {
+  .scene-seam {
+    --scene-seam-depth: clamp(180px, 34vh, 230px);
+  }
+}
+
+/* Shallow assets retain the same renderer and matte while reserving less
+   visual depth at compact, object-free light-to-light boundaries. */
+.scene-seam--continuation[data-scene-seam-profile="shallow"] {
+  --scene-seam-depth: clamp(120px, 8vw, 145px);
+  --scene-seam-matte: none;
+}
+
+@media (max-width: 1200px) {
+  .scene-seam--continuation[data-scene-seam-profile="shallow"] {
+    --scene-seam-depth: clamp(105px, 10vw, 125px);
+  }
+}
+
+@media (max-width: 820px) {
+  .scene-seam--continuation[data-scene-seam-profile="shallow"] {
+    --scene-seam-depth: clamp(82px, 22vw, 105px);
+  }
+}
+
+@media (max-height: 620px) {
+  .scene-seam--continuation[data-scene-seam-profile="shallow"] {
+    --scene-seam-depth: clamp(90px, 16vh, 115px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-seam--switch[data-scene-seam-state="active"] {
+    display: none;
+    animation: none;
+  }
+
+  [data-scene-flow="switch"][data-scene-seam-switching="active"]
+    [data-scene-frame][data-scene-seam-role] [data-seam-safe-content] {
+    animation: none;
+  }
+}

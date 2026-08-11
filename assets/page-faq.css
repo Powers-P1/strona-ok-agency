@@ -23,25 +23,7 @@ body.faq-page {
   min-width: 320px;
   margin: 0;
   color: var(--faq-navy);
-  background:
-    radial-gradient(circle at 82% 9%, rgba(181, 36, 84, .07), transparent 24%),
-    radial-gradient(circle at 8% 68%, rgba(166, 104, 77, .09), transparent 27%),
-    linear-gradient(128deg, rgba(255, 255, 255, .16), transparent 48%),
-    var(--faq-paper);
   font-family: var(--ok-font-body, "Archivo", sans-serif);
-}
-
-.faq-page::before {
-  content: "";
-  position: fixed;
-  z-index: 0;
-  inset: 0;
-  pointer-events: none;
-  opacity: .34;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, .48) 0 1px, transparent 1.2px),
-    radial-gradient(circle at 70% 60%, rgba(20, 32, 48, .08) 0 .7px, transparent 1px);
-  background-size: 13px 17px, 17px 19px;
 }
 
 .faq-skip {
@@ -316,6 +298,7 @@ body.faq-page {
 }
 
 @media (max-width: 600px) {
+
   .faq-main {
     padding: 42px 22px 72px;
     gap: 46px;

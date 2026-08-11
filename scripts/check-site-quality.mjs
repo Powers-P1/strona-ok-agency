@@ -8,6 +8,7 @@ const htmlFiles = (await readdir(root))
   .sort();
 const publicFiles = htmlFiles.filter(name => name !== "404.html");
 const failures = [];
+const retiredTransitionPattern = /\b(?:scene-seam__art|scene-seam__bridge|scene-derived|data-scene-continuation-art|campaign-seam-art-to-dark|diagnosis-seam-atmosphere-v1)\b/i;
 
 const decodeEntities = value => value
   .replaceAll("&amp;", "&")
@@ -178,18 +179,71 @@ for (const file of publicFiles) {
   if (/href=["'][^"']*\.html(?:[?#"'])/i.test(source)) failures.push(`${file}: wewnętrzny link zawiera .html`);
   if (/fonts\.(?:googleapis|gstatic)\.com/i.test(source)) failures.push(`${file}: zewnętrzne Google Fonts`);
   if (/\[(?:DO UZUPEŁNIENIA|UZUPEŁNIJ)[^\]]*\]|TODO|FIXME/i.test(source)) failures.push(`${file}: znacznik roboczy`);
+  if (retiredTransitionPattern.test(source)) {
+    failures.push(`${file}: przejście zawiera wycofany renderer, marker lub dekoracyjny asset`);
+  }
 
   if (file === "index.html") {
     const homeIntro = source.match(/<section class=["']home-intro["'][\s\S]*?<\/section>/i)?.[0] || "";
+    const homeIntroTag = source.match(/<section\b(?=[^>]*\bclass=["'][^"']*\bhome-intro\b)[^>]*>/i)?.[0] || "";
     const homeIntroText = decodeEntities(homeIntro.replace(/<[^>]+>/g, " "));
     const homeIntroWords = homeIntroText.match(/\p{L}[\p{L}\p{M}’'-]*/gu) || [];
     if (homeIntroWords.length < 150 || homeIntroWords.length > 250) {
       failures.push(`${file}: blok home-intro ma ${homeIntroWords.length} słów zamiast 150–250`);
     }
+    if (!/\bdata-scene-seam-profile=["']shallow["']/i.test(homeIntroTag)) {
+      failures.push(`${file}: przejście hero nie korzysta ze wspólnego płytkiego profilu`);
+    }
+    for (const tier of ["default", "low", "compact"]) {
+      if (!new RegExp(`\\bdata-scene-seam-atmosphere-${tier}=["'][^"']*home-hero-intro-v27`, "i").test(homeIntroTag)) {
+        failures.push(`${file}: przejście hero nie ma wariantu v24 dla ${tier}`);
+      }
+    }
+  }
+
+  if (/\bdata-scene-flow=["']document["']/i.test(source)) {
+    const frameTags = [...source.matchAll(/<section\b[^>]*\bdata-scene-frame\b[^>]*>/gi)]
+      .map(match => ({ index: match.index, tag: match[0] }));
+    const hasAttribute = (tag, name) => new RegExp(`\\b${name}(?:\\s*=|\\s|>)`, "i").test(`${tag}>`);
+    const tone = tag => tag.match(/\bdata-scene-tone=["']([^"']+)["']/i)?.[1]?.toLowerCase() || "";
+
+    for (let index = 0; index < frameTags.length - 1; index += 1) {
+      const current = frameTags[index];
+      const next = frameTags[index + 1];
+      const between = source.slice(current.index + current.tag.length, next.index);
+      const authored = [...between.matchAll(
+        /<div\b(?=[^>]*\bclass=["'][^"']*\bscene-seam\b)(?=[^>]*\bdata-scene-seam-source(?:\s*=|\s|>))[^>]*>/gi,
+      )].length;
+      const generated = hasAttribute(current.tag, "data-scene-boundary-source")
+        && hasAttribute(next.tag, "data-scene-boundary-target")
+        && hasAttribute(next.tag, "data-scene-continuation");
+
+      const hasExactlyOneContract = (authored === 1 && !generated)
+        || (authored === 0 && generated);
+      if (!hasExactlyOneContract) {
+        failures.push(`${file}: granica scen ${index + 1}→${index + 2} nie ma dokładnie jednego kontraktu przejścia`);
+      }
+      if (generated && (tone(current.tag) !== "light" || tone(next.tag) !== "light")) {
+        failures.push(`${file}: generowana granica scen ${index + 1}→${index + 2} nie jest wspieraną parą light→light`);
+      }
+    }
   }
 
   if (["strony-internetowe.html", "social-media.html", "kampanie.html"].includes(file)) {
-    if (!/<section\b[^>]*class=["'][^"']*\bdecision-guide__faq\b[^"']*["'][^>]*aria-labelledby=/i.test(source)) {
+    const faqSceneId = {
+      "kampanie.html": "campaign-faq",
+      "social-media.html": "social-faq",
+      "strony-internetowe.html": "web-faq",
+    }[file];
+    const faqSection = source.match(new RegExp(
+      `<section\\b(?=[^>]*\\bid=["']${faqSceneId}["'])[^>]*>[\\s\\S]*?<\\/section>`,
+      "i",
+    ))?.[0] || "";
+    if (
+      !/\baria-labelledby=["'][^"']+["']/i.test(faqSection)
+      || !/\bdata-scene-frame\b/i.test(faqSection)
+      || !/\bclass=["'][^"']*\bproof-list\b/i.test(faqSection)
+    ) {
       failures.push(`${file}: FAQ nie jest semantyczną sekcją`);
     }
     for (const image of imageTags.filter(tag => /\bclass=["'][^"']*\bcampaign-art\b/i.test(tag))) {
@@ -236,10 +290,13 @@ for (const path of requiredFiles) {
 }
 
 const assetFiles = await readdir(join(root, "assets"), { recursive: true });
-for (const path of assetFiles.filter(path => path.endsWith(".css"))) {
+for (const path of assetFiles.filter(path => /\.(?:css|js)$/i.test(path))) {
   const source = await readFile(join(root, "assets", path), "utf8");
-  if (/fonts\.(?:googleapis|gstatic)\.com/i.test(source)) {
+  if (path.endsWith(".css") && /fonts\.(?:googleapis|gstatic)\.com/i.test(source)) {
     failures.push(`assets/${path}: zewnętrzne Google Fonts`);
+  }
+  if (retiredTransitionPattern.test(source)) {
+    failures.push(`assets/${path}: kod przywraca wycofany renderer, marker lub dekoracyjny asset`);
   }
 }
 

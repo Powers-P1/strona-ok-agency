@@ -34,7 +34,7 @@ try {
     });
     const artwork = await page.evaluate(sceneSelector => (
       [...document.querySelectorAll(sceneSelector)].flatMap(scene => {
-        const art = scene.querySelector(":scope > .campaign-art, :scope > .scene-art");
+        const art = scene.querySelector(":scope > .campaign-art, :scope > picture > .campaign-art, :scope > .scene-art");
         if (!art?.dataset.placementMask) {
           return [];
         }

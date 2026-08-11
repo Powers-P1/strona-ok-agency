@@ -239,6 +239,7 @@
    visual depth at compact, object-free light-to-light boundaries. */
 .scene-seam--continuation[data-scene-seam-profile="shallow"] {
   --scene-seam-depth: clamp(120px, 8vw, 145px);
+  --scene-seam-matte: none;
 }
 
 @media (max-width: 1200px) {
